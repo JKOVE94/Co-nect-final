@@ -1,40 +1,61 @@
 package conect.service.board.proj;
 
 import conect.data.dto.ProjectDto;
+import conect.data.entity.DepartmentEntity;
 import conect.data.entity.ProjectEntity;
+import conect.data.entity.UserEntity;
+import conect.data.repository.DepartmentRepository;
 import conect.data.repository.ProjectRepository;
+import conect.data.repository.UserRepository;
 
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ProjServiceImpl implements ProjService {
 
     @Autowired
-    private ProjectRepository prepository;
+    private ProjectRepository projrepository;
 
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private DepartmentRepository deptRepository;
+    
+    // 부서 번호를 기준으로 프로젝트 리스트 가져오기
+    public List<ProjectEntity> getProjByDept(int dpartPkNum) {
+        return projrepository.findByDepartmentEntity_dpartPkNum(dpartPkNum);
+    }
+    
+    
+    // 프로젝트 생성 메서드
     @Override
-    public ProjectDto projCreate(ProjectDto request) {
-        // DTO -> Entity
-        ProjectEntity projEntity = new ProjectEntity();
-        projEntity.setProjName(request.getProj_name());
-        projEntity.setProjDesc(request.getProj_desc());
-        projEntity.setProjStartDate(request.getProj_startdate());
-        projEntity.setProjEndDate(request.getProj_enddate());
-        projEntity.setProjStatus(request.getProj_status());
-        projEntity.setProjMembers(request.getProj_members());
-        projEntity.setProjCreated(new Date()); // 생성 일시는 서버에서 처리
-        projEntity.setProjUpdated(new Date()); // 수정 일시는 서버에서 처리
-        projEntity.setProjImport(request.getProj_import());
-        projEntity.setProjTag(request.getProj_tag());
-        projEntity.setProjTagCol(request.getProj_tagcol());
-        projEntity.setProjIcon(request.getProj_icon());
-   
-        ProjectEntity savedEntity = prepository.save(projEntity);
+    public void createProject(ProjectDto projectDto) {
+        // DTO를 Entity로 변환
+        ProjectEntity entity = new ProjectEntity();
+        entity.setProjName(projectDto.getProj_name());
+        entity.setProjDesc(projectDto.getProj_desc());
+        entity.setProjStatus(projectDto.getProj_status());
+        entity.setProjImport(projectDto.getProj_import());
+        
+        // 담당 부서와 담당자 설정
+        DepartmentEntity deptEntity  = deptRepository
+        		.findById(projectDto.getProj_fk_dpart_num())
+                .orElseThrow(() -> new RuntimeException("부서가 존재하지 않습니다."));
+        UserEntity userEntity  = userRepository
+        		.findById(projectDto.getProj_fk_user_num())
+                .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+        
+        entity.setDepartmentEntity(deptEntity);  // 부서 설정
+        entity.setUserEntity(userEntity);  // 담당자 설정
 
-        return ProjectDto.fromEntity(savedEntity);
+        // 프로젝트 저장
+        projrepository.save(entity);
     }
     
 }

@@ -1,13 +1,16 @@
 package conect.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import conect.data.dto.ProjectDto;
+import conect.data.entity.ProjectEntity;
 import conect.service.board.proj.ProjService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
@@ -23,11 +26,20 @@ public class BoardController {
 
     //프로젝트게시판 (/board/proj)
 	
-	// 프로젝트 생성
-	@PostMapping("/proj/create")
-    public ResponseEntity<ProjectDto> projCreate(@RequestBody ProjectDto request) {
-        ProjectDto projCreate = projService.projCreate(request); // 서비스 호출
-        return ResponseEntity.status(HttpStatus.CREATED).body(projCreate);
+	// 부서 번호를 기준으로 프로젝트 리스트 조회
+    @GetMapping("/list/{dpartPkNum}")
+    public List<ProjectEntity> getProjByDept(@PathVariable int dpartPkNum) {
+        return projService.getProjByDept(dpartPkNum);
     }
 	
+	// 프로젝트 생성 API
+	@PostMapping("/proj/create")
+	public String createProject(@RequestBody ProjectDto projectDto) {
+	    try {
+	        projService.createProject(projectDto);
+	        return "프로젝트가 생성 성공!"; 
+	    } catch (Exception e) {
+	        return "프로젝트 생성 실패: " + e.getMessage();
+	    }
+	}
 }
