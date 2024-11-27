@@ -10,39 +10,37 @@ import java.util.List;
 @Getter
 @Setter
 public class PostDto {
-    private int post_pk_num;
-    private int post_kind;
-    private String post_targetnum;
-    private String post_name;
-    private Date post_regdate;
-    private String post_import;
-    private String post_content;
-    private String post_tag;
-    private int post_depth;
-    private int post_view;
-    private UserDto user_entity;
-    private CompanyDto company_entity;
-    private DepartmentDto department_entity;
-    private List<ReplyDto> reply_entities;
-    private List<FavoritesDto> favorites_entities;
+    private int post_pk_num; //게시글 번호 [PK, INT, INCREMENT]
+    private int post_kind; //게시글 유형 [INT]
+    private String post_targetnum; //게시글 대상 사원번호 [VARCHAR] => String으로 작성 이후 데이터사용은 String tokenizer 사용
+    private String post_name; //게시글 제목 [VARCHAR]
+    private Date post_regdate; //게시글 등록일 [DATETIME]
+    private String post_import; //게시글 중요도 [VARCHAR] (낮음,보통,높음,매우 높음)
+    private String post_content; //게시글 내용 [TEXT]
+    private String post_tag; //게시글 태그 [VARCHAR]
+    private int post_depth; //게시글 깊이 [INT] (기본값 0, 답글 설정시 사용)
+    private int post_view; //게시글 조회수 [INT]
+    private int post_fk_dpart_num; //게시글 작성 부서 번호 [FK, INT]
+    private int post_fk_comp_num; //게시글 회사 고유번호 [FK, INT]
+    private int post_fk_post_num; //게시글 답글 기준 게시글 번호 [FK, INT]
+    private int post_fk_user_num; //게시글 작성자 사번 [FK, INT]
 
     public static PostDto fromEntity(PostEntity entity) {
         PostDto dto = new PostDto();
         dto.setPost_pk_num(entity.getPostPkNum());
         dto.setPost_kind(entity.getPostKind());
-        dto.setPost_targetnum(entity.getPostTargetNum());
+        dto.setPost_targetnum(entity.getPostTargetnum());
         dto.setPost_name(entity.getPostName());
-        dto.setPost_regdate(entity.getPostRegDate());
+        dto.setPost_regdate(entity.getPostRegdate());
         dto.setPost_import(entity.getPostImport());
         dto.setPost_content(entity.getPostContent());
         dto.setPost_tag(entity.getPostTag());
         dto.setPost_depth(entity.getPostDepth());
         dto.setPost_view(entity.getPostView());
-        dto.setUser_entity(UserDto.fromEntity(entity.getUserEntity()));
-        dto.setCompany_entity(CompanyDto.fromEntity(entity.getCompanyEntity()));
-        dto.setDepartment_entity(DepartmentDto.fromEntity(entity.getDepartmentEntity()));
-        dto.setReply_entities(entity.getReplyEntities().stream().map(ReplyDto::fromEntity).toList());
-        dto.setFavorites_entities(entity.getFavoritesEntities().stream().map(FavoritesDto::fromEntity).toList());
+        dto.setPost_fk_dpart_num(entity.getDepartmentEntity().getDpartFkDpartNum());
+        dto.setPost_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
+        dto.setPost_fk_post_num(entity.getPostFkPostNum());
+        dto.setPost_fk_user_num(entity.getUserEntity().getUserPkNum());
         return dto;
     }
 }

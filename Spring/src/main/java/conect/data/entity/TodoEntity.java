@@ -18,6 +18,8 @@ public class TodoEntity {
     private String todoContent; //투두리스트 내용 [VARCHAR]
     private Date todoStart; //투두리스트 시작일 [DATETIME]
     private Date todoEnd; //투두리스트 종료일 [DATETIME]
+    private int todoIcon;
+    private String todoTagcol;
 
     @ManyToOne
     @JoinColumn(name = "todo_fk_user_num")

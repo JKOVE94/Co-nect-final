@@ -11,11 +11,11 @@ public class CompanyForm {
     private String comp_name;
     private String comp_pic;
 
-    public CompanyEntity toEntity() {
+    public static CompanyEntity toEntity(CompanyForm form) {
         CompanyEntity entity = new CompanyEntity();
-        entity.setCompPkNum(this.comp_pk_num);
-        entity.setCompName(this.comp_name);
-        entity.setCompPic(this.comp_pic);
+        entity.setCompPkNum(form.getComp_pk_num());
+        entity.setCompName(form.getComp_name());
+        entity.setCompPic(form.getComp_pic());
         return entity;
     }
 }
