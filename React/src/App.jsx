@@ -11,6 +11,7 @@ const App = () => {
         {/* <Mange /> 관리자페이지 컴포넌트 */}
         <Manage />
       </div>
+
       <Routes>
         {/* <Route path="/" element={<Landing />} />
         <Route path="/main" element={<Dashboard />} />
