@@ -22,7 +22,7 @@ public class SecurityConfig {
         // 커스텀 로그인페이지 설정
         httpSecurity
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/")
