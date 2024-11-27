@@ -24,7 +24,6 @@ public class PostEntity {
     private String postTag; //게시글 태그 [VARCHAR]
     private int postDepth; //게시글 깊이 [INT] (기본값 0, 답글 설정시 사용)
     private int postView; //게시글 조회수 [INT]
-    private int postFkPostNum;
 
     @ManyToOne
     @JoinColumn(name="post_fk_user_num")
