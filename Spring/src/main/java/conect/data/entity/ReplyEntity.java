@@ -10,8 +10,8 @@ import lombok.Setter;
 @Table(name = "reply")
 public class ReplyEntity {
     @Id
-    private int reply_pk_num; //댓글 번호 [PK, INT]
-    private String reply_cont; //댓글 내용 {TEXT]
+    private int replyPkNum; //댓글 번호 [PK, INT]
+    private String replyCont; //댓글 내용 {TEXT]
 
     @ManyToOne
     @JoinColumn(name="reply_fk_porj_num")
@@ -24,5 +24,4 @@ public class ReplyEntity {
     @ManyToOne
     @JoinColumn(name="reply_fk_user_renum")
     private UserEntity userEntity;
-
 }
