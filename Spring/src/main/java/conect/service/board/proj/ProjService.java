@@ -1,5 +1,7 @@
 package conect.service.board.proj;
 
-public interface ProjService {
+import conect.data.dto.ProjectDto;
 
+public interface ProjService {
+	ProjectDto projCreate(ProjectDto request);
 }
