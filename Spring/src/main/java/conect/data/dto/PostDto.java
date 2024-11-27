@@ -30,9 +30,9 @@ public class PostDto {
         PostDto dto = new PostDto();
         dto.setPost_pk_num(entity.getPostPkNum());
         dto.setPost_kind(entity.getPostKind());
-        dto.setPost_targetnum(entity.getPostTargetNum());
+        dto.setPost_targetnum(entity.getPostTargetnum());
         dto.setPost_name(entity.getPostName());
-        dto.setPost_regdate(entity.getPostRegDate());
+        dto.setPost_regdate(entity.getPostRegdate());
         dto.setPost_import(entity.getPostImport());
         dto.setPost_content(entity.getPostContent());
         dto.setPost_tag(entity.getPostTag());

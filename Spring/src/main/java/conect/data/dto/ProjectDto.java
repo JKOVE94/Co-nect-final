@@ -35,15 +35,15 @@ public class ProjectDto {
         dto.setProj_pk_num(entity.getProjPkNum());
         dto.setProj_name(entity.getProjName());
         dto.setProj_desc(entity.getProjDesc());
-        dto.setProj_startdate(entity.getProjStartDate());
-        dto.setProj_enddate(entity.getProjEndDate());
+        dto.setProj_startdate(entity.getProjStartdate());
+        dto.setProj_enddate(entity.getProjEnddate());
         dto.setProj_status(entity.getProjStatus());
         dto.setProj_members(entity.getProjMembers());
         dto.setProj_created(entity.getProjCreated());
         dto.setProj_updated(entity.getProjUpdated());
         dto.setProj_import(entity.getProjImport());
         dto.setProj_tag(entity.getProjTag());
-        dto.setProj_tagcol(entity.getProjTagCol());
+        dto.setProj_tagcol(entity.getProjTagcol());
         dto.setProj_icon(entity.getProjIcon());
         dto.setDepartment_entity(DepartmentDto.fromEntity(entity.getDepartmentEntity()));
         dto.setTask_entities(entity.getTaskEntities().stream().map(TaskDto::fromEntity).toList());

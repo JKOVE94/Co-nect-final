@@ -28,14 +28,14 @@ public class UserDto {
     public static UserDto fromEntity(UserEntity entity) {
         UserDto dto = new UserDto();
         dto.setUser_pk_num(entity.getUserPkNum());
-        dto.setUser_regdate(entity.getUserRegDate());
+        dto.setUser_regdate(entity.getUserRegdate());
         dto.setUser_pw(entity.getUserPw());
         dto.setUser_name(entity.getUserName());
         dto.setUser_mail(entity.getUserMail());
         dto.setUser_pic(entity.getUserPic());
         dto.setUser_rank(entity.getUserRank());
-        dto.setUser_lastlogin(entity.getUserLastLogin());
-        dto.setUser_trynum(entity.getUserTryNum());
+        dto.setUser_lastlogin(entity.getUserLastlogin());
+        dto.setUser_trynum(entity.getUserTrynum());
         dto.setUser_locked(entity.getUserLocked());
         dto.setAccount_entity(AccountDto.fromEntity(entity.getAccountEntity()));
         dto.setCompany_entity(CompanyDto.fromEntity(entity.getCompanyEntity()));
