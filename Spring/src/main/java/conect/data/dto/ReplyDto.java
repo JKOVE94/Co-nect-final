@@ -15,8 +15,8 @@ public class ReplyDto {
 
     public static ReplyDto fromEntity(ReplyEntity entity) {
         ReplyDto dto = new ReplyDto();
-        dto.setReply_pk_num(entity.getReply_pk_num());
-        dto.setReply_cont(entity.getReply_cont());
+        dto.setReply_pk_num(entity.getReplyPkNum());
+        dto.setReply_cont(entity.getReplyCont());
         dto.setProj_entity(ProjectDto.fromEntity(entity.getProjectEntity()));
         dto.setPost_entity(PostDto.fromEntity(entity.getPostEntity()));
         dto.setUser_entity(UserDto.fromEntity(entity.getUserEntity()));

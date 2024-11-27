@@ -14,10 +14,10 @@ public class DepartmentForm {
 
     public DepartmentEntity toEntity() {
         DepartmentEntity entity = new DepartmentEntity();
-        entity.setDpart_pk_num(this.dpart_pk_num);
-        entity.setDpart_name(this.dpart_name);
-        entity.setDpart_mail(this.dpart_mail);
-        entity.setDpart_fk_dpart_num(this.dpart_fk_dpart_num);
+        entity.setDpartPkNum(this.dpart_pk_num);
+        entity.setDpartName(this.dpart_name);
+        entity.setDpartMail(this.dpart_mail);
+        entity.setDpartFkDpartNum(this.dpart_fk_dpart_num);
         return entity;
     }
 }

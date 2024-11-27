@@ -22,16 +22,16 @@ public class PostForm {
 
     public PostEntity toEntity() {
         PostEntity entity = new PostEntity();
-        entity.setPost_pk_num(this.post_pk_num);
-        entity.setPost_kind(this.post_kind);
-        entity.setPost_targetnum(this.post_targetnum);
-        entity.setPost_name(this.post_name);
-        entity.setPost_regdate(this.post_regdate);
-        entity.setPost_import(this.post_import);
-        entity.setPost_content(this.post_content);
-        entity.setPost_tag(this.post_tag);
-        entity.setPost_depth(this.post_depth);
-        entity.setPost_view(this.post_view);
+        entity.setPostPkNum(this.post_pk_num);
+        entity.setPostKind(this.post_kind);
+        entity.setPostTargetNum(this.post_targetnum);
+        entity.setPostName(this.post_name);
+        entity.setPostRegDate(this.post_regdate);
+        entity.setPostImport(this.post_import);
+        entity.setPostContent(this.post_content);
+        entity.setPostTag(this.post_tag);
+        entity.setPostDepth(this.post_depth);
+        entity.setPostView(this.post_view);
         return entity;
     }
 }

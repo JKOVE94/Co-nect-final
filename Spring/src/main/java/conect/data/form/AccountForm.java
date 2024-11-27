@@ -12,8 +12,8 @@ public class AccountForm {
 
     public AccountEntity toEntity() {
         AccountEntity entity = new AccountEntity();
-        entity.setAcc_pk_authornum(this.acc_pk_authornum);
-        entity.setAcc_author(this.acc_author);
+        entity.setAccPkAuthorNum(this.acc_pk_authornum);
+        entity.setAccAuthor(this.acc_author);
         return entity;
     }
 }

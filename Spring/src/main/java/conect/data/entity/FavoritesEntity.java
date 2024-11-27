@@ -12,7 +12,7 @@ public class FavoritesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int favor_id;
+    private int favorId;
 
     @ManyToOne
     @JoinColumn(name="favor_fk_post_num")

@@ -27,16 +27,16 @@ public class UserDto {
 
     public static UserDto fromEntity(UserEntity entity) {
         UserDto dto = new UserDto();
-        dto.setUser_pk_num(entity.getUser_pk_num());
-        dto.setUser_regdate(entity.getUser_regdate());
-        dto.setUser_pw(entity.getUser_pw());
-        dto.setUser_name(entity.getUser_name());
-        dto.setUser_mail(entity.getUser_mail());
-        dto.setUser_pic(entity.getUser_pic());
-        dto.setUser_rank(entity.getUser_rank());
-        dto.setUser_lastlogin(entity.getUser_lastlogin());
-        dto.setUser_trynum(entity.getUser_trynum());
-        dto.setUser_locked(entity.getUser_locked());
+        dto.setUser_pk_num(entity.getUserPkNum());
+        dto.setUser_regdate(entity.getUserRegDate());
+        dto.setUser_pw(entity.getUserPw());
+        dto.setUser_name(entity.getUserName());
+        dto.setUser_mail(entity.getUserMail());
+        dto.setUser_pic(entity.getUserPic());
+        dto.setUser_rank(entity.getUserRank());
+        dto.setUser_lastlogin(entity.getUserLastLogin());
+        dto.setUser_trynum(entity.getUserTryNum());
+        dto.setUser_locked(entity.getUserLocked());
         dto.setAccount_entity(AccountDto.fromEntity(entity.getAccountEntity()));
         dto.setCompany_entity(CompanyDto.fromEntity(entity.getCompanyEntity()));
         dto.setDepartment_entity(DepartmentDto.fromEntity(entity.getDepartmentEntity()));

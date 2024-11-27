@@ -19,10 +19,10 @@ public class DepartmentDto {
 
     public static DepartmentDto fromEntity(DepartmentEntity entity) {
         DepartmentDto dto = new DepartmentDto();
-        dto.setDpart_pk_num(entity.getDpart_pk_num());
-        dto.setDpart_name(entity.getDpart_name());
-        dto.setDpart_mail(entity.getDpart_mail());
-        dto.setDpart_fk_dpart_num(entity.getDpart_fk_dpart_num());
+        dto.setDpart_pk_num(entity.getDpartPkNum());
+        dto.setDpart_name(entity.getDpartName());
+        dto.setDpart_mail(entity.getDpartMail());
+        dto.setDpart_fk_dpart_num(entity.getDpartFkDpartNum());
         dto.setUser_entities(entity.getUserEntities().stream().map(UserDto::fromEntity).toList());
         dto.setFree_entities(entity.getFreeEntities().stream().map(PostDto::fromEntity).toList());
         dto.setUser_entity_list(entity.getUserEntityList().stream().map(ProjectDto::fromEntity).toList());

@@ -18,10 +18,10 @@ import java.util.List;
 public class DepartmentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int dpart_pk_num; //부서 번호 [PK, INT]
-    private String dpart_name; //부서 이름 [VARCHAR]
-    private String dpart_mail; //부서 이메일 [VARCHAR]
-    private int dpart_fk_dpart_num; //상위 부서 번호
+    private int dpartPkNum; //부서 번호 [PK, INT]
+    private String dpartName; //부서 이름 [VARCHAR]
+    private String dpartMail; //부서 이메일 [VARCHAR]
+    private int dpartFkDpartNum; //상위 부서 번호
 
     @OneToMany(mappedBy = "departmentEntity")
     private List<UserEntity> userEntities;

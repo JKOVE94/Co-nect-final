@@ -25,19 +25,19 @@ public class TaskForm {
 
     public TaskEntity toEntity() {
         TaskEntity entity = new TaskEntity();
-        entity.setTask_pk_num(this.task_pk_num);
-        entity.setTask_title(this.task_title);
-        entity.setTask_desc(this.task_desc);
-        entity.setTask_startdate(this.task_startdate);
-        entity.setTask_deadline(this.task_deadline);
-        entity.setTask_enddate(this.task_enddate);
-        entity.setTask_duration(this.task_duration);
-        entity.setTask_progress(this.task_progress);
-        entity.setTask_status(this.task_status);
-        entity.setTask_priority(this.task_priority);
-        entity.setTask_created(this.task_created);
-        entity.setTask_updated(this.task_updated);
-        entity.setTask_version(this.task_version);
+        entity.setTaskPkNum(this.task_pk_num);
+        entity.setTaskTitle(this.task_title);
+        entity.setTaskDesc(this.task_desc);
+        entity.setTaskStartDate(this.task_startdate);
+        entity.setTaskDeadline(this.task_deadline);
+        entity.setTaskEndDate(this.task_enddate);
+        entity.setTaskDuration(this.task_duration);
+        entity.setTaskProgress(this.task_progress);
+        entity.setTaskStatus(this.task_status);
+        entity.setTaskPriority(this.task_priority);
+        entity.setTaskCreated(this.task_created);
+        entity.setTaskUpdated(this.task_updated);
+        entity.setTaskVersion(this.task_version);
         return entity;
     }
 }
