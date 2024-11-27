@@ -28,16 +28,16 @@ public class PostDto {
 
     public static PostDto fromEntity(PostEntity entity) {
         PostDto dto = new PostDto();
-        dto.setPost_pk_num(entity.getPost_pk_num());
-        dto.setPost_kind(entity.getPost_kind());
-        dto.setPost_targetnum(entity.getPost_targetnum());
-        dto.setPost_name(entity.getPost_name());
-        dto.setPost_regdate(entity.getPost_regdate());
-        dto.setPost_import(entity.getPost_import());
-        dto.setPost_content(entity.getPost_content());
-        dto.setPost_tag(entity.getPost_tag());
-        dto.setPost_depth(entity.getPost_depth());
-        dto.setPost_view(entity.getPost_view());
+        dto.setPost_pk_num(entity.getPostPkNum());
+        dto.setPost_kind(entity.getPostKind());
+        dto.setPost_targetnum(entity.getPostTargetNum());
+        dto.setPost_name(entity.getPostName());
+        dto.setPost_regdate(entity.getPostRegDate());
+        dto.setPost_import(entity.getPostImport());
+        dto.setPost_content(entity.getPostContent());
+        dto.setPost_tag(entity.getPostTag());
+        dto.setPost_depth(entity.getPostDepth());
+        dto.setPost_view(entity.getPostView());
         dto.setUser_entity(UserDto.fromEntity(entity.getUserEntity()));
         dto.setCompany_entity(CompanyDto.fromEntity(entity.getCompanyEntity()));
         dto.setDepartment_entity(DepartmentDto.fromEntity(entity.getDepartmentEntity()));

@@ -17,11 +17,11 @@ public class TodoForm {
 
     public TodoEntity toEntity() {
         TodoEntity entity = new TodoEntity();
-        entity.setTodo_pk_num(this.todo_pk_num);
-        entity.setTodo_title(this.todo_title);
-        entity.setTodo_content(this.todo_content);
-        entity.setTodo_start(this.todo_start);
-        entity.setTodo_end(this.todo_end);
+        entity.setTodoPkNum(this.todo_pk_num);
+        entity.setTodoTitle(this.todo_title);
+        entity.setTodoContent(this.todo_content);
+        entity.setTodoStart(this.todo_start);
+        entity.setTodoEnd(this.todo_end);
         return entity;
     }
 }

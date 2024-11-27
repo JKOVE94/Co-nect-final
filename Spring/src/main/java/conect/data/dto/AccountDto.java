@@ -15,8 +15,8 @@ public class AccountDto {
 
     public static AccountDto fromEntity(AccountEntity entity) {
         AccountDto dto = new AccountDto();
-        dto.setAcc_pk_authornum(entity.getAcc_pk_authornum());
-        dto.setAcc_author(entity.getAcc_author());
+        dto.setAcc_pk_authornum(entity.getAccPkAuthorNum());
+        dto.setAcc_author(entity.getAccAuthor());
         dto.setUser_entities(entity.getUserEntities().stream().map(UserDto::fromEntity).toList());
         return dto;
     }

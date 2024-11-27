@@ -16,9 +16,9 @@ public class CompanyDto {
 
 	public static CompanyDto fromEntity(CompanyEntity entity) {
 		CompanyDto dto = new CompanyDto();
-		dto.setComp_pk_num(entity.getComp_pk_num());
-		dto.setComp_name(entity.getComp_name());
-		dto.setComp_pic(entity.getComp_pic());
+		dto.setComp_pk_num(entity.getCompPkNum());
+		dto.setComp_name(entity.getCompName());
+		dto.setComp_pic(entity.getCompPic());
 		dto.setUser_entities(entity.getUserEntities().stream().map(UserDto::fromEntity).toList());
 		return dto;
 	}

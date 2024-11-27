@@ -18,11 +18,11 @@ public class TodoDto {
 
     public static TodoDto fromEntity(TodoEntity entity) {
         TodoDto dto = new TodoDto();
-        dto.setTodo_pk_num(entity.getTodo_pk_num());
-        dto.setTodo_title(entity.getTodo_title());
-        dto.setTodo_content(entity.getTodo_content());
-        dto.setTodo_start(entity.getTodo_start());
-        dto.setTodo_end(entity.getTodo_end());
+        dto.setTodo_pk_num(entity.getTodoPkNum());
+        dto.setTodo_title(entity.getTodoTitle());
+        dto.setTodo_content(entity.getTodoContent());
+        dto.setTodo_start(entity.getTodoStart());
+        dto.setTodo_end(entity.getTodoEnd());
         dto.setUser(UserDto.fromEntity(entity.getUser()));
         return dto;
     }

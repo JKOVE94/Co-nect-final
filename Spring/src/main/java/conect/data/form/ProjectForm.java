@@ -25,19 +25,19 @@ public class ProjectForm {
 
     public ProjectEntity toEntity() {
         ProjectEntity entity = new ProjectEntity();
-        entity.setProj_pk_num(this.proj_pk_num);
-        entity.setProj_name(this.proj_name);
-        entity.setProj_desc(this.proj_desc);
-        entity.setProj_startdate(this.proj_startdate);
-        entity.setProj_enddate(this.proj_enddate);
-        entity.setProj_status(this.proj_status);
-        entity.setProj_members(this.proj_members);
-        entity.setProj_created(this.proj_created);
-        entity.setProj_updated(this.proj_updated);
-        entity.setProj_import(this.proj_import);
-        entity.setProj_tag(this.proj_tag);
-        entity.setProj_tagcol(this.proj_tagcol);
-        entity.setProj_icon(this.proj_icon);
+        entity.setProjPkNum(this.proj_pk_num);
+        entity.setProjName(this.proj_name);
+        entity.setProjDesc(this.proj_desc);
+        entity.setProjStartDate(this.proj_startdate);
+        entity.setProjEndDate(this.proj_enddate);
+        entity.setProjStatus(this.proj_status);
+        entity.setProjMembers(this.proj_members);
+        entity.setProjCreated(this.proj_created);
+        entity.setProjUpdated(this.proj_updated);
+        entity.setProjImport(this.proj_import);
+        entity.setProjTag(this.proj_tag);
+        entity.setProjTagCol(this.proj_tagcol);
+        entity.setProjIcon(this.proj_icon);
         return entity;
     }
 }

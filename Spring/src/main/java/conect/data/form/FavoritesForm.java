@@ -11,7 +11,7 @@ public class FavoritesForm {
 
     public FavoritesEntity toEntity() {
         FavoritesEntity entity = new FavoritesEntity();
-        entity.setFavor_id(this.favor_id);
+        entity.setFavorId(this.favor_id);
         return entity;
     }
 }

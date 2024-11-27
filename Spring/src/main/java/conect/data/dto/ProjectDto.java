@@ -32,19 +32,19 @@ public class ProjectDto {
 
     public static ProjectDto fromEntity(ProjectEntity entity) {
         ProjectDto dto = new ProjectDto();
-        dto.setProj_pk_num(entity.getProj_pk_num());
-        dto.setProj_name(entity.getProj_name());
-        dto.setProj_desc(entity.getProj_desc());
-        dto.setProj_startdate(entity.getProj_startdate());
-        dto.setProj_enddate(entity.getProj_enddate());
-        dto.setProj_status(entity.getProj_status());
-        dto.setProj_members(entity.getProj_members());
-        dto.setProj_created(entity.getProj_created());
-        dto.setProj_updated(entity.getProj_updated());
-        dto.setProj_import(entity.getProj_import());
-        dto.setProj_tag(entity.getProj_tag());
-        dto.setProj_tagcol(entity.getProj_tagcol());
-        dto.setProj_icon(entity.getProj_icon());
+        dto.setProj_pk_num(entity.getProjPkNum());
+        dto.setProj_name(entity.getProjName());
+        dto.setProj_desc(entity.getProjDesc());
+        dto.setProj_startdate(entity.getProjStartDate());
+        dto.setProj_enddate(entity.getProjEndDate());
+        dto.setProj_status(entity.getProjStatus());
+        dto.setProj_members(entity.getProjMembers());
+        dto.setProj_created(entity.getProjCreated());
+        dto.setProj_updated(entity.getProjUpdated());
+        dto.setProj_import(entity.getProjImport());
+        dto.setProj_tag(entity.getProjTag());
+        dto.setProj_tagcol(entity.getProjTagCol());
+        dto.setProj_icon(entity.getProjIcon());
         dto.setDepartment_entity(DepartmentDto.fromEntity(entity.getDepartmentEntity()));
         dto.setTask_entities(entity.getTaskEntities().stream().map(TaskDto::fromEntity).toList());
         dto.setReply_entities(entity.getReplyEntities().stream().map(ReplyDto::fromEntity).toList());

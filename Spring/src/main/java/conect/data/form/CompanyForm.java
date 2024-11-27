@@ -13,9 +13,9 @@ public class CompanyForm {
 
     public CompanyEntity toEntity() {
         CompanyEntity entity = new CompanyEntity();
-        entity.setComp_pk_num(this.comp_pk_num);
-        entity.setComp_name(this.comp_name);
-        entity.setComp_pic(this.comp_pic);
+        entity.setCompPkNum(this.comp_pk_num);
+        entity.setCompName(this.comp_name);
+        entity.setCompPic(this.comp_pic);
         return entity;
     }
 }

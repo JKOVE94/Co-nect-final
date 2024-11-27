@@ -12,8 +12,8 @@ public class ReplyForm {
 
     public ReplyEntity toEntity() {
         ReplyEntity entity = new ReplyEntity();
-        entity.setReply_pk_num(this.reply_pk_num);
-        entity.setReply_cont(this.reply_cont);
+        entity.setReplyPkNum(this.reply_pk_num);
+        entity.setReplyCont(this.reply_cont);
         return entity;
     }
 }

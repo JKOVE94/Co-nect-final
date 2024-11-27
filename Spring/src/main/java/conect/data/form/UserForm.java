@@ -22,16 +22,16 @@ public class UserForm {
 
     public UserEntity toEntity() {
         UserEntity entity = new UserEntity();
-        entity.setUser_pk_num(this.user_pk_num);
-        entity.setUser_regdate(this.user_regdate);
-        entity.setUser_pw(this.user_pw);
-        entity.setUser_name(this.user_name);
-        entity.setUser_mail(this.user_mail);
-        entity.setUser_pic(this.user_pic);
-        entity.setUser_rank(this.user_rank);
-        entity.setUser_lastlogin(this.user_lastlogin);
-        entity.setUser_trynum(this.user_trynum);
-        entity.setUser_locked(this.user_locked);
+        entity.setUserPkNum(this.user_pk_num);
+        entity.setUserRegDate(this.user_regdate);
+        entity.setUserPw(this.user_pw);
+        entity.setUserName(this.user_name);
+        entity.setUserMail(this.user_mail);
+        entity.setUserPic(this.user_pic);
+        entity.setUserRank(this.user_rank);
+        entity.setUserLastLogin(this.user_lastlogin);
+        entity.setUserTryNum(this.user_trynum);
+        entity.setUserLocked(this.user_locked);
         return entity;
     }
 }

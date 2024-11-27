@@ -14,7 +14,7 @@ public class FavoritesDto {
 
     public static FavoritesDto fromEntity(FavoritesEntity entity) {
         FavoritesDto dto = new FavoritesDto();
-        dto.setFavor_id(entity.getFavor_id());
+        dto.setFavor_id(entity.getFavorId());
         dto.setPost_entity(PostDto.fromEntity(entity.getPostEntity()));
         dto.setProject_entity(ProjectDto.fromEntity(entity.getProjectEntity()));
         dto.setUser_entity(UserDto.fromEntity(entity.getUserEntity()));
