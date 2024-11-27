@@ -8,16 +8,16 @@ import lombok.Setter;
 @Setter
 public class FavoritesDto {
     private int favor_id;
-    private PostDto post_entity;
-    private ProjectDto project_entity;
-    private UserDto user_entity;
+    private int favor_fk_user_num;
+    private int favor_fk_post_num;
+    private int favor_fk_proj_num;
 
     public static FavoritesDto fromEntity(FavoritesEntity entity) {
         FavoritesDto dto = new FavoritesDto();
         dto.setFavor_id(entity.getFavorId());
-        dto.setPost_entity(PostDto.fromEntity(entity.getPostEntity()));
-        dto.setProject_entity(ProjectDto.fromEntity(entity.getProjectEntity()));
-        dto.setUser_entity(UserDto.fromEntity(entity.getUserEntity()));
+        dto.setFavor_fk_user_num(entity.getUserEntity().getUserPkNum());
+        dto.setFavor_fk_post_num(entity.getPostEntity().getPostPkNum());
+        dto.setFavor_fk_proj_num(entity.getProjectEntity().getProjPkNum());
         return dto;
     }
 }

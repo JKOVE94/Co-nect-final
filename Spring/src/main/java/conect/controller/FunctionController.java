@@ -33,10 +33,10 @@ public class FunctionController {
     	Map<String, Object> map = new HashMap<String, Object>();
     	
     	List<ProjectDto> projList = projServiceImpl.getScheduleAll(usernum);
-    	//List<TodoDto> todoList = todoServiceImpl.getTodoAll(usernum);
+    	List<TodoDto> todoList = todoServiceImpl.getTodoAll(usernum);
     	
     	map.put("proj", projList);
-    	//map.put("todo", todoList);
+    	map.put("todo", todoList);
     	return map;
     }
 }

@@ -10,10 +10,10 @@ public class AccountForm {
     private int acc_pk_authornum;
     private String acc_author;
 
-    public AccountEntity toEntity() {
+    public static AccountEntity toEntity(AccountForm form) {
         AccountEntity entity = new AccountEntity();
-        entity.setAccPkAuthorNum(this.acc_pk_authornum);
-        entity.setAccAuthor(this.acc_author);
+        entity.setAccPkAuthornum(form.getAcc_pk_authornum());
+        entity.setAccAuthor(form.getAcc_author());
         return entity;
     }
 }

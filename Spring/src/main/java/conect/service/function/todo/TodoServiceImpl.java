@@ -15,10 +15,10 @@ public class TodoServiceImpl implements TodoService {
     private TodoRepository todoRepository;
     
     
-//    @Override
-//    public List<TodoDto> getTodoAll(int usernum) {
-//    	return todoRepository.findByUser_UserPkNum(usernum)
-//        			.stream().map(TodoDto::fromEntity).toList();
-//    }
+    @Override
+    public List<TodoDto> getTodoAll(int usernum) {
+    	return todoRepository.findByUser_UserPkNum(usernum)
+        			.stream().map(TodoDto::fromEntity).toList();
+    }
 
 }

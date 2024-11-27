@@ -1,18 +1,17 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Link } from "react-router";
 import "./App.css";
+import Function from "./components/function/Function";
 
 const App = () => {
   return (
     <BrowserRouter>
       <div className="App">
-        <Landing /> {/* 로그인페이지 컴포넌트 */}
-        <Dashboard /> {/* 메인페이지 컴포넌트 */}
-        <Mange /> {/* 관리자페이지 컴포넌트 */}
+        <Link to="/main">메인</Link>
+        <Link to="/function">업무 관리</Link>
       </div>
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/main" element={<Dashboard />} />
-        <Route path="/manage" element={<Manage />} />
+        <Route path="/main" element={<div></div>} />
+        <Route path="/function" element={<Function />} />
       </Routes>
     </BrowserRouter>
   );
