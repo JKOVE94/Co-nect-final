@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import Modal from 'react-modal';
 import TodoForm from './TodoForm';
+import { useSelector } from 'react-redux';
 
 const CalendarModal = ({ isOpen, onClose, content }) => {
     Modal.setAppElement("#root");
@@ -26,7 +27,7 @@ const CalendarModal = ({ isOpen, onClose, content }) => {
         
     }
     const navigate = useNavigate();
-
+    
     const handleDelete = (id) => {
         axios.delete('/function/schedule/'+id)
         .then(res => {

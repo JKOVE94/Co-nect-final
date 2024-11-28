@@ -6,7 +6,6 @@ const Function = () => {
         <div style={{width:700, height:700}}>
             <MyCalendar />
         </div>
-        
     </>
   );
 };

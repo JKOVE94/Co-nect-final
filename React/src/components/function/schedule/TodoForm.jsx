@@ -2,11 +2,10 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 const TodoForm = ({onClose}) => {
-
-    const [num, setNum] = useState(10); //현재 로그인한 사용자의 넘버
-
+    const num = useSelector((state)=> state.usernum);
     const [data, setData] = useState({todo_fk_user_num:num})
     const navigate = useNavigate();
     const handleChange = (e) => {

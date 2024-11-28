@@ -1,16 +1,38 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router";
 import "./App.css";
 import Function from "./components/function/Function";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux';
+import Session from 'react-session-api';
+import {SET_USER_DATA} from './reducer/UserReducer';
+import axios from 'axios';
 
 const App = () => {
 
+  const [data, setData] = useState({});
   const dispatch = useDispatch();
+  
+  useEffect(() => {
 
-  useEffect({
+    //로그인 성공 시 진행할 코드
+    Session.set('usernum',10);
+    Session.set('authornum','user');
+    //
+    
+    const fetchData = async () => {
+      
+      const userData = {
+        usernum: await Session.get('usernum'),
+        authornum: await Session.get('authornum'),
+      };
+      setData(userData);
+      dispatch(SET_USER_DATA(userData));
+    };
+  
+    fetchData();
+  }, [dispatch]);
+    
 
-  },[])
 
   return (
     <BrowserRouter>

@@ -7,6 +7,7 @@ import moment from 'moment';
 import TodoModal from './TodoModal';
 import {Tooltip} from 'react-tippy';
 import 'react-tippy/dist/tippy.css'; 
+import { useSelector } from "react-redux";
 
 const MyCalendar = () => {
   
@@ -14,8 +15,6 @@ const MyCalendar = () => {
   const [modalContent, setModalContent] = useState({});
 
   const [addIsOpen, setAddIsOpen] = useState(false);
-
-  const [num, setNum] = useState(10); //시큐리티에서 받아올 로그인한 유저 번호
   const [events, setEvents] = useState([{}]);
 
   const [tooltipContent, setTooltipContent] = useState(null); // 툴팁 내용 상태
@@ -34,7 +33,7 @@ const MyCalendar = () => {
     });
     setModalIsOpen(true);
   }
-
+  const num = useSelector((state) => state.usernum);
   const getEvent = () => {
     axios.get('/function/schedule/'+num)
     .then(res => {

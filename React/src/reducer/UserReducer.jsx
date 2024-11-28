@@ -10,12 +10,12 @@ const UserReducer = createSlice({
     },
 
     reducers:{ 
-        setUserData:(state, action) => {
-            state.usernum = action.payload.user_pk_num;
-            state.authornum = action.payload.user_fk_acc_authornum;
+        SET_USER_DATA:(state, action) => {
+            state.usernum = action.payload.usernum;
+            state.authornum = action.payload.authornum;
         }
     }
 });
 
-export const {setUserData} = UserReducer.actions;
+export const {SET_USER_DATA} = UserReducer.actions;
 export default UserReducer.reducer;
