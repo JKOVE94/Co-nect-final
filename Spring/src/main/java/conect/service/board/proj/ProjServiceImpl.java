@@ -8,7 +8,7 @@ import conect.data.repository.DepartmentRepository;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.UserRepository;
 
-import java.util.List;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,12 +26,21 @@ public class ProjServiceImpl implements ProjService {
     
     @Autowired
     private DepartmentRepository deptRepository;
-    
-    // 부서 번호를 기준으로 프로젝트 리스트 가져오기
-    public List<ProjectEntity> getProjByDept(int dpartPkNum) {
-        return projrepository.findByDepartmentEntity_dpartPkNum(dpartPkNum);
+    /*
+    // 모든 프로젝트 목록 반환
+    public List<ProjectDto> getAllProjects() {
+        List<ProjectEntity> projects = projrepository.findAll();
+        return projects.stream()
+                .map(ProjectDto::fromEntity)
+                .collect(Collectors.toList());
     }
     
+    
+    // 부서 번호를 기준으로 프로젝트 리스트 가져오기
+    public List<ProjectEntity> getProjByDept(int dpartFkDpartNum) {
+        return projrepository.findByDepartmentEntity_dpartFkDpartNum(dpartFkDpartNum);
+    }
+    */
     
     // 프로젝트 생성 메서드
     @Override
@@ -40,6 +49,7 @@ public class ProjServiceImpl implements ProjService {
         ProjectEntity entity = new ProjectEntity();
         entity.setProjName(projectDto.getProj_name());
         entity.setProjDesc(projectDto.getProj_desc());
+        entity.setProjCreated(new Date());
         entity.setProjStatus(projectDto.getProj_status());
         entity.setProjImport(projectDto.getProj_import());
         

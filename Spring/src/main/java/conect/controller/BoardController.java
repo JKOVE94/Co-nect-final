@@ -3,17 +3,17 @@ package conect.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import conect.data.dto.ProjectDto;
-import conect.data.entity.ProjectEntity;
 import conect.service.board.proj.ProjService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/board")
 public class BoardController {
@@ -26,20 +26,30 @@ public class BoardController {
 
     //프로젝트게시판 (/board/proj)
 	
-	// 부서 번호를 기준으로 프로젝트 리스트 조회
-    @GetMapping("/list/{dpartPkNum}")
-    public List<ProjectEntity> getProjByDept(@PathVariable int dpartPkNum) {
-        return projService.getProjByDept(dpartPkNum);
-    }
+	// 모든 프로젝트 목록 조회
+//    @GetMapping("/proj/list")
+//    public List<ProjectDto> getAllProjects() {
+//        return projService.getAllProjects();
+//    }
 	
-	// 프로젝트 생성 API
+	/*
+	// 상위부서 번호로 프로젝트 목록 조회
+    @GetMapping("/proj/list/{dpartFkDpartNum}")
+    public List<ProjectEntity> getDataAll(@PathVariable("dpartFkDpartNum") int dpartFkDpartNum) {
+        return projService.getProjByDept(dpartFkDpartNum);
+    }
+    */
+	
+	// 프로젝트 생성 
 	@PostMapping("/proj/create")
 	public String createProject(@RequestBody ProjectDto projectDto) {
 	    try {
 	        projService.createProject(projectDto);
 	        return "프로젝트가 생성 성공!"; 
 	    } catch (Exception e) {
+	    	e.printStackTrace(); // 로그로 에러 확인
 	        return "프로젝트 생성 실패: " + e.getMessage();
 	    }
 	}
+	
 }

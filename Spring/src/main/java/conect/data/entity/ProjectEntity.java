@@ -10,6 +10,10 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Setter
 @Getter
 @Entity
@@ -34,22 +38,28 @@ public class ProjectEntity {
 
     @ManyToOne
     @JoinColumn(name="proj_fk_dpart_num")
+    @JsonBackReference // 순환 참조 방지를 목적
     private DepartmentEntity departmentEntity;
 
     @ManyToOne
     @JoinColumn(name="proj_fk_user_num")
+    @JsonBackReference
     private UserEntity userEntity;
 
     @ManyToOne
     @JoinColumn(name="proj_fk_comp_num")
+    @JsonBackReference
     private CompanyEntity companyEntity;
 
     @OneToMany(mappedBy = "projectEntity")
+    @JsonManagedReference
     private List<TaskEntity> taskEntities;
 
     @OneToMany(mappedBy = "projectEntity")
+    @JsonManagedReference
     private List<ReplyEntity> replyEntities;
 
     @OneToMany(mappedBy = "projectEntity")
+    @JsonIgnore
     private List<FavoritesEntity> favoritesEntities;
 }

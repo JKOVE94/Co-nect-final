@@ -10,6 +10,9 @@ public interface ProjService {
 	// 프로젝트 생성 메서드
     void createProject(ProjectDto projectDto);
     
-    // 부서 번호를 기준으로 프로젝트 리스트 조회 메서드
-    List<ProjectEntity> getProjByDept(int dpartPkNum);
+	// 전체 목록 조회
+    //List<ProjectDto> getAllProjects();
+    
+    // 상위 부서 번호로 조회
+    //List<ProjectEntity> getProjByDept(int dpartPkNum);
 }
