@@ -12,4 +12,6 @@ public class BoardController {
     //자유게시판 (/board/free)
 
     //프로젝트게시판 (/board/proj)
+	
+	
 }
