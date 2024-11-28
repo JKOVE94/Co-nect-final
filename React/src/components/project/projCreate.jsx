@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-//import '../../assets/css/'
+import '../../assets/css/argon-dashboard-react.css'; 
+import { Input, Button, FormGroup, Label, Container, Row, Col, Card, CardBody } from "reactstrap";
+
 
 const ProjCreate = () => {
   console.log("ProjCreate 컴포넌트 렌더링됨");
@@ -46,92 +48,150 @@ const ProjCreate = () => {
   };
 
   return (
-    <div>
-      <h2>프로젝트 작성</h2> {/* 폼 제목 */}
+    <Card 
+    className="shadow rounded" 
+    style={{ borderRadius: '10px',
+             marginTop: '20px',
+            marginLeft: '15px',
+            marginRight: '15px',
+     }}>
+    <CardBody>
+      <h2 className="text-center mb-4">프로젝트 작성</h2>
       <form onSubmit={handleSubmit}>
-        {" "}
-        {/* 폼 제출 시 handleSubmit 함수 호출 */}
-        <div>
-          <label>프로젝트명</label>
-          <input
-            type="text"
-            name="proj_name"
-            value={formData.proj_name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>작성자</label>
-          <input
-            type="text"
-            name="proj_fk_user_num"
-            value={formData.proj_fk_user_num}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>담당부서</label>
-          <input
-            type="text"
-            name="proj_fk_dpart_num"
-            value={formData.proj_fk_dpart_num}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>담당자</label>
-          <input
-            type="text"
-            name="proj_members"
-            value={formData.proj_members}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>우선순위</label>
-          <select
-            name="proj_import"
-            value={formData.proj_import}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">선택하세요</option>
-            <option value="낮음">낮음</option>
-            <option value="보통">보통</option>
-            <option value="중요">중요</option>
-            <option value="긴급">긴급</option>
-          </select>
-        </div>
-        <div>
-          <label>상태</label>
-          <select
-            name="proj_status"
-            value={formData.proj_status}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">선택하세요</option>
-            <option value="예정">예정</option>
-            <option value="진행중">진행중</option>
-            <option value="완료">완료</option>
-          </select>
-        </div>
-        <div>
-          <label>내용</label>
-          <textarea
-            name="proj_desc"
-            value={formData.proj_desc}
-            onChange={handleInputChange}
-            required
-          ></textarea>
-        </div>
-        <button type="submit">저장</button> {/* 폼 제출 버튼 */}
+        {/* 프로젝트명 */}
+        <FormGroup row>
+          <Label for="proj_name" sm={2} style={{ fontSize: '14px', fontWeight: 'bold' }}>프로젝트명</Label>
+          <Col sm={10}>
+            <Input
+              type="text"
+              name="proj_name"
+              id="proj_name"
+              value={formData.proj_name}
+              onChange={handleInputChange}
+              required
+              placeholder="프로젝트명을 입력하세요"
+            />
+          </Col>
+        </FormGroup>
+
+        {/* 작성자 */}
+        <FormGroup row>
+          <Label for="proj_fk_user_num" sm={2} style={{ fontSize: '14px', fontWeight: 'bold' }}>작성자</Label>
+          <Col sm={10}>
+            <Input
+              type="text"
+              name="proj_fk_user_num"
+              id="proj_fk_user_num"
+              value={formData.proj_fk_user_num}
+              onChange={handleInputChange}
+              required
+              placeholder="작성자를 입력하세요"
+            />
+          </Col>
+        </FormGroup>
+
+        {/* 담당부서 */}
+        <FormGroup row>
+          <Label for="proj_fk_dpart_num" sm={2} style={{ fontSize: '14px', fontWeight: 'bold' }}>담당부서</Label>
+          <Col sm={10}>
+            <Input
+              type="text"
+              name="proj_fk_dpart_num"
+              id="proj_fk_dpart_num"
+              value={formData.proj_fk_dpart_num}
+              onChange={handleInputChange}
+              required
+              placeholder="담당부서를 입력하세요"
+            />
+          </Col>
+        </FormGroup>
+
+        {/* 담당자 */}
+        <FormGroup row>
+          <Label for="proj_members" sm={2} style={{ fontSize: '14px', fontWeight: 'bold' }}>담당자</Label>
+          <Col sm={10}>
+            <Input
+              type="text"
+              name="proj_members"
+              id="proj_members"
+              value={formData.proj_members}
+              onChange={handleInputChange}
+              required
+              placeholder="담당자를 입력하세요"
+            />
+          </Col>
+        </FormGroup>
+
+        {/* 우선순위 */}
+        <FormGroup row>
+          <Label for="proj_import" sm={2} style={{ fontSize: '14px', fontWeight: 'bold' }}>우선순위</Label>
+          <Col sm={10}>
+            <div className="custom-select-wrapper">
+              <Input
+                type="select"
+                name="proj_import"
+                id="proj_import"
+                value={formData.proj_import}
+                onChange={handleInputChange}
+                required
+                className="custom-select"
+              >
+                <option value="">선택하세요</option>
+                <option value="낮음">낮음</option>
+                <option value="보통">보통</option>
+                <option value="중요">중요</option>
+                <option value="긴급">긴급</option>
+              </Input>
+            </div>
+          </Col>
+        </FormGroup>
+
+        {/* 상태 */}
+        <FormGroup row>
+          <Label for="proj_status" sm={2} style={{ fontSize: '14px', fontWeight: 'bold' }}>상태</Label>
+          <Col sm={10}>
+            <Input
+              type="select"
+              name="proj_status"
+              id="proj_status"
+              value={formData.proj_status}
+              onChange={handleInputChange}
+              required
+              className="custom-select"
+            >
+              <option value="">선택하세요</option>
+              <option value="예정">예정</option>
+              <option value="진행중">진행중</option>
+              <option value="완료">완료</option>
+            </Input>
+          </Col>
+        </FormGroup>
+
+        {/* 내용 */}
+        <FormGroup row>
+          <Label for="proj_desc" sm={2} style={{ fontSize: '14px', fontWeight: 'bold' }}>내용</Label>
+          <Col sm={10}>
+            <Input
+              type="textarea"
+              name="proj_desc"
+              id="proj_desc"
+              value={formData.proj_desc}
+              onChange={handleInputChange}
+              required
+              placeholder="프로젝트 내용을 입력하세요"
+            />
+          </Col>
+        </FormGroup>
+
+        {/* 제출 버튼 */}
+        <FormGroup row>
+          <Col sm={{ size: 2, offset: 5 }} className="text-center">
+            <Button color="primary" type="submit" block>저장</Button>
+          </Col>
+        </FormGroup>
       </form>
-    </div>
+    </CardBody>
+  </Card>
   );
 };
 
