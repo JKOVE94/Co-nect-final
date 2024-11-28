@@ -7,5 +7,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> {
-	//List<ProjectEntity> findByDepartmentEntity_dpartFkDpartNum(int dpartFkDpartNum);
+	List<ProjectEntity> findByDepartmentEntity_dpartFkDpartNum(int dpartFkDpartNum);
+	
+	List<ProjectEntity> findByUserEntity_userPkNum(int userPkNum);
+	
+	List<ProjectEntity> findByCompanyEntity_compPkNum(int compPkNum);
 }

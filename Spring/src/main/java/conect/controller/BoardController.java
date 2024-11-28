@@ -13,7 +13,6 @@ import conect.data.dto.ProjectDto;
 import conect.service.board.proj.ProjService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/board")
 public class BoardController {

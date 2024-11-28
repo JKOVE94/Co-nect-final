@@ -1,0 +1,41 @@
+/* 전체 폼을 감싸는 컨테이너 */
+.form-container {
+    border-radius: 15px; /* 둥근 테두리 */
+    border: 1px solid #ddd; /* 테두리 색상 */
+    padding: 20px; /* 내부 여백 */
+    background-color: #f9f9f9; /* 배경색 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    width: 90%; /* 너비 설정 */
+    max-width: 600px; /* 최대 너비 */
+    margin: 0 auto; /* 중앙 정렬 */
+  }
+  
+  /* 각 입력 필드와 레이블 스타일 */
+  label {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 8px; /* 둥근 입력 필드 */
+    border: 1px solid #ddd;
+    box-sizing: border-box; /* 여백 포함 크기 계산 */
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white;
+    border: none;
+    border-radius: 8px; /* 둥근 버튼 */
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* 버튼 hover 색상 */
+  }
