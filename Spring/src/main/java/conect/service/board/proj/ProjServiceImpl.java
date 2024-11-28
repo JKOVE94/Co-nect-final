@@ -20,4 +20,8 @@ public class ProjServiceImpl implements ProjService {
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
 	
+	public List<ProjectDto> getProjIdList(int projPkNum){
+		return prepository.findById(projPkNum).stream().map(ProjectDto::fromEntity).toList();
+	}
+	
 }

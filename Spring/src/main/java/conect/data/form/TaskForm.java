@@ -28,9 +28,9 @@ public class TaskForm {
         entity.setTaskPkNum(this.task_pk_num);
         entity.setTaskTitle(this.task_title);
         entity.setTaskDesc(this.task_desc);
-        entity.setTaskStartDate(this.task_startdate);
+        entity.setTaskStartdate(this.task_startdate);
         entity.setTaskDeadline(this.task_deadline);
-        entity.setTaskEndDate(this.task_enddate);
+        entity.setTaskEnddate(this.task_enddate);
         entity.setTaskDuration(this.task_duration);
         entity.setTaskProgress(this.task_progress);
         entity.setTaskStatus(this.task_status);

@@ -24,9 +24,9 @@ public class PostForm {
         PostEntity entity = new PostEntity();
         entity.setPostPkNum(this.post_pk_num);
         entity.setPostKind(this.post_kind);
-        entity.setPostTargetNum(this.post_targetnum);
+        entity.setPostTargetnum(this.post_targetnum);
         entity.setPostName(this.post_name);
-        entity.setPostRegDate(this.post_regdate);
+        entity.setPostRegdate(this.post_regdate);
         entity.setPostImport(this.post_import);
         entity.setPostContent(this.post_content);
         entity.setPostTag(this.post_tag);

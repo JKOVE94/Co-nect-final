@@ -28,15 +28,15 @@ public class ProjectForm {
         entity.setProjPkNum(this.proj_pk_num);
         entity.setProjName(this.proj_name);
         entity.setProjDesc(this.proj_desc);
-        entity.setProjStartDate(this.proj_startdate);
-        entity.setProjEndDate(this.proj_enddate);
+        entity.setProjStartdate(this.proj_startdate);
+        entity.setProjEnddate(this.proj_enddate);
         entity.setProjStatus(this.proj_status);
         entity.setProjMembers(this.proj_members);
         entity.setProjCreated(this.proj_created);
         entity.setProjUpdated(this.proj_updated);
         entity.setProjImport(this.proj_import);
         entity.setProjTag(this.proj_tag);
-        entity.setProjTagCol(this.proj_tagcol);
+        entity.setProjTagcol(this.proj_tagcol);
         entity.setProjIcon(this.proj_icon);
         return entity;
     }

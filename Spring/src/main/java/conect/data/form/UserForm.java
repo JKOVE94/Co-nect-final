@@ -23,14 +23,14 @@ public class UserForm {
     public UserEntity toEntity() {
         UserEntity entity = new UserEntity();
         entity.setUserPkNum(this.user_pk_num);
-        entity.setUserRegDate(this.user_regdate);
+        entity.setUserRegdate(this.user_regdate);
         entity.setUserPw(this.user_pw);
         entity.setUserName(this.user_name);
         entity.setUserMail(this.user_mail);
         entity.setUserPic(this.user_pic);
         entity.setUserRank(this.user_rank);
-        entity.setUserLastLogin(this.user_lastlogin);
-        entity.setUserTryNum(this.user_trynum);
+        entity.setUserLastlogin(this.user_lastlogin);
+        entity.setUserTrynum(this.user_trynum);
         entity.setUserLocked(this.user_locked);
         return entity;
     }

@@ -32,9 +32,9 @@ public class TaskDto {
         dto.setTask_pk_num(entity.getTaskPkNum());
         dto.setTask_title(entity.getTaskTitle());
         dto.setTask_desc(entity.getTaskDesc());
-        dto.setTask_startdate(entity.getTaskStartDate());
+        dto.setTask_startdate(entity.getTaskStartdate());
         dto.setTask_deadline(entity.getTaskDeadline());
-        dto.setTask_enddate(entity.getTaskEndDate());
+        dto.setTask_enddate(entity.getTaskEnddate());
         dto.setTask_duration(entity.getTaskDuration());
         dto.setTask_progress(entity.getTaskProgress());
         dto.setTask_status(entity.getTaskStatus());

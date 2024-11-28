@@ -12,7 +12,7 @@ public class AccountForm {
 
     public AccountEntity toEntity() {
         AccountEntity entity = new AccountEntity();
-        entity.setAccPkAuthorNum(this.acc_pk_authornum);
+        entity.setAccPkAuthornum(this.acc_pk_authornum);
         entity.setAccAuthor(this.acc_author);
         return entity;
     }
