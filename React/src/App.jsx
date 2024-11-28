@@ -1,8 +1,17 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router";
 import "./App.css";
 import Function from "./components/function/Function";
+import { useEffect } from "react";
+import { useDispatch } from 'react-redux';
 
 const App = () => {
+
+  const dispatch = useDispatch();
+
+  useEffect({
+
+  },[])
+
   return (
     <BrowserRouter>
       <div className="App">

@@ -28,14 +28,7 @@ const CalendarModal = ({ isOpen, onClose, content }) => {
     const navigate = useNavigate();
 
     const handleDelete = (id) => {
-        axios.delete('/function/schedule/'+id)
-        .then(res => {
-            console.log(res.data);
-            if(res.data){
-                navigate(0);    //페이지 새로고침..?
-            }
-        })
-        .catch(err => console.log(err));
+        
     }
 
     return (
@@ -44,14 +37,7 @@ const CalendarModal = ({ isOpen, onClose, content }) => {
             isOpen={isOpen}
             onRequestClose={onClose}
             >
-            <input type='text' id="title" value={content.title} /><br/>
-            <textarea id="content" value={content.content} ></textarea><br/>
-            <input type='datetime-local' id="start" value={content.start}  /><br/>
-            <input type='datetime-local' id="end" value={content.end}  /><br/>
-
-            {content.groupId === '1' ? <button onClick={handleUpdate}>수정</button> : <></>}
-            {content.groupId === '1' ? <button onClick={()=>handleDelete(content.id)}>삭제</button> : <></>} 
-            <button onClick={onClose}>닫기</button>
+            <TodoForm onClose={onClose}></TodoForm>    
         </Modal>
     );
 }
