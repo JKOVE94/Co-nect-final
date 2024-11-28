@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProjCreate from "./components/project/projCreate.jsx";
+import ProjUpdate from "./components/project/projUpdate.jsx";
 // import './assets/css/argon-dashboard-react.css';
 // import './assets/css/argon-dashboard-react.css.map';
 // import './assets/css/argon-dashboard-react.min.css';
@@ -19,6 +20,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ProjCreate />} />
+        <Route path="/update" element={<ProjUpdate />} />
       </Routes>
     </BrowserRouter>
   );
