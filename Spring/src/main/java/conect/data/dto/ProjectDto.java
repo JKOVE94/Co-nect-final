@@ -22,13 +22,12 @@ public class ProjectDto {
     private String proj_tag; //임의로 부여하는 프로젝트 태그 [VARCHAR] => 검색용
     private String proj_tagcol; //프로젝트 태그 컬러 [VARCHAR]
     private String proj_icon; //프로젝트 아이콘 코드 [VARCHAR] => 부트스트랩 아이콘
-    private int proj_progress; //프로젝트 진행도
+    private Integer proj_progress; //프로젝트 진행도
     private int proj_fk_dpart_num; //프로젝트 부서 번호 [FK, INT]
     private int proj_fk_user_num; //프로젝트 담당자 사번 [FK, INT]
     private int proj_fk_comp_num; //프로젝트 회사 고유번호 [FK, INT]
 
-
-    public static ProjectDto fromEntity(ProjectEntity entity) {
+   public static ProjectDto fromEntity(ProjectEntity entity) {
         ProjectDto dto = new ProjectDto();
         dto.setProj_pk_num(entity.getProjPkNum());
         dto.setProj_name(entity.getProjName());
@@ -49,4 +48,6 @@ public class ProjectDto {
         dto.setProj_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
         return dto;
     }
+    
+    
 }

@@ -37,7 +37,9 @@ public class ProjectForm {
         entity.setProjEnddate(form.getProj_enddate());
         entity.setProjStatus(form.getProj_status());
         entity.setProjMembers(form.getProj_members());
-        entity.setProjCreated(form.getProj_created());
+        if(form.getProj_created()!=null) {
+        	entity.setProjCreated(form.getProj_created());        	
+        }
         entity.setProjUpdated(form.getProj_updated());
         entity.setProjImport(form.getProj_import());
         entity.setProjTag(form.getProj_tag());

@@ -3,16 +3,17 @@ package conect.service.board.proj;
 import java.util.List;
 
 import conect.data.dto.ProjectDto;
-import conect.data.entity.ProjectEntity;
+import conect.data.form.ProjectForm;
 
 public interface ProjService {
-
-	// 프로젝트 생성 메서드
-    void createProject(ProjectDto projectDto);
-    
-	// 전체 목록 조회
-    //List<ProjectDto> getAllProjects();
-    
-    // 상위 부서 번호로 조회
-    //List<ProjectEntity> getProjByDept(int dpartPkNum);
+	//로그인한 사용자가 참여하고 있는 프로젝트 반환 - Calendar
+	List<ProjectDto> getScheduleAll(int usernum);
+	
+	List<ProjectDto> getListAll();
+	
+	//프로젝트 생성
+	void addProject(ProjectForm form);
+	
+	//프로젝트 수정
+	void editProject(ProjectForm form);
 }

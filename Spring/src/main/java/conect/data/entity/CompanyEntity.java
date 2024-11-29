@@ -9,8 +9,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Setter
 @Getter
 @Entity
@@ -22,6 +20,5 @@ public class CompanyEntity {
     private String compPic; //회사 로고사진 경로 [VARCHAR] ( 0_asset/emp_pic)
 
     @OneToMany(mappedBy = "companyEntity")
-    @JsonIgnore
     private List<UserEntity> userEntities;
 }

@@ -11,8 +11,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Getter
 @Setter
 @Entity
@@ -26,14 +24,11 @@ public class DepartmentEntity {
     private int dpartFkDpartNum; //상위 부서 번호
 
     @OneToMany(mappedBy = "departmentEntity")
-    @JsonIgnore
     private List<UserEntity> userEntities;
 
     @OneToMany(mappedBy = "departmentEntity")
-    @JsonIgnore
     private List<PostEntity> freeEntities;
 
     @OneToMany(mappedBy = "departmentEntity")
-    @JsonIgnore
     private List<ProjectEntity> userEntityList;
 }
