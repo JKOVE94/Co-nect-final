@@ -15,4 +15,7 @@ public interface TodoService {
 	
 	//Todo 등록
 	boolean addTodoData(TodoForm bean);
+	
+	//Todo 수정
+	boolean editTodoData(TodoForm bean);
 }

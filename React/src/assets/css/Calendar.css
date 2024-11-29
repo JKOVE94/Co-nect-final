@@ -1,0 +1,39 @@
+:root{
+  --fc-event-bg-color: rgba(49, 138, 174, 0.5);
+  --fc-event-border-color: #ffffff;
+  --fc-event-text-color: #ffffff;
+
+  --fc-button-text-color: #fff;
+  --fc-button-bg-color: #1E74B1;
+  --fc-button-border-color: #fff;
+  --fc-button-hover-bg-color: #14527d;
+  --fc-button-hover-border-color: #fff;
+  --fc-button-active-bg-color: #1E74B1;
+  --fc-button-active-border-color: #ffffff;
+  --fc-list-event-dot-border-radius : 5px;
+}
+.eventStyle {
+    padding: 3px;
+}
+.textinfo {
+  width : 100%;
+  color : #abababc8;
+  text-align: left;
+}
+.fc a  {
+  text-decoration: none;
+  color : black;
+}
+.toast {
+  width : auto;
+}
+.closeBtn {
+  font-size:10px;
+  margin-left:5px; 
+}
+
+.accTitle{
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}

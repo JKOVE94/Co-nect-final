@@ -1,5 +1,6 @@
 package conect.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,11 +31,6 @@ public class FunctionController {
 	@Autowired
 	private TodoServiceImpl todoServiceImpl;
 	
-	@GetMapping("/test")
-	public Map<String, String> test(){
-		return Map.of("test","통과");
-	}
-	
     @GetMapping("/schedule/{usernum}")
     public Map<String, Object> getDataAll(@PathVariable("usernum")int usernum){
     	Map<String, Object> map = new HashMap<String, Object>();
@@ -49,7 +46,16 @@ public class FunctionController {
     @DeleteMapping("/schedule/{id}")
     public Map<String,Object> dropTodo(@PathVariable("id")int id){
     	if (todoServiceImpl.dropTodoData(id)) {
-    		return Map.of("isSuceess",true);
+    		return Map.of("isSuccess",true);
+    	}
+    	return Map.of("isSuccess",false);
+    }
+    
+    @PutMapping("/schedule/{id}")
+    public Map<String,Object> editTodo(@PathVariable("id")int id, @RequestBody TodoForm bean){
+    	bean.setTodo_pk_num(id);
+    	if (todoServiceImpl.editTodoData(bean)) {
+    		return Map.of("isSuccess",true);
     	}
     	return Map.of("isSuccess",false);
     }
@@ -58,7 +64,7 @@ public class FunctionController {
     public Map<String,Object> addTodo(@RequestBody TodoForm bean){
     	
     	if(todoServiceImpl.addTodoData(bean)) {
-    		return Map.of("isSuceess",true);
+    		return Map.of("isSuccess",true);
     	}
     	return Map.of("isSuccess",false);
     }
