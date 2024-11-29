@@ -20,10 +20,10 @@ import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
-import Navbar from "components/Navbars/Navbar.js";
-import Footer from "components/Footers/Footer.js";
-import MSidebar from "components/Sidebar/MSidebar.js";
-import Header from "components/Headers/Header.js";
+import Navbar from "components/2dashboard/Navbars/Navbar.js";
+import Footer from "components/2dashboard/Footers/Footer.js";
+import MSidebar from "components/2dashboard/Sidebar/MSidebar.js";
+import Header from "components/2dashboard/Headers/Header.js";
 import routes from "routes.js";
 
 const Dashboard = (props) => {

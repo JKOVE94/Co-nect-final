@@ -25,14 +25,16 @@ import "assets/scss/argon-dashboard-react.scss";
 
 import Dashboard from "layouts/Dashboard";
 import Manage from "layouts/Manage";
+import Login from "views/Login";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/1" element={<Manage />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/main" element={<Dashboard />} />
+      <Route path="/admin/manage" element={<Manage />} />
     </Routes>
   </BrowserRouter>
 );

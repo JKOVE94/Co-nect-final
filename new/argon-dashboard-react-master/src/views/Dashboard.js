@@ -40,7 +40,7 @@ import {
 
 // core components
 
-import Header from "components/Headers/Header.js";
+import Header from "components/2dashboard/Headers/Header.js";
 
 //이 컴포넌트는 메인 페이지를 세팅하는 컴포넌트입니다.
 //
@@ -52,7 +52,11 @@ const Index = (props) => {
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
-          <Col className="mb-5 mb-xl-0" xl="8"></Col>
+          <Col className="mb-5 mb-xl-0" xl="8">
+            <Card className="bg-gradient-default shadow">
+              <CardHeader className="bg-transparent">제목</CardHeader>
+            </Card>
+          </Col>
         </Row>
       </Container>
     </>

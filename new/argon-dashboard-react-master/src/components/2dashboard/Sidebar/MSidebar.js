@@ -20,6 +20,7 @@ import { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
+import Logo from "../../../assets/img/logo/Logo.jsx";
 
 // reactstrap components
 import {
@@ -51,7 +52,7 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import ManageNavbar from "components/Navbars/ManageNavbar";
+import ManageNavbar from "components/2dashboard/Navbars/ManageNavbar";
 
 var ps;
 
@@ -84,11 +85,7 @@ const Sidebar = (props) => {
         {/* Brand */}
 
         <NavbarBrand className="pt-0"></NavbarBrand>
-        <img
-          alt="CO-NECT"
-          className="navbar-brand-img"
-          src="../../assets/img/logo/co-nect.svg"
-        />
+        <Logo />
 
         {/* User */}
         <Nav className="align-items-center d-md-none">
@@ -113,7 +110,7 @@ const Sidebar = (props) => {
                 <span className="avatar avatar-sm rounded-circle">
                   <img
                     alt="..."
-                    src={require("../../assets/img/theme/team-1-800x800.jpg")}
+                    src={require("../../../assets/img/theme/team-1-800x800.jpg")}
                   />
                 </span>
               </Media>

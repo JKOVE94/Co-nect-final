@@ -67,7 +67,7 @@ const UserNavbar = (props) => {
                   <span className="avatar avatar-sm rounded-circle">
                     <img
                       alt="..."
-                      src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                      src={require("assets/img/theme/team-4-800x800.jpg")}
                     />
                   </span>
                   {/* 사용자 이름 */}
@@ -86,7 +86,7 @@ const UserNavbar = (props) => {
                   <i className="ni ni-single-02" />
                   <span>계정 정보</span>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
+                <DropdownItem to="/admin/manage" tag={Link}>
                   <i className="ni ni-settings-gear-65" />
                   <span>설정</span>
                 </DropdownItem>

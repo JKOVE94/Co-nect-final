@@ -36,7 +36,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 // core components
-import Header from "components/Headers/Header.js";
+import Header from "components/2dashboard/Headers/Header.js";
 
 const Tables = () => {
   return (
@@ -155,7 +155,7 @@ const Tables = () => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
                           />
                         </a>
                         <UncontrolledTooltip
@@ -305,7 +305,7 @@ const Tables = () => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
                           />
                         </a>
                         <UncontrolledTooltip
@@ -453,7 +453,7 @@ const Tables = () => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
                           />
                         </a>
                         <UncontrolledTooltip
@@ -603,7 +603,7 @@ const Tables = () => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
                           />
                         </a>
                         <UncontrolledTooltip
@@ -753,7 +753,7 @@ const Tables = () => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
                           />
                         </a>
                         <UncontrolledTooltip
@@ -982,7 +982,7 @@ const Tables = () => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
                           />
                         </a>
                         <UncontrolledTooltip
@@ -1277,7 +1277,7 @@ const Tables = () => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
                           />
                         </a>
                         <UncontrolledTooltip
@@ -1427,7 +1427,7 @@ const Tables = () => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
                           />
                         </a>
                         <UncontrolledTooltip
@@ -1449,190 +1449,6 @@ const Tables = () => {
                           />
                         </div>
                       </div>
-                    </td>
-                    <td className="text-right">
-                      <UncontrolledDropdown>
-                        <DropdownToggle
-                          className="btn-icon-only text-light"
-                          href="#pablo"
-                          role="button"
-                          size="sm"
-                          color=""
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <i className="fas fa-ellipsis-v" />
-                        </DropdownToggle>
-                        <DropdownMenu className="dropdown-menu-arrow" right>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Action
-                          </DropdownItem>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Another action
-                          </DropdownItem>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Something else here
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      <Media className="align-items-center">
-                        <a
-                          className="avatar rounded-circle mr-3"
-                          href="#pablo"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            src={require("../../assets/img/theme/vue.jpg")}
-                          />
-                        </a>
-                        <Media>
-                          <span className="mb-0 text-sm">
-                            Vue Paper UI Kit PRO
-                          </span>
-                        </Media>
-                      </Media>
-                    </th>
-                    <td>$2,200 USD</td>
-                    <td>
-                      <Badge color="" className="badge-dot mr-4">
-                        <i className="bg-success" />
-                        completed
-                      </Badge>
-                    </td>
-                    <td>
-                      <div className="avatar-group">
-                        <a
-                          className="avatar avatar-sm"
-                          href="#pablo"
-                          id="tooltip781594051"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={require("../../assets/img/theme/team-1-800x800.jpg")}
-                          />
-                        </a>
-                        <UncontrolledTooltip
-                          delay={0}
-                          target="tooltip781594051"
-                        >
-                          Ryan Tompson
-                        </UncontrolledTooltip>
-                        <a
-                          className="avatar avatar-sm"
-                          href="#pablo"
-                          id="tooltip840372212"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={require("../../assets/img/theme/team-2-800x800.jpg")}
-                          />
-                        </a>
-                        <UncontrolledTooltip
-                          delay={0}
-                          target="tooltip840372212"
-                        >
-                          Romina Hadid
-                        </UncontrolledTooltip>
-                        <a
-                          className="avatar avatar-sm"
-                          href="#pablo"
-                          id="tooltip497647175"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={require("../../assets/img/theme/team-3-800x800.jpg")}
-                          />
-                        </a>
-                        <UncontrolledTooltip
-                          delay={0}
-                          target="tooltip497647175"
-                        >
-                          Alexander Smith
-                        </UncontrolledTooltip>
-                        <a
-                          className="avatar avatar-sm"
-                          href="#pablo"
-                          id="tooltip951447946"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={require("../../assets/img/theme/team-4-800x800.jpg")}
-                          />
-                        </a>
-                        <UncontrolledTooltip
-                          delay={0}
-                          target="tooltip951447946"
-                        >
-                          Jessica Doe
-                        </UncontrolledTooltip>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <span className="mr-2">100%</span>
-                        <div>
-                          <Progress
-                            max="100"
-                            value="100"
-                            barClassName="bg-danger"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="text-right">
-                      <UncontrolledDropdown>
-                        <DropdownToggle
-                          className="btn-icon-only text-light"
-                          href="#pablo"
-                          role="button"
-                          size="sm"
-                          color=""
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <i className="fas fa-ellipsis-v" />
-                        </DropdownToggle>
-                        <DropdownMenu className="dropdown-menu-arrow" right>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Action
-                          </DropdownItem>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Another action
-                          </DropdownItem>
-                          <DropdownItem
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Something else here
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
                     </td>
                   </tr>
                 </tbody>
