@@ -2,6 +2,7 @@ package conect.service.board.proj;
 
 import conect.data.dto.ProjectDto;
 import conect.data.repository.ProjectRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 
@@ -22,6 +23,12 @@ public class ProjServiceImpl implements ProjService {
 	
 	public List<ProjectDto> getListAll(){
 		return prepository.findAll().stream().map(ProjectDto::fromEntity).toList();
+	}
+	
+	public ProjectDto getProjById(int projPkNum) {
+	    return prepository.findById(projPkNum)
+	        .map(ProjectDto::fromEntity)
+	        .orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
 	}
 	
 }

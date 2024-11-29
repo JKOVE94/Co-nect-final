@@ -9,4 +9,6 @@ public interface ProjService {
 	List<ProjectDto> getScheduleAll(int usernum);
 	
 	List<ProjectDto> getListAll();
+	
+	ProjectDto getProjById(int projPkNum);
 }
