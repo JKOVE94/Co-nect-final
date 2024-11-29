@@ -26,7 +26,7 @@ public class ProjServiceImpl implements ProjService {
 	}
 	
 	public ProjectDto getProjById(int projPkNum) {
-	    return prepository.findById(projPkNum)
+	    return prepository.findByIdWithUser(projPkNum)
 	        .map(ProjectDto::fromEntity)
 	        .orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
 	}
