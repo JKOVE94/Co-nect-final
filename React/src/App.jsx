@@ -1,20 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import "./App.css";
+import Landing from "./components/common/Landing";
+import Dashboard from "./components/common/Dashboard";
+import Manage from "./components/management/Manage";
+import Header from "./components/headers/Header";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Landing /> {/* 로그인페이지 컴포넌트 */}
-        <Dashboard /> {/* 메인페이지 컴포넌트 */}
-        <Mange /> {/* 관리자페이지 컴포넌트 */}
-      </div>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/main" element={<Dashboard />} />
-        <Route path="/manage" element={<Manage />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="App">
+      <Dashboard /> {/* 로그인페이지 컴포넌트 */}
+    </div>
   );
 };
 
