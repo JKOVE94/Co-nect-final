@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 	
 	
 	
-	
+	/*
 	
 	
 	//회사 코드 확인
@@ -65,7 +65,7 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 	@Query("UPDATE user SET user_locked = 1 WHERE user_fk_comp_num = ?1 AND user_pk_num = ?2")
 	UserEntity lockUserAccount(@Param("user_fk_comp_num")int compPkNum, @Param("user_pk_num")int userPkNum);
 	
-	
+	*/
 	
 	
 }

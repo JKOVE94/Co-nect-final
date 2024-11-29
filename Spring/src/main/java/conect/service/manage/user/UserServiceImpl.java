@@ -13,13 +13,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    
+    /*
     public Boolean login(int compNum, Model model) {
     	userRepository.existsById(null)
     	
     	
     	return true;
     }
+    */
     
     
 
