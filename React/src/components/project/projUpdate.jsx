@@ -33,12 +33,12 @@ const ProjCreate = () => {
     // API 호출
     try {
       // "" 실제 서버의 URL
-      const response = await axios.post("", formData);
+      const response = await axios.post("/board/projedit", formData);
       
       console.log("프로젝트 생성 성공:", response.data);
 
-      // 프로젝트 목록 페이지로 이동
-      // navigate('/projects');
+      // 프로젝트 상세 페이지로 이동
+      navigate('/board/projread');
 
     } catch (error) {
       console.error("프로젝트 생성 실패:", error);
@@ -47,7 +47,7 @@ const ProjCreate = () => {
 
   // 취소 버튼 클릭 시 목록으로 이동
   const handleCancel = () => {
-    navigate("/board/proj/list");  // 목록 페이지로 이동
+    navigate("/board/projlist");  // 목록 페이지로 이동
   };
 
   return (

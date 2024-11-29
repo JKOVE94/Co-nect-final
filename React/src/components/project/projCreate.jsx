@@ -6,7 +6,7 @@ import { Input, Button, FormGroup, Label, Container, Row, Col, Card, CardBody } 
 
 
 const ProjCreate = () => {
-  console.log("ProjCreate 컴포넌트 렌더링됨");
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     proj_name: "",
@@ -35,16 +35,21 @@ const ProjCreate = () => {
     // API 호출
     try {
       // "" 실제 서버의 URL
-      const response = await axios.post("", formData);
+      const response = await axios.post("/board/projadd", formData);
       
       console.log("프로젝트 생성 성공:", response.data);
 
-      // 프로젝트 목록 페이지로 이동
-      // navigate('/projects');
+      // 프로젝트 상세 페이지로 이동
+      navigate('/board/projread');
 
     } catch (error) {
       console.error("프로젝트 생성 실패:", error);
     }
+  };
+
+  // 목록 버튼 클릭 시 목록으로 이동
+  const handleList = () => {
+    navigate("/board/projlist");  // 목록 페이지로 이동
   };
 
   return (
@@ -187,6 +192,9 @@ const ProjCreate = () => {
         <FormGroup row>
           <Col sm={{ size: 2, offset: 5 }} className="text-center">
             <Button color="primary" type="submit" block>저장</Button>
+          </Col>
+          <Col sm={{ size: 2 }} className="text-center">
+            <Button color="primary" type="button" onClick={handleList} block>목록</Button>
           </Col>
         </FormGroup>
       </form>

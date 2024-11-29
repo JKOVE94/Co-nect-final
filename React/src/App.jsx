@@ -2,33 +2,20 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProjCreate from "./components/project/projCreate.jsx";
 import ProjUpdate from "./components/project/projUpdate.jsx";
 
-// import './assets/css/argon-dashboard-react.css';
-// import './assets/css/argon-dashboard-react.css.map';
-// import './assets/css/argon-dashboard-react.min.css';
-
-// //import './assets/css/plugins/css/nucleo-svg.css'; 
-// //import './assets/css/plugins/css/nucleo.css';
-
-// import './assets/scss/argon-dashboard/custom/_alert.scss';
-// import './assets/scss/argon-dashboard/custom/_avatar.scss';
-// import './assets/scss/argon-dashboard/custom/_variables.scss';
-// import './assets/scss/argon-dashboard/custom/_mixins.scss';
-// //import 
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ProjCreate />} />
-        <Route path="/update" element={<ProjUpdate />} />
+        <Route path="/board/projadd" element={<ProjCreate />} />
+        <Route path="/board/projedit" element={<ProjUpdate />} />
       </Routes>
     </BrowserRouter>
   );
 };
 
 export default App;
-
 
 /*
     <BrowserRouter>
