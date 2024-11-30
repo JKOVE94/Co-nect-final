@@ -4,8 +4,6 @@ import conect.data.entity.AccountEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 public class AccountDto {

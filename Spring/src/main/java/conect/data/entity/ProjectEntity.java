@@ -1,14 +1,14 @@
 package conect.data.entity;
 
-import conect.data.entity.ReplyEntity;
-import conect.data.entity.TaskEntity;
-import conect.data.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Setter
 @Getter
@@ -34,22 +34,28 @@ public class ProjectEntity {
 
     @ManyToOne
     @JoinColumn(name="proj_fk_dpart_num")
+    @JsonIgnore
     private DepartmentEntity departmentEntity;
 
     @ManyToOne
     @JoinColumn(name="proj_fk_user_num")
+    @JsonIgnore
     private UserEntity userEntity;
 
     @ManyToOne
     @JoinColumn(name="proj_fk_comp_num")
+    @JsonIgnore
     private CompanyEntity companyEntity;
 
     @OneToMany(mappedBy = "projectEntity")
+    @JsonBackReference
     private List<TaskEntity> taskEntities;
 
     @OneToMany(mappedBy = "projectEntity")
+    @JsonBackReference
     private List<ReplyEntity> replyEntities;
 
     @OneToMany(mappedBy = "projectEntity")
+    @JsonBackReference
     private List<FavoritesEntity> favoritesEntities;
 }
