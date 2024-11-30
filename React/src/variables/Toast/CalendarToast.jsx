@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { CloseButton, ToastContainer } from "react-bootstrap";
+import { Button, ToastContainer } from "react-bootstrap";
+import CloseButton from 'react-bootstrap/CloseButton';
 import Toast from "react-bootstrap/Toast";
 import "../../assets/css/calendar.css";
 
@@ -25,7 +26,9 @@ const CalendarToast = ({ toastType, isOpen, onClose }) => {
       >
         <Toast.Body>
           ℹ️ {text}
-          <CloseButton className="closeBtn" onClick={onClose} />
+          <Button className="custom-close-btn" size="xs" variant="link" onClick={onClose}>
+            &times;
+          </Button>
         </Toast.Body>
       </Toast>
     </ToastContainer>

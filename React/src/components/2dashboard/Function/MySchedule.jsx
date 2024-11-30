@@ -1,7 +1,14 @@
 import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { Accordion, Carousel, Image } from "react-bootstrap";
+import {
+  Accordion,
+  Card,
+  Carousel,
+  Container,
+  Image,
+  Row,
+} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "../../../assets/css/calendar.css";
 
@@ -32,11 +39,11 @@ const MySchedule = ({ events }) => {
   }, [events]);
 
   return (
-    <div>
-      <p className="accTitle">오늘의 일정</p>
-      <>
+    <>
+      <Card.Title className="accTitle">오늘의 일정</Card.Title>
+      <Card.Body>
         {todoList.length === 0 ? (
-          <>일정이 없습니다.</>
+          <Card.Subtitle>오늘의 일정이 없습니다.</Card.Subtitle>
         ) : (
           <Carousel
             slide={false}
@@ -49,20 +56,18 @@ const MySchedule = ({ events }) => {
             interval={null}
           >
             {todoList.map((todo, index) => (
-              <Carousel.Item key={index}>
-                <div style={{ textAlign: "center" }}>
-                  <h4>{todo.title}</h4>
-                  <p>
-                    {todo.start} ~ {todo.end}
-                  </p>
-                  <div className="accItem">{todo.content}</div>
-                </div>
+              <Carousel.Item key={index} style={{ textAlign: "center" }}>
+                <Card.Title>{todo.title}</Card.Title>
+                <Card.Subtitle>
+                  {todo.start} ~ {todo.end}
+                </Card.Subtitle>
+                <Card.Text className="accItem">{todo.content}</Card.Text>
               </Carousel.Item>
             ))}
           </Carousel>
         )}
-      </>
-    </div>
+      </Card.Body>
+    </>
   );
 };
 export default MySchedule;

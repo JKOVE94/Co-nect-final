@@ -13,7 +13,7 @@ const CommonNavbar = () => {
                 <NavLink to="/" tag={NavLinkRRD}>프로젝트</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/" tag={NavLinkRRD}>자유게시판</NavLink>
+                <NavLink to="/main/freefavorite" tag={NavLinkRRD}>자유게시판</NavLink>
               </NavItem>
             </SubMenu>
             <SubMenu label="프로젝트" icon={<i className="fa fa-briefcase text-info text-sm opacity-10" />}>
@@ -23,7 +23,7 @@ const CommonNavbar = () => {
             </SubMenu>
             <SubMenu label="게시판" icon={<i className="fa fa-window-maximize text-success text-sm opacity-10" />}>
               <NavItem>
-                <NavLink to="" tag={NavLinkRRD}>자유게시판</NavLink>
+                <NavLink to="/main/freelist" tag={NavLinkRRD}>자유게시판</NavLink>
               </NavItem>
             </SubMenu>
             <SubMenu label="업무관리" icon={<i className="ni ni-calendar-grid-58 text-warning text-sm opacity-10" />}>

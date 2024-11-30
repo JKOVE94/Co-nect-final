@@ -12,7 +12,7 @@ const CalEventShowModal = ({
   getEvent,
   handleToast,
 }) => {
-  const num = useSelector((state) => state.usernum);
+  const num = useSelector((state) => state.userData.user_pk_num);
   const [data, setData] = useState({});
   const [read, setRead] = useState(false); //수정 가능 여부
 
@@ -73,6 +73,7 @@ const CalEventShowModal = ({
               type="color"
               id="todo_tagcol"
               onChange={handleChange}
+              disabled={read}
             />
           </Col>
           <Button
@@ -101,7 +102,7 @@ const CalEventShowModal = ({
             id="todo_title"
             value={data.todo_title}
             onChange={handleChange}
-            readOnly={read}
+            disabled={read}
           />
         </Form.Group>
         <Form.Group className="mb-2">
@@ -112,7 +113,7 @@ const CalEventShowModal = ({
             id="todo_content"
             value={data.todo_content}
             onChange={handleChange}
-            readOnly={read}
+            disabled={read}
           />
         </Form.Group>
         <Form.Group className="mb-2">
@@ -122,7 +123,7 @@ const CalEventShowModal = ({
             id="todo_start"
             value={data.todo_start}
             onChange={handleChange}
-            readOnly={read}
+            disabled={read}
           />
         </Form.Group>
         <Form.Group className="mb-2">
@@ -132,7 +133,7 @@ const CalEventShowModal = ({
             value={data.todo_end}
             id="todo_end"
             onChange={handleChange}
-            readOnly={read}
+            disabled={read}
           />
         </Form.Group>
       </Modal.Body>

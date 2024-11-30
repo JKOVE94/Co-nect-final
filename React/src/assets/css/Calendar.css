@@ -50,15 +50,23 @@
   color:black;
 }
 
-/* 기본 화살표 버튼 스타일을 검정색으로 변경 */
 .carousel-control-prev,
 .carousel-control-next {
-  color: black; /* 기본 화살표 색상 검정으로 설정 */
-  font-size: 30px; /* 크기 조정 */
+  color: black;
+  font-size: 30px; 
 }
 
-/* 화살표 색상, 배경색 등 추가 스타일을 변경할 수 있습니다 */
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
-  color: darkgray; /* hover 상태에서의 색상 변경 */
+  color: darkgray;
+}
+
+.custom-close-btn:focus,
+.custom-close-btn:active {
+  outline: none;  
+  box-shadow: none; 
+}
+.custom-close-btn:hover {
+  outline: none;  
+  text-decoration-line: none;
 }
