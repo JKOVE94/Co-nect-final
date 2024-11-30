@@ -15,7 +15,7 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	private PostRepository frepository;
-
+	
 	// 삽입
 	@Override
 	public PostEntity insertPost(PostForm postForm) {
@@ -72,4 +72,5 @@ public class PostServiceImpl implements PostService {
 	public void deletePost(int postPkNum) {
 		frepository.deleteById(postPkNum);
 	}
+
 }

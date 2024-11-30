@@ -19,5 +19,5 @@ public class ProjServiceImpl implements ProjService {
 		return prepository.findByProjMembersContaining(pattern)
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
-	
+
 }

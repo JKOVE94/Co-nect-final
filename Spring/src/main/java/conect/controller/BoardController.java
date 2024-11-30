@@ -1,9 +1,14 @@
 package conect.controller;
 
+import conect.data.dto.FavoritesDto;
 import conect.data.dto.PostDto;
+import conect.data.dto.ProjectDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
+import conect.service.board.favor.FavorService;
 import conect.service.board.post.PostService;
+import conect.service.board.proj.ProjService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +18,51 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
 @RequestMapping("/board")
 public class BoardController {
 
 	@Autowired
 	private PostService postService;
-
+	@Autowired
+	private ProjService projService;
+	@Autowired
+	private FavorService favorService;
+	
+	//즐겨찾기
+	//즐겨찾기-자유게시글
+	@GetMapping("/favorite/post/{usernum}")
+	public List<PostDto> getAllFavoritePost(@PathVariable("usernum")int usernum){
+		return favorService.getFavoritePost(usernum);
+	}
+	//즐겨찾기-프로젝트
+	@GetMapping("/favorite/proj/{usernum}")
+	public List<ProjectDto> getAllFavoriteProj(@PathVariable("usernum")int usernum){
+		return favorService.getFavoriteProj(usernum);
+	}
+	//즐겨찾기 등록
+	@PostMapping("/favorite/{type}")
+	public Map<String, Object> addFavorite(@RequestBody FavoritesDto dto, @PathVariable("type")String type){
+		if(favorService.addFavoriteData(dto, type)) {
+			return Map.of("isSuccess",true);
+		} else {
+			return Map.of("isSuccess",false);
+		}
+	}
+	
+	//즐겨찾기 삭제
+	@DeleteMapping("/favorite/{num}")
+	public Map<String, Object> dropFavorite(@PathVariable("num")int num){
+		if(favorService.dropFavoriteData(num)) {
+			return Map.of("isSuccess",true);
+		} else {
+			return Map.of("isSuccess",false);
+		}
+	}
+	
+	
+	// 자유게시글
 	// 게시글 생성
 	@PostMapping("/free")
 	public Map<String, Object> createPost(@RequestBody PostForm postForm) {
