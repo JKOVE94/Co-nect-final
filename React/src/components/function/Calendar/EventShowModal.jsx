@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../../assets/css/Calendar.css";
 
@@ -13,10 +13,11 @@ const CalendarModal = ({ isOpen, onClose, info, getEvent, handleToast }) => {
   useEffect(() => {
     setData({
       todo_fk_user_num: num,
-      todo_title: info.title,
-      todo_content: info.content,
-      todo_start: info.start,
-      todo_end: info.end,
+      todo_title: info.title || "",
+      todo_content: info.content || "",
+      todo_start: info.start || "",
+      todo_end: info.end || "",
+      todo_tagcol : info.tagcol || "#000000"
     });
     if (info.groupId === "0") {
       setRead(true);
@@ -56,9 +57,23 @@ const CalendarModal = ({ isOpen, onClose, info, getEvent, handleToast }) => {
   };
 
   return (
-    <Modal show={isOpen} onHide={onClose}>
+    <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>일정 수정</Modal.Title>
+      <Modal.Title>
+          <Row className="align-items-center">
+            <Col md="auto" className="text-center">
+              일정 수정
+            </Col>
+            <Col>
+              <Form.Control
+                value={data.todo_tagcol}
+                type="color"
+                id="todo_tagcol"
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form.Group className="mb-2">

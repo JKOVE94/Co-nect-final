@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux';
 import Session from 'react-session-api';
 import {SET_USER_DATA} from './reducer/UserReducer';
-import Error from "./components/function/Error";
+import ErrorPage from "./components/function/ErrorPage";
 
 const App = () => {
 
@@ -37,7 +37,7 @@ const App = () => {
       </div>
       <Routes>
         <Route path="/main" element={<div></div>} />
-        <Route path="/error" element={<Error />} />
+        <Route path="/error" element={<ErrorPage />} />
         <Route path="/function" element={<Function />} />
       </Routes>
     </BrowserRouter>

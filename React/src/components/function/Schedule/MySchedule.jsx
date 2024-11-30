@@ -1,58 +1,51 @@
 import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import "../../../assets/css/Calendar.css"
+import "../../../assets/css/Calendar.css";
 
-const MySchedule = () => {
+const MySchedule = ({ events }) => {
   const num = useSelector((state) => state.usernum);
   const [todoList, setTodoList] = useState([]);
   const [today] = useState(new Date());
 
   useEffect(() => {
-    const day = moment(today).format("YYYY-MM-DD");
-    axios
-      .get("/function/schedule/" + num)
-      .then((res) => {
-        let dbList = [];
-        res.data.todo.forEach((data) => {
-          const sday = moment(data.todo_start).format("YYYY-MM-DD");
-          const eday = moment(data.todo_end).format("YYYY-MM-DD");
-          if (sday <= day && day <= eday) {
-            dbList.push({ title: data.todo_title, 
-                content: data.todo_content,
-                start : moment(data.todo_start).format('hh:mm'),
-                end : moment(data.todo_end).format('hh:mm')     });
-          }
+    const day = moment(today).startOf('day');
+    let dbList = [];
+    events.forEach((event) => {
+      const sday = moment(event.start).startOf('day');
+      const eday = moment(event.end).endOf('day');
+      if (sday <= day && day <= eday) {
+        dbList.push({
+          title: event.title,
+          content: event.content,
+          start: moment(event.start).format("hh:mm A"),
+          end: eday > moment(today).endOf('day') ? moment().format("12:00 A") : moment(event.end).format("hh:mm A"),
         });
-        res.data.proj.forEach((data) => {
-          const sday = moment(data.proj_startdate).format("YYYY-MM-DD");
-          const eday = moment(data.proj_enddate).format("YYYY-MM-DD");
-          if (sday <= day && day <= eday) {
-            dbList.push({ title: data.proj_name, content: data.proj_desc,
-                start : moment(data.proj_startdate).format('hh:mm:ss'),
-                end : moment(data.proj_enddate).format('hh:mm:ss')     });
-          }
-        });
-        setTodoList(dbList);
-      })
-      .catch();
-  }, [num, today]);
+      }
+    });
+    setTodoList(dbList);
+  }, [events]);
 
   return (
     <div>
       <p className="accTitle">오늘의 일정</p>
       <div>
-        {!todoList[0] && <>일정이 없습니다.</>}
-        <Accordion>
-          {todoList.map((todo, index) => (
-            <Accordion.Item eventKey={index}>
-              <Accordion.Header>{todo.start} ~ {todo.end}&nbsp;<b>{todo.title}</b></Accordion.Header>
-              <Accordion.Body>{todo.content}</Accordion.Body>
-            </Accordion.Item>
-          ))}
-        </Accordion>
+        {todoList.length === 0 ? (
+          <>일정이 없습니다.</>
+        ) : (
+          <Accordion>
+            {todoList.map((todo, index) => (
+              <Accordion.Item eventKey={index} key={index} className="accItem">
+                <Accordion.Header>
+                <div className="accHead">{todo.start} ~ {todo.end}<br/><b>{todo.title}</b></div>
+                </Accordion.Header>
+                <Accordion.Body>{todo.content}</Accordion.Body>
+              </Accordion.Item>
+            ))}
+          </Accordion>
+        )}
       </div>
     </div>
   );

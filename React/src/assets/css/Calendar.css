@@ -37,3 +37,13 @@
   font-size: 20px;
   font-weight: bold;
 }
+.accItem {
+  white-space: pre-wrap;
+}
+.accHead{
+  line-height: 1.5;
+  color : #616161da;
+}
+.accHead b{
+  color : black;
+}

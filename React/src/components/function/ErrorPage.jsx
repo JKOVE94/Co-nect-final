@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router";
 
-export default Error = () => {
+const ErrorPage = () => {
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -13,3 +13,4 @@ export default Error = () => {
         </div>
     );
 }
+export default ErrorPage;

@@ -62,7 +62,6 @@ public class FunctionController {
     
     @PostMapping("/schedule")
     public Map<String,Object> addTodo(@RequestBody TodoForm bean){
-    	
     	if(todoServiceImpl.addTodoData(bean)) {
     		return Map.of("isSuccess",true);
     	}

@@ -15,103 +15,66 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import EventToast from "./EventToast";
 
-const MyCalendar = () => {
-  const [type, setType] = useState();
+const MyCalendar = ({events, handleGetEvent}) => {
+  const [toastType, setToastType] = useState("");
   const [toastIsOpen, setToastIsOpen] = useState(false);
   const [showModalIsOpen, setShowModalIsOpen] = useState(false); //modal 표시 여부
   const [modalContent, setModalContent] = useState({}); //modal 내용
   const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트 추가 modal 표시 여부
-  const [events, setEvents] = useState([{}]); //캘린더에 표시될 이벤트
+
 
   const num = useSelector((state) => state.usernum); //로그인한 유저의 사번
   const navigate = useNavigate();
-
-  useEffect(() => {
-    handleGetEvent();
-  }, [num]);
-
   const setTime = (time) => {
     //시간 설정
     time = moment.utc(time).format("YYYY-MM-DDTHH:mm");
     return time;
   };
-    const handleToast = (text, open) => {
-        setType(text);
-        setToastIsOpen(open);
-    }
-  const handleGetEvent = async () => {
-    //캘린더에 표시될 이벤트 불러오기
-    axios
-      .get("/function/schedule/" + num)
-      .then((res) => {
-        let projEvent = res.data.proj.map((data) => ({
-          id: data.proj_pk_num,
-          title: data.proj_name,
-          start: data.proj_startdate,
-          end: data.proj_enddate,
-          content: data.proj_desc,
-          groupId: 0,
-          color: data.proj_tagcol,
-          editable: false,
-        }));
-
-        let todoEvent = res.data.todo.map((data) => ({
-          id: data.todo_pk_num,
-          title: data.todo_title,
-          start: data.todo_start,
-          end: data.todo_end,
-          content: data.todo_content,
-          starttime: data.todo_start,
-          endtime: data.todo_end,
-          color: "#rgba(49, 138, 174, 0.5)",
-          allDay: true,
-        }));
-        setEvents([...projEvent, ...todoEvent]);
-      })
-      .catch((err) => {
-        const errMsg = "서버 응답 실패";
-        navigator(`/error?msg=${errMsg}`);
-      });
+  const handleToast = (text, open) => {
+    setToastType(text);
+    setToastIsOpen(open);
   };
 
-  const renderEventContent = (eventinfo) => {
+  const renderEventContent = (info) => {
     //표시될 타이틀
     return (
       <div className="eventStyle">
-        <span>{eventinfo.event.title}</span>
+        <span>{info.event.title}</span>
       </div>
     );
   };
 
-  const handleEventClick = (eventinfo) => {
+  const handleEventClick = (info) => {
     //이벤트 클릭시 modal 열기
     setModalContent({
       //modal에 표시될 내용
-      title: eventinfo.event._def.title,
-      content: eventinfo.event._def.extendedProps.content,
-      start: setTime(eventinfo.event._def.extendedProps.starttime),
-      end: setTime(eventinfo.event._def.extendedProps.endtime),
-      groupId: eventinfo.event._def.groupId,
-      id: eventinfo.event._def.publicId,
+      title: info.event.title,
+      content: info.event.extendedProps.content,
+      start: setTime(info.event.extendedProps.starttime),
+      end: setTime(info.event.extendedProps.endtime),
+      groupId: info.event.groupId,
+      id: info.event.id,
+      tagcol: info.event.backgroundColor,
     });
     setShowModalIsOpen(true);
   };
 
-  const handleEventChange = async (eventinfo) => {
+  const handleEventChange = async (info) => {
     const data = {
       todo_fk_user_num: num,
-      todo_title: eventinfo.event._def.title,
-      todo_content: eventinfo.event._def.extendedProps.content,
-      todo_start: setTime(eventinfo.event._instance.range.start),
-      todo_end: setTime(eventinfo.event._instance.range.end),
+      todo_title: info.event.title,
+      todo_content: info.event.extendedProps.content,
+      todo_start: setTime(info.event._instance.range.start),
+      todo_end: setTime(info.event._instance.range.end),
+      todo_tagcol: info.event.backgroundColor,
     };
 
     axios
-      .put("/function/schedule/" + eventinfo.event._def.publicId, data)
+      .put("/function/schedule/" + info.event._def.publicId, data)
       .then((res) => {
         if (res.data.isSuccess) {
           handleGetEvent();
-          handleToast("update",true);
+          handleToast("update", true);
         }
       })
       .catch((err) => {
@@ -173,7 +136,7 @@ const MyCalendar = () => {
       <EventToast
         isOpen={toastIsOpen}
         onClose={() => setToastIsOpen(false)}
-        type={type}
+        toastType={toastType}
       />
     </>
   );

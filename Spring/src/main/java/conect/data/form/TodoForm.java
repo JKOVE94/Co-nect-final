@@ -27,6 +27,7 @@ public class TodoForm {
         entity.setTodoContent(form.getTodo_content());
         entity.setTodoStart(form.getTodo_start());
         entity.setTodoEnd(form.getTodo_end());
+        entity.setTodoTagcol(form.getTodo_tagcol());
         return entity;
     }
 }

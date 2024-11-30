@@ -1,14 +1,20 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Form, Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 
 const CalendarModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) => state.usernum); // 로그인한 유저 넘버
-  const [data, setData] = useState({ todo_fk_user_num: num }); // 전달할 데이터
+  const [data, setData] = useState(); //전달할 데이터
+  const [color,setColor] = useState("#318AAE");
+
+  useEffect(() => {
+    setData((pre) => ({ ...pre, todo_fk_user_num: num }));
+  }, [num]);
 
   const handleChange = (e) => {
+    if(e.target.id==="todo_tagcol") setColor(e.target.value);
     setData({ ...data, [e.target.id]: e.target.value });
   };
 
@@ -26,9 +32,23 @@ const CalendarModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   };
 
   return (
-    <Modal show={isOpen} onHide={onClose}>
+    <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>일정 추가</Modal.Title>
+        <Modal.Title>
+          <Row className="align-items-center">
+            <Col md="auto" className="text-center">
+              일정 추가
+            </Col>
+            <Col>
+              <Form.Control
+                type="color"
+                id="todo_tagcol"
+                value={color}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form.Group className="mb-2">
