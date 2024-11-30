@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Setter
 @Getter
@@ -16,12 +18,13 @@ public class TodoEntity {
     private int todoPkNum; //투두리스트 고유 식별자 [PK, INT, INCREMENT]
     private String todoTitle; // 투두리스트 제목 [VARCHAR]
     private String todoContent; //투두리스트 내용 [VARCHAR]
-    private LocalDateTime todoStart; //투두리스트 시작일 [DATETIME]
-    private LocalDateTime todoEnd; //투두리스트 종료일 [DATETIME]
+    private Date todoStart; //투두리스트 시작일 [DATETIME]
+    private Date todoEnd; //투두리스트 종료일 [DATETIME]
     private int todoIcon;
     private String todoTagcol;
 
     @ManyToOne
     @JoinColumn(name = "todo_fk_user_num")
+    @JsonIgnore
     private UserEntity user;
 }

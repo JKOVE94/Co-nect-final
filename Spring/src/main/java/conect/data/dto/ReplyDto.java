@@ -19,7 +19,7 @@ public class ReplyDto {
         dto.setReply_cont(entity.getReplyCont());
         dto.setReply_fk_user_renum(entity.getUserEntity().getUserPkNum());
         dto.setReply_fk_proj_num(entity.getProjectEntity().getProjPkNum());
-        dto.setReply_fk_post_num(entity.getPostEntity().getPostFkPostNum());
+        dto.setReply_fk_post_num(entity.getPostEntity().getPostPkNum());
         return dto;
     }
 }
