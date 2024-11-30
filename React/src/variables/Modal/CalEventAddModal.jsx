@@ -4,17 +4,17 @@ import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 
-const CalendarModal = ({ isOpen, onClose, getEvent, handleToast }) => {
+const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) => state.usernum); // 로그인한 유저 넘버
   const [data, setData] = useState(); //전달할 데이터
-  const [color,setColor] = useState("#318AAE");
+  const [color, setColor] = useState("#318AAE");
 
   useEffect(() => {
     setData((pre) => ({ ...pre, todo_fk_user_num: num }));
   }, [num]);
 
   const handleChange = (e) => {
-    if(e.target.id==="todo_tagcol") setColor(e.target.value);
+    if (e.target.id === "todo_tagcol") setColor(e.target.value);
     setData({ ...data, [e.target.id]: e.target.value });
   };
 
@@ -33,21 +33,33 @@ const CalendarModal = ({ isOpen, onClose, getEvent, handleToast }) => {
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          <Row className="align-items-center">
-            <Col md="auto" className="text-center">
-              일정 추가
-            </Col>
-            <Col>
-              <Form.Control
-                type="color"
-                id="todo_tagcol"
-                value={color}
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
+      <Modal.Header>
+        <Modal.Title style={{ display: "flex", alignItems: "center" }}>
+          <Col md="auto">일정 추가</Col>
+          <Col md={5}>
+            <Form.Control
+              type="color"
+              id="todo_tagcol"
+              value={color}
+              onChange={handleChange}
+            />
+          </Col>
+          <Button
+            variant="link"
+            onClick={onClose}
+            style={{
+              position: "absolute",
+              top: "15px",
+              right: "15px",
+              fontSize: "24px",
+              color: "#000",
+              backgroundColor: "transparent",
+              border: "none",
+              padding: "0",
+            }}
+          >
+            &times;
+          </Button>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -87,4 +99,4 @@ const CalendarModal = ({ isOpen, onClose, getEvent, handleToast }) => {
     </Modal>
   );
 };
-export default CalendarModal;
+export default CalEventAddModal;

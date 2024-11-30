@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { CloseButton, ToastContainer } from "react-bootstrap";
 import Toast from "react-bootstrap/Toast";
-import "../../../assets/css/Calendar.css";
+import "../../assets/css/calendar.css";
 
-const EventToast = ({ toastType, isOpen, onClose }) => {
+const CalendarToast = ({ toastType, isOpen, onClose }) => {
   const [text, setText] = useState();
   useEffect(() => {
     if (toastType === "del") {
@@ -15,7 +15,7 @@ const EventToast = ({ toastType, isOpen, onClose }) => {
     }
   }, [toastType]);
   return (
-    <ToastContainer position="bottom-end" className="p-1">
+    <ToastContainer position="top-end" className="p-1">
       <Toast
         className="toast"
         onClose={onClose}
@@ -32,4 +32,4 @@ const EventToast = ({ toastType, isOpen, onClose }) => {
   );
 };
 
-export default EventToast;
+export default CalendarToast;

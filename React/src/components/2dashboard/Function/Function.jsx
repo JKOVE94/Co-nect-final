@@ -1,17 +1,22 @@
-import MyCalendar from "./Calendar/MyCalendar";
-import "../../assets/css/Calendar.css";
-import MySchedule from "./Schedule/MySchedule";
+import MyCalendar from "./MyCalendar";
+import MySchedule from "./MySchedule";
+import "../../../assets/css/calendar.css";
 
 import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import CalendarToast from "variables/Toast/CalendarToast";
 
 const Function = () => {
-  
-  const num = useSelector((state) => state.usernum); 
+  const [toastType, setToastType] = useState("");
+  const [toastIsOpen, setToastIsOpen] = useState(false);
+  const num = useSelector((state) => state.userData.user_pk_num);
   const [events, setEvents] = useState([{}]);
-
+  const handleToast = (text, open) => {
+    setToastType(text);
+    setToastIsOpen(open);
+  };
   const handleGetEvent = async () => {
     //캘린더에 표시될 이벤트 불러오기
     axios
@@ -46,7 +51,7 @@ const Function = () => {
         navigator(`/error?msg=${errMsg}`);
       });
   };
-  
+
   useEffect(() => {
     handleGetEvent();
   }, [num]);
@@ -54,20 +59,29 @@ const Function = () => {
   return (
     <>
       <Container fluid style={{ marginTop: "2rem" }}>
-        <Row className="mx-0 align-items-start">
-          <Col xs={8} className="px-0">
+        <Row className="mx-0 align-items-start justify-content-center">
+          <Col md={6} className="px-0">
             <Card className="mx-auto">
               <CardBody className="p-10">
-                <MyCalendar events={events} handleGetEvent={handleGetEvent}/>
+                <MyCalendar
+                  events={events}
+                  handleGetEvent={handleGetEvent}
+                  handleToast={handleToast}
+                />
               </CardBody>
             </Card>
-            </Col>
-            <Col xs={4}>
+          </Col>
+          <Col md={4}>
             <Card className="mx-auto">
               <CardBody className="p-10">
-                <MySchedule events={events}/>
+                <MySchedule events={events} />
               </CardBody>
             </Card>
+            <CalendarToast
+        isOpen={toastIsOpen}
+        onClose={() => setToastIsOpen(false)}
+        toastType={toastType}
+      />
           </Col>
         </Row>
       </Container>

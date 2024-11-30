@@ -27,8 +27,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Dashboard from "layouts/Dashboard";
 import Manage from "layouts/Manage";
-import Login from "views/Login";
+import Login from "layouts/Login";
 import Store from "./Redux/Store";
+import Function from "components/2dashboard/Function/Function";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

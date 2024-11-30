@@ -26,6 +26,7 @@ import Sidebar from "components/2dashboard/Sidebar/Sidebar.js";
 import Header from "components/2dashboard/Headers/Header.js";
 import routes from "routes.js";
 import Item1 from "layouts/itemFrame/Item1";
+import Function from "components/2dashboard/Function/Function";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -67,7 +68,7 @@ const Dashboard = (props) => {
         />
         <Header />
         <Routes>
-          
+          <Route path="/function" element={<Function />} />
         </Routes>
         <Container fluid style={{padding:"3em"}}>
           <Item1/>

@@ -3,9 +3,15 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../../assets/css/Calendar.css";
+import "../../assets/css/calendar.css";
 
-const CalendarModal = ({ isOpen, onClose, info, getEvent, handleToast }) => {
+const CalEventShowModal = ({
+  isOpen,
+  onClose,
+  info,
+  getEvent,
+  handleToast,
+}) => {
   const num = useSelector((state) => state.usernum);
   const [data, setData] = useState({});
   const [read, setRead] = useState(false); //수정 가능 여부
@@ -17,7 +23,7 @@ const CalendarModal = ({ isOpen, onClose, info, getEvent, handleToast }) => {
       todo_content: info.content || "",
       todo_start: info.start || "",
       todo_end: info.end || "",
-      todo_tagcol : info.tagcol || "#000000"
+      todo_tagcol: info.tagcol || "#000000",
     });
     if (info.groupId === "0") {
       setRead(true);
@@ -58,21 +64,33 @@ const CalendarModal = ({ isOpen, onClose, info, getEvent, handleToast }) => {
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
-      <Modal.Header closeButton>
-      <Modal.Title>
-          <Row className="align-items-center">
-            <Col md="auto" className="text-center">
-              일정 수정
-            </Col>
-            <Col>
-              <Form.Control
-                value={data.todo_tagcol}
-                type="color"
-                id="todo_tagcol"
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
+      <Modal.Header>
+        <Modal.Title style={{ display: "flex", alignItems: "center" }}>
+          <Col md={8}>일정 수정</Col>
+          <Col md={5}>
+            <Form.Control
+              value={data.todo_tagcol}
+              type="color"
+              id="todo_tagcol"
+              onChange={handleChange}
+            />
+          </Col>
+          <Button
+            variant="link"
+            onClick={onClose}
+            style={{
+              position: "absolute",
+              top: "15px",
+              right: "15px",
+              fontSize: "24px", // 원하는 크기로 설정
+              color: "#000",
+              backgroundColor: "transparent",
+              border: "none",
+              padding: "0",
+            }}
+          >
+            &times;
+          </Button>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -133,4 +151,4 @@ const CalendarModal = ({ isOpen, onClose, info, getEvent, handleToast }) => {
     </Modal>
   );
 };
-export default CalendarModal;
+export default CalEventShowModal;

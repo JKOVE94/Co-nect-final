@@ -1,39 +1,35 @@
 //FullCalendar 관련 라이브러리
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import moment from "moment";
 //Component
-import EventShowModal from "./EventShowModal";
-import EventAddModal from "./EventAddModal";
+import CalEventShowModal from "../../../variables/Modal/CalEventShowModal";
+import CalEventAddModal from "../../../variables/Modal/CalEventAddModal";
+import CalendarToast from "../../../variables/Toast/CalendarToast";
 //css
-import "../../../assets/css/Calendar.css";
+import "../../../assets/css/calendar.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import EventToast from "./EventToast";
 
-const MyCalendar = ({events, handleGetEvent}) => {
-  const [toastType, setToastType] = useState("");
-  const [toastIsOpen, setToastIsOpen] = useState(false);
+
+const MyCalendar = ({events, handleGetEvent, handleToast}) => {
+  
   const [showModalIsOpen, setShowModalIsOpen] = useState(false); //modal 표시 여부
   const [modalContent, setModalContent] = useState({}); //modal 내용
   const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트 추가 modal 표시 여부
 
 
-  const num = useSelector((state) => state.usernum); //로그인한 유저의 사번
+  const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
   const navigate = useNavigate();
   const setTime = (time) => {
     //시간 설정
     time = moment.utc(time).format("YYYY-MM-DDTHH:mm");
     return time;
   };
-  const handleToast = (text, open) => {
-    setToastType(text);
-    setToastIsOpen(open);
-  };
+  
 
   const renderEventContent = (info) => {
     //표시될 타이틀
@@ -90,7 +86,7 @@ const MyCalendar = ({events, handleGetEvent}) => {
   return (
     <>
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth" // 월별 보기
         locale="ko"
         editable={true} // 이벤트 수정 가능
@@ -118,7 +114,7 @@ const MyCalendar = ({events, handleGetEvent}) => {
         eventChange={handleEventChange} //이벤트 드롭 & 리사이즈
       />
 
-      <EventShowModal
+      <CalEventShowModal
         isOpen={showModalIsOpen}
         onClose={() => setShowModalIsOpen(false)}
         getEvent={handleGetEvent}
@@ -126,18 +122,14 @@ const MyCalendar = ({events, handleGetEvent}) => {
         handleToast={handleToast}
       />
 
-      <EventAddModal
+      <CalEventAddModal
         isOpen={addModalIsOpen}
         onClose={() => setAddModalIsOpen(false)}
         getEvent={handleGetEvent}
         handleToast={handleToast}
       />
 
-      <EventToast
-        isOpen={toastIsOpen}
-        onClose={() => setToastIsOpen(false)}
-        toastType={toastType}
-      />
+      
     </>
   );
 };
