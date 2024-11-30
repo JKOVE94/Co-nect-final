@@ -11,6 +11,8 @@ import lombok.Setter;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Getter
 @Setter
 @Entity
@@ -24,11 +26,10 @@ public class DepartmentEntity {
     private int dpartFkDpartNum; //상위 부서 번호
 
     @OneToMany(mappedBy = "departmentEntity")
+    @JsonBackReference
     private List<UserEntity> userEntities;
 
     @OneToMany(mappedBy = "departmentEntity")
-    private List<PostEntity> freeEntities;
-
-    @OneToMany(mappedBy = "departmentEntity")
+    @JsonBackReference
     private List<ProjectEntity> userEntityList;
 }

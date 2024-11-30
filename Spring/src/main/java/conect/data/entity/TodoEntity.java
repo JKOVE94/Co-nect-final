@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Setter
 @Getter
 @Entity
@@ -23,5 +25,6 @@ public class TodoEntity {
 
     @ManyToOne
     @JoinColumn(name = "todo_fk_user_num")
+    @JsonIgnore
     private UserEntity user;
 }

@@ -1,5 +1,7 @@
 package conect.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,13 +17,16 @@ public class ReplyEntity {
 
     @ManyToOne
     @JoinColumn(name="reply_fk_porj_num")
+    @JsonIgnore
     private ProjectEntity projectEntity;
 
     @ManyToOne
     @JoinColumn(name="reply_fk_post_num")
+    @JsonIgnore
     private PostEntity postEntity;
 
     @ManyToOne
     @JoinColumn(name="reply_fk_user_renum")
+    @JsonIgnore
     private UserEntity userEntity;
 }
