@@ -1,6 +1,7 @@
 package conect.service.manage.user;
 
 import conect.data.dto.UserDto;
+import conect.data.entity.UserEntity;
 import conect.data.form.UserForm;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

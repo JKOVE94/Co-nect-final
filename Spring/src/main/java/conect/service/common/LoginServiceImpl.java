@@ -1,6 +1,7 @@
 package conect.service.common;
 
 import conect.data.dto.UserDto;
+import conect.data.entity.UserEntity;
 import conect.data.form.LoginForm;
 import conect.data.repository.CompanyRepository;
 import conect.data.repository.UserRepository;
