@@ -20,7 +20,7 @@ import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
-import Navbar from "components/2dashboard/Navbars/Navbar.js";
+import MNavbar from "components/2dashboard/Navbars/MNavbar.js";
 import Footer from "components/2dashboard/Footers/Footer.js";
 import MSidebar from "components/2dashboard/Sidebar/MSidebar.js";
 import Header from "components/2dashboard/Headers/Header.js";
@@ -48,7 +48,7 @@ const Dashboard = (props) => {
         }}
       />
       <div className="main-content" ref={mainContent}>
-        <Navbar />
+        <MNavbar />
         <Header />
         <Routes></Routes>
         <Container fluid>

@@ -21,17 +21,24 @@ import "assets/landing/css/login.css";
 import ConectTextLogo from "assets/img/logo/ConectTextLogo";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import LoginToast from "variables/Toast/LoginToast";
+import { useDispatch } from "react-redux";
+import { LOGIN } from "../Redux/Reducer/userDataReducer";
+import LoginModal from "variables/Modal/LoginModal";
 
 //이 컴포넌트는 메인 페이지를 세팅하는 컴포넌트입니다.
 
 const Login = (props) => {
-  const [isFirst, setIsFirst] = useState(true);
-  const [isSignIn, setIsSignIn] = useState(null);
+  const dispatch = useDispatch();
+  const [isFirst, setIsFirst] = useState(true); //첫 렌더링 여부
+  const [isSignIn, setIsSignIn] = useState(null); //로그인/문의 토글용
   const [loginInfo, setLoginInfo] = useState({
     comp_pk_num: "",
     user_pk_num: "",
     user_pw: "",
   });
+  const [errType, setErrType] = useState(0); //로그인 실패시 에러타입 설정
+  const [data, setData] = useState({}); //로그인 성공시 데이터 저장
   const navigate = useNavigate();
 
   const toggle = () => {
@@ -50,12 +57,23 @@ const Login = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setLoginInfo({
       ...loginInfo,
       [name]: value,
     });
   };
+
+  //부트스트랩 토스트 토글용
+  const [showA, setShowA] = useState(false);
+  const toggleShowA = () => {
+      setShowA(true)
+      setTimeout(() => {setShowA(false)}, 3000)
+  }
+
+  //부트스트래  모달 토글용
+  const [showM, setShowM] = useState(false); 
+  const handleShowM = () => setShowM(true); //모달을 열어주는 함수
+  const handleCloseM = () => setShowM(false); //모달을 닫는 함수
 
   const login = async (e) => {
     e.preventDefault();
@@ -67,13 +85,22 @@ const Login = (props) => {
       status; //로그인 상태 번호로 표시 1 성공, 2 : 정보 불일치, 3 : 잠긴 계정
       user_trynum; //유저가 로그인 시도 횟수
       */
-      const res = await axios.post("/login", loginInfo);
-      console.log(res);
-      if (res.data.status === 1) {
+      let res = await axios.post("/login", loginInfo);
+      const responseData = res.data;
+      await setData(responseData);
+      if (res.data.status === 1) { //로그인 성공
+        dispatch(LOGIN(responseData));
         navigate("/main");
-      } else if (res.data.status === 2) {
+      } 
+      else if (res.data.status === 2) { //로그인 실패(정보 불일치)
+        setErrType(res.data.status);
+        toggleShowA()
         //정보 불일치 => toast로 실패 알림 / 로그인 시도횟수 안내
-      } else if (res.data.status === 3) {
+      } 
+      else if (res.data.status === 3) {//잠긴계정
+        setErrType(res.data.status);
+        handleShowM();
+
         //잠긴계정 => modal로 잠긴계정 안내
       }
     } catch (error) {
@@ -81,7 +108,6 @@ const Login = (props) => {
       console.error("로그인 실패:", error);
     }
   };
-
   return (
     <>
       <div
@@ -155,14 +181,12 @@ const Login = (props) => {
             </form>
           </div>
         </div>
-
         <div className="form-wrapper"></div>
         <div className="row content-row">
           <div className="col align-items-center flex-col">
             <div className="text sign-in">
               <h2>Welcome</h2>
             </div>
-
             <div className="img sign-in"></div>
           </div>
           <div className="col align-items-center flex-col">
@@ -172,8 +196,8 @@ const Login = (props) => {
           </div>
         </div>
       </div>
-
-      <script src="./asset/1_landing/login.js"></script>
+    <LoginToast showA={showA} toggleShowA={toggleShowA} type={errType} data={data} />
+    <LoginModal handleCloseM={handleCloseM} handleShowM={handleShowM} showM={showM} type={errType}/>
     </>
   );
 };

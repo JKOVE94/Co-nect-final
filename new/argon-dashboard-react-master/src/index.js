@@ -18,23 +18,28 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { Provider } from "react-redux";
 
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/scss/argon-dashboard-react.scss";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Dashboard from "layouts/Dashboard";
 import Manage from "layouts/Manage";
 import Login from "views/Login";
+import Store from "./Redux/Store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
+  <Provider store={Store}>
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/main" element={<Dashboard />} />
-      <Route path="/admin/manage" element={<Manage />} />
+      <Route path="/main/*" element={<Dashboard />} />
+      <Route path="/manage" element={<Manage />} />
     </Routes>
   </BrowserRouter>
+  </Provider>
 );

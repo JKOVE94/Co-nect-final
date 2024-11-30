@@ -20,11 +20,12 @@ import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
-import MNavbar from "components/2dashboard/Navbars/MNavbar.js";
+import Navbar from "components/2dashboard/Navbars/Navbar.js";
 import Footer from "components/2dashboard/Footers/Footer.js";
 import Sidebar from "components/2dashboard/Sidebar/Sidebar.js";
 import Header from "components/2dashboard/Headers/Header.js";
 import routes from "routes.js";
+import Item1 from "layouts/itemFrame/Item1";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -60,13 +61,16 @@ const Dashboard = (props) => {
         }}
       />
       <div className="main-content" ref={mainContent}>
-        <MNavbar
+        <Navbar
           {...props}
           brandText={getBrandText(props?.location?.pathname)}
         />
         <Header />
-        <Routes></Routes>
-        <Container fluid>
+        <Routes>
+          
+        </Routes>
+        <Container fluid style={{padding:"3em"}}>
+          <Item1/>
           <Footer />
         </Container>
       </div>

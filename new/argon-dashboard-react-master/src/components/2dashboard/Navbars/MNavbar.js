@@ -15,7 +15,10 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 // reactstrap components
 import {
   DropdownMenu,
@@ -36,6 +39,14 @@ import {
 
 //Navbar는 우측 상단의 사용자 사진과 메뉴를 표시
 const UserNavbar = (props) => {
+    const navigate = useNavigate();
+  const [userData, setUserData] = useState({});
+  const user = useSelector((state) => (state.userData));
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    setUserData(user);
+    console.log(userData);
+  },[]);
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -73,7 +84,7 @@ const UserNavbar = (props) => {
                   {/* 사용자 이름 */}
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      테스터
+                      {userData.user_name}
                     </span>
                   </Media>
                 </Media>

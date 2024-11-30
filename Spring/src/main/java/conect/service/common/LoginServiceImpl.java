@@ -1,5 +1,6 @@
 package conect.service.common;
 
+import conect.data.dto.UserDto;
 import conect.data.entity.UserEntity;
 import conect.data.form.LoginForm;
 import conect.data.repository.CompanyRepository;
@@ -21,6 +22,11 @@ public class LoginServiceImpl implements LoginService {
     2 : 정보 불일치
     3 : 잠긴 계정
      */
+
+    @Override
+    public UserDto getUserInfo(int user_pk_num) {
+        return UserDto.fromEntity(userRepository.findById(user_pk_num).get());
+    }
 
     @Override
     public int getTryNum(int user_pk_num){ //로그인 시도횟수를 반환하는 메소드

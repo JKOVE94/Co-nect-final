@@ -15,7 +15,10 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { LOGOUT } from "../../../Redux/Reducer/userDataReducer";
 // reactstrap components
 import {
   DropdownMenu,
@@ -36,6 +39,22 @@ import {
 
 //Navbar는 우측 상단의 사용자 사진과 메뉴를 표시
 const UserNavbar = (props) => {
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState({});
+  const user = useSelector((state) => (state.userData));
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    setUserData(user);
+    console.log(userData);
+  },[]);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    dispatch(LOGOUT());
+    navigate("/");
+  }
+
+
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -73,7 +92,7 @@ const UserNavbar = (props) => {
                   {/* 사용자 이름 */}
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      테스터
+                      {userData.user_name}
                     </span>
                   </Media>
                 </Media>
@@ -82,24 +101,28 @@ const UserNavbar = (props) => {
                 <DropdownItem className="noti-title" header tag="div">
                   <h6 className="text-overflow m-0">Welcome!</h6>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
+                <DropdownItem to="/#" tag={Link}>
                   <i className="ni ni-single-02" />
                   <span>계정 정보</span>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
+                {/*관리자일 경우에만 설정 메뉴가 보이도록 설정*/}
+                {userData.user_fk_acc_authornum === 3 ? 
+                <DropdownItem to="/manage" tag={Link}>
                   <i className="ni ni-settings-gear-65" />
                   <span>설정</span>
-                </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
+                </DropdownItem> : null
+                }
+                <DropdownItem to="#" tag={Link}>
                   <i className="ni ni-calendar-grid-58" />
                   <span>활동</span>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
+                
+                <DropdownItem to="#" tag={Link}>
                   <i className="ni ni-support-16" />
                   <span>지원</span>
                 </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+                <DropdownItem onClick={(e) => logout()}>
                   <i className="ni ni-user-run" />
                   <span>로그아웃</span>
                 </DropdownItem>

@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserOne(int userno) {
+
         return UserDto.fromEntity(userRepository.findById(userno).get());
     }
 

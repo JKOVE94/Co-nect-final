@@ -6,7 +6,7 @@ const UserUnlock = () => {
 
   useEffect(() => {
     axios
-      .get("/user/locked")
+      .get("/manage/user/locked")
       .then((res) => {
         console.log(res);
         setUserInfos(res.data);
