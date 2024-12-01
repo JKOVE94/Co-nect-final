@@ -45,7 +45,6 @@ const UserNavbar = (props) => {
   const dispatch = useDispatch();
   useEffect(()=>{
     setUserData(user);
-    console.log(userData);
   },[]);
 
   const logout = () => {

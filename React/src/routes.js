@@ -15,7 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Landing from "views/Login.js";
+import Landing from "layouts/Login.js";
 import Dashboard from "views/Dashboard.js";
 import Manage from "views/Manage.js";
 import Profile from "views/examples/Profile.js";

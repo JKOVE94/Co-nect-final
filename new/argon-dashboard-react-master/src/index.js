@@ -38,7 +38,7 @@ root.render(
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/main/*" element={<Dashboard />} />
-      <Route path="/manage/*" element={<Manage />} />
+      <Route path="/manage" element={<Manage />} />
     </Routes>
   </BrowserRouter>
   </Provider>

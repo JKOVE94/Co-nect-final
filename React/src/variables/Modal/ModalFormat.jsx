@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 /*
 상위 컴포넌트에는 하단의 코드가 있어야 합니다.
 토스트를 표시해야할 상황에는 handleShowM()함수를 호출하면 됩니다.
-  const [showM, setShowM] = useStateM(false); //모달 상태와 관련된 state
+  const [showM, setShowM] = useState(false); //모달 상태와 관련된 state
   const handleCloseM = () => setShowM(false); //모달을 닫는 함수
   const handleShowM = () => setShowM(true); //모달을 열어주는 함수
 */
@@ -13,11 +13,10 @@ import Modal from "react-bootstrap/Modal";
 function ModalFormat(props) {
   const handlePermit = () => {
     //모달에서 확인 버튼을 눌렀을 때 실행되는 함수
-    console.log("허가 버튼을 눌렀습니다.");
     props.handleCloseM(); //모달을 닫아줍
   };
 
-  const TypeText = (props) => {
+  const TypeText = () => {
     switch (props.type) {
       case 3:
         return (

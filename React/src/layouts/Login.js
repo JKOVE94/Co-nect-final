@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import LoginToast from "variables/Toast/LoginToast";
 import { useDispatch } from "react-redux";
 import { LOGIN } from "../Redux/Reducer/userDataReducer";
+import { SET_DPARTINFO } from "../Redux/Reducer/departDataReducer";
 import LoginModal from "variables/Modal/LoginModal";
 
 //이 컴포넌트는 메인 페이지를 세팅하는 컴포넌트입니다.
@@ -90,6 +91,8 @@ const Login = (props) => {
       await setData(responseData);
       if (res.data.status === 1) { //로그인 성공
         dispatch(LOGIN(responseData));
+        let dpartsInfo = await axios.get("/login/departs");
+        dispatch(SET_DPARTINFO(dpartsInfo.data));
         navigate("/main");
       } 
       else if (res.data.status === 2) { //로그인 실패(정보 불일치)

@@ -1,13 +1,17 @@
 package conect.controller;
 
+import conect.data.dto.DepartmentDto;
 import conect.data.dto.LoginDto;
 import conect.data.dto.UserDto;
 import conect.data.form.LoginForm;
 import conect.service.common.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class LoginController {
@@ -50,5 +54,9 @@ public class LoginController {
             userInfoDto.setUser_trynum(loginService.getTryNum(form.getUser_pk_num())); //로그인 시도횟수 담기
             return userInfoDto;
         }
+    }
+    @GetMapping("/login/departs")
+    public List<DepartmentDto> getDeparts(){
+        return loginService.getDeparts();
     }
 }
