@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Button, Card, Col, Form } from "react-bootstrap";
 
 const Search = ({value, onChange, onSearch, onKeyDown}) => {

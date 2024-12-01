@@ -28,6 +28,8 @@ const Function = () => {
           start: data.proj_startdate,
           end: data.proj_enddate,
           content: data.proj_desc,
+          starttime: data.proj_startdate,
+          endtime: data.proj_enddate,
           groupId: 0,
           color: data.proj_tagcol,
           editable: false,
@@ -78,10 +80,10 @@ const Function = () => {
               </CardBody>
             </Card>
             <CalendarToast
-        isOpen={toastIsOpen}
-        onClose={() => setToastIsOpen(false)}
-        toastType={toastType}
-      />
+              isOpen={toastIsOpen}
+              onClose={() => setToastIsOpen(false)}
+              toastType={toastType}
+            />
           </Col>
         </Row>
       </Container>

@@ -1,22 +1,48 @@
 import axios from "axios";
-import { useEffect } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import "../../../assets/css/favor.css";
+import { useNavigate } from "react-router-dom";
 
-const { Container, Row, Col, Card, CardBody, Table } = require("react-bootstrap");
+const {
+  Container,
+  Card,
+  CardBody,
+  Table
+} = require("react-bootstrap");
 
 const FreeFavorite = () => {
-
   const num = useSelector((state) => state.userData.user_pk_num);
-
+  const [favorFree, setFavorFree] = useState([{}]);
+  const navigate = useNavigate();
   const getData = () => {
-    axios.get('/')
-  }
+    axios
+      .get("/board/favorite/post/" + num)
+      .then((res) => {
+        setFavorFree(res.data);
+      })
+      .catch();
+  };
   useEffect(() => {
+    getData();
+  }, [num]);
 
-  })
-
+  const handleClick = (num) => {
+    axios.delete("/board/favorite/"+num)
+    .then((res)=>{
+      if(res.data.isSuccess){
+        getData();
+      }
+    })
+    .catch();
+  }
+  const handlePage = (num) => {
+    //proj read로 이동하는 코드 넣기
+    navigate();
+  }
   return (
-    <Container fluid style={{ marginTop: "2rem" }}>
+    <Container fluid>
       <Card className="mx-auto">
         <CardBody className="p-10">
           <Card.Title>즐겨찾기</Card.Title>
@@ -24,13 +50,31 @@ const FreeFavorite = () => {
           <Table>
             <thead>
               <tr>
-                <th>번호</th><th>제목</th><th>분류</th><th>작성자</th><th>등록일</th><th>조회수</th>
+                <th>번호</th>
+                <th>제목</th>
+                <th>분류</th>
+                <th>작성자</th>
+                <th>등록일</th>
+                <th>조회수</th>
+                <th className="del"></th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-
-              </tr>
+              {favorFree.map((free) => (
+                <tr key={free.favor_id}>
+                  <td>{free.post_pk_num}</td>
+                  <td>
+                    <Card.Link onClick={() => handlePage(free.post_pk_num)}>{free.post_name}</Card.Link>
+                  </td>
+                  <td>{free.post_tag}</td>
+                  <td>{free.user_name}</td>
+                  <td>{moment(free.post_regdate).format("YYYY-MM-DD")}</td>
+                  <td>{free.post_view}</td>
+                  <td>
+                    <Card.Link onClick={() => handleClick(free.favor_id)}>&times;</Card.Link>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </CardBody>

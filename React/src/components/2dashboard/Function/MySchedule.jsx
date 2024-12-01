@@ -1,19 +1,13 @@
-import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import {
-  Accordion,
   Card,
   Carousel,
-  Container,
-  Image,
-  Row,
 } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "../../../assets/css/calendar.css";
 
 const MySchedule = ({ events }) => {
-  const num = useSelector((state) => state.userData.user_pk_num);
   const [todoList, setTodoList] = useState([]);
   const [today] = useState(new Date());
 

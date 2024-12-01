@@ -4,6 +4,7 @@ import { Card } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { CardBody } from "reactstrap";
 import Search from "variables/Search/Search";
+import FavorCheck from "../Favorite/FavorCheck";
 
 const FreeList = () => {
   //검색
@@ -52,6 +53,7 @@ const FreeList = () => {
       <table className="table table-bordered" border={1}>
         <thead>
           <tr>
+            <th></th>
             <th>번호</th>
             <th>제목</th>
             <th>작성자</th>
@@ -63,6 +65,7 @@ const FreeList = () => {
           {post.length > 0 ? (
             post.map((post, index) => (
               <tr key={post.post_pk_num || `post-${index}`}>
+                <td><FavorCheck type='post' pknum={post.post_pk_num}/></td>
                 <td>{post.post_pk_num}</td>
                 <td>
                   <Link to={`/board/free/${post.post_pk_num}`}>

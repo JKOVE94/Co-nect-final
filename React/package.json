@@ -47,6 +47,7 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "@reduxjs/toolkit": "^2.4.0",
     "ajv": "^8.16.0",
     "axios": "^1.7.8",

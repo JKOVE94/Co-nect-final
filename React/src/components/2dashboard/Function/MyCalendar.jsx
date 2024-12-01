@@ -6,7 +6,6 @@ import moment from "moment";
 //Component
 import CalEventShowModal from "../../../variables/Modal/CalEventShowModal";
 import CalEventAddModal from "../../../variables/Modal/CalEventAddModal";
-import CalendarToast from "../../../variables/Toast/CalendarToast";
 //css
 import "../../../assets/css/calendar.css";
 import axios from "axios";
@@ -26,7 +25,7 @@ const MyCalendar = ({events, handleGetEvent, handleToast}) => {
   const navigate = useNavigate();
   const setTime = (time) => {
     //시간 설정
-    time = moment.utc(time).format("YYYY-MM-DDTHH:mm");
+    time = moment(time).format("YYYY-MM-DDTHH:mm");
     return time;
   };
   

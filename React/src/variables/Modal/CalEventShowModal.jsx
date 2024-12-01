@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Form, Modal, Button, Row, Col } from "react-bootstrap";
+import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/calendar.css";
 
@@ -139,14 +139,14 @@ const CalEventShowModal = ({
       </Modal.Body>
       <Modal.Footer>
         {info.groupId === "0" ? (
-          <div className="textinfo">프로젝트 일정은 수정할 수 없습니다</div>
+          <Container className="textinfo">
+            프로젝트 일정은 수정할 수 없습니다
+          </Container>
         ) : (
-          <Button onClick={handleUpdate}>수정</Button>
-        )}
-        {info.groupId === "0" ? (
-          <></>
-        ) : (
-          <Button onClick={handleDelete}>삭제</Button>
+          <>
+            <Button onClick={handleUpdate}>수정</Button>
+            <Button onClick={handleDelete}>삭제</Button>
+          </>
         )}
       </Modal.Footer>
     </Modal>

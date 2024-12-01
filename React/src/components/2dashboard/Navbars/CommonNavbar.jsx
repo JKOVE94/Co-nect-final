@@ -10,7 +10,7 @@ const CommonNavbar = () => {
           <Menu>
             <SubMenu label="즐겨찾기" icon={<i className="fa fa-bookmark text-primary text-sm opacity-10" />}>
               <NavItem>
-                <NavLink to="/" tag={NavLinkRRD}>프로젝트</NavLink>
+                <NavLink to="/main/projfavorite" tag={NavLinkRRD}>프로젝트</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink to="/main/freefavorite" tag={NavLinkRRD}>자유게시판</NavLink>

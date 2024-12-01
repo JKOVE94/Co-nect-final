@@ -29,6 +29,7 @@ import Item1 from "layouts/itemFrame/Item1";
 import Function from "components/2dashboard/Function/Function";
 import FreeList from "components/2dashboard/post/FreeList";
 import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
+import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -70,6 +71,7 @@ const Dashboard = (props) => {
         />
         <Header />
         <Routes>
+          <Route path="/projfavorite" element={<ProjFavorite />} />
           <Route path="/freefavorite" element={<FreeFavorite />} />
           <Route path="/function" element={<Function />} />
           <Route path="/freelist" element={<FreeList />} />

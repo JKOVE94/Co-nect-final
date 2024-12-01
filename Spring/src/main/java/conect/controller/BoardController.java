@@ -33,13 +33,24 @@ public class BoardController {
 	//즐겨찾기
 	//즐겨찾기-자유게시글
 	@GetMapping("/favorite/post/{usernum}")
-	public List<PostDto> getAllFavoritePost(@PathVariable("usernum")int usernum){
+	public List<Map<String,Object>> getAllFavoritePost(@PathVariable("usernum")int usernum){
 		return favorService.getFavoritePost(usernum);
 	}
 	//즐겨찾기-프로젝트
 	@GetMapping("/favorite/proj/{usernum}")
-	public List<ProjectDto> getAllFavoriteProj(@PathVariable("usernum")int usernum){
+	public List<Map<String,Object>> getAllFavoriteProj(@PathVariable("usernum")int usernum){
 		return favorService.getFavoriteProj(usernum);
+	}
+	//즐겨찾기에 등록되어있는지 확인
+	@GetMapping("/favorite/{type}/{usernum}/{pknum}")
+	public boolean checkFavorite(@PathVariable("type")String type, 
+								 @PathVariable("usernum")int usernum, 
+								 @PathVariable("pknum")int num) {
+		boolean b = false;
+		if(favorService.checkFavorite(type, usernum, num) != null) {
+			b = true;
+		}
+		return b;
 	}
 	//즐겨찾기 등록
 	@PostMapping("/favorite/{type}")
@@ -61,6 +72,16 @@ public class BoardController {
 		}
 	}
 	
+	//즐겨찾기 삭제 (post, proj pk num 전달 시)
+	@DeleteMapping("/favorite/{type}/{usernum}/{pknum}")
+	public Map<String, Object> dropFavoriteAsPk(@PathVariable("type")String type, 
+												@PathVariable("usernum")int usernum, @PathVariable("pknum")int pkum){
+		if(favorService.dropFavoriteDataAsPk(type, usernum, pkum)) {
+			return Map.of("isSuccess",true);
+		} else {
+			return Map.of("isSuccess",false);
+		}
+	}
 	
 	// 자유게시글
 	// 게시글 생성
