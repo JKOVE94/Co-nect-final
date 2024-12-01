@@ -1,5 +1,6 @@
 package conect.service.board.proj;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import conect.data.dto.ProjectDto;
@@ -11,4 +12,8 @@ public interface ProjService {
 	List<ProjectDto> getListAll();
 	
 	ProjectDto getProjById(int projPkNum);
+	
+	//회사코드 관련 프로젝트 읽어오기
+	List<ProjectDto> getAllProjInfo(int compNum);
+	
 }

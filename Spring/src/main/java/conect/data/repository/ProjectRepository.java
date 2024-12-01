@@ -1,7 +1,9 @@
 package conect.data.repository;
 
+import conect.data.dto.ProjectDto;
 import conect.data.entity.ProjectEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +20,10 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> 
 	List<ProjectEntity> findByProjMembersContaining(@Param("pattern")String pattern);
 	
 	 @Query("SELECT p FROM ProjectEntity p JOIN FETCH p.userEntity WHERE p.projPkNum = :projPkNum")
-	    Optional<ProjectEntity> findByIdWithUser(@Param("projPkNum") int projPkNum);
-
+	 Optional<ProjectEntity> findByIdWithUser(@Param("projPkNum") int projPkNum);
+	 
+	 //프로젝트 목록 회사 num 기준으로 조회
+	 @Query("SELECT p FROM ProjectEntity p WHERE p.companyEntity.compPkNum = :compNum")
+	 List<ProjectEntity> findByProjCompNum(@Param("compNum") int compNum);
 
 }

@@ -4,6 +4,7 @@ import conect.data.dto.ProjectDto;
 import conect.data.repository.ProjectRepository;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,14 @@ public class ProjServiceImpl implements ProjService {
 	    return prepository.findByIdWithUser(projPkNum)
 	        .map(ProjectDto::fromEntity)
 	        .orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
+	}
+
+	@Override
+	public List<ProjectDto> getAllProjInfo(int compNum) {
+		// TODO 프로젝트 목록 가져오기
+		return  prepository.findByProjCompNum(compNum)
+				.stream().map(ProjectDto::fromEntity).toList();
+		
 	}
 	
 }
