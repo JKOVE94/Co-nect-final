@@ -32,16 +32,22 @@ public class FavorServiceImpl implements FavorService {
     @Autowired
     private UserRepository userRepository;
 	
-	//즐겨찾기 목록 조회 - 프로젝트
+	//즐겨찾기 목록 - 프로젝트
 	@Override
 	public List<Map<String,Object>> getFavoriteProj(int usernum) {
+		
 		List<FavoritesDto> favorList = 
-				favorRepository.findByUserEntity_userPkNum(usernum).stream().map(FavoritesDto::fromEntity).toList();
+				favorRepository.findByUserEntity_userPkNum(usernum)
+					.stream()
+					.map(FavoritesDto::fromEntity)
+					.toList();
 		
 		List<Map<String,Object>> favorProjList = new ArrayList<Map<String,Object>>();
 		
-		//조회된 즐겨찾기 목록에서 proj num이 null이 아닌 경우 proj 정보를 가져오기
+		
 		for(FavoritesDto dto:favorList) {
+			
+			//조회된 즐겨찾기 목록에서 proj num이 null이 아닌 경우 proj 정보를 가져오기
 			if (dto.getFavor_fk_proj_num() != null) {
 				ProjectDto proj = ProjectDto.fromEntity(projRepository.findById(dto.getFavor_fk_proj_num()).get());
 				
@@ -50,10 +56,11 @@ public class FavorServiceImpl implements FavorService {
 		        //날짜(regdate)를 long으로 변환하는 것을 막기 위한 코드
 		        objectMapper.registerModule(new JavaTimeModule());
 		        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); 
+		        
 		        Map<String, Object> map  = objectMapper.convertValue(proj, Map.class);
 				
 		        map.put("favor_id", dto.getFavor_id());
-		        map.put("user_name", userRepository.findById(proj.getProj_fk_user_num()).get().getUserName());
+		   
 		        favorProjList.add(map);
 			}
 		}
@@ -61,7 +68,7 @@ public class FavorServiceImpl implements FavorService {
 	}
 	
 	
-	//즐겨찾기 목록 조회 - 자유게시글
+	//즐겨찾기 목록 - 자유게시글
 	@Override
 	public List<Map<String,Object>> getFavoritePost(int usernum) {
 		
@@ -84,30 +91,28 @@ public class FavorServiceImpl implements FavorService {
 		        
 		        //즐겨찾기 pknum과 유저 이름 함께 전달
 		        map.put("favor_id", dto.getFavor_id());
-		        map.put("user_name", userRepository.findById(post.getPost_fk_user_num()).get().getUserName());
+		        
 		        favorPostList.add(map);
 			}
 		}
 		return favorPostList;
 	}
 	
-	//즐겨찾기에 등록된 글인지 확인
+	//즐겨찾기에 등록된 글인지 확인 (Read용)
 	@Override
 	public FavoritesDto checkFavorite(String type, int usernum, int num) {
-		try {
-			if(type.equalsIgnoreCase("proj")) {
-				FavoritesEntity entity = favorRepository.findByUserEntity_userPkNumAndProjectEntity_projPkNum(usernum, num);
-				return FavoritesDto.fromEntity(entity);
-				
-			} else if (type.equalsIgnoreCase("post")) {
-				FavoritesEntity entity = favorRepository.findByUserEntity_userPkNumAndPostEntity_postPkNum(usernum, num);
-				return FavoritesDto.fromEntity(entity);
-			} else {
-				return null;
-			}
-		} catch(Exception e) {
+	
+		if(type.equalsIgnoreCase("proj")) {
+			FavoritesEntity entity = favorRepository.findByUserEntity_userPkNumAndProjectEntity_projPkNum(usernum, num);
+			return FavoritesDto.fromEntity(entity);
+			
+		} else if (type.equalsIgnoreCase("post")) {
+			FavoritesEntity entity = favorRepository.findByUserEntity_userPkNumAndPostEntity_postPkNum(usernum, num);
+			return FavoritesDto.fromEntity(entity);
+		} else {
 			return null;
 		}
+		
 	}
 	
 	//즐겨찾기 등록

@@ -11,7 +11,7 @@ import CalendarToast from "variables/Toast/CalendarToast";
 const Function = () => {
   const [toastType, setToastType] = useState("");
   const [toastIsOpen, setToastIsOpen] = useState(false);
-  const num = useSelector((state) => state.userData.user_pk_num);
+  const num = useSelector((state) => state.userData.user_pk_num || 0);
   const [events, setEvents] = useState([{}]);
   const handleToast = (text, open) => {
     setToastType(text);
@@ -49,8 +49,7 @@ const Function = () => {
         setEvents([...projEvent, ...todoEvent]);
       })
       .catch((err) => {
-        const errMsg = "서버 응답 실패";
-        navigator(`/error?msg=${errMsg}`);
+        console.log(err);
       });
   };
 

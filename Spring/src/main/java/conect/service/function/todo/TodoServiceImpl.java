@@ -27,27 +27,20 @@ public class TodoServiceImpl implements TodoService {
     }
     
     @Override
-    public boolean dropTodoData(int id) {
-    	try {
-    		todoRepository.deleteById(id);
-    	} catch(Exception e) {
-    		//예외처리
-    		return false;
-    	}
-    	return true;
+    public void addTodoData(TodoForm bean) {
+		TodoEntity entity = TodoForm.toEntity(bean);
+		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
+		todoRepository.save(entity);
     }
     
     @Override
-    public boolean addTodoData(TodoForm bean) {
+    public boolean dropTodoData(int id) {
     	try {
-    		TodoEntity entity = TodoForm.toEntity(bean);
-    		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
-    		todoRepository.save(entity);
+    		todoRepository.deleteById(id);
+        	return true;
     	} catch(Exception e) {
-    		System.out.println(e.getMessage());
     		return false;
     	}
-    	return true;
     }
     
     @Override
@@ -56,11 +49,9 @@ public class TodoServiceImpl implements TodoService {
     		TodoEntity entity = TodoForm.toEntity(bean);
     		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
     		todoRepository.save(entity);
+        	return true;
     	} catch(Exception e) {
-    		System.out.println(e.getMessage());
     		return false;
     	}
-    	return true;
     }
-
 }

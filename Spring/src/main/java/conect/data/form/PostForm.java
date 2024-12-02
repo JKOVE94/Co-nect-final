@@ -4,6 +4,7 @@ import conect.data.entity.PostEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -13,7 +14,7 @@ public class PostForm {
     private int post_kind; //게시글 유형 [INT]
     private String post_targetnum; //게시글 대상 사원번호 [VARCHAR] => String으로 작성 이후 데이터사용은 String tokenizer 사용
     private String post_name; //게시글 제목 [VARCHAR]
-    private Date post_regdate; //게시글 등록일 [DATETIME]
+    private LocalDateTime post_regdate; //게시글 등록일 [DATETIME]
     private String post_import; //게시글 중요도 [VARCHAR] (낮음,보통,높음,매우 높음)
     private String post_content; //게시글 내용 [TEXT]
     private String post_tag; //게시글 태그 [VARCHAR]

@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-const FavorCheck = ({pknum, type}) => {
+const FavorCheck = ({pknum, type, favorList}) => {
     const num = useSelector((state)=>state.userData.user_pk_num);
-    const [isCheck, setIsCheck] = useState();
+    const [isCheck, setIsCheck] = useState(false);
     const [data, setData] = useState({});
 
     useEffect(()=>{
@@ -15,12 +15,12 @@ const FavorCheck = ({pknum, type}) => {
             setData({'favor_fk_user_num':num, 'favor_fk_proj_num':pknum});
         }
 
-        axios.get(`/board/favorite/${type}/${num}/${pknum}`)
-        .then(res => {
-            setIsCheck(res.data);
+        favorList.forEach((data)=>{
+            if(data.post_pk_num === pknum){
+                setIsCheck(true);
+            }
         })
-        .catch();
-    },[num])
+    },[num, pknum, type, favorList])
     
     const handleChange = (e) => {
         setIsCheck(e.target.checked);

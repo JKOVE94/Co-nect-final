@@ -30,6 +30,7 @@ import Function from "components/2dashboard/Function/Function";
 import FreeList from "components/2dashboard/post/FreeList";
 import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
 import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
+import ErrPage from "components/2dashboard/ErrPage";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -75,6 +76,7 @@ const Dashboard = (props) => {
           <Route path="/freefavorite" element={<FreeFavorite />} />
           <Route path="/function" element={<Function />} />
           <Route path="/freelist" element={<FreeList />} />
+          <Route path="/err" element={<ErrPage />} />
         </Routes>
       </div>
     </>
