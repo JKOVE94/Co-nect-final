@@ -14,7 +14,7 @@ public interface ProjService {
 	ProjectDto getProjById(int projPkNum);
 	
 	//프로젝트 생성
-	void addProject(ProjectForm form);
+	int addProject(ProjectForm form);
 	
 	//프로젝트 수정
 	void editProject(int projPkNum, ProjectForm form);

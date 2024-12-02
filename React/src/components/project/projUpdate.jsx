@@ -1,15 +1,8 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // useParams를 사용해 URL 파라미터를 가져옴
-import {
-  Input,
-  Button,
-  FormGroup,
-  Label,
-  Col,
-  Card,
-  CardBody,
-} from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import '../../assets/css/argon-dashboard-react.css'; 
+import { Input, Button, FormGroup, Label, Col, Card, CardBody } from "reactstrap";
 
 const ProjEdit = () => {
   const navigate = useNavigate();
@@ -20,6 +13,8 @@ const ProjEdit = () => {
     proj_fk_user_num: "",
     proj_fk_dpart_num: "",
     proj_members: "",
+    proj_startdate: "",
+    proj_enddate: "",
     proj_import: "",
     proj_status: "",
     proj_desc: "",
@@ -27,6 +22,7 @@ const ProjEdit = () => {
 
   // API에서 데이터 불러오기
   useEffect(() => {
+    console.log(projPkNum);
     const fetchProjectData = async () => {
       try {
         const response = await axios.get(`/board/projread/${projPkNum}`); // ID로 데이터 가져오기

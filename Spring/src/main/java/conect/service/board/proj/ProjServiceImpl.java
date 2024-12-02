@@ -10,12 +10,14 @@ import conect.data.repository.CompanyRepository;
 import conect.data.repository.DepartmentRepository;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjServiceImpl implements ProjService {
@@ -38,41 +40,48 @@ public class ProjServiceImpl implements ProjService {
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
 
+	// 전체 자료 읽기
 	public List<ProjectDto> getListAll() {
 		return prepository.findAll().stream().map(ProjectDto::fromEntity).toList();
 	}
 
+	// 상세보기
 	public ProjectDto getProjById(int projPkNum) {
 		return prepository.findByIdWithUser(projPkNum).map(ProjectDto::fromEntity)
 				.orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
 	}
 
 	// 프로젝트 생성 메서드
-	public void addProject(ProjectForm form) {
-		// DTO (ProjectForm) -> Entity (ProjectEntity)
+	@Transactional
+	public int addProject(ProjectForm form) {
+	    // DTO (ProjectForm) -> Entity (ProjectEntity)
 	    ProjectEntity entity = ProjectForm.toEntity(form);
 
 	    // proj_created가 null인 경우 현재 날짜로 설정
 	    if (entity.getProjCreated() == null) {
 	        entity.setProjCreated(new Date());
 	    }
-	    
+
 	    // 부서, 담당자, 회사 설정
-	    DepartmentEntity deptEntity  = deptRepository
+	    DepartmentEntity deptEntity = deptRepository
 	        .findById(form.getProj_fk_dpart_num())
 	        .orElseThrow(() -> new RuntimeException("부서가 존재하지 않습니다."));
-	    UserEntity userEntity  = userRepository
+	    UserEntity userEntity = userRepository
 	        .findById(form.getProj_fk_user_num())
 	        .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
-//	    CompanyEntity compEntity  = compRepository
-//	        .findById(form.getProj_fk_comp_num())
-//	        .orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
-	    
+	    CompanyEntity compEntity = compRepository
+	        .findById(form.getProj_fk_comp_num())
+	        .orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
+
 	    entity.setDepartmentEntity(deptEntity);
 	    entity.setUserEntity(userEntity);
-//	    entity.setCompanyEntity(compEntity);
+	    entity.setCompanyEntity(compEntity);
 
-	    prepository.save(entity); // Entity 저장
+	    // Entity 저장 후, 저장된 엔티티 반환
+	    ProjectEntity savedEntity = prepository.save(entity);
+
+	    // 저장된 엔티티의 Primary Key 반환
+	    return savedEntity.getProjPkNum();
 	}
     
 	public void editProject(int projPkNum, ProjectForm form) {
