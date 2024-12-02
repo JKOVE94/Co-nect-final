@@ -18,6 +18,8 @@ public class AccountEntity {
     private int accPkAuthornum; //계정 권한 고유번호 [PK, INT] (1, 2, 3)
     private String accAuthor; //계정 권한 [VARCHAR] (일반사용자, 매니저, 관리자)
 
+    /*
     @OneToMany(mappedBy = "accountEntity")
     private List<UserEntity> userEntities;
+    */
 }
