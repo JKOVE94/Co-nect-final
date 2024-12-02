@@ -29,6 +29,7 @@ import Item1 from "layouts/itemFrame/Item1";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import TreeTable from "variables/TreeTable/TreeTable";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -61,6 +62,7 @@ const Dashboard = (props) => {
       <div className="main-content" ref={mainContent}>
         <Navbar/>
         <Header />
+        <TreeTable/>
         <Routes>
           
         </Routes>

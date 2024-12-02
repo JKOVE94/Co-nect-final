@@ -62,12 +62,15 @@
     "react-router-dom": "6.21.1",
     "react-scripts": "5.0.1",
     "reactstrap": "^8.10.0",
+    "rsuite": "^5.74.2",
     "sass": "1.69.5"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
     "cross-env": "^7.0.3",
     "gulp": "4.0.2",
-    "gulp-append-prepend": "1.0.9"
+    "gulp-append-prepend": "1.0.9",
+    "mock": "^0.1.1"
   },
   "optionalDependencies": {
     "eslint-plugin-flowtype": "8.0.3",
