@@ -37,14 +37,19 @@ public class ProjServiceImpl implements ProjService {
 		return prepository.findByProjMembersContaining(pattern)
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
-	
-	public List<ProjectDto> getListAll(){
+
+	public List<ProjectDto> getListAll() {
 		return prepository.findAll().stream().map(ProjectDto::fromEntity).toList();
+	}
+
+	public ProjectDto getProjById(int projPkNum) {
+		return prepository.findByIdWithUser(projPkNum).map(ProjectDto::fromEntity)
+				.orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
 	}
 
 	// 프로젝트 생성 메서드
 	public void addProject(ProjectForm form) {
-	    // DTO (ProjectForm) -> Entity (ProjectEntity)
+		// DTO (ProjectForm) -> Entity (ProjectEntity)
 	    ProjectEntity entity = ProjectForm.toEntity(form);
 
 	    // proj_created가 null인 경우 현재 날짜로 설정
@@ -84,6 +89,8 @@ public class ProjServiceImpl implements ProjService {
 	    
 	    entity.setProjName(updatedEntity.getProjName());
 	    entity.setProjMembers(updatedEntity.getProjMembers());
+	    entity.setProjStartdate(updatedEntity.getProjStartdate());
+        entity.setProjEnddate(updatedEntity.getProjEnddate());
 	    entity.setProjImport(updatedEntity.getProjImport());
 	    entity.setProjStatus(updatedEntity.getProjStatus());
 	    entity.setProjDesc(updatedEntity.getProjDesc());

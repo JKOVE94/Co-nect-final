@@ -11,6 +11,8 @@ public interface ProjService {
 	
 	List<ProjectDto> getListAll();
 	
+	ProjectDto getProjById(int projPkNum);
+	
 	//프로젝트 생성
 	void addProject(ProjectForm form);
 	

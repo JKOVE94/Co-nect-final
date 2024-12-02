@@ -33,6 +33,11 @@ public class BoardController {
 		return projServiceImpl.getListAll();
 	}
 
+	@GetMapping("/projread/{projPkNum}")
+	public ProjectDto getProjById(@PathVariable("projPkNum") int projPkNum) {
+		return projServiceImpl.getProjById(projPkNum);
+	}
+
 	// 프로젝트 생성
 	@PostMapping("/projadd")
 	public String addProject(@RequestBody ProjectForm form) {

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import '../../assets/css/argon-dashboard-react.css'; 
-import { Input, Button, FormGroup, Label, Container, Row, Col, Card, CardBody } from "reactstrap";
+import { Input, Button, FormGroup, Label, Col, Card, CardBody } from "reactstrap";
 
 
 const ProjCreate = () => {
@@ -13,6 +13,8 @@ const ProjCreate = () => {
     proj_fk_user_num: "",
     proj_fk_dpart_num: "",
     proj_members: "",
+    proj_startdate: "",
+    proj_enddate: "",
     proj_import: "",
     proj_status: "",
     proj_desc: "",
@@ -126,6 +128,40 @@ const ProjCreate = () => {
             />
           </Col>
         </FormGroup>
+
+        {/* 시작일 */}
+        <FormGroup row>
+            <Label for="proj_startdate" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+              시작일
+            </Label>
+            <Col sm={10}>
+              <Input
+                type="date"
+                name="proj_startdate"
+                id="proj_startdate"
+                value={formData.proj_startdate}
+                onChange={handleInputChange}
+                required
+              />
+            </Col>
+          </FormGroup>
+
+          {/* 종료일 */}
+          <FormGroup row>
+            <Label for="proj_enddate" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+              종료일
+            </Label>
+            <Col sm={10}>
+              <Input
+                type="date"
+                name="proj_enddate"
+                id="proj_enddate"
+                value={formData.proj_enddate}
+                onChange={handleInputChange}
+                required
+              />
+            </Col>
+          </FormGroup>
 
         {/* 우선순위 */}
         <FormGroup row>
