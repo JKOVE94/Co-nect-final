@@ -43,7 +43,6 @@ public class ProjServiceImpl implements ProjService {
 	}
 
 	// 프로젝트 생성 메서드
-	@Override
 	public void addProject(ProjectForm form) {
 	    // DTO (ProjectForm) -> Entity (ProjectEntity)
 	    ProjectEntity entity = ProjectForm.toEntity(form);
@@ -60,18 +59,18 @@ public class ProjServiceImpl implements ProjService {
 	    UserEntity userEntity  = userRepository
 	        .findById(form.getProj_fk_user_num())
 	        .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
-	    CompanyEntity compEntity  = compRepository
-	        .findById(form.getProj_fk_comp_num())
-	        .orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
+//	    CompanyEntity compEntity  = compRepository
+//	        .findById(form.getProj_fk_comp_num())
+//	        .orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
 	    
 	    entity.setDepartmentEntity(deptEntity);
 	    entity.setUserEntity(userEntity);
-	    entity.setCompanyEntity(compEntity);
+//	    entity.setCompanyEntity(compEntity);
 
 	    prepository.save(entity); // Entity 저장
 	}
     
-	public void editProject(ProjectForm form) {
+	public void editProject(int projPkNum, ProjectForm form) {
 	    // 프로젝트 번호로 기존 프로젝트 조회
 	    ProjectEntity entity = prepository
 	        .findById(form.getProj_pk_num())
@@ -83,6 +82,11 @@ public class ProjServiceImpl implements ProjService {
 	    // proj_created 값을 기존 값으로 유지
 	    updatedEntity.setProjCreated(entity.getProjCreated());
 	    
+	    entity.setProjName(updatedEntity.getProjName());
+	    entity.setProjMembers(updatedEntity.getProjMembers());
+	    entity.setProjImport(updatedEntity.getProjImport());
+	    entity.setProjStatus(updatedEntity.getProjStatus());
+	    entity.setProjDesc(updatedEntity.getProjDesc());
 	    entity.setProjUpdated(new Date()); // 프로젝트 수정 날짜 설정
 
 	    // 부서, 담당자, 회사 설정
@@ -92,13 +96,13 @@ public class ProjServiceImpl implements ProjService {
 	    UserEntity userEntity = userRepository
 	        .findById(form.getProj_fk_user_num())
 	        .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
-	    CompanyEntity compEntity = compRepository
-	        .findById(form.getProj_fk_comp_num())
-	        .orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
+//	    CompanyEntity compEntity = compRepository
+//	        .findById(form.getProj_fk_comp_num())
+//	        .orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
 
 	    entity.setDepartmentEntity(deptEntity);
 	    entity.setUserEntity(userEntity);
-	    entity.setCompanyEntity(compEntity);
+//	    entity.setCompanyEntity(compEntity);
 
 	    prepository.save(entity); // 수정된 Entity 저장
 	}

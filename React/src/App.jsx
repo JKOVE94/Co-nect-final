@@ -9,7 +9,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/board/projadd" element={<ProjCreate />} />
-        <Route path="/board/projedit" element={<ProjUpdate />} />
+        <Route path="/board/projedit/:projPkNum" element={<ProjUpdate />} />
       </Routes>
     </BrowserRouter>
   );

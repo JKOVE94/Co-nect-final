@@ -15,5 +15,5 @@ public interface ProjService {
 	void addProject(ProjectForm form);
 	
 	//프로젝트 수정
-	void editProject(ProjectForm form);
+	void editProject(int projPkNum, ProjectForm form);
 }

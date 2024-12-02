@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,6 @@ import conect.service.board.proj.ProjServiceImpl;
 
 @RestController
 @RequestMapping("/board")
-@CrossOrigin(origins = "http://localhost:3000")
 public class BoardController {
 	@Autowired
 	private ProjServiceImpl projServiceImpl;
@@ -45,14 +45,15 @@ public class BoardController {
 		}
 	}
 	
-	@PutMapping("/projedit")
-	public String editProject(@RequestBody ProjectForm form) {
-		try {
-			projServiceImpl.editProject(form);
-			return "프로젝트가 수정 성공!";
-		} catch (Exception e) {
-			e.printStackTrace(); // 로그로 에러 확인
-			return "프로젝트 수정 실패: " + e.getMessage();
-		}
-	}
+	@PutMapping("/projedit/{projPkNum}")
+	   public String editProject(@PathVariable("projPkNum") int projPkNum, @RequestBody ProjectForm form) {
+	      try {
+	         projServiceImpl.editProject(projPkNum, form);
+	         return "프로젝트 수정 성공!";
+	      } catch (Exception e) {
+	         e.printStackTrace(); // 로그로 에러 확인
+	         return "프로젝트 수정 실패: " + e.getMessage();
+	      }
+	   }
+
 }
