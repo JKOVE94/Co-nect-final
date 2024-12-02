@@ -145,7 +145,7 @@ const FreeCreate = () => {
           className="btn btn-secondary"
           onClick={handleBackToList} // 목록으로 돌아가기 버튼 클릭 시
         >
-          목록으로 돌아가기
+          목록
         </button>
       </form>
       </CardBody>

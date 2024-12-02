@@ -48,28 +48,34 @@ const FreeDetail = () => {
        <Row>
        <Col>
       <Card>
-      <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
+      <CardHeader>
+      <h2>자유게시판</h2>
+      </CardHeader>
+      <CardBody style={{ maxHeight: "40em", overflowY: "auto",fontSize: "1.2rem" }}>
         <div>
             {post ? (
-                <div>
-                    <h2>제목 : {post.post_name}</h2> {/* 게시글 제목 */}
-                    <h3>대상 사원 : {post.post_targetnum}</h3>
-                    <h3>중요도 : {post.post_import}</h3> {/* 게시글 중요도 */}
-                    <h3>내용 : {post.post_content}</h3> {/* 게시글 내용 */}
-
+                <table className="table" style={{ fontSize: "1.2rem" }}>
+                    <tbody>
+                   <tr>제    목  {post.post_name}</tr> {/* 게시글 제목 */}
+                   <tr>대상번호  {post.post_targetnum}</tr>
+                   <tr>중 요 도  {post.post_import}</tr> {/* 게시글 중요도 */}
+                   <tr>내    용 {post.post_content} </tr> {/* 게시글 내용 */}
+                   </tbody>
+                
+                   <br/>
                     {/* 수정 버튼 */}
-                    <button className="btn btn-primary" onClick={() => navigate(`/main/free/edit/${postPkNumInt}`)}>
-                        수정
-                    </button>
+                    <button className="btn btn-primary" onClick={() => navigate(`/main/free/update/${postPkNumInt}`)}>수정</button>&nbsp;&nbsp;
 
                     {/* 삭제 버튼 */}
-                    <button className="btn btn-primary" onClick={handleDelete}>삭제</button>
+                    <button className="btn btn-primary" onClick={handleDelete}>삭제</button>&nbsp;&nbsp;
+                    {/* 목록 버튼 */}
+                    <button className="btn btn-primary" onClick={() => navigate('/main/free')}>목록</button>
 
-                </div>
+                </table>
             ) : (
                 <div>게시글을 찾을 수 없습니다.</div>
             )}
-            <button className="btn btn-primary" onClick={() => navigate('/main/free')}>목록</button>
+            
         </div>
      </CardBody>
          </Card>

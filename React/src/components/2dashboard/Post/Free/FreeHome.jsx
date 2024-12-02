@@ -22,7 +22,7 @@ const FreeHome = () => {
           <Route path="/create" element={<FreeCreate />} />
           <Route path="/detail/:postPkNum" element={<FreeDetail />} />
           <Route path="/delete" element={<FreeDelete />} />
-          <Route path="/update" element={<FreeUpdate />} />
+          <Route path="/update/:postPkNum" element={<FreeUpdate />} />
     </Routes>
     </div>
   );

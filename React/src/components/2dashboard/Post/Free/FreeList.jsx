@@ -73,11 +73,12 @@ const FreeList = () => {
               <td colSpan="4">게시글이 없습니다.</td>
             </tr>
           )}
+           <button className="btn btn-primary" onClick={() => navigate(`/main/free/create`)}>글쓰기</button>
         </tbody>
         </table>
         </CardBody>
         </Card>
-      <Link to="/main/free/create">새 게시글 작성하기</Link>
+       
       </Container>
   );
 };
