@@ -27,7 +27,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Dashboard from "layouts/Dashboard";
 import Manage from "layouts/Manage";
-import Login from "views/Login";
+import Login from "layouts/Login";
 import Store from "./Redux/Store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -38,7 +38,7 @@ root.render(
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/main/*" element={<Dashboard />} />
-      <Route path="/manage" element={<Manage />} />
+      <Route path="/manage/*" element={<Manage />} />
     </Routes>
   </BrowserRouter>
   </Provider>

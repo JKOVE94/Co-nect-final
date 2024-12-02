@@ -48,17 +48,7 @@ import Header from "components/2dashboard/Headers/Header.js";
 const Index = (props) => {
   return (
     <>
-      <Header />
-      {/* Page content */}
-      <Container className="mt--7" fluid>
-        <Row>
-          <Col className="mb-5 mb-xl-0" xl="8">
-            <Card className="bg-gradient-default shadow">
-              <CardHeader className="bg-transparent">제목</CardHeader>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+ 
     </>
   );
 };
