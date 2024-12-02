@@ -23,7 +23,7 @@ const CommonNavbar = () => {
             </SubMenu>
             <SubMenu label="게시판" icon={<i className="fa fa-window-maximize text-success text-sm opacity-10" />}>
               <NavItem>
-                <NavLink to="" tag={NavLinkRRD}>자유게시판</NavLink>
+                <NavLink to="/main/free" tag={NavLinkRRD}>자유게시판</NavLink>
               </NavItem>
             </SubMenu>
             <SubMenu label="업무관리" icon={<i className="ni ni-calendar-grid-58 text-warning text-sm opacity-10" />}>

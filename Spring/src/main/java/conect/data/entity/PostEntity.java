@@ -7,9 +7,6 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Setter
 @Getter
 @Entity
@@ -30,19 +27,15 @@ public class PostEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "post_fk_user_num")
-	@JsonIgnore
 	private UserEntity userEntity;
 
 	@ManyToOne
 	@JoinColumn(name = "post_fk_comp_num")
-	@JsonIgnore
 	private CompanyEntity companyEntity;
 
 	@OneToMany(mappedBy = "postEntity")
-	@JsonBackReference
 	private List<ReplyEntity> replyEntities;
 
 	@OneToMany(mappedBy = "postEntity")
-	@JsonBackReference
 	private List<FavoritesEntity> favoritesEntities;
 }

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const FreeDetail = () => {
     const postPkNumInt = parseInt(useParams().postPkNum, 10); // URL에서 'postPkNum'을 추출하고 숫자로 변환
+    console.log(postPkNumInt)
     const navigate = useNavigate();
     const [post, setPost] = useState({});
     const [loading, setLoading] = useState(true);
@@ -42,6 +44,11 @@ const FreeDetail = () => {
     if (error) return <div>Error: {error}</div>; // 에러 발생 시
 
     return (
+        <Container fluid style={{ marginTop: "2em" }}>
+       <Row>
+       <Col>
+      <Card>
+      <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
         <div>
             {post ? (
                 <div>
@@ -51,19 +58,24 @@ const FreeDetail = () => {
                     <h3>내용 : {post.post_content}</h3> {/* 게시글 내용 */}
 
                     {/* 수정 버튼 */}
-                    <button onClick={() => navigate(`/board/free/edit/${postPkNumInt}`)}>
+                    <button className="btn btn-primary" onClick={() => navigate(`/main/free/edit/${postPkNumInt}`)}>
                         수정
                     </button>
 
                     {/* 삭제 버튼 */}
-                    <button onClick={handleDelete}>삭제</button>
+                    <button className="btn btn-primary" onClick={handleDelete}>삭제</button>
 
                 </div>
             ) : (
                 <div>게시글을 찾을 수 없습니다.</div>
             )}
-            <button onClick={() => navigate('/board/free')}>목록으로 돌아가기</button>
+            <button className="btn btn-primary" onClick={() => navigate('/main/free')}>목록</button>
         </div>
+     </CardBody>
+         </Card>
+         </Col>
+         </Row>
+         </Container>
     );
 };
 
