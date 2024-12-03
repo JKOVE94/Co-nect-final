@@ -1,30 +1,40 @@
 package conect.controller;
 
-import java.util.List;
+import conect.data.dto.ProjectDto;
+import conect.data.dto.TaskDto;
+import conect.service.board.proj.ProjService;
+import conect.service.board.proj.ProjServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import conect.data.dto.ProjectDto;
-import conect.service.board.proj.ProjServiceImpl;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/board")
 public class BoardController {
-	@Autowired
+
+ 
+    
+    @Autowired
 	private ProjServiceImpl projServiceImpl;
 
-    //즐겨찾기 (/board/favorite)
 
-    //자유게시판 (/board/free)
+    @RequestMapping("/task/proj/{task_fk_proj_num}")
+    public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable("task_fk_proj_num") int task_fk_proj_num) {
+        return projServiceImpl.getAllTask(task_fk_proj_num);
+    }
 
-    //프로젝트게시판 (/board/proj)
-	
+    @RequestMapping("/task/user/{user_pk_num}")
+    public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable("user_pk_num") int user_pk_num) {
+        return projServiceImpl.getAllTaskWithUser(user_pk_num);
+    }
+    
 	@GetMapping("/projread")
 	public List<ProjectDto> getListAll(){
 		return projServiceImpl.getListAll();
@@ -34,4 +44,11 @@ public class BoardController {
 		public ProjectDto getProjById(@PathVariable("projPkNum")int projPkNum){
 		return projServiceImpl.getProjById(projPkNum);
 	}
+	
+	
+	@GetMapping("/{user_pk_num}")
+    public ResponseEntity<Map<String, Object>> getUserRelatedData(@PathVariable("user_pk_num") int userPkNum) {
+        Map<String, Object> userData = projServiceImpl.getUserRelatedData(userPkNum);
+        return ResponseEntity.ok(userData);
+    }
 }

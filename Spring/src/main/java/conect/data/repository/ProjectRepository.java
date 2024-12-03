@@ -1,6 +1,7 @@
 package conect.data.repository;
 
 import conect.data.entity.ProjectEntity;
+import conect.data.entity.TaskEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,9 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> 
 	
 	 @Query("SELECT p FROM ProjectEntity p JOIN FETCH p.userEntity WHERE p.projPkNum = :projPkNum")
 	    Optional<ProjectEntity> findByIdWithUser(@Param("projPkNum") int projPkNum);
+	 
+	 @Query("SELECT p FROM ProjectEntity p WHERE p.userEntity.userPkNum = ?1")
+	    List<ProjectEntity> getProjByTaskFkUserNum(int task_fk_user_num);
 
 
 }

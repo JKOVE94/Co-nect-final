@@ -29,7 +29,7 @@ public class TaskEntity {
     private int taskDepth;
     private String taskTag;
     private String taskTagcol;
-    private int taskFkTaskNum;
+    private Integer taskFkTaskNum;
 
     @ManyToOne
     @JoinColumn(name="task_fk_proj_num")

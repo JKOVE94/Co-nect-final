@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
@@ -28,7 +27,7 @@ public class TaskDto {
     private String task_tagcol;
     private int task_fk_user_num; //담당자 사번 [FK, INT]
     private int task_fk_proj_num; //연관된 프로젝트 번호 [FK, INT]
-    private int task_fk_task_num; //상위 업무 번호 [FK, INT]
+    private Integer task_fk_task_num; //상위 업무 번호 [FK, INT]
 
     public static TaskDto fromEntity(TaskEntity entity) {
         TaskDto dto = new TaskDto();
