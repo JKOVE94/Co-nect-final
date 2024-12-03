@@ -34,6 +34,20 @@ public class BoardController {
     //자유게시판 (/board/free)
 
     //프로젝트게시판 (/board/proj)
+	
+	// 전체 프로젝트 리스트 조회
+	@GetMapping("/projlist")
+	public ResponseEntity<?> getAllProjects() {
+	    try {
+	        List<ProjectDto> projectList = projServiceImpl.getListAll();
+	        return ResponseEntity.ok(projectList); // 성공 시 전체 리스트 반환
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 로그로 에러 확인
+	        return ResponseEntity
+	        		.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	        		.body("프로젝트 리스트 조회 실패: " + e.getMessage());
+	    }
+	}
 
 	// 상세보기
 	@GetMapping("/projread/{projPkNum}")
@@ -55,15 +69,17 @@ public class BoardController {
 	    }
 	}
 
+	// 프로젝트 수정
 	@PutMapping("/projedit/{projPkNum}")
-	public String editProject(@PathVariable("projPkNum") int projPkNum, @RequestBody ProjectForm form) {
-		try {
-			projServiceImpl.editProject(projPkNum, form);
-			return "프로젝트 수정 성공!";
-		} catch (Exception e) {
-			e.printStackTrace(); // 로그로 에러 확인
-			return "프로젝트 수정 실패: " + e.getMessage();
-		}
+	public ResponseEntity<?> editProject(@PathVariable("projPkNum") int projPkNum, @RequestBody ProjectForm form) {
+	    try {
+	        projServiceImpl.editProject(projPkNum, form);
+	        return ResponseEntity.ok("프로젝트 수정 성공!"); // 성공 시 메시지 반환
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 로그로 에러 확인
+	        return ResponseEntity
+	        		.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	        		.body("프로젝트 수정 실패: " + e.getMessage());
+	    }
 	}
-
 }

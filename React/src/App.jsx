@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProjCreate from "./components/project/projCreate.jsx";
+import ProjList from "./components/project/projList.jsx";
 import ProjRead from "./components/project/projRead.jsx";
 import ProjUpdate from "./components/project/projUpdate.jsx";
 
@@ -10,6 +11,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/board/projadd" element={<ProjCreate />} />
+        <Route path="/board/projlist" element={<ProjList />} />
         <Route path="/board/projread/:projPkNum" element={<ProjRead />} />
         <Route path="/board/projedit/:projPkNum" element={<ProjUpdate />} />
       </Routes>

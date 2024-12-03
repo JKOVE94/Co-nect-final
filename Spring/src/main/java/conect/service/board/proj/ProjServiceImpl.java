@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,10 @@ public class ProjServiceImpl implements ProjService {
 
 	// 전체 자료 읽기
 	public List<ProjectDto> getListAll() {
-		return prepository.findAll().stream().map(ProjectDto::fromEntity).toList();
+	    // findAll()이 반환하는 타입이 List<ProjectEntity>인지 확인하고, DTO로 변환
+	    return prepository.findAll().stream()
+	            .map(ProjectDto::fromEntity)  // Entity에서 DTO로 변환
+	            .collect(Collectors.toList()); // .toList()는 Java 16 이후에 사용할 수 있으므로 Java 11 이하에서는 collect(Collectors.toList())로 사용
 	}
 
 	// 상세보기
@@ -92,9 +96,7 @@ public class ProjServiceImpl implements ProjService {
 
 	    // 기존 proj_created 값은 그대로 유지하고, 나머지 필드를 수정
 	    ProjectEntity updatedEntity = ProjectForm.toEntity(form);
-
-	    // proj_created 값을 기존 값으로 유지
-	    updatedEntity.setProjCreated(entity.getProjCreated());
+	    updatedEntity.setProjCreated(entity.getProjCreated()); // 기존 생성일을 유지
 	    
 	    entity.setProjName(updatedEntity.getProjName());
 	    entity.setProjMembers(updatedEntity.getProjMembers());
@@ -112,13 +114,13 @@ public class ProjServiceImpl implements ProjService {
 	    UserEntity userEntity = userRepository
 	        .findById(form.getProj_fk_user_num())
 	        .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
-//	    CompanyEntity compEntity = compRepository
-//	        .findById(form.getProj_fk_comp_num())
-//	        .orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
+	    CompanyEntity compEntity = compRepository
+	        .findById(form.getProj_fk_comp_num())
+	        .orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
 
 	    entity.setDepartmentEntity(deptEntity);
 	    entity.setUserEntity(userEntity);
-//	    entity.setCompanyEntity(compEntity);
+	    entity.setCompanyEntity(compEntity);
 
 	    prepository.save(entity); // 수정된 Entity 저장
 	}
