@@ -47,15 +47,15 @@ public class ProjectEntity {
     @JsonIgnore
     private CompanyEntity companyEntity;
 
-    @OneToMany(mappedBy = "projectEntity")
+    @OneToMany(mappedBy = "projectEntity",orphanRemoval = true)
     @JsonBackReference
     private List<TaskEntity> taskEntities;
 
-    @OneToMany(mappedBy = "projectEntity")
+    @OneToMany(mappedBy = "projectEntity",orphanRemoval = true)
     @JsonBackReference
     private List<ReplyEntity> replyEntities;
 
-    @OneToMany(mappedBy = "projectEntity")
+    @OneToMany(mappedBy = "projectEntity",orphanRemoval = true)
     @JsonBackReference
     private List<FavoritesEntity> favoritesEntities;
 }

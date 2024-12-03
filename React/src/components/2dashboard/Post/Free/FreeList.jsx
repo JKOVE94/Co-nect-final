@@ -25,11 +25,6 @@ const FreeList = () => {
 
   const navigate = useNavigate();
 
-  // 게시글 번호 클릭 시 상세 페이지로 이동
-  const handlePostClick = (postNum) => {
-    navigate(`/board/free/list/${postNum}`);
-  };
-
   // 날짜 포맷팅 함수
   const formatDate = (date) => {
     return format(new Date(date), "yyyy-MM-dd"); // YYYY-MM-DD 형식으로 변환
@@ -58,7 +53,7 @@ const FreeList = () => {
               <tr key={post.post_pk_num || `post-${index}`}>
                 <td>{post.post_pk_num}</td>
                 <td>
-                  <Link to={`/main/free/detail/${post.post_fk_user_num}`}>
+                  <Link to={`/main/free/detail/${post.post_pk_num}`}>
                     {post.post_name}
                   </Link>
                 </td>

@@ -9,7 +9,7 @@ const FreeCreate = () => {
   const [formData, setFormData] = useState({
     post_targetnum: "",  
     post_name: "",        
-    post_fk_user_num: "", 
+    post_fk_user_num: "1", 
     post_fk_comp_num: "1", // 기본값 1
     post_import: "",      // 기본값 빈 문자열
     post_content: "",     // 기본값 빈 문자열
@@ -25,25 +25,22 @@ const FreeCreate = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const regDate = new Date().toISOString(); 
-    const compNum = formData.post_fk_comp_num || "1";
-  
-    // 요청 데이터를 로그로 출력해서 확인
-    console.log("Form data:", formData);
 
+    // 기본값 처리
     const formToSubmit = {
       ...formData,
-      regdate: regDate, // 현재 시간 추가
-      post_fk_comp_num: formData.post_fk_comp_num || "1", // null 이거나 빈 값일 경우 기본값 "1"
-      post_kind: "1",   // 기본값 "1"
-      post_fk_dpart_num: "1", // 기본값 "1"
-      post_tag: "red",  // 기본값 "red"
+      post_fk_user_num: formData.post_fk_user_num || "1",  // 값이 없으면 "1"로 설정
+      post_fk_comp_num: formData.post_fk_comp_num || "1",  // 값이 없으면 "1"로 설정
+      regdate: new Date().toISOString(),  // 현재 시간 추가
+      post_kind: "1",    // 기본값
+      post_fk_dpart_num: "1", // 기본값
+      post_tag: "red",   // 기본값
     };
-    const url = "/board/free";  // 요청 URL
-  
-    // 요청 데이터를 확인 후 필요한 경우 수정
+
+    console.log('Form data before submitting:', formToSubmit);
+
     axios
-      .post(url, formToSubmit)
+      .post("/board/free", formToSubmit)
       .then((response) => {
         if(response.data.isSuccess) {
           navigate("/board/free");
@@ -53,11 +50,12 @@ const FreeCreate = () => {
         console.error("게시글 저장 중 오류:", error);
         alert("저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status);
       });
-  };
+};
+
   
 
   const handleBackToList = () => {
-    navigate('/main/free'); // React Router로 리디렉션
+    navigate('/board/free'); // React Router로 리디렉션
   };
 
   return (
@@ -81,9 +79,9 @@ const FreeCreate = () => {
             required
           >
             <option value="">대상 번호를 선택하세요</option>
-            <option value="1">1:경영진</option>
-            <option value="2">2:인사팀</option>
-            <option value="3">3:재무팀</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
           </select>
         </div>
         <div className="form-group">

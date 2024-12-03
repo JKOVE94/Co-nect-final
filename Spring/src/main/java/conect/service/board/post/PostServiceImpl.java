@@ -49,10 +49,9 @@ public class PostServiceImpl implements PostService {
 
 	// 수정
 	@Override
-	public PostEntity updatePost(int postPkNum, PostForm postForm) { // postId를 postPkNum으로 변경
+	public PostDto updatePost(int postPkNum, PostForm postForm) { // postId를 postPkNum으로 변경
 		PostEntity updatePost = frepository.findById(postPkNum).orElse(null); // postId를 postPkNum으로 변경
 		if (updatePost != null) {
-
 			updatePost.setPostKind(postForm.getPost_kind());
 			updatePost.setPostTargetnum(postForm.getPost_targetnum());
 			updatePost.setPostName(postForm.getPost_name());
@@ -61,8 +60,8 @@ public class PostServiceImpl implements PostService {
 			updatePost.setPostContent(postForm.getPost_content());
 			updatePost.setPostTag(postForm.getPost_tag());
 			updatePost.setPostDepth(postForm.getPost_depth());
-			updatePost.setPostView(postForm.getPost_view());
-			return frepository.save(updatePost);
+			updatePost.setPostView(postForm.getPost_view());			
+			return PostDto.fromEntity(frepository.save(updatePost));
 		}
 		return null;
 	}

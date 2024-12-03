@@ -59,10 +59,10 @@ public class BoardController {
 
 	// 게시글 수정
 	@PutMapping("/free/{postPkNum}")
-	public ResponseEntity<PostEntity> updatePost(@PathVariable("postPkNum") int postPkNum,
+	public ResponseEntity<PostDto> updatePost(@PathVariable("postPkNum") int postPkNum,
 			@RequestBody PostForm postForm) {
 		try {
-			PostEntity updatedPost = postService.updatePost(postPkNum, postForm);
+			PostDto updatedPost = postService.updatePost(postPkNum, postForm);
 			if (updatedPost != null) {
 				return new ResponseEntity<>(updatedPost, HttpStatus.OK);
 			} else {

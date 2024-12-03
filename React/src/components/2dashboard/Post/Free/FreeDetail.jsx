@@ -5,7 +5,6 @@ import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const FreeDetail = () => {
     const postPkNumInt = parseInt(useParams().postPkNum, 10); // URL에서 'postPkNum'을 추출하고 숫자로 변환
-    console.log(postPkNumInt)
     const navigate = useNavigate();
     const [post, setPost] = useState({});
     const [loading, setLoading] = useState(true);
@@ -42,7 +41,6 @@ const FreeDetail = () => {
 
     if (loading) return <div>Loading...</div>; // 로딩 중일 때
     if (error) return <div>Error: {error}</div>; // 에러 발생 시
-
     return (
         <Container fluid style={{ marginTop: "2em" }}>
        <Row>
@@ -54,29 +52,42 @@ const FreeDetail = () => {
       <CardBody style={{ maxHeight: "40em", overflowY: "auto",fontSize: "1.2rem" }}>
         <div>
             {post ? (
-                <table className="table" style={{ fontSize: "1.2rem" }}>
-                    <tbody>
-                   <tr>제    목  {post.post_name}</tr> {/* 게시글 제목 */}
-                   <tr>대상번호  {post.post_targetnum}</tr>
-                   <tr>중 요 도  {post.post_import}</tr> {/* 게시글 중요도 */}
-                   <tr>내    용 {post.post_content} </tr> {/* 게시글 내용 */}
-                   </tbody>
-                
-                   <br/>
-                    {/* 수정 버튼 */}
-                    <button className="btn btn-primary" onClick={() => navigate(`/main/free/update/${postPkNumInt}`)}>수정</button>&nbsp;&nbsp;
-
-                    {/* 삭제 버튼 */}
-                    <button className="btn btn-primary" onClick={handleDelete}>삭제</button>&nbsp;&nbsp;
-                    {/* 목록 버튼 */}
-                    <button className="btn btn-primary" onClick={() => navigate('/main/free')}>목록</button>
-
-                </table>
+              <table className="table" style={{ fontSize: "1.2rem", border: "1px solid lightgray"}}>
+              <tbody>
+                  <tr>
+                      <td style={{ width: "10%", textAlign: "left"  }}>제 목</td> 
+                      <td style={{ width: "90%", textAlign: "left"  }}>{post.post_name}</td>
+                  </tr>
+                  <tr>
+                      <td style={{ width: "10%", textAlign: "left"  }}>대상사원</td>  
+                      <td style={{ width: "90%", textAlign: "left"  }}>{post.post_targetnum}</td>
+                  </tr>
+                  <tr>
+                      <td style={{ width: "10%", textAlign: "left"  }}>중 요 도</td>  
+                      <td style={{ width: "90%", textAlign: "left"  }}>{post.post_import}</td>
+                  </tr>    
+                  <tr>
+                      <td style={{ width: "10%", textAlign: "left"  }}>작 성 일</td>  
+                      <td style={{ width: "90%", textAlign: "left"  }}>{new Date(post.post_regdate).toISOString().split('T')[0]}</td>
+                  </tr>                    
+                  <tr>
+                      <td style={{ width: "10%", textAlign: "left"  }}> 내    용</td> 
+                      <td style={{ width: "90%", textAlign: "left"  }}>{post.post_content}</td> 
+                  </tr>
+              </tbody>
+          </table>
+          
             ) : (
                 <div>게시글을 찾을 수 없습니다.</div>
             )}
-            
-        </div>
+                    <br/>
+                    
+                    <button className="btn btn-primary" onClick={() => navigate(`/main/free/update/${postPkNumInt}`)}>수정</button>
+                    <button className="btn btn-primary" onClick={handleDelete}>삭제</button>
+                    <button className="btn btn-primary" onClick={() => navigate('/main/free')}>목록</button>
+                </div>
+        <br/>
+        <div>댓글 공간</div>
      </CardBody>
          </Card>
          </Col>

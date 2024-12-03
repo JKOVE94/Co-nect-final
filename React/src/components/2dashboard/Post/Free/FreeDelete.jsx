@@ -11,7 +11,7 @@ const FreeDelete = ({ postPkNum }) => {
                 // 삭제 API 호출
                 await axios.delete(`/board/free/${postPkNum}`);
                 alert("게시글이 성공적으로 삭제되었습니다.");
-                navigate("/posts"); // 게시글 목록 페이지로 이동
+                navigate("/main"); // 게시글 목록 페이지로 이동
             } catch (error) {
                 console.error("게시글 삭제 중 오류 발생:", error);
                 alert("게시글 삭제에 실패했습니다. 다시 시도해 주세요.");

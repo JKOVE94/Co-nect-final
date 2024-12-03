@@ -38,7 +38,7 @@ const FreeUpdate = () => {
             const response = await axios.put(`/board/free/${postPkNum}`, post);
             if (response.status === 200) {
                 alert("게시글이 성공적으로 수정되었습니다.");
-                navigate(`/main/free/${postPkNum}`); // Redirect to the post detail page after update
+                navigate(`/main/free/detail/${postPkNum}`); // Redirect to the post detail page after update
             }
         } catch (error) {
             console.error("Error updating post:", error);
@@ -48,7 +48,7 @@ const FreeUpdate = () => {
 
     const handleCancel = () => {
         // 수정하지 않고 상세보기 페이지로 이동
-        navigate(`/main/free/${postPkNum}`);
+        navigate(`/detail/:postPkNum${postPkNum}`);
     };
 
     return (
@@ -94,9 +94,7 @@ const FreeUpdate = () => {
                         required
                     />
                 </div>
-                <button className="btn btn-primary" onClick={() => navigate('/detail/:postPkNum')} type="submit">수정</button>
-                {/* 목록 버튼 */}
-                <button className="btn btn-primary" onClick={() => navigate('/main/free')}>목록</button>
+                <button type="submit">수정</button>
             </form>
         </div>
     );

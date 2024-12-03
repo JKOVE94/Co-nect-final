@@ -17,7 +17,7 @@ public interface PostService {
 	PostDto getPost(int postPkNum);
 
 	// 수정
-	PostEntity updatePost(int postPkNum, PostForm postForm);
+	PostDto updatePost(int postPkNum, PostForm postForm);
 
 	// 삭제
 	void deletePost(int postPkNum);
