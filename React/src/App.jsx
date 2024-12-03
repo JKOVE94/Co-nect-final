@@ -3,6 +3,7 @@ import ProjCreate from "./components/project/projCreate.jsx";
 import ProjList from "./components/project/projList.jsx";
 import ProjRead from "./components/project/projRead.jsx";
 import ProjUpdate from "./components/project/projUpdate.jsx";
+import { ToastContainer } from 'react-toastify'; 
 
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/board/projread/:projPkNum" element={<ProjRead />} />
         <Route path="/board/projedit/:projPkNum" element={<ProjUpdate />} />
       </Routes>
+      <ToastContainer />
     </BrowserRouter>
   );
 };
