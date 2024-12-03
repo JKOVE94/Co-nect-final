@@ -61,7 +61,7 @@ const pageButtons = Array.from(
   
 
   return (
-    <Container fluid style={{Height: "60em", marginTop: "2em" }}>
+    <Container fluid style={{Height: "40em", marginTop: "2em" }}>
      <Card style={{ Height: "40em", overflowY: "auto" }}>
       <CardHeader>
       <h2>자유 게시판</h2>
