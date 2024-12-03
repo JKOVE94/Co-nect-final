@@ -1,0 +1,104 @@
+/* 공통 스타일 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* 페이지 배경 */
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 */
+    background-color: #ffffff;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #343a40;
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff; /* 강조 텍스트 색 */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.table th {
+    background-color: #f1f1f1; /* 테이블 헤더 배경 */
+    color: #6c757d;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    color: #495057;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table tr:hover {
+    background-color: #f8f9fa; /* 행 호버 효과 */
+}
+
+.table td:last-child {
+    color: #007bff; /* 강조된 텍스트 */
+}
+
+.button {
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.btn {
+    color: #fff;
+    background-color: #007bff; /* 버튼 배경 */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* 버튼 호버 */
+}
+
+.btn:focus {
+    outline: none;
+}
+
+/* 진행도 바 스타일 */
+.progress-container {
+    position: relative;
+    background-color: #e9ecef;
+    height: 8px;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 5px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #17a2b8;
+    transition: width 0.3s ease-in-out;
+}
