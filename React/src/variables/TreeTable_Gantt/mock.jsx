@@ -11,7 +11,7 @@ export const mockTreeData = ({ limits, labels, getRowData }) => {
       for (let i = 0; i < limits[layer]; i++) {
         node.children.push(createNode(layer + 1, node.id));
       }
-    }
+    }s
 
     return node;
   };

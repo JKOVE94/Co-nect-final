@@ -29,7 +29,7 @@ import Item1 from "layouts/itemFrame/Item1";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import TreeTable from "variables/TreeTable/TreeTable";
+import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -62,12 +62,11 @@ const Dashboard = (props) => {
       <div className="main-content" ref={mainContent}>
         <Navbar/>
         <Header />
-        <TreeTable/>
+        <TreeAndGantt/>
         <Routes>
           
         </Routes>
         <Container fluid style={{padding:"3em"}}>
-          <Item1/>
           <Footer />
         </Container>
       </div>

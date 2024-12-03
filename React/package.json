@@ -55,6 +55,7 @@
     "react-bootstrap": "^2.10.6",
     "react-chartjs-2": "2.11.2",
     "react-copy-to-clipboard": "5.1.0",
+    "react-datepicker": "^7.5.0",
     "react-datetime": "3.2.0",
     "react-dom": "18.2.0",
     "react-pro-sidebar": "^1.1.0",
