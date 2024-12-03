@@ -61,12 +61,12 @@ const pageButtons = Array.from(
   
 
   return (
-    <Container fluid style={{ marginTop: "2em" }}>
-     <Card fluid>
+    <Container fluid style={{Height: "60em", marginTop: "2em" }}>
+     <Card style={{ Height: "40em", overflowY: "auto" }}>
       <CardHeader>
       <h2>자유 게시판</h2>
       </CardHeader> 
-      <CardBody style={{ maxHeight: "50em", overflowY: "auto" }}>
+      <CardBody style={{ Height: "40em", overflowY: "auto" }}>
       <table className="table" style={{ fontSize: "1.2rem" }}>
         <thead>
           <tr>
@@ -142,12 +142,10 @@ const pageButtons = Array.from(
           disabled={pageBlock + 1 >= totalBlocks}
         >
           다음 &raquo;
-        </button>
+      </button>
       </div>
-
         </CardBody>
         </Card>
-       
       </Container>
   );
 };

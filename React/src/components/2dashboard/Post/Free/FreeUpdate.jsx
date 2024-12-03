@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
+import PostTost from "variables/Toast/PostToast";
+
 
 const FreeUpdate = () => {
     const { postPkNum } = useParams(); // URL에서 'postPkNum'을 추출하고 숫자로 변환
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
     const [post, setPost] = useState({
         post_name: "",
         post_targetnum: "",
@@ -51,6 +54,7 @@ const FreeUpdate = () => {
         // 수정하지 않고 상세보기 페이지로 이동
         navigate(`/main/free/detail/${postPkNum}`);
     };
+
 
     return (
         <Container fluid style={{ marginTop: "2em" }}>

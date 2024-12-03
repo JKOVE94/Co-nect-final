@@ -34,7 +34,7 @@ const FreeDetail = () => {
      const handleDelete = async () => {
         try {
             await axios.delete(`/board/free/${postPkNumInt}`); // 삭제 API 호출
-            navigate('/board/free'); // 삭제 후 목록 페이지로 이동
+            navigate('/main/free'); // 삭제 후 목록 페이지로 이동
         } catch (err) {
             setError("삭제 실패: " + err.message); // 삭제 실패 시 에러 처리
         }
@@ -94,7 +94,7 @@ const FreeDetail = () => {
                     <br/>
                     
                     <button className="btn btn-primary" onClick={() => navigate(`/main/free/update/${postPkNumInt}`)}>수정</button>
-                    <button className="btn btn-primary" onClick={handleDelete}>삭제</button>
+                    <button className="btn btn-primary" onClick={handleDelete} >삭제</button>
                     <button className="btn btn-primary" onClick={() => navigate('/main/free')}>목록</button>
                 </div>
         <br/>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
-import PostTost from "variables/Toast/PostToast";
+
 const FreeCreate = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -55,14 +55,7 @@ const FreeCreate = () => {
     navigate('/main/free'); // React Router로 리디렉션
   };
   
-  //부트스트랩 토스트 토글용
-  const [Success, setSuccess] = useState(false);
-  const toggleSuccess = () => {
-      setSuccess(true)
-      setTimeout(() => {setSuccess(false)}, 3000)
-  }
-  //저장 실패 시 에러 타입 설정
-  const [errType, setErrType] = useState(0); 
+ 
 
   return (
     <Container fluid style={{ marginTop: "2em" }}>
@@ -142,7 +135,6 @@ const FreeCreate = () => {
         <button onClick={handleSubmit} type="submit" className="btn btn-primary">게시글 저장</button>
         <button type="button" className="btn btn-secondary" onClick={handleBackToList}>목록</button>
       </form>
-      <PostTost showA={Success} toggleShowA={toggleSuccess} type={errType} data={formData} />
       </CardBody>
       </Card>
       </Container>
