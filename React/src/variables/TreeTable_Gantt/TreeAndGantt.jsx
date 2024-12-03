@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import TreeTable from "variables/TreeTable_Gantt/TreeTable";
-import Gantt from "variables/TreeTable_Gantt/Gantt";
+import Gantt from "variables/TreeTable_Gantt/Gantt2";
 import axios from "axios";
 import "rsuite/dist/rsuite-no-reset.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";

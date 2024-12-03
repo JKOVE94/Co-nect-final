@@ -28,11 +28,11 @@ import routes from "routes.js";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import ManageHome from "components/3manage/ManageHome";
 import UserHome from "components/3manage/user/UserHome";
 import UserInfo from "components/3manage/user/UserInfo";
 import UserAdd from "components/3manage/user/UserAdd";
 import UserUnlock from "components/3manage/user/UserUnlock";
+import Test from '../../src/components/3manage/Test';
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -67,16 +67,11 @@ const Dashboard = (props) => {
         <Header />
         <Container fluid style={{overflow:"scroll", marginTop:"1em"}}>
         <Routes>
-          <Route path="/" element={<ManageHome />}>
-            <Route path="user" element={<UserHome />}>
-              <Route path="info" element={<UserInfo />} />
-              <Route path="add" element={<UserAdd />} />
-              <Route path="unlock" element={<UserUnlock />} />
-            </Route>
-          </Route>
+            <Route path="user/*" element={<UserHome />}/>          
        </Routes>
         </Container>
       </div>
+      {/* <Test/> */}
     </>
   );
 };

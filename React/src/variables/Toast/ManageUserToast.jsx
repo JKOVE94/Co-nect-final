@@ -1,19 +1,5 @@
-import React, { use } from "react";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Toast from "react-bootstrap/Toast";
-import { Link } from "react-router-dom";
-
-/*
-상위 컴포넌트에는 하단의 코드가 있어야 합니다.
-토스트를 표시해야할 상황에는 toggleShowA()함수를 호출하면 됩니다.
-
- const [showA, setShowA] = useState(false);
-    const toggleShowA = () => {
-        setShowA(true)
-        setTimeout(() => {setShowA(false)}, 3000)
-    }
-*/
+import React from "react";
+import { Toast, Row, Col } from "react-bootstrap";
 
 /**
  * 부트스트랩 토스트를 사용하기 위한 컴포넌트
@@ -58,6 +44,8 @@ const ManageUserToast = (props) => {
             </Toast.Body>
           </>
         );
+      default:
+        return null;
     }
   };
 
@@ -67,15 +55,17 @@ const ManageUserToast = (props) => {
         <Toast
           show={props.showA}
           onClose={props.toggleShowA}
+          className="position-fixed bottom-0 end-0 m-3"
           style={{
             width: "25rem",
-            position: "fixed",
+            float: "right",
+            position: "absolute",
             bottom: "3em",
             right: "3em",
-            zIndex: 1,
+            zIndex: 1050,
           }}
         >
-          <TypeText />
+          <TypeText type={props.type} />
         </Toast>
       </Col>
     </Row>

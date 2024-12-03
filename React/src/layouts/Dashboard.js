@@ -30,6 +30,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
+import Test from '../../src/components/3manage/Test';
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -70,6 +71,7 @@ const Dashboard = (props) => {
           <Footer />
         </Container>
       </div>
+      <Test/>
     </>
   );
 };

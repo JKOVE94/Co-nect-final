@@ -14,11 +14,6 @@ const ToastFunction = (props) => {
         return (
           <>
             <Toast.Header>
-              <img
-                src="holder.js/20x20?text=%20"
-                className="rounded me-2"
-                alt=""
-              />
               <strong className="me-auto" style={{ fontSize: "1rem" }}>
                 로그인 실패
               </strong>

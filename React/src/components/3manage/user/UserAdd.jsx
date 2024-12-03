@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
+import { Row, Col, Card, CardBody, CardHeader, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "assets/css/3manage/useradd.css";
 import ManageUserAddModal from "../../../variables/Modal/ManageUserAddModal";

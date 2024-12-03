@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
+import {
+  Row,
+  Col,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Button,
+} from "react-bootstrap";
 import ManageUserToast from "variables/Toast/ManageUserToast";
 
 const UserUnlock = () => {
   const [userInfos, setUserInfos] = useState([]);
   const [userLocked, setUserLocked] = useState([]);
   const [type, setType] = useState("");
+  const [showA, setShowA] = useState(true);
+
+  const toggleShowA = () => {
+    setShowA(true);
+    setTimeout(() => {
+      setShowA(false);
+    }, 3000);
+  };
 
   useEffect(() => {
     axios
@@ -52,15 +68,9 @@ const UserUnlock = () => {
       })
       .catch((err) => {
         console.log("handlePermit err : " + err);
+        setType("error");
+        toggleShowA();
       });
-  };
-
-  const [showA, setShowA] = useState(false);
-  const toggleShowA = () => {
-    setShowA(true);
-    setTimeout(() => {
-      setShowA(false);
-    }, 3000);
   };
 
   return (
@@ -70,7 +80,7 @@ const UserUnlock = () => {
           <Card>
             <CardHeader>
               <h2>잠긴 계정 관리</h2>
-              <button
+              <Button
                 className="btn btn-primary"
                 style={{
                   float: "right",
@@ -80,7 +90,7 @@ const UserUnlock = () => {
                 onClick={handlePermit}
               >
                 수정
-              </button>
+              </Button>
             </CardHeader>
             <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
               {userInfos.length > 0 ? (
