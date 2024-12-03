@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
  * 부트스트랩 토스트를 사용하기 위한 컴포넌트
  */
 //props에 담기는 데이터 => type(어떤 유형인지), showA(토스트표시 함수), toggleShowA(토스트숨김 함수)
-const ToastFunction = (props) => {
+const PostToast = (props) => {
   const TypeText = () => {
     switch (props.type) {
       case 2:
@@ -32,11 +32,11 @@ const ToastFunction = (props) => {
                 alt=""
               />
               <strong className="me-auto" style={{ fontSize: "1rem" }}>
-                제목이 들어가는 자리입니다
+                자유게시판
               </strong>
             </Toast.Header>
             <Toast.Body style={{ fontSize: "1rem" }}>
-              토스트 메세지가 들어가는 자리입니다
+              자유게시판 게시글이 정상적으로 저장되었습니다.
             </Toast.Body>
           </>
         );
@@ -64,4 +64,4 @@ const ToastFunction = (props) => {
   );
 };
 
-export default ToastFunction;
+export default PostToast;

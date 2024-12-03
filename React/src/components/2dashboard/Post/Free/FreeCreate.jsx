@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
-
+import PostTost from "variables/Toast/PostToast";
 const FreeCreate = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -42,8 +42,8 @@ const FreeCreate = () => {
     axios
       .post("/board/free", formToSubmit)
       .then((response) => {
-        if(response.data.isSuccess) {
-          navigate("/board/free");
+        if(response.data!=0) {
+          navigate(`/main/free/detail/${response.data}`);
         }
       })
       .catch((error) => {
@@ -51,39 +51,27 @@ const FreeCreate = () => {
         alert("저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status);
       });
 };
-
-  
-
   const handleBackToList = () => {
-    navigate('/board/free'); // React Router로 리디렉션
+    navigate('/main/free'); // React Router로 리디렉션
   };
+  
+  //부트스트랩 토스트 토글용
+  const [Success, setSuccess] = useState(false);
+  const toggleSuccess = () => {
+      setSuccess(true)
+      setTimeout(() => {setSuccess(false)}, 3000)
+  }
+  //저장 실패 시 에러 타입 설정
+  const [errType, setErrType] = useState(0); 
 
   return (
     <Container fluid style={{ marginTop: "2em" }}>
-       <Row>
-       <Col>
-      <Card>
+       <Card>
       <CardHeader>
       <h2>새 게시글 작성</h2>
       </CardHeader>
       <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
       <form onSubmit={handleSubmit}>
-      <div className="form-group">
-          <label htmlFor="post_targetnum">대상 번호:</label>
-          <select
-            className="form-control"
-            id="post_targetnum"
-            name="post_targetnum"
-            value={formData.post_targetnum} // 상태 값으로 연결
-            onChange={handleChange}
-            required
-          >
-            <option value="">대상 번호를 선택하세요</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
-        </div>
         <div className="form-group">
           <label htmlFor="post_name">제목:</label>
           <input
@@ -107,6 +95,22 @@ const FreeCreate = () => {
             onChange={handleChange}
             required
           />
+        </div>
+        <div className="form-group">
+          <label htmlFor="post_targetnum">담당 부서:</label>
+          <select
+            className="form-control"
+            id="post_targetnum"
+            name="post_targetnum"
+            value={formData.post_targetnum} // 상태 값으로 연결
+            onChange={handleChange}
+            required
+          >
+            <option value="">담당 부서를 선택하세요</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
         </div>
         <div className="form-group">
           <label htmlFor="post_import">우선순위:</label>
@@ -135,21 +139,12 @@ const FreeCreate = () => {
             required
           ></textarea>
         </div>
-        <button onClick={handleSubmit} type="submit" className="btn btn-primary">
-          게시글 저장
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={handleBackToList} // 목록으로 돌아가기 버튼 클릭 시
-        >
-          목록
-        </button>
+        <button onClick={handleSubmit} type="submit" className="btn btn-primary">게시글 저장</button>
+        <button type="button" className="btn btn-secondary" onClick={handleBackToList}>목록</button>
       </form>
+      <PostTost showA={Success} toggleShowA={toggleSuccess} type={errType} data={formData} />
       </CardBody>
       </Card>
-      </Col>
-      </Row>
       </Container>
   );
 };

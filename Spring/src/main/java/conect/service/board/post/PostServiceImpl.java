@@ -5,6 +5,9 @@ import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
 import conect.data.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,4 +74,14 @@ public class PostServiceImpl implements PostService {
 	public void deletePost(int postPkNum) {
 		frepository.deleteById(postPkNum);
 	}
+	// 페이징
+		public Page<PostDto> getList(int page, int pageSize) {
+		    Pageable pageable = PageRequest.of(page, 10);
+		    Page<PostEntity> postPage = this.frepository.findAll(pageable);
+		    
+		    // PostEntity -> PostDto 변환
+		    Page<PostDto> postDtoPage = postPage.map(post -> PostDto.fromEntity(post));
+
+		    return postDtoPage;
+		}
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
+import PostTost from "variables/Toast/PostToast";
 
 const FreeDetail = () => {
     const postPkNumInt = parseInt(useParams().postPkNum, 10); // URL에서 'postPkNum'을 추출하고 숫자로 변환
@@ -38,13 +39,23 @@ const FreeDetail = () => {
             setError("삭제 실패: " + err.message); // 삭제 실패 시 에러 처리
         }
     };
+ //부트스트랩 토스트 토글용
+ const [Success, setSuccess] = useState(false);
+ const toggleSuccess = () => {
+     setSuccess(true)
+     setTimeout(() => {setSuccess(false)}, 3000)
+ }
 
+ useEffect(()=> {
+    toggleSuccess();
+ })
+ //저장 실패 시 에러 타입 설정
+ const [errType, setErrType] = useState(0); 
     if (loading) return <div>Loading...</div>; // 로딩 중일 때
     if (error) return <div>Error: {error}</div>; // 에러 발생 시
     return (
         <Container fluid style={{ marginTop: "2em" }}>
-       <Row>
-       <Col>
+       
       <Card>
       <CardHeader>
       <h2>자유게시판</h2>
@@ -88,11 +99,14 @@ const FreeDetail = () => {
                 </div>
         <br/>
         <div>댓글 공간</div>
+      <PostTost showA={Success} toggleShowA={toggleSuccess} type={errType} />
      </CardBody>
          </Card>
-         </Col>
-         </Row>
+        
          </Container>
+         
+         
+
     );
 };
 

@@ -5,6 +5,7 @@ import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
 import conect.service.board.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,26 +24,50 @@ public class BoardController {
 
 	// 게시글 생성
 	@PostMapping("/free")
-	public Map<String, Object> createPost(@RequestBody PostForm postForm) {
-		postService.insertPost(postForm);
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("isSuccess", true);
+	public int createPost(@RequestBody PostForm postForm) {
 		
-		return map;
+		try {
+		PostEntity entity = postService.insertPost(postForm);
+		return entity.getPostPkNum();
+		}catch(Exception e) {
+			System.out.println("Insert err :"+e );
+		}
+		return 0;
 	}
 
 	// 모든 게시글 조회
-	@GetMapping("/free")
-	public ResponseEntity<List<PostDto>> getAllPosts() {
-	    try {
-	        List<PostDto> posts = postService.getPostAll();
-	        System.out.println("조회된 게시글: " + posts); // 로그 추가
-	        return new ResponseEntity<>(posts, HttpStatus.OK);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	}
+		@GetMapping("/free")
+		public ResponseEntity<Map<String, Object>> getAllPosts(
+		    @RequestParam(name = "page", defaultValue = "0") int page,
+		    @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock // 블록 번호 추가
+		) {
+		    try {
+		        // 한 페이지당 5개씩 페이지 버튼을 표시
+		        int pageSize = 5;
+
+		        // 페이지 요청 처리 (블록당 5개의 페이지로 나누기)
+		        Page<PostDto> postPage = postService.getList(page, pageSize);
+
+		        // 전체 페이지 수를 계산 (블록 기준으로)
+		        int totalPages = postPage.getTotalPages();
+		        int totalBlocks = (int) Math.ceil((double) totalPages / pageSize); // 총 블록 수
+
+		        // 응답 객체 구성
+		        Map<String, Object> response = new HashMap<>();
+		        response.put("posts", postPage.getContent()); // 게시글 내용
+		        response.put("currentPage", postPage.getNumber()); // 현재 페이지
+		        response.put("totalItems", postPage.getTotalElements()); // 전체 게시글 수
+		        response.put("totalPages", totalPages); // 전체 페이지 수
+		        response.put("totalBlocks", totalBlocks); // 전체 블록 수
+		        response.put("currentBlock", pageBlock); // 현재 블록 번호
+
+		        // 페이징 정보 포함된 응답 반환
+		        return new ResponseEntity<>(response, HttpStatus.OK);
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 오류 발생 시
+		    }
+		}
 
 	// 부분 게시글 조회
 	@GetMapping("/free/{postPkNum}")

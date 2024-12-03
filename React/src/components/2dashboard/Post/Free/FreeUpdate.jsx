@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const FreeUpdate = () => {
     const { postPkNum } = useParams(); // URL에서 'postPkNum'을 추출하고 숫자로 변환
@@ -46,57 +47,78 @@ const FreeUpdate = () => {
         }
     };
 
-    const handleCancel = () => {
+    const handleDitail = () => {
         // 수정하지 않고 상세보기 페이지로 이동
-        navigate(`/detail/:postPkNum${postPkNum}`);
+        navigate(`/main/free/detail/${postPkNum}`);
     };
 
     return (
-        <div>
-            <h1>게시글 수정</h1>
+        <Container fluid style={{ marginTop: "2em" }}>
+              <Card>
+              <CardHeader>
+            <h2>게시글 수정</h2>
+            </CardHeader>
+            <CardBody style={{ maxHeight: "40em", overflowY: "auto",fontSize: "1.2rem"}}>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>제목:</label>
+          <div className="form-group">
+                    <label htmlFor="post_name">제목:</label>
                     <input
                         type="text"
+                        className="form-control"
+                        id="post_name"
                         name="post_name"
                         value={post.post_name}
                         onChange={handleChange}
                         required
                     />
                 </div>
-                <div>
-                    <label>대상 사원번호:</label>
-                    <input
-                        type="text"
+                <div className="form-group">
+                    <label htmlFor="post_targetnum">담당 부서:</label>
+                    <select
+                        className="form-control"
+                        id="post_targetnum"
                         name="post_targetnum"
                         value={post.post_targetnum}
                         onChange={handleChange}
                         required
-                    />
+                    >
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
                 </div>
-                <div>
-                    <label>중요도:</label>
-                    <input
-                        type="text"
+                <div className="form-group">
+                    <label htmlFor="post_import">우선 순위:</label>
+                    <select
+                        className="form-control"
+                        id="post_import"
                         name="post_import"
                         value={post.post_import}
                         onChange={handleChange}
                         required
-                    />
+                    >
+                        <option>높음</option>
+                        <option>중간</option>
+                        <option>낮음</option>
+                    </select>
                 </div>
-                <div>
-                    <label>내용:</label>
+                <div className="form-group">
+                    <label htmlFor="post_content">내용:</label>
                     <textarea
+                        className="form-control"
+                        id="post_content"
                         name="post_content"
                         value={post.post_content}
                         onChange={handleChange}
                         required
                     />
                 </div>
-                <button type="submit">수정</button>
+                <button type="button"className="btn btn-secondary"onClick={handleSubmit}>수정</button>
+                <button type="button"className="btn btn-secondary"onClick={handleDitail}>취소</button>
             </form>
-        </div>
+            </CardBody>
+        </Card>
+        </Container>
     );
 };
 

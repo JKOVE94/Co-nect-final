@@ -2,6 +2,8 @@ package conect.service.board.post;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import conect.data.dto.PostDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
@@ -21,4 +23,6 @@ public interface PostService {
 
 	// 삭제
 	void deletePost(int postPkNum);
+	// 페이징
+		public Page<PostDto> getList(int page, int pageSize);
 }
