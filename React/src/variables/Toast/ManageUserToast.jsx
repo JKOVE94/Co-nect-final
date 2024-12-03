@@ -19,10 +19,10 @@ import { Link } from "react-router-dom";
  * 부트스트랩 토스트를 사용하기 위한 컴포넌트
  */
 //props에 담기는 데이터 => type(어떤 유형인지), showA(토스트표시 함수), toggleShowA(토스트숨김 함수)
-const ToastFunction = (props) => {
-  const TypeText = () => {
+const ManageUserToast = (props) => {
+  const TypeText = (props) => {
     switch (props.type) {
-      case 2:
+      case "unlocked":
         return (
           <>
             <Toast.Header>
@@ -32,11 +32,29 @@ const ToastFunction = (props) => {
                 alt=""
               />
               <strong className="me-auto" style={{ fontSize: "1rem" }}>
-                제목이 들어가는 자리입니다
+                잠금해제
               </strong>
             </Toast.Header>
             <Toast.Body style={{ fontSize: "1rem" }}>
-              토스트 메세지가 들어가는 자리입니다
+              계정이 잠금해제 되었습니다.
+            </Toast.Body>
+          </>
+        );
+      case "error":
+        return (
+          <>
+            <Toast.Header>
+              <img
+                src="holder.js/20x20?text=%20"
+                className="rounded me-2"
+                alt=""
+              />
+              <strong className="me-auto" style={{ fontSize: "1rem" }}>
+                에러 발생
+              </strong>
+            </Toast.Header>
+            <Toast.Body style={{ fontSize: "1rem" }}>
+              알 수 없는 에러가 발생했습니다. 다시 시도해주세요.
             </Toast.Body>
           </>
         );
@@ -64,4 +82,4 @@ const ToastFunction = (props) => {
   );
 };
 
-export default ToastFunction;
+export default ManageUserToast;

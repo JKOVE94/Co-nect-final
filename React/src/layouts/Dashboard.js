@@ -26,33 +26,26 @@ import Sidebar from "components/2dashboard/Sidebar/Sidebar.js";
 import Header from "components/2dashboard/Headers/Header.js";
 import routes from "routes.js";
 import Item1 from "layouts/itemFrame/Item1";
-import Function from "components/2dashboard/Function/Function";
-import FreeList from "components/2dashboard/post/FreeList";
-import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
-import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
-import ErrPage from "components/2dashboard/ErrPage";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  const user = useSelector((state) => (state.userData));
+    useEffect(()=>{
+    if(user.user_pk_num ===0 ){
+      navigate("/");
+    }
+  },[]);
 
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     mainContent.current.scrollTop = 0;
   }, [location]);
-
-  const getBrandText = (path) => {
-    for (let i = 0; i < routes.length; i++) {
-      if (
-        props?.location?.pathname.indexOf(routes[i].layout + routes[i].path) !==
-        -1
-      ) {
-        return routes[i].name;
-      }
-    }
-    return "Brand";
-  };
 
   return (
     <>
@@ -66,18 +59,15 @@ const Dashboard = (props) => {
         }}
       />
       <div className="main-content" ref={mainContent}>
-        <Navbar
-          {...props}
-          brandText={getBrandText(props?.location?.pathname)}
-        />
+        <Navbar/>
         <Header />
         <Routes>
-          <Route path="/projfavorite" element={<ProjFavorite />} />
-          <Route path="/freefavorite" element={<FreeFavorite />} />
-          <Route path="/function" element={<Function />} />
-          <Route path="/freelist" element={<FreeList />} />
-          <Route path="/err" element={<ErrPage />} />
+          
         </Routes>
+        <Container fluid style={{padding:"3em"}}>
+          <Item1/>
+          <Footer />
+        </Container>
       </div>
     </>
   );

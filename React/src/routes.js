@@ -15,35 +15,35 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-// import Landing from "views/Login.js";
-// import Dashboard from "views/Dashboard.js";
-// import Manage from "views/Manage.js";
-// import Profile from "views/examples/Profile.js";
+import Landing from "layouts/Login.js";
+import Dashboard from "views/Dashboard.js";
+import Manage from "views/Manage.js";
+import Profile from "views/examples/Profile.js";
 
 var routes = [
-//   {
-//     path: "/",
-//     name: "Dashboard",
-//     icon: "ni ni-tv-2 text-primary",
-//     component: <Landing />,
-//   },
-//   {
-//     path: "/main",
-//     name: "Icons",
-//     icon: "ni ni-planet text-blue",
-//     component: <Dashboard />,
-//   },
-//   {
-//     path: "/admin/manage",
-//     name: "Dashboard",
-//     icon: "ni ni-tv-2 text-primary",
-//     component: <Manage />,
-//   },
-//   {
-//     path: "/user-profile",
-//     name: "User Profile",
-//     icon: "ni ni-single-02 text-yellow",
-//     component: <Profile />,
-//   },
+  {
+    path: "/",
+    name: "Dashboard",
+    icon: "ni ni-tv-2 text-primary",
+    component: <Landing />,
+  },
+  {
+    path: "/main",
+    name: "Icons",
+    icon: "ni ni-planet text-blue",
+    component: <Dashboard />,
+  },
+  {
+    path: "/admin/manage",
+    name: "Dashboard",
+    icon: "ni ni-tv-2 text-primary",
+    component: <Manage />,
+  },
+  {
+    path: "/user-profile",
+    name: "User Profile",
+    icon: "ni ni-single-02 text-yellow",
+    component: <Profile />,
+  },
 ];
 export default routes;

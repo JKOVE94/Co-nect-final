@@ -23,4 +23,5 @@ public class AccountEntity {
     @OneToMany(mappedBy = "accountEntity")
     @JsonBackReference
     private List<UserEntity> userEntities;
+
 }

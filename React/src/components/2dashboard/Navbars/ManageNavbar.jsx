@@ -9,25 +9,25 @@ const CommonNavbar = () => {
       <Side>
         <Menu>
           <NavItem>
-            <NavLink to="/" tag={NavLinkRRD}>
+            <NavLink to="/manage/user/info" tag={NavLinkRRD}>
               <i className="fa fa-users text-primary text-sm opacity-10" />
               모든 사용자 정보
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink to="/" tag={NavLinkRRD}>
+            <NavLink to="/manage/user/add" tag={NavLinkRRD}>
               <i className="fa fa-users  text-sm opacity-10" />
               사용자 등록
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink to="/" tag={NavLinkRRD}>
+            <NavLink to="/manage/user/unlock" tag={NavLinkRRD}>
               <i className="fa fa-unlock text-info text-sm opacity-10" />
               사용자 잠금 해제
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink to="/" tag={NavLinkRRD}>
+            <NavLink to="/main" tag={NavLinkRRD}>
               <i className="fa fa-home text-info text-sm opacity-10" />
               대시보드로 돌아가기
             </NavLink>
