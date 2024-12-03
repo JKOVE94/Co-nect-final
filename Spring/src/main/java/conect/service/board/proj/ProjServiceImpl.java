@@ -43,10 +43,9 @@ public class ProjServiceImpl implements ProjService {
 
 	// 전체 자료 읽기
 	public List<ProjectDto> getListAll() {
-	    // findAll()이 반환하는 타입이 List<ProjectEntity>인지 확인하고, DTO로 변환
 	    return prepository.findAll().stream()
 	            .map(ProjectDto::fromEntity)  // Entity에서 DTO로 변환
-	            .collect(Collectors.toList()); // .toList()는 Java 16 이후에 사용할 수 있으므로 Java 11 이하에서는 collect(Collectors.toList())로 사용
+	            .collect(Collectors.toList());
 	}
 
 	// 상세보기

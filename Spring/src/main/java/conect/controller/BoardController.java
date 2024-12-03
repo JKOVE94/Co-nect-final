@@ -18,16 +18,12 @@ import conect.data.dto.ProjectDto;
 import conect.data.entity.UserEntity;
 import conect.data.form.ProjectForm;
 import conect.service.board.proj.ProjServiceImpl;
-import conect.service.manage.user.UserServiceImpl;
 
 @RestController
 @RequestMapping("/board")
 public class BoardController {
 	@Autowired
 	private ProjServiceImpl projServiceImpl;
-	
-	@Autowired
-	private UserServiceImpl userServiceImpl;
 
     //즐겨찾기 (/board/favorite)
 
