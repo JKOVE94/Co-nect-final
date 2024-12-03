@@ -1,0 +1,54 @@
+package conect.controller;
+
+import conect.data.dto.ProjectDto;
+import conect.data.dto.TaskDto;
+import conect.service.board.proj.ProjService;
+import conect.service.board.proj.ProjServiceImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/board")
+public class BoardController {
+
+ 
+    
+    @Autowired
+	private ProjServiceImpl projServiceImpl;
+
+
+    @RequestMapping("/task/proj/{task_fk_proj_num}")
+    public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable("task_fk_proj_num") int task_fk_proj_num) {
+        return projServiceImpl.getAllTask(task_fk_proj_num);
+    }
+
+    @RequestMapping("/task/user/{user_pk_num}")
+    public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable("user_pk_num") int user_pk_num) {
+        return projServiceImpl.getAllTaskWithUser(user_pk_num);
+    }
+    
+	@GetMapping("/projread")
+	public List<ProjectDto> getListAll(){
+		return projServiceImpl.getListAll();
+	}
+	
+	@GetMapping("/projread/{projPkNum}")
+		public ProjectDto getProjById(@PathVariable("projPkNum")int projPkNum){
+		return projServiceImpl.getProjById(projPkNum);
+	}
+	
+	
+	@GetMapping("/{user_pk_num}")
+    public ResponseEntity<Map<String, Object>> getUserRelatedData(@PathVariable("user_pk_num") int userPkNum) {
+        Map<String, Object> userData = projServiceImpl.getUserRelatedData(userPkNum);
+        return ResponseEntity.ok(userData);
+    }
+}

@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 //createSlice를 사용하면 보일러플레이트코드를 생략할 수 있다.
+import storage from "redux-persist/lib/storage/session";
+import { persistReducer } from "redux-persist";
 
 //reducer 파일
 //createSlice : 리듀서와 액션을 생성, 초기 상태 정의, 함수 관리, 불변성 관리
@@ -17,6 +19,12 @@ const ResourceSlice = createSlice({
   },
 });
 
+const persistConfig = {
+  timeout: 100, //Set the timeout function to 2 seconds
+  key: "root",
+  storage, // storage로 수정
+};
+
 //Action, Reducer 내보내기
 export const {
   SET_DPARTINFO,
@@ -24,4 +32,4 @@ export const {
   GET_DPARTINFO,
   GET_ALLDPARTINFO,
 } = ResourceSlice.actions; //slice라는 의미처럼 Action를 각각 쪼개서 보내준다.
-export default ResourceSlice.reducer; //리듀서를 내보낸다.
+export default persistReducer(persistConfig, ResourceSlice.reducer);
