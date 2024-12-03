@@ -16,7 +16,7 @@ const CalendarToast = ({ toastType, isOpen, onClose }) => {
     }
   }, [toastType]);
   return (
-    <ToastContainer position="top-end" className="p-1">
+    <ToastContainer position="bottom-end" className="p-1">
       <Toast
         className="toast"
         onClose={onClose}

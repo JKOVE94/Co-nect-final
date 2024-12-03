@@ -12,9 +12,7 @@
   --fc-button-active-border-color: #ffffff;
   --fc-list-event-dot-border-radius : 5px;
 }
-.eventStyle {
-    padding: 3px;
-}
+
 .textinfo {
   width : 100%;
   color : #abababc8;
@@ -68,5 +66,19 @@
 }
 .custom-close-btn:hover {
   outline: none;  
+  text-decoration-line: none;
+}
+
+.modalCloseBtn{
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  color: #000;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+.modalCloseBtn:hover{
   text-decoration-line: none;
 }

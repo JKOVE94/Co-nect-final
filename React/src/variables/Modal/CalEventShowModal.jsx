@@ -14,7 +14,7 @@ const CalEventShowModal = ({
 }) => {
   const num = useSelector((state) => state.userData.user_pk_num);
   const [data, setData] = useState({});
-  const [read, setRead] = useState(false); //수정 가능 여부
+  const [read, setRead] = useState(); //수정 가능 여부
 
   useEffect(() => {
     setData({
@@ -25,27 +25,32 @@ const CalEventShowModal = ({
       todo_end: info.end || "",
       todo_tagcol: info.tagcol || "#000000",
     });
-    if (info.groupId === "0") {
-      setRead(true);
-    } else {
-      setRead(false);
-    }
-  }, [info]);
+    setRead(true);
+    // if (info.groupId === "0") {
+    //   setRead(true);
+    // } else {
+    //   setRead(false);
+    // }
+  }, [isOpen, onClose, info, getEvent, handleToast, num]);
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.id]: e.target.value });
+  };
+
+  const handleUpdateForm = () => {
+    setRead(false);
   };
 
   const handleUpdate = () => {
     axios
       .put("/function/schedule/" + info.id, data)
       .then((res) => {
-        if (res.data.isSuccess) {
+        if (res.data) {
           handleToast("update", true);
           getEvent();
         }
       })
-      .catch((err) => navigator(`/error?msg=서버 응답 실패`));
+      .catch((err) => navigator(`/error`));
     onClose();
   };
 
@@ -53,12 +58,12 @@ const CalEventShowModal = ({
     axios
       .delete("/function/schedule/" + info.id)
       .then((res) => {
-        if (res.data.isSuccess) {
+        if (res.data) {
           handleToast("del", true);
           getEvent();
         }
       })
-      .catch((err) => navigator(`/error?msg=서버 응답 실패`));
+      .catch((err) => navigator(`/error`));
     onClose();
   };
 
@@ -66,7 +71,7 @@ const CalEventShowModal = ({
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
         <Modal.Title style={{ display: "flex", alignItems: "center" }}>
-          <Col md={8}>일정 수정</Col>
+          <Col md="auto">일정 수정</Col>
           <Col md={5}>
             <Form.Control
               value={data.todo_tagcol}
@@ -76,20 +81,7 @@ const CalEventShowModal = ({
               disabled={read}
             />
           </Col>
-          <Button
-            variant="link"
-            onClick={onClose}
-            style={{
-              position: "absolute",
-              top: "15px",
-              right: "15px",
-              fontSize: "24px", // 원하는 크기로 설정
-              color: "#000",
-              backgroundColor: "transparent",
-              border: "none",
-              padding: "0",
-            }}
-          >
+          <Button className="modalCloseBtn" variant="link" onClick={onClose}>
             &times;
           </Button>
         </Modal.Title>
@@ -144,7 +136,11 @@ const CalEventShowModal = ({
           </Container>
         ) : (
           <>
-            <Button onClick={handleUpdate}>수정</Button>
+            {read ? (
+              <Button onClick={handleUpdateForm}>수정</Button>
+            ) : (
+              <Button onClick={handleUpdate}>수정확인</Button>
+            )}
             <Button onClick={handleDelete}>삭제</Button>
           </>
         )}

@@ -33,7 +33,7 @@ const MyCalendar = ({events, handleGetEvent, handleToast}) => {
   const renderEventContent = (info) => {
     //표시될 타이틀
     return (
-      <div className="eventStyle">
+      <div>
         <span>{info.event.title}</span>
       </div>
     );
@@ -67,13 +67,13 @@ const MyCalendar = ({events, handleGetEvent, handleToast}) => {
     axios
       .put("/function/schedule/" + info.event._def.publicId, data)
       .then((res) => {
-        if (res.data.isSuccess) {
+        if (res.data) {
           handleGetEvent();
           handleToast("update", true);
         }
       })
       .catch((err) => {
-        navigator(`/error?msg=서버 응답 실패`);
+        navigator(`/error`);
       });
   };
 
@@ -90,7 +90,7 @@ const MyCalendar = ({events, handleGetEvent, handleToast}) => {
         locale="ko"
         editable={true} // 이벤트 수정 가능
         eventResizableFromStart={true}
-        dayMaxEvents={true} // 한 셀에 최대 이벤트(more) 표시 여부
+        dayMaxEventRows={3}
         headerToolbar={{
           start: "today prev,next", //오늘날짜, 이전달, 다음달 버튼
           center: "title", //현재 달
@@ -127,8 +127,6 @@ const MyCalendar = ({events, handleGetEvent, handleToast}) => {
         getEvent={handleGetEvent}
         handleToast={handleToast}
       />
-
-      
     </>
   );
 };

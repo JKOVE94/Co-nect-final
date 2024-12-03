@@ -22,12 +22,12 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
     axios
       .post("/function/schedule", data)
       .then((res) => {
-        if (res.data.isSuccess) {
+        if (res.data) {
           handleToast("add", true);
           getEvent();
         }
       })
-      .catch((err) => navigator(`/error?msg=서버 응답 실패`));
+      .catch((err) => navigator(`/error`));
     onClose();
   };
 
@@ -45,18 +45,9 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
             />
           </Col>
           <Button
+            className="modalCloseBtn"
             variant="link"
             onClick={onClose}
-            style={{
-              position: "absolute",
-              top: "15px",
-              right: "15px",
-              fontSize: "24px",
-              color: "#000",
-              backgroundColor: "transparent",
-              border: "none",
-              padding: "0",
-            }}
           >
             &times;
           </Button>

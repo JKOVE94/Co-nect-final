@@ -4,7 +4,7 @@ import { Card } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { CardBody } from "reactstrap";
 import Search from "variables/Search/Search";
-import FavorCheck from "../Favorite/FavorCheck";
+import FavorCheck from "./FavorCheck";
 import { useSelector } from "react-redux";
 
 const FreeList = () => {

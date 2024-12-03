@@ -44,10 +44,6 @@ public class FunctionController {
         	map.put("proj", projList);
         	map.put("todo", todoList);
         	
-        	if (projList.isEmpty() && todoList.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data found for usernum: " + usernum);
-            }
-        	
         	return ResponseEntity.ok(map);
     	} catch(IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Invalid input parameters"); //잘못된 요청이 들어온 경우

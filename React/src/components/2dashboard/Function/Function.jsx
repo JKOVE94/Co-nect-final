@@ -61,9 +61,9 @@ const Function = () => {
     <>
       <Container fluid style={{ marginTop: "2rem" }}>
         <Row className="mx-0 align-items-start justify-content-center">
-          <Col md={6} className="px-0">
+          <Col md={8} className="px-0">
             <Card className="mx-auto">
-              <CardBody className="p-10">
+              <CardBody className="p-10" style={{maxHeight: '45em', overflowY:'auto'}}>
                 <MyCalendar
                   events={events}
                   handleGetEvent={handleGetEvent}

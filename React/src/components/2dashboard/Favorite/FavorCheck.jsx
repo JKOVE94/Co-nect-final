@@ -49,13 +49,14 @@ const FavorCheck = ({pknum, type, favorList}) => {
         .catch();
     }
     return (
-        <Form.Check
-            id={pknum}
-            type="checkbox"
-            checked={isCheck}
-            onChange={handleChange}
-        >
-        </Form.Check>
+        <>
+            <Form.Check
+                id={pknum}
+                checked={isCheck}
+                onChange={handleChange}
+            >
+            </Form.Check>
+        </>
     );
 }
 export default FavorCheck;
