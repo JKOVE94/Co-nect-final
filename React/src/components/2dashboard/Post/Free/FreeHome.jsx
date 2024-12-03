@@ -3,6 +3,7 @@ import FreeList from "./FreeList";
 import { Route, Routes, useNavigate, userNavigate } from "react-router-dom";
 import FreeCreate from "./FreeCreate";
 import FreeDetail from "./FreeDetail";
+
 import FreeUpdate from "./FreeUpdate";
 
 const FreeHome = () => {

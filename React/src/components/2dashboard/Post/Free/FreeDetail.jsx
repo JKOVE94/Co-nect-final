@@ -3,16 +3,25 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 import PostTost from "variables/Toast/PostToast";
+import Test from "./Test";
 
 const FreeDetail = () => {
     const postPkNumInt = parseInt(useParams().postPkNum, 10); // URL에서 'postPkNum'을 추출하고 숫자로 변환
+    const type = parseInt(useParams().type, 10);
     const navigate = useNavigate();
     const [post, setPost] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [targetDatas, setTargetDatas] = useState([{}])
 
     useEffect(() => {
-        
+        console.log(post.post_targetnum)
+        axios.get(`/board/free/username/${post.post_targetnum}`)
+        .then(res => setTargetDatas(res.data))
+        console.log(targetDatas)
+    },[post])
+
+    useEffect(() => {
         const fetchPost = async () => {
             try {
                 const response = await axios.get(`/board/free/${postPkNumInt}`); // 백엔드 API 호출
@@ -30,6 +39,13 @@ const FreeDetail = () => {
         fetchPost();
     }, []);
 
+    useEffect(() => {
+        if(type===1){
+            setMsgType(2);
+            toggleSuccess();
+        }
+    },[])
+
      // 삭제 함수
      const handleDelete = async () => {
         try {
@@ -40,7 +56,7 @@ const FreeDetail = () => {
         }
     };
  //부트스트랩 토스트 토글용
- const [Success, setSuccess] = useState(false);
+ const [Success, setSuccess] = useState(true);
  const toggleSuccess = () => {
      setSuccess(true)
      setTimeout(() => {setSuccess(false)}, 3000)
@@ -50,17 +66,17 @@ const FreeDetail = () => {
     toggleSuccess();
  })
  //저장 실패 시 에러 타입 설정
- const [errType, setErrType] = useState(0); 
+ const [msgType, setMsgType] = useState(0); 
     if (loading) return <div>Loading...</div>; // 로딩 중일 때
     if (error) return <div>Error: {error}</div>; // 에러 발생 시
     return (
-        <Container fluid style={{ marginTop: "2em" }}>
+        <Container fluid style={{Height: "40em", marginTop: "2em" }}>
        
-      <Card>
+       <Card style={{ Height: "40em", overflowY: "auto" }}>
       <CardHeader>
       <h2>자유게시판</h2>
       </CardHeader>
-      <CardBody style={{ maxHeight: "40em", overflowY: "auto",fontSize: "1.2rem" }}>
+      <CardBody style={{ maxHeight: "40em", overflowY: "auto",fontSize: "1.2rem",  marginTop: "1em"}}>
         <div>
             {post ? (
               <table className="table" style={{ fontSize: "1.2rem", border: "1px solid lightgray"}}>
@@ -71,7 +87,7 @@ const FreeDetail = () => {
                   </tr>
                   <tr>
                       <td style={{ width: "10%", textAlign: "left"  }}>대상사원</td>  
-                      <td style={{ width: "90%", textAlign: "left"  }}>{post.post_targetnum}</td>
+                      <td style={{ width: "90%", textAlign: "left"  }}>{targetDatas.map((item,idx) => (<div>{item[Object.keys(item)]}</div>))}</td>
                   </tr>
                   <tr>
                       <td style={{ width: "10%", textAlign: "left"  }}>중 요 도</td>  
@@ -99,10 +115,11 @@ const FreeDetail = () => {
                 </div>
         <br/>
         <div>댓글 공간</div>
-      <PostTost showA={Success} toggleShowA={toggleSuccess} type={errType} />
      </CardBody>
          </Card>
         
+      <PostTost showA={Success} toggleShowA={toggleSuccess} type={msgType} />
+      <Test/>
          </Container>
          
          

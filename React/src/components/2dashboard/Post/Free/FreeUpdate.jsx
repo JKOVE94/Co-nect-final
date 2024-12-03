@@ -20,7 +20,7 @@ const FreeUpdate = () => {
         // 기존 게시글 데이터 가져오기
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`/board/free/${postPkNum}`);
+                const response = await axios.get(`/board/free/${postPkNum}/1`);
                 setPost(response.data);
             } catch (error) {
                 console.error("Error fetching post:", error);
@@ -57,12 +57,12 @@ const FreeUpdate = () => {
 
 
     return (
-        <Container fluid style={{ marginTop: "2em" }}>
-              <Card>
+        <Container fluid style={{Height: "40em", marginTop: "2em" }}>
+              <Card style={{ Height: "40em", overflowY: "auto" }}>
               <CardHeader>
             <h2>게시글 수정</h2>
             </CardHeader>
-            <CardBody style={{ maxHeight: "40em", overflowY: "auto",fontSize: "1.2rem"}}>
+            <CardBody style={{ maxHeight: "40em", overflowY: "auto",fontSize: "1.2rem",  marginTop: "1em"}}>
             <form onSubmit={handleSubmit}>
           <div className="form-group">
                     <label htmlFor="post_name">제목:</label>

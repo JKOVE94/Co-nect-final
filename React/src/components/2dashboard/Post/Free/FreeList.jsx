@@ -10,8 +10,16 @@ const FreeList = () => {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [pageBlock, setPageBlock] = useState(0); // 현재 페이지 블록 (5개씩 묶임)
   const [totalBlocks, setTotalBlocks] = useState(0); // 전체 블록 수
+  const [targetDatas, setTargetDatas] = useState([{}])//번호 이름 변경
+
   const navigate = useNavigate();
-  
+  useEffect(() => {
+    console.log(post.post_targetnum)
+    axios.get(`/board/free/username/${post.post_targetnum}`)
+    .then(res => setTargetDatas(res.data))
+    console.log(targetDatas)
+},[post]);
+
   const fetchPosts = (page, block) => {
     axios
       .get(`/board/free?page=${page}&pageBlock=${block}`)
@@ -61,7 +69,7 @@ const pageButtons = Array.from(
   
 
   return (
-    <Container fluid style={{Height: "40em", marginTop: "2em" }}>
+    <Container fluid style={{Height: "40em", marginTop: "1em" }}>
      <Card style={{ Height: "40em", overflowY: "auto" }}>
       <CardHeader>
       <h2>자유 게시판</h2>
@@ -87,7 +95,7 @@ const pageButtons = Array.from(
                     {post.post_name}
                   </Link>
                 </td>
-                <td>{post.post_fk_user_num}</td>
+                <td>{targetDatas.map((item,idx) => (<div>{item[Object.keys(item)]}</div>))}</td>
                 <td>{formatDate(post.post_regdate)}</td>
                 <td>{post.post_view}</td>
               </tr>
