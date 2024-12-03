@@ -17,8 +17,8 @@
 */
 import Landing from "layouts/Login.js";
 import Dashboard from "views/Dashboard.js";
-import Manage from "views/Manage.js";
-import Profile from "views/examples/Profile.js";
+// import Manage from "views/Manage.js";
+// import Profile from "views/examples/Profile.js";
 
 var routes = [
   {
@@ -33,17 +33,17 @@ var routes = [
     icon: "ni ni-planet text-blue",
     component: <Dashboard />,
   },
-  {
-    path: "/admin/manage",
-    name: "Dashboard",
-    icon: "ni ni-tv-2 text-primary",
-    component: <Manage />,
-  },
-  {
-    path: "/user-profile",
-    name: "User Profile",
-    icon: "ni ni-single-02 text-yellow",
-    component: <Profile />,
-  },
+  // {
+  //   path: "/admin/manage",
+  //   name: "Dashboard",
+  //   icon: "ni ni-tv-2 text-primary",
+  //   component: <Manage />,
+  // },
+  // {
+  //   path: "/user-profile",
+  //   name: "User Profile",
+  //   icon: "ni ni-single-02 text-yellow",
+  //   component: <Profile />,
+  // },
 ];
 export default routes;

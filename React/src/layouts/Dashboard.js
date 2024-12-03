@@ -29,6 +29,10 @@ import Item1 from "layouts/itemFrame/Item1";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
+import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
+import Function from "components/2dashboard/Function/Function";
+import ErrPage from "components/2dashboard/ErrPage";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -61,11 +65,13 @@ const Dashboard = (props) => {
       <div className="main-content" ref={mainContent}>
         <Navbar/>
         <Header />
-        <Routes>
-          
-        </Routes>
-        <Container fluid style={{padding:"3em"}}>
-          <Item1/>
+        <Container fluid style={{ marginTop: "2em" }}>
+          <Routes>
+            <Route path="/projfavorite" element={<ProjFavorite />} />
+            <Route path="/freefavorite" element={<FreeFavorite />} />
+            <Route path="/function" element={<Function />} />
+            <Route path="/err" element={<ErrPage />} />
+          </Routes>
           <Footer />
         </Container>
       </div>

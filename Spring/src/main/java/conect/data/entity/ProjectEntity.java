@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -20,13 +21,13 @@ public class ProjectEntity {
     private int projPkNum; //프로젝트 번호 [PK, INT]
     private String projName; //프로젝트 이름 [VARCHAR]
     private String projDesc; //프로젝트 설명 [TEXT]
-    private Date projStartdate; //프로젝트 시작일 [DATETIME]
-    private Date projEnddate; // 프로젝트 종료일 [DATETIME]
+    private LocalDateTime projStartdate; //프로젝트 시작일 [DATETIME]
+    private LocalDateTime projEnddate; // 프로젝트 종료일 [DATETIME]
     private String projStatus; // 프로젝트 상태 [VARCHAR] (예정, 진행 중, 완료)
     private String projMembers; // 프로젝트 참여자 사번 [VARCHAR] (String으로 저장 후 string tokenizer로 데이터 사용)
-    private Date projCreated; //프로젝트 생성 일시 [DATETIME]
-    private Date projUpdated; // 프로젝트 정보 최종 수정 일시 [DATETIME]
-    private int projProgress;
+    private LocalDateTime projCreated; //프로젝트 생성 일시 [DATETIME]
+    private LocalDateTime projUpdated; // 프로젝트 정보 최종 수정 일시 [DATETIME]
+    private Integer projProgress;
     private String projImport; //프로젝트 중요도 [VARCHAR] (낮음, 보통, 높음, 매우높음)
     private String projTag; //임의로 부여하는 프로젝트 태그 [VARCHAR] => 검색용
     private String projTagcol; //프로젝트 태그 컬러 [VARCHAR]
