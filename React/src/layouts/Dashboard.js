@@ -25,7 +25,6 @@ import Footer from "components/2dashboard/Footers/Footer.js";
 import Sidebar from "components/2dashboard/Sidebar/Sidebar.js";
 import Header from "components/2dashboard/Headers/Header.js";
 import routes from "routes.js";
-import Item1 from "layouts/itemFrame/Item1";
 import MyToDoList from "components/TempComp/MyToDOList";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -71,7 +70,7 @@ const Dashboard = (props) => {
           <Route path="/proj/*" element={<ProjectHome />}/>
         </Routes>
         <Container fluid style={{ padding: "3em" }}>
-          <Item1 />
+          
           <Footer />
         </Container>
       </div>
