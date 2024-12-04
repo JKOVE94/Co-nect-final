@@ -1949,7 +1949,7 @@ pre code {
   .table-responsive-sm {
     display: block;
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
   .table-responsive-sm > .table-bordered {

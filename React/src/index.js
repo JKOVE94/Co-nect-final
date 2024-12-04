@@ -13,6 +13,7 @@ import Dashboard from "layouts/Dashboard";
 import Manage from "layouts/Manage";
 import Login from "layouts/Login";
 import Store from "./Redux/Store";
+import ProjHeaders from "components/2dashboard/Headers/ProjHeaders";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const persistor = persistStore(Store);
@@ -25,6 +26,7 @@ root.render(
           <Route path="/" element={<Login />} />
           <Route path="/main/*" element={<Dashboard />} />
           <Route path="/manage/*" element={<Manage />} />
+          <Route path="proj/projread/:id" element={<ProjHeaders />} />
         </Routes>
       </BrowserRouter>
     </PersistGate>
