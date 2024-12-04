@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ramonak/react-progress-bar": "^5.3.0",
     "@reduxjs/toolkit": "^2.3.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -13,6 +14,7 @@
     "react-bootstrap": "^2.10.6",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
+    "react-native-progress": "^5.0.1",
     "react-redux": "^9.1.2",
     "react-router": "^7.0.1",
     "react-router-dom": "^7.0.1",
