@@ -1,9 +1,13 @@
 package conect.service.board.post;
 
 import conect.data.dto.PostDto;
+import conect.data.entity.CompanyEntity;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
+import conect.data.repository.CompanyRepository;
 import conect.data.repository.PostRepository;
+import conect.data.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +22,13 @@ public class PostServiceImpl implements PostService {
 
 	@Autowired
 	private PostRepository frepository;
-
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private CompanyRepository companyRepository;
+	
 	// 삽입
 	@Override
 	public PostEntity insertPost(PostForm postForm) {
@@ -33,7 +43,8 @@ public class PostServiceImpl implements PostService {
 		postEntity.setPostTag(postForm.getPost_tag());
 		postEntity.setPostDepth(postForm.getPost_depth());
 		postEntity.setPostView(postForm.getPost_view());
-
+		postEntity.setUserEntity(userRepository.findById(postForm.getPost_fk_user_num()).get());
+		postEntity.setCompanyEntity(companyRepository.findById(postForm.getPost_fk_comp_num()).get());
 		return frepository.save(postEntity);
 	}
 

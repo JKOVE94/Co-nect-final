@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useHistory } from 'react-router-dom';
-import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
+import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import { useSelector } from "react-redux";
 
 const FreeCreate = () => {
+  const writer= useSelector((state)=>state.userData);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     post_targetnum: "",  
@@ -38,7 +39,7 @@ const FreeCreate = () => {
     };
 
     console.log('Form data before submitting:', formToSubmit);
-
+    
     axios
       .post("/board/free", formToSubmit)
       .then((response) => {
@@ -84,28 +85,12 @@ const FreeCreate = () => {
             className="form-control"
             id="post_fk_user_num"
             name="post_fk_user_num"
-            value={formData.post_fk_user_num}
+            value={writer.user_name}
             onChange={handleChange}
             required
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="post_targetnum">담당 부서:</label>
-          <select
-            className="form-control"
-            id="post_targetnum"
-            name="post_targetnum"
-            value={formData.post_targetnum} // 상태 값으로 연결
-            onChange={handleChange}
-            required
-          >
-            <option value="">담당 부서를 선택하세요</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
-        </div>
-        <div className="form-group">
+       <div className="form-group">
           <label htmlFor="post_import">우선순위:</label>
           <select
             className="form-control"

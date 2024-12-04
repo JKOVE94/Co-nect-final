@@ -5,13 +5,15 @@ import { format } from "date-fns"; // 날짜 포맷팅
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const FreeList = () => {
+ 
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [pageBlock, setPageBlock] = useState(0);
   const [totalBlocks, setTotalBlocks] = useState(0);
+
   const navigate = useNavigate();
-  
+
   const fetchPosts = (page, block) => {
     axios
       .get(`/board/free?page=${page}&pageBlock=${block}`)
@@ -20,7 +22,7 @@ const FreeList = () => {
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);
         setTotalBlocks(res.data.totalBlocks);
-      })    
+      })
       .catch((error) => {
         console.error("Axios 요청 중 오류 발생:", error);
       });
@@ -75,7 +77,7 @@ const FreeList = () => {
               {posts.length > 0 ? (
                 posts.map((post, index) => (
                   <tr key={post.post_pk_num || `post-${index}`}>
-                    <td>{post.user_name}</td>
+                    <td>{post.post_pk_num}</td>
                     <td>
                       <Link to={`/main/free/detail/${post.post_pk_num}`}>
                         {post.post_name}

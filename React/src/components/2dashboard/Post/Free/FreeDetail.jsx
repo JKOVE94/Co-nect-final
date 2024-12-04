@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
+import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import PostTost from "variables/Toast/PostToast";
 import Test from "./Test";
 
@@ -23,6 +23,7 @@ const FreeDetail = () => {
         setLoading(false); // 로딩 상태 종료
       }
     };
+
     fetchPost();
   }, []);
 
@@ -81,14 +82,8 @@ const FreeDetail = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>부 서 명</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                    {post.buser_name}
-                    </td>
-                  </tr>
-                  <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>
-                      대상사원
+                      작 성 자
                     </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                     {post.user_name}
@@ -96,7 +91,7 @@ const FreeDetail = () => {
                   </tr>
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>
-                      중 요 도
+                      우선순위
                     </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {post.post_import}

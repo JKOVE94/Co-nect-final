@@ -28,13 +28,7 @@ public class PostEntity {
 	private String postTag; // 게시글 태그 [VARCHAR]
 	private int postDepth; // 게시글 깊이 [INT] (기본값 0, 답글 설정시 사용)
 	private int postView; // 게시글 조회수 [INT]
-	
-	@Column(name = "post_fk_comp_num", insertable = false, updatable = false)  // DB 필드와 연결
-    private Integer postFkCompNum;  // DB에 저장되는 값과 동일
-	
-	@Column(name = "post_fk_user_num", insertable = false, updatable = false)
-	private Integer postFkUserNum;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "post_fk_user_num")
 	@JsonIgnore

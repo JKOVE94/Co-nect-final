@@ -37,7 +37,6 @@ public class PostDto {
         dto.setPost_depth(entity.getPostDepth());
         dto.setPost_view(entity.getPostView());
         dto.setUser_name(entity.getUserEntity().getUserName());
-        dto.setBuser_name(entity.getUserEntity().getDepartmentEntity().getDpartName());
         
         // UserEntity에서 user_name을 가져와 설정
         if (entity.getUserEntity() != null) {

@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
+import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import PostTost from "variables/Toast/PostToast";
 
 
 const FreeUpdate = () => {
     const { postPkNum } = useParams(); // URL에서 'postPkNum'을 추출하고 숫자로 변환
     const navigate = useNavigate();
-    const [error, setError] = useState(null);
     const [post, setPost] = useState({
         post_name: "",
-        post_targetnum: "",
         post_import: "",
         post_content: "",
     });
@@ -20,7 +18,7 @@ const FreeUpdate = () => {
         // 기존 게시글 데이터 가져오기
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`/board/free/${postPkNum}/1`);
+                const response = await axios.get(`/board/free/${postPkNum}`);
                 setPost(response.data);
             } catch (error) {
                 console.error("Error fetching post:", error);
@@ -55,7 +53,6 @@ const FreeUpdate = () => {
         navigate(`/main/free/detail/${postPkNum}`);
     };
 
-
     return (
         <Container fluid style={{Height: "40em", marginTop: "2em" }}>
               <Card style={{ Height: "40em", overflowY: "auto" }}>
@@ -77,22 +74,7 @@ const FreeUpdate = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="post_targetnum">담당 부서:</label>
-                    <select
-                        className="form-control"
-                        id="post_targetnum"
-                        name="post_targetnum"
-                        value={post.post_targetnum}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="post_import">우선 순위:</label>
+                    <label htmlFor="post_import">우선순위:</label>
                     <select
                         className="form-control"
                         id="post_import"
