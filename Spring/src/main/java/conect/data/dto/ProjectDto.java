@@ -27,7 +27,7 @@ public class ProjectDto {
     private int proj_fk_user_num; //프로젝트 담당자 사번 [FK, INT]
     private int proj_fk_comp_num; //프로젝트 회사 고유번호 [FK, INT]
 
-   public static ProjectDto fromEntity(ProjectEntity entity) {
+    public static ProjectDto fromEntity(ProjectEntity entity) {
         ProjectDto dto = new ProjectDto();
         dto.setProj_pk_num(entity.getProjPkNum());
         dto.setProj_name(entity.getProjName());
@@ -48,6 +48,4 @@ public class ProjectDto {
         dto.setProj_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
         return dto;
     }
-    
-    
 }

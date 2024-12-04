@@ -4,8 +4,6 @@ import conect.data.entity.CompanyEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 public class CompanyDto {

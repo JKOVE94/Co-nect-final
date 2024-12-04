@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Setter
 @Getter
 @Entity
@@ -19,5 +21,7 @@ public class AccountEntity {
     private String accAuthor; //계정 권한 [VARCHAR] (일반사용자, 매니저, 관리자)
 
     @OneToMany(mappedBy = "accountEntity")
+    @JsonBackReference
     private List<UserEntity> userEntities;
+
 }
