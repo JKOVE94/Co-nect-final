@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
-import PostTost from "variables/Toast/PostToast";
+import PostToast from "variables/Toast/PostToast";
 
 
 const FreeUpdate = () => {
+    const [freeType, setfreeType] = useState("");
+  const [S, setToastIsOpen] = useState(false);
     const { postPkNum } = useParams(); // URL에서 'postPkNum'을 추출하고 숫자로 변환
     const navigate = useNavigate();
     const [post, setPost] = useState({
@@ -55,6 +57,9 @@ const FreeUpdate = () => {
 
     return (
         <Container fluid style={{Height: "40em", marginTop: "2em" }}>
+            <PostToast
+            
+            ></PostToast>
               <Card style={{ Height: "40em", overflowY: "auto" }}>
               <CardHeader>
             <h2>게시글 수정</h2>

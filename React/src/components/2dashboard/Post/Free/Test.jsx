@@ -1,7 +1,7 @@
 import React, {useState, } from 'react'
 import PostTost from "variables/Toast/PostToast";
 
-const Test = () => {
+const FreeToast = () => {
     const [errType, setErrType] = useState(2); 
     const [Success, setSuccess] = useState(false);
     const toggleSuccess = () => {
@@ -16,4 +16,4 @@ const Test = () => {
     )
 }
 
-export default Test;
+export default FreeToast;
