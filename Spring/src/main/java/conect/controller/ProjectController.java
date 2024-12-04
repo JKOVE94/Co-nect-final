@@ -26,6 +26,11 @@ public class ProjectController {
 		public ProjectDto getProjById(@PathVariable("projPkNum")int projPkNum){
 		return projServiceImpl.getProjById(projPkNum);
 	}
-
+	
+    //프로젝트 게시판
+	@GetMapping("/{compNum}")
+	public List<ProjectDto> getAllProj(@PathVariable("compNum")int compNum){
+		return projServiceImpl.getAllProjInfo(compNum);
+	}
 
 }

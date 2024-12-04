@@ -24,5 +24,8 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> 
 	 @Query("SELECT p FROM ProjectEntity p WHERE p.userEntity.userPkNum = ?1")
 	    List<ProjectEntity> getProjByTaskFkUserNum(int task_fk_user_num);
 
-
+	//프로젝트 목록 회사 num 기준으로 조회
+	@Query("SELECT p, p.userEntity.userName, p.userEntity.userMail FROM ProjectEntity p WHERE p.companyEntity.compPkNum = :compNum")
+	List<ProjectEntity> findByProjCompNum(@Param("compNum") int compNum);
+	 
 }

@@ -18,4 +18,7 @@ public interface ProjService {
 	ProjectDto getProjById(int projPkNum);
 	
 	Map<String, Object> getUserRelatedData(int userPkNum);
+	
+	//회사코드 관련 프로젝트 읽어오기
+	List<ProjectDto> getAllProjInfo(int compNum);
 }
