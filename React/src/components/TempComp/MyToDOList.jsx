@@ -33,7 +33,7 @@ const MyToDoList = () => {
     setLoading(true);
     setError(null);
     axios
-      .get(`board/${user_pk_num}`)
+      .get(`post/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
       })
