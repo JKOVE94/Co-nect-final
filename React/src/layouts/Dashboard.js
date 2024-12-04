@@ -28,7 +28,7 @@ import routes from "routes.js";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import FreeHome from "../components/2dashboard/Post/Free/FreeHome";
+import FreeHome from "components/2dashboard/Post/Free/FreeHome";
 
 
 const Dashboard = (props) => {

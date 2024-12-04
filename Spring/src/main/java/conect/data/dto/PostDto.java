@@ -23,7 +23,7 @@ public class PostDto {
     private int post_fk_comp_num; //게시글 회사 고유번호 [FK, INT]
     private int post_fk_user_num; //게시글 작성자 사번 [FK, INT]
     private String user_name;
-    
+    private String buser_name;
     public static PostDto fromEntity(PostEntity entity) {
         PostDto dto = new PostDto();
         dto.setPost_pk_num(entity.getPostPkNum());
@@ -36,6 +36,8 @@ public class PostDto {
         dto.setPost_tag(entity.getPostTag());
         dto.setPost_depth(entity.getPostDepth());
         dto.setPost_view(entity.getPostView());
+        dto.setUser_name(entity.getUserEntity().getUserName());
+        dto.setBuser_name(entity.getUserEntity().getDepartmentEntity().getDpartName());
         
         // UserEntity에서 user_name을 가져와 설정
         if (entity.getUserEntity() != null) {
