@@ -49,7 +49,7 @@ const Dashboard = (props) => {
         }}
       />
       <div className="main-content" ref={mainContent}>
-        <Navbar />
+        {isProjReadPath ? "" : <Navbar />}
         {/* 조건부 렌더링으로 헤더 선택 */}
         {isProjReadPath ? <BinHeader /> : <Header />}
         <Routes>

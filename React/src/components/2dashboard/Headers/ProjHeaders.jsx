@@ -17,17 +17,46 @@
 */
 
 // reactstrap components
-import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Container,
+  Row,
+  Col,
+  DropdownItem,
+  DropdownMenu,
+  Media,
+  DropdownToggle,
+  Nav,
+  UncontrolledDropdown,
+} from "reactstrap";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import "../../../assets/css/argon-dashboard-react.css";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGOUT } from "../../../Redux/Reducer/userDataReducer";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [proj, setProj] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState({});
+  const user = useSelector((state) => state.userData);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setUserData(user);
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    dispatch(LOGOUT());
+    navigate("/");
+  };
 
   const fetchProjectData = useCallback(() => {
     setLoading(true);
@@ -56,12 +85,12 @@ const Header = () => {
 
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
+      <div className="header bg-gradient-info pb-8 pt-2 pt-md-3">
         <Container fluid>
-          <div className="header-body">
+          <div className="header-body ">
             {/* Card stats */}
-            <Row>
-              <Col lg="6" xl="3">
+            <Row className="h-25 justify-content-end align-items-end ">
+              <Col lg="5" xl="2">
                 <Card className="card-stats mb-4 mb-xl-0">
                   <CardBody>
                     <Row className="h-25">
@@ -84,8 +113,15 @@ const Header = () => {
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
                       <span className="text-success mr-2">
-                        <i className="fas fa-calendar-alt" />{" "}
-                        {proj.proj_created}
+                        <i className="fas fa-calendar-alt" /> &nbsp;
+                        {new Date(proj.proj_created).toLocaleDateString(
+                          "ko-KR",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          }
+                        )}
                       </span>
                       <span className="text-nowrap">
                         {" "}
@@ -97,8 +133,8 @@ const Header = () => {
               </Col>
 
               {/* 담당자 정보 카드 */}
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0 h-100">
+              <Col lg="5" xl="2">
+                <Card className="card-stats mb-4 mb-xl-0">
                   <CardBody>
                     <Row className="h-25">
                       <Col>
@@ -126,8 +162,8 @@ const Header = () => {
               </Col>
 
               {/* 일정 관리 카드 */}
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0 h-100">
+              <Col lg="5" xl="2">
+                <Card className="card-stats mb-4 mb-xl-0">
                   <CardBody>
                     <Row className="h-25">
                       <Col>
@@ -135,10 +171,17 @@ const Header = () => {
                           tag="h5"
                           className="text-uppercase text-muted mb-0"
                         >
-                          일정 관리
+                          마감 기한
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
-                          {proj.proj_enddate}
+                        <span className="h3 font-weight-bold mb-0">
+                          {new Date(proj.proj_enddate).toLocaleDateString(
+                            "ko-KR",
+                            {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                            }
+                          )}
                         </span>
                       </Col>
                       <Col className="col-auto">
@@ -155,8 +198,8 @@ const Header = () => {
               </Col>
 
               {/* 프로젝트 진행 상황 카드 */}
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0 h-100">
+              <Col lg="5" xl="2">
+                <Card className="card-stats mb-4 mb-xl-0 ">
                   <CardBody>
                     <Row className="h-25">
                       <Col>
@@ -182,6 +225,62 @@ const Header = () => {
                   </CardBody>
                 </Card>
               </Col>
+              {/* 사용자 프로필 */}
+              <div
+                className="align-items-top d-none d-md-flex pb-6"
+                navbar
+                style={{}}
+              >
+                <UncontrolledDropdown nav>
+                  <DropdownToggle className="pr-0" nav>
+                    <Media className="align-items-center">
+                      {/* 사용자 사진 */}
+                      <span className="avatar avatar-sm rounded-circle">
+                        <img
+                          alt="..."
+                          src={require("assets/img/theme/team-4-800x800.jpg")}
+                        />
+                      </span>
+                      {/* 사용자 이름 */}
+                      <Media className="ml-2 d-none d-lg-block">
+                        <span className="mb-0 text-sm font-weight-bold">
+                          {userData.user_name}
+                        </span>
+                      </Media>
+                    </Media>
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-menu-arrow" right>
+                    <DropdownItem className="noti-title" header tag="div">
+                      <h6 className="text-overflow m-0">Welcome!</h6>
+                    </DropdownItem>
+                    <DropdownItem to="/#" tag={Link}>
+                      <i className="ni ni-single-02" />
+                      <span>계정 정보</span>
+                    </DropdownItem>
+                    {/*관리자일 경우에만 설정 메뉴가 보이도록 설정*/}
+                    {userData.user_fk_acc_authornum === 3 ? (
+                      <DropdownItem to="/manage" tag={Link}>
+                        <i className="ni ni-settings-gear-65" />
+                        <span>설정</span>
+                      </DropdownItem>
+                    ) : null}
+                    <DropdownItem to="#" tag={Link}>
+                      <i className="ni ni-calendar-grid-58" />
+                      <span>활동</span>
+                    </DropdownItem>
+
+                    <DropdownItem to="#" tag={Link}>
+                      <i className="ni ni-support-16" />
+                      <span>지원</span>
+                    </DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem onClick={(e) => logout()}>
+                      <i className="ni ni-user-run" />
+                      <span>로그아웃</span>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </div>
             </Row>
           </div>
         </Container>
