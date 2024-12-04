@@ -1,0 +1,12 @@
+package conect.service.board.post;
+
+import java.util.List;
+
+import conect.data.dto.PostDto;
+import conect.data.dto.TaskDto;
+
+public interface PostService {
+	
+	 List <PostDto> getAllPostWithUser(int user_pk_num);
+
+}
