@@ -1,6 +1,7 @@
-.card-link:hover{
+.link:hover{
     cursor: pointer;
 }
+
 .del {
     width:80px;
 }
@@ -8,6 +9,10 @@
     table-layout: fixed;
     text-align: center;
 }
-.container-fluid {
+.container {
     margin-top: 2rem;
+}
+
+.subtitle{
+    margin-bottom: 10px;
 }

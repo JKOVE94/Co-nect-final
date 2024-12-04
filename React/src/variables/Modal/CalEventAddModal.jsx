@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import style from '../../assets/css/2dashboard/calendar.module.css'
 
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버
@@ -46,7 +47,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
             />
           </Col>
           <Button
-            className="modalCloseBtn"
+            className={style.modalCloseBtn}
             variant="link"
             onClick={onClose}
           >

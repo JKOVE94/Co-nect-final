@@ -7,9 +7,8 @@ import moment from "moment";
 import CalEventShowModal from "../../../variables/Modal/CalEventShowModal";
 import CalEventAddModal from "../../../variables/Modal/CalEventAddModal";
 //css
-import "../../../assets/css/calendar.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
@@ -92,12 +91,12 @@ const MyCalendar = ({events, handleGetEvent, handleToast}) => {
         eventResizableFromStart={true}
         dayMaxEventRows={3}
         headerToolbar={{
-          start: "today prev,next", //오늘날짜, 이전달, 다음달 버튼
+          start: "today", //오늘날짜, 이전달, 다음달 버튼
           center: "title", //현재 달
           end: "addButton", //커스텀 버튼(일정 추가)
         }}
         footerToolbar={{
-          start: "dayGridMonth dayGridWeek",
+          start: "prev,next",
         }}
         customButtons={{
           addButton: {

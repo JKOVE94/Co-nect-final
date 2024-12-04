@@ -1,6 +1,7 @@
 import MyCalendar from "./MyCalendar";
 import MySchedule from "./MySchedule";
-import "../../../assets/css/calendar.css";
+import "../../../assets/css/2dashboard/function.css"
+import style from '../../../assets/css/2dashboard/calendar.module.css'
 
 import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import axios from "axios";
@@ -59,12 +60,12 @@ const Function = () => {
 
   return (
     <>
-      <Container fluid style={{ marginTop: "2rem" }}>
+      <Container fluid className={style.calendar}>
         <Row className="mx-0 align-items-start justify-content-center">
           <Col md={8} className="px-0">
-            <Card className="mx-auto">
-              <CardBody className="p-10" style={{maxHeight: '45em', overflowY:'auto'}}>
-                <MyCalendar
+            <Card className={style.card}>
+              <CardBody>
+                <MyCalendar 
                   events={events}
                   handleGetEvent={handleGetEvent}
                   handleToast={handleToast}
@@ -72,9 +73,9 @@ const Function = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col md={4}>
-            <Card className="mx-auto">
-              <CardBody className="p-10">
+          <Col md={4} >
+            <Card className={style.card2}>
+              <CardBody className={style.cardbody}>
                 <MySchedule events={events} />
               </CardBody>
             </Card>

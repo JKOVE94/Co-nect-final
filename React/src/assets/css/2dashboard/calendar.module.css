@@ -1,0 +1,85 @@
+
+/*function*/
+.calendar {
+  min-width: 800px;
+  margin-top: "2rem";
+  overflow-y: scroll;
+}
+.calendar::-webkit-scrollbar{
+  display: none;
+}
+.card {
+  min-width: 500px;
+}
+.card2{
+  min-width: 200px;
+}
+.cardbody{
+  padding-left : 0px;
+  padding-right : 0px;
+}
+/*schedule*/
+.title{
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+.subtitle{
+  font-size: 1.1rem;
+}
+.itembox{
+  text-align: center;
+}
+.item {
+  white-space: pre-wrap;
+}
+.sub{
+  font-size : 0.8rem;
+}
+
+/*modal*/
+.modalCloseBtn{
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  color: #000;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+.modalCloseBtn:hover{
+  text-decoration-line: none;
+}
+.modalCloseBtn:focus,
+.modalCloseBtn:active {
+  outline: none;  
+  box-shadow: none; 
+}
+.textinfo {
+  width : 100%;
+  color : #abababc8;
+  text-align: left;
+}
+
+/*toast*/
+.toast {
+  width : auto;
+}
+.text{
+  font-size:1rem;
+}
+.closeBtn {
+  font-size:1rem;
+}
+.closeBtn:hover{
+  text-decoration-line: none;
+}
+.closeBtn:focus,
+.closeBtn:active {
+  outline: none;  
+  box-shadow: none; 
+}
+
+
+

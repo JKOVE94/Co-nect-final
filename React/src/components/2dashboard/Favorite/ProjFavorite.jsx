@@ -2,7 +2,7 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import "../../../assets/css/favor.css";
+import style from "../../../assets/css/2dashboard/favor.module.css";
 import { useNavigate } from "react-router-dom";
 
 const {
@@ -46,12 +46,12 @@ const ProjFavorite = () => {
   }
 
   return (
-    <Container fluid style={{ marginTop: "2rem" }}>
+    <Container fluid className={style.container}>
       <Card className="mx-auto">
         <CardBody className="p-10">
-          <Card.Title>즐겨찾기</Card.Title>
-          <Card.Subtitle>프로젝트</Card.Subtitle>
-          <Table style={{ tableLayout: "fixed" }}>
+          <Card.Title><h3>즐겨찾기</h3></Card.Title>
+          <Card.Subtitle className={style.subtitle}>프로젝트</Card.Subtitle>
+          <Table>
             <thead>
               <tr>
                 <th>번호</th>
@@ -61,7 +61,7 @@ const ProjFavorite = () => {
                 <th>중요도</th>
                 <th>시작날짜</th>
                 <th>종료날짜</th>
-                <th className="del"></th>
+                <th className={style.del}></th>
               </tr>
             </thead>
             <tbody>
