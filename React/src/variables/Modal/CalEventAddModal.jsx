@@ -34,7 +34,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
-        <Modal.Title style={{ display: "flex", alignItems: "center" }}>
+        <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
           <Col md="auto">일정 추가</Col>
           <Col md={5}>
             <Form.Control
@@ -42,6 +42,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
               id="todo_tagcol"
               value={color}
               onChange={handleChange}
+              style={{width:'50px'}}
             />
           </Col>
           <Button

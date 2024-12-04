@@ -10,23 +10,34 @@ import { useSelector } from "react-redux";
 const FreeList = () => {
   //검색
   const [searchText, setSearchText] = useState("");
+  const [searchType, setSearchType] = useState("");
 
   const handleKeyDown = (e) => {
     if (e.keyCode === 13) handleSearch();
   };
 
   const handleChange = (e) => {
-    setSearchText(e.target.value.trim());
+    if(e.target.id==="type"){
+      setSearchType(e.target.value);
+    } else if(e.target.id==="search") {
+      setSearchText(e.target.value.trim());
+    }
   };
+
   const handleSearch = () => {
-    if (searchText === "") {
-      refresh();
+    if(searchType === "" || searchType === null){
+      return;
     } else {
-      setPosts(
-        post.filter((data) =>
-          data.post_name.replace(/\s+/g, "").includes(searchText)
-        )
-      );
+      axios
+      .get("/board/free")
+      .then((res) => {
+        const allData = res.data;
+        setPosts(
+          allData.filter((data) =>
+            data[searchType].replace(/\s+/g, "").includes(searchText)
+          )
+        );
+      })
     }
   };
 
@@ -53,7 +64,7 @@ const FreeList = () => {
       .catch((error) => {
         console.error("Axios 요청 중 오류 발생:", error);
       });
-  };
+  }
 
   useEffect(() => {
     refresh();
@@ -66,6 +77,7 @@ const FreeList = () => {
     <Card>
       <CardBody>
         <Search
+          type='post'
           value={searchText}
           onChange={handleChange}
           onSearch={handleSearch}
@@ -100,7 +112,7 @@ const FreeList = () => {
                       {post.post_name}
                     </Link>
                   </td>
-                  <td>{post.post_fk_user_num}</td>
+                  <td>{post.user_name}</td>
                   <td>{post.post_regdate}</td>
                   <td>{post.post_view}</td>
                 </tr>

@@ -43,7 +43,7 @@ public class UserEntity {
     @JsonIgnore
     private DepartmentEntity departmentEntity;
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "userEntity",orphanRemoval = true)
     @JsonBackReference
     private List<FavoritesEntity> favoritesEntities;
 

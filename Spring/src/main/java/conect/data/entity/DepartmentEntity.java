@@ -25,11 +25,11 @@ public class DepartmentEntity {
     private String dpartMail; //부서 이메일 [VARCHAR]
     private int dpartFkDpartNum; //상위 부서 번호
 
-    @OneToMany(mappedBy = "departmentEntity")
+    @OneToMany(mappedBy = "departmentEntity",orphanRemoval = true)
     @JsonBackReference
     private List<UserEntity> userEntities;
 
-    @OneToMany(mappedBy = "departmentEntity")
+    @OneToMany(mappedBy = "departmentEntity",orphanRemoval = true)
     @JsonBackReference
     private List<ProjectEntity> userEntityList;
 }
