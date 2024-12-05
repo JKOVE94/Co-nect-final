@@ -69,7 +69,7 @@ const ProjFavorite = () => {
                 <tr key={proj.favor_id}>
                   <td>{proj.proj_pk_num}</td>
                   <td>
-                    <Card.Link onClick={() => handlePage(proj.proj_pk_num)}>{proj.proj_name}</Card.Link>
+                    <Card.Link className={style.link} onClick={() => handlePage(proj.proj_pk_num)}>{proj.proj_name}</Card.Link>
                   </td>
                   <td>{proj.proj_tag}</td>
                   <td>{proj.user_name}</td>
@@ -77,7 +77,7 @@ const ProjFavorite = () => {
                   <td>{moment(proj.proj_startdate).format("YYYY-MM-DD")}</td>
                   <td>{moment(proj.proj_enddate).format("YYYY-MM-DD")}</td>
                   <td>
-                    <Card.Link onClick={() => handleClick(proj.favor_id)}>&times;</Card.Link>
+                    <Card.Link className={style.link} onClick={() => handleClick(proj.favor_id)}>&times;</Card.Link>
                   </td>
                 </tr>
               ))}

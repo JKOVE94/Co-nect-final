@@ -1,14 +1,15 @@
 package conect.service.board.post;
 
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Page;
 
 import conect.data.dto.PostDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
 
-
 public interface PostService {
-	
 	// 삽입
 	PostEntity insertPost(PostForm postForm);
 
@@ -19,12 +20,14 @@ public interface PostService {
 	PostDto getPost(int postPkNum);
 
 	// 수정
-	PostEntity updatePost(int postPkNum, PostForm postForm);
-	
-	// 리스트
-	List <PostDto> getAllPostWithUser(int user_pk_num);
+	PostDto updatePost(int postPkNum, PostForm postForm);
 
 	// 삭제
 	void deletePost(int postPkNum);
 
+	// 페이징
+	public Page<PostDto> getList(int page, int pageSize);
+	
+	// targetNum 여러명 이름 불러오기
+	public List<Map<Integer,String>> getTargetNames(String targetNumsString);
 }

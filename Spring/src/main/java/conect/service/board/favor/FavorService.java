@@ -2,6 +2,7 @@ package conect.service.board.favor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import conect.data.dto.FavoritesDto;
 import conect.data.dto.PostDto;
@@ -16,7 +17,7 @@ public interface FavorService {
 	List<Map<String,Object>> getFavoritePost(int usernum);
 	
 	//즐겨찾기 등록 조회
-	FavoritesDto checkFavorite(String type, int usernum, int num);
+	Optional<FavoritesDto> checkFavorite(String type, int usernum, int num);
 	
 	//즐겨찾기 등록
 	boolean addFavoriteData(FavoritesDto dto, String type);

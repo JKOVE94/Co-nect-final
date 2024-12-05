@@ -69,7 +69,7 @@ public class FavoriteController {
 												 @PathVariable("usernum")int usernum, 
 												 @PathVariable("pknum")int num) {
 		try {
-			if(favorService.checkFavorite(type, usernum, num) != null) {
+			if(!favorService.checkFavorite(type, usernum, num).isEmpty()) {
 				return ResponseEntity.ok(true); //등록되어 있을 경우 true 반환
 			} else {
 				return ResponseEntity.ok(false);//등록되어있지 않을 경우 false 반환

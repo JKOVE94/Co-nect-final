@@ -3,7 +3,8 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import style from "../../../assets/css/2dashboard/favor.module.css";
-import { useNavigate } from "react-router-dom";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { Link, useNavigate } from "react-router-dom";
 
 const {
   Container,
@@ -17,7 +18,6 @@ const FreeFavorite = () => {
   const [favorFree, setFavorFree] = useState([{}]);
   const navigate = useNavigate();
   const getData = () => {
-    console.log('?');
     axios
       .get("/favorite/post/" + num)
       .then((res) => {
@@ -32,15 +32,11 @@ const FreeFavorite = () => {
   const handleClick = (num) => {
     axios.delete("/favorite/"+num)
     .then((res)=>{
-      if(res.data.isSuccess){
+      if(res.data){
         getData();
       }
     })
     .catch();
-  }
-  const handlePage = (num) => {
-    //proj read로 이동하는 코드 넣기
-    navigate();
   }
   return (
     <Container fluid className={style.container}>
@@ -65,7 +61,9 @@ const FreeFavorite = () => {
                 <tr key={free.favor_id}>
                   <td>{free.post_pk_num}</td>
                   <td>
-                    <Card.Link className={style.link} onClick={() => handlePage(free.post_pk_num)}>{free.post_name}</Card.Link>
+                    <Link to={`/main/free/detail/${free.post_pk_num}`}>
+                      {free.post_name}
+                    </Link>
                   </td>
                   <td>{free.post_tag}</td>
                   <td>{free.user_name}</td>

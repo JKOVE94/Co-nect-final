@@ -70,14 +70,15 @@ const CalEventShowModal = ({
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
-        <Modal.Title style={{ display: "flex", alignItems: "center" }}>
-          <Col md="auto">일정 수정</Col>
+        <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
+          <Col md='100%' style={{fontSize:'1.5rem'}}>일정 수정</Col>
           <Col md={5}>
             <Form.Control
               value={data.todo_tagcol}
               type="color"
               id="todo_tagcol"
               onChange={handleChange}
+              style={{width:'45px'}}
               disabled={read}
             />
           </Col>

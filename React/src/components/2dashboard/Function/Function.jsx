@@ -60,7 +60,7 @@ const Function = () => {
 
   return (
     <>
-      <Container fluid className={style.calendar}>
+      <Container fluid className={style.calendar} >
         <Row className="mx-0 align-items-start justify-content-center">
           <Col md={8} className="px-0">
             <Card className={style.card}>

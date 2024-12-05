@@ -14,5 +14,10 @@
 }
 
 .subtitle{
+    font-size: 0.8rem;
     margin-bottom: 10px;
+}
+
+.icon {
+    color : yellow;
 }

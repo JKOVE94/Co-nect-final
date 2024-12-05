@@ -35,15 +35,15 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
-        <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
-          <Col md="auto">일정 추가</Col>
+        <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%'}}>
+          <Col md='100%' style={{fontSize:'1.5rem'}}>일정 추가</Col>
           <Col md={5}>
             <Form.Control
               type="color"
               id="todo_tagcol"
               value={color}
               onChange={handleChange}
-              style={{width:'50px'}}
+              style={{width:'45px'}}
             />
           </Col>
           <Button
