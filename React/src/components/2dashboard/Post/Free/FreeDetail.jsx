@@ -10,7 +10,6 @@ const FreeDetail = () => {
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [target_names, settargetnames] = useState([{}])//번호 이름 변경
 
   
   useEffect(() => {
@@ -18,15 +17,14 @@ const FreeDetail = () => {
       try {
         const response = await axios.get(`/board/free/${postPkNumInt}`); 
         setPost(response.data); 
-        axios.get(`/board/free/username/${post.post_targetnum}`)
-        .then(res => settargetnames(res.data))
-        console.log(target_names)
       } catch (err) {
         setError(err.message); 
       } finally {
         setLoading(false); 
       }
     };
+    
+
     fetchPost();
   },[postPkNumInt]);
 
@@ -73,14 +71,18 @@ const FreeDetail = () => {
                     </td>
                   </tr>
                   <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>조 회 수</td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {post.post_view}회
+                    </td>
+                  </tr>
+                  <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>작 성 자</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {post.user_name}
                     </td>
                     </tr>
-                    <tr>
-                  </tr>
-                  <tr>
+                     <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>우선순위</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {post.post_import}
