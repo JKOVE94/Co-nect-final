@@ -77,7 +77,9 @@ const ProjUpdate = () => {
       const response = await axios.put(`/proj/projedit/${projPkNum}`, formData); // 수정 API 호출
       console.log("수정 성공:", response.data);
 
-      navigate(`/main/proj/projread/${projPkNum}`,{ state: { actionType: "update" } }); // 수정 후 목록 페이지로 이동
+      navigate(`/main/proj/projread/${projPkNum}`, {
+        state: { actionType: "update" },
+      }); // 수정 후 목록 페이지로 이동
     } catch (error) {
       console.error("수정 실패:", error);
     }
@@ -93,9 +95,10 @@ const ProjUpdate = () => {
       className="shadow rounded"
       style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
     >
-      <CardHeader className="border-0">
+      <CardHeader className="border-1">
         <h1 className="mb-0">프로젝트 수정</h1>
       </CardHeader>
+
       <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
         <form onSubmit={handleSubmit}>
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
@@ -300,6 +303,7 @@ const ProjUpdate = () => {
               />
             </Col>
           </FormGroup>
+          <br/>
           <Row form className="justify-content-center">
             <Col sm={1.5} className="text-center">
               <Button

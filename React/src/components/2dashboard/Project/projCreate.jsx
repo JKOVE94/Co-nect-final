@@ -52,9 +52,11 @@ const ProjCreate = () => {
     try {
       const response = await axios.post("/proj/projadd", formData);
       const projPkNum = response.data;
-  
+
       // 상태값과 함께 ProjRead로 navigate
-      navigate(`/main/proj/projread/${projPkNum}`, { state: { actionType: "create" } });
+      navigate(`/main/proj/projread/${projPkNum}`, {
+        state: { actionType: "create" },
+      });
     } catch (error) {
       console.error("프로젝트 생성 실패:", error);
       alert("프로젝트 생성에 실패했습니다.");
@@ -71,8 +73,8 @@ const ProjCreate = () => {
       className="shadow rounded"
       style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
     >
-      <CardHeader className="border-0">
-        <h1 className="mb-4">프로젝트 작성</h1>
+      <CardHeader className="border-1">
+        <h1 className="mb-0">프로젝트 작성</h1>
       </CardHeader>
 
       <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
@@ -281,7 +283,7 @@ const ProjCreate = () => {
               />
             </Col>
           </FormGroup>
-
+          <br />
           {/* 버튼들 */}
           <Row form className="justify-content-center">
             <Col sm={1.5} className="text-center">
