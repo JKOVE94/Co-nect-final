@@ -1,11 +1,10 @@
 import React from "react";
 import { Col, Row, Toast } from "react-bootstrap";
 
-// props에 담기는 데이터 => type(어떤 유형인지), showA(토스트표시 함수), toggleShowA(토스트숨김 함수)
 const ProjToast = (props) => {
-  const TypeText = () => {
-    switch (props.type) {
-      case 1:
+  const TypeText = ({ type }) => {
+    switch (type) {
+      case "create":
         return (
           <>
             <Toast.Header>
@@ -23,7 +22,7 @@ const ProjToast = (props) => {
             </Toast.Body>
           </>
         );
-      case 2:
+      case "update":
         return (
           <>
             <Toast.Header>
@@ -57,10 +56,10 @@ const ProjToast = (props) => {
             position: "fixed",
             bottom: "3em",
             right: "3em",
-            zIndex: 1,
+            zIndex: 105,
           }}
         >
-          <TypeText />
+          <TypeText type={props.type} />
         </Toast>
       </Col>
     </Row>

@@ -77,13 +77,9 @@ const ProjUpdate = () => {
       const response = await axios.put(`/proj/projedit/${projPkNum}`, formData); // 수정 API 호출
       console.log("수정 성공:", response.data);
 
-      //toast.success("프로젝트가 성공적으로 수정되었습니다!");
-
-      navigate(`/main/proj/projread/${projPkNum}`); // 수정 후 목록 페이지로 이동
+      navigate(`/main/proj/projread/${projPkNum}`,{ state: { actionType: "update" } }); // 수정 후 목록 페이지로 이동
     } catch (error) {
       console.error("수정 실패:", error);
-
-      //toast.error("프로젝트 수정에 실패했습니다.");
     }
   };
 

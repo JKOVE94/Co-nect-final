@@ -46,7 +46,7 @@ const ProjCreate = () => {
     console.log(formData); // 폼 데이터 출력
     console.log("Submitted formData:", formData);
     console.log("Response data from server:", projPkNum); // 서버에서 응답 받은 프로젝트 번호
-    console.log("Navigating to:", `/board/projread/${projPkNum}`); // 이동할 페이지
+    console.log("Navigating to:", `/main/proj/projread/${projPkNum}`); // 이동할 페이지
 
     // API 호출
     try {
@@ -54,9 +54,7 @@ const ProjCreate = () => {
       const projPkNum = response.data;
   
       // 상태값과 함께 ProjRead로 navigate
-      navigate(`/main/proj/projread/${projPkNum}`, {
-        state: { toastType: 1 }, // 1은 프로젝트 등록 성공
-      });
+      navigate(`/main/proj/projread/${projPkNum}`, { state: { actionType: "create" } });
     } catch (error) {
       console.error("프로젝트 생성 실패:", error);
       alert("프로젝트 생성에 실패했습니다.");

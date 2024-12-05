@@ -21,19 +21,20 @@ const ProjList = () => {
   }, []);
 
   // 프로젝트 상세보기 페이지로 이동하는 함수
-  const goToProjectDetails = (projPkNum) => {
-    navigate(`/main/proj/projread/${projPkNum}`);
+  const handleDetail = (projPkNum) => {
+    navigate(`/main/proj/projread/${projPkNum}`, { state: { fromList: true } });
   };
 
   // 프로젝트 수정 페이지로 이동하는 함수
-  const goToProjectEdit = (projPkNum) => {
+  const handleEditChange = (projPkNum) => {
     navigate(`/main/proj/projedit/${projPkNum}`);
   };
 
   // 등록 페이지로 이동하는 함수
-  const goToProjectCreate = () => {
+  const handleInputChange = () => {
     navigate("/main/proj/projadd"); // 등록 페이지로 이동
   };
+
 
   return (
     <Card className="shadow rounded" style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}>
@@ -61,7 +62,7 @@ const ProjList = () => {
                   projects.map((project) => (
                     <tr key={project.proj_pk_num}>
                       <td>
-                        <Button color="link" onClick={() => goToProjectDetails(project.proj_pk_num)} style={{ textDecoration: 'none' }}>
+                        <Button color="link" onClick={() => handleDetail(project.proj_pk_num)} style={{ textDecoration: 'none' }}>
                           {project.proj_name}
                         </Button>
                       </td>
@@ -69,7 +70,7 @@ const ProjList = () => {
                       <td>{project.proj_fk_dpart_num}</td>
                       <td>{project.proj_status}</td>
                       <td>
-                        <Button color="primary" onClick={() => goToProjectEdit(project.proj_pk_num)}>
+                        <Button color="primary" onClick={() => handleEditChange(project.proj_pk_num)}>
                           수정
                         </Button>
                       </td>
@@ -84,7 +85,7 @@ const ProjList = () => {
         {/* 등록 버튼을 왼쪽 하단에 배치 */}
         <Row className="justify-content-start">
           <Col sm={12}>
-            <Button color="success" onClick={goToProjectCreate}>
+            <Button color="success" onClick={handleInputChange}>
               프로젝트 등록
             </Button>
           </Col>

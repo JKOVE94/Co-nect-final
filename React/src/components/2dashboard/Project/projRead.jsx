@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
-import { Card, CardBody, CardTitle, Col, Row, Table } from "reactstrap";
+import { Card, CardBody, CardTitle, Col, Container, Row, Table } from "reactstrap";
 import axios from "axios";
 import ProjToast from "variables/Toast/ProjToast";
 
@@ -8,49 +8,56 @@ const ProjRead = () => {
   const { projPkNum } = useParams(); // URL에서 projPkNum 가져오기
   const [project, setProject] = useState(null);
   const location = useLocation();
-  const [showToast, setShowToast] = useState(false); // 토스트 표시 상태 관리
-  const [toastType, setToastType] = useState(null); // 토스트 유형 관리
+  const [type, setType] = useState(0); // 0: 기본값, 1: 등록, 2: 수정
 
-  // 1. 프로젝트 데이터 가져오기 (프로젝트 정보 로딩 후)
   useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        const response = await axios.get(`/proj/projread/${projPkNum}`);
-        console.log("프로젝트 데이터:", response.data); // 응답 데이터를 콘솔에 출력
-        setProject(response.data);
+    // 등록 또는 수정 상태인지 체크
+    const actionType = location.state?.actionType;
+    if (actionType === "create") {
+      setType("create"); // 등록 상태
+      toggleShowA(); // 토스트 표시
+    } else if (actionType === "update") {
+      setType("update"); // 수정 상태
+      toggleShowA(); // 토스트 표시
+    }
 
-        // 프로젝트 데이터 로딩이 완료되면, 1초 뒤에 토스트를 표시
-        setTimeout(() => {
-          if (location.state && location.state.toastType) {
-            setToastType(location.state.toastType);
-            setShowToast(true); // 토스트 표시
-
-            // 일정 시간 후에 토스트 숨기기 (3초 후)
-            setTimeout(() => {
-              setShowToast(false); // 3초 뒤에 토스트 숨기기
-            }, 3000);
+    // 상세 정보 가져오기
+    if (projPkNum) {
+      const fetchProject = async () => {
+        try {
+          const response = await axios.get(`/proj/projread/${projPkNum}`);
+          if (response.data) {
+            setProject(response.data);
           }
-        }, 1000); // 1초 뒤에 토스트를 표시
-      } catch (error) {
-        console.error("프로젝트 상세 정보 로딩 실패:", error); // 에러 메시지 출력
-      }
-    };
-    
-    fetchProject();
-  }, [projPkNum, location.state]);
+        } catch (error) {
+          console.error("프로젝트 상세 정보 로딩 실패:", error);
+        }
+      };
+      fetchProject();
+    }
+  }, [projPkNum, location.state])
+  
+  const [showA, setShowA] = useState(false);
+  const toggleShowA = () => {
+    setShowA(true);
+    setTimeout(() => {
+      setShowA(false);
+    }, 3000);
+  };
 
   // 프로젝트가 아직 로딩 중이면 로딩 메시지 표시
-  if (!project) {
+  if (!project && projPkNum) {
     return <div>로딩 중...</div>;
   }
 
+  // 상세보기일 때 수정 성공 메시지를 띄우지 않도록 하기
+  if (!projPkNum) {
+    setType(1); // 등록 메시지를 띄운다.
+  }
   return (
-    <>
-      {/* 토스트 메시지 표시 */}
-      <ProjToast showA={showToast} toggleShowA={() => setShowToast(false)} type={toastType} />
-      
+    <Container>
       {/* 프로젝트 상세 정보 표시 */}
-      <Card className="shadow rounded" style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px", position: "relative" }}>
+      <Card className="shadow rounded" style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px", position: "relative", zIndex: 100, overflow: "auto" }}>
         <CardBody>
           <h2 className="text-center mb-4">프로젝트 상세</h2>
           <Row>
@@ -96,7 +103,9 @@ const ProjRead = () => {
           </Row>
         </CardBody>
       </Card>
-    </>
+      <ProjToast type={type} showA={showA} toggleShowA={toggleShowA} />
+      
+      </Container>     
   );
 };
 
