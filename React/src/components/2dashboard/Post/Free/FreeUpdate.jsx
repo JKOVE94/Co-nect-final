@@ -2,18 +2,17 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
-import PostToast from "variables/Toast/PostToast";
 
 
 const FreeUpdate = () => {
-    const [freeType, setfreeType] = useState("");
-  const [S, setToastIsOpen] = useState(false);
     const { postPkNum } = useParams(); // URL에서 'postPkNum'을 추출하고 숫자로 변환
     const navigate = useNavigate();
     const [post, setPost] = useState({
         post_name: "",
         post_import: "",
         post_content: "",
+        post_targetnum: "",  
+        user_name: "",
     });
 
     useEffect(() => {
@@ -38,17 +37,16 @@ const FreeUpdate = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // PUT request to update the post
-            const response = await axios.put(`/board/free/${postPkNum}`, post);
-            if (response.status === 200) {
-                alert("게시글이 성공적으로 수정되었습니다.");
-                navigate(`/main/free/detail/${postPkNum}`); // Redirect to the post detail page after update
-            }
+          const response = await axios.put(`/board/free/${postPkNum}`, post);
+          if (response.status === 200) {
+            // 수정 성공 시 상태 전달
+            navigate(`/main/free/detail/${postPkNum}`, { state: { success: true } });
+          }
         } catch (error) {
-            console.error("Error updating post:", error);
-            alert("게시글 수정에 실패했습니다. 다시 시도해 주세요.");
+          console.error("Error updating post:", error);
+          alert("게시글 수정에 실패했습니다. 다시 시도해 주세요.");
         }
-    };
+      };
 
     const handleDitail = () => {
         // 수정하지 않고 상세보기 페이지로 이동
@@ -57,9 +55,7 @@ const FreeUpdate = () => {
 
     return (
         <Container fluid style={{Height: "40em", marginTop: "2em" }}>
-            <PostToast
-            
-            ></PostToast>
+           
               <Card style={{ Height: "40em", overflowY: "auto" }}>
               <CardHeader>
             <h2>게시글 수정</h2>
@@ -78,7 +74,7 @@ const FreeUpdate = () => {
                         required
                     />
                 </div>
-                <div className="form-group">
+                      <div className="form-group">
                     <label htmlFor="post_import">우선순위:</label>
                     <select
                         className="form-control"

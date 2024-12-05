@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 
 @Getter
@@ -23,7 +25,8 @@ public class PostDto {
     private int post_fk_comp_num; //게시글 회사 고유번호 [FK, INT]
     private int post_fk_user_num; //게시글 작성자 사번 [FK, INT]
     private String user_name;
-    private String buser_name;
+    private List<Map<Integer,String>> target_names;
+    
     public static PostDto fromEntity(PostEntity entity) {
         PostDto dto = new PostDto();
         dto.setPost_pk_num(entity.getPostPkNum());

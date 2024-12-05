@@ -90,7 +90,7 @@ const FreeCreate = () => {
             required
           />
         </div>
-       <div className="form-group">
+          <div className="form-group">
           <label htmlFor="post_import">우선순위:</label>
           <select
             className="form-control"

@@ -1,6 +1,7 @@
 package conect.service.board.post;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 
@@ -23,6 +24,10 @@ public interface PostService {
 
 	// 삭제
 	void deletePost(int postPkNum);
+
 	// 페이징
-		public Page<PostDto> getList(int page, int pageSize);
+	public Page<PostDto> getList(int page, int pageSize);
+	
+	// targetNum 여러명 이름 불러오기
+	public List<Map<Integer,String>> getTargetNames(String targetNumsString);
 }

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -36,8 +35,6 @@ public class PostForm {
         entity.setPostTag(form.getPost_tag());
         entity.setPostDepth(form.getPost_depth());
         entity.setPostView(form.getPost_view());
-        entity.setPostFkCompNum(form.getPost_fk_comp_num());
-        entity.setPostFkUserNum(form.getPost_fk_user_num());
 
         return entity;
     }

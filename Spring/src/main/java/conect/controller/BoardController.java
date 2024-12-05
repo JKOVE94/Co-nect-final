@@ -3,7 +3,6 @@ package conect.controller;
 import conect.data.dto.PostDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
-import conect.data.repository.UserRepository;
 import conect.service.board.post.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,11 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -25,8 +21,6 @@ public class BoardController {
 	@Autowired
 	private PostService postService;
 	
-	@Autowired
-	private UserRepository userRepository;
 
 	// 게시글 생성
 	@PostMapping("/free")

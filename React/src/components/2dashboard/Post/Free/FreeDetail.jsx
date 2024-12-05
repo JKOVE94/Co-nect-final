@@ -2,54 +2,45 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
-import PostTost from "variables/Toast/PostToast";
-import Test from "./Test";
+
 
 const FreeDetail = () => {
-  const postPkNumInt = parseInt(useParams().postPkNum, 10); // URL에서 'postPkNum'을 추출하고 숫자로 변환
+  const postPkNumInt = parseInt(useParams().postPkNum, 10); 
   const navigate = useNavigate();
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [target_names, settargetnames] = useState([{}])//번호 이름 변경
 
+  
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/board/free/${postPkNumInt}`); // 백엔드 API 호출
-        setPost(response.data); // 게시글 데이터를 상태에 저장
+        const response = await axios.get(`/board/free/${postPkNumInt}`); 
+        setPost(response.data); 
+        axios.get(`/board/free/username/${post.post_targetnum}`)
+        .then(res => settargetnames(res.data))
+        console.log(target_names)
       } catch (err) {
-        setError(err.message); // 에러 처리
+        setError(err.message); 
       } finally {
-        setLoading(false); // 로딩 상태 종료
+        setLoading(false); 
       }
     };
-
     fetchPost();
-  }, []);
+  },[postPkNumInt]);
 
-  // 삭제 함수
   const handleDelete = async () => {
     try {
-      await axios.delete(`/board/free/${postPkNumInt}`); // 삭제 API 호출
-      navigate("/main/free"); // 삭제 후 목록 페이지로 이동
+      await axios.delete(`/board/free/${postPkNumInt}`); 
+      navigate("/main/free", { state: { success: true } }); 
     } catch (err) {
-      setError("삭제 실패: " + err.message); // 삭제 실패 시 에러 처리
+      setError("삭제 실패: " + err.message); 
     }
   };
 
-  // 부트스트랩 토스트 토글용
-  const [Success, setSuccess] = useState(true);
-  const toggleSuccess = () => {
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-    }, 3000);
-  };
-
-  const [msgType, setMsgType] = useState(0);
-
-  if (loading) return <div>Loading...</div>; // 로딩 중일 때
-  if (error) return <div>Error: {error}</div>; // 에러 발생 시
+  if (loading) return <div>Loading...</div>; 
+  if (error) return <div>Error: {error}</div>; 
 
   return (
     <Container fluid style={{ Height: "40em", marginTop: "2em" }}>
@@ -82,17 +73,15 @@ const FreeDetail = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>
-                      작 성 자
-                    </td>
+                    <td style={{ width: "10%", textAlign: "left" }}>작 성 자</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                    {post.user_name}
+                      {post.user_name}
                     </td>
+                    </tr>
+                    <tr>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>
-                      우선순위
-                    </td>
+                    <td style={{ width: "10%", textAlign: "left" }}>우선순위</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {post.post_import}
                     </td>
@@ -136,9 +125,6 @@ const FreeDetail = () => {
           <div>댓글 공간</div>
         </CardBody>
       </Card>
-
-      <PostTost showA={Success} toggleShowA={toggleSuccess} type={msgType} />
-      <Test />
     </Container>
   );
 };
