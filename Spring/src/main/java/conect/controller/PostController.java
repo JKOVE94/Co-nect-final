@@ -5,7 +5,12 @@ import conect.data.dto.TemporaryDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
 import conect.service.board.post.PostService;
+<<<<<<< HEAD:Spring/src/main/java/conect/controller/BoardController.java
 import conect.service.board.temporary.TempService;
+=======
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+>>>>>>> 3b47e0a645852f15f9b05151b28cb3c476b5b8db:Spring/src/main/java/conect/controller/PostController.java
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +25,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/board")
-public class BoardController {
+public class PostController {
 
 	@Autowired
 	private PostService postService;
@@ -77,17 +82,11 @@ public class BoardController {
 		}
 
 	// 부분 게시글 조회
-	@GetMapping("/free/{postPkNum}")
-	public ResponseEntity<PostDto> getPost(@PathVariable("postPkNum") int postPkNum) {
-		try {
-			PostDto post = postService.getPost(postPkNum);
-			return new ResponseEntity<>(post, HttpStatus.OK);
-		} catch (RuntimeException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/free/{postPkNum}")
+    public ResponseEntity<PostDto> getPost(@PathVariable("postPkNum") Integer postPkNum, HttpServletRequest request, HttpServletResponse response) {
+        PostDto postDto = postService.getPostView(postPkNum, request, response);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
+    }
 
 	// 게시글 수정
 	@PutMapping("/free/{postPkNum}")
@@ -117,6 +116,7 @@ public class BoardController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+<<<<<<< HEAD:Spring/src/main/java/conect/controller/BoardController.java
 //-----------------------------------------------------------------------------------------------
     // 임시 저장된 게시글 생성
     @PostMapping("/temporary")
@@ -136,3 +136,7 @@ public class BoardController {
     	tempService.deleteTemporary(postPkNum);
     }
 }
+=======
+	
+}
+>>>>>>> 3b47e0a645852f15f9b05151b28cb3c476b5b8db:Spring/src/main/java/conect/controller/PostController.java

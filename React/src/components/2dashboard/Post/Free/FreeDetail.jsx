@@ -71,6 +71,12 @@ const FreeDetail = () => {
                     </td>
                   </tr>
                   <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>조 회 수</td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {post.post_view}회
+                    </td>
+                  </tr>
+                  <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>작 성 자</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {post.user_name}
