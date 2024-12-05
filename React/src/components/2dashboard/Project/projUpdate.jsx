@@ -98,7 +98,7 @@ const ProjUpdate = () => {
   </CardHeader>
   <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
     <form onSubmit={handleSubmit}>
-    <FormGroup row  style={{ height: "10%" }}> 
+    <FormGroup row  style={{ height: "10%",marginBottom: "12px" }}> 
             <Label for="proj_name" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               프로젝트명
             </Label>
@@ -115,7 +115,7 @@ const ProjUpdate = () => {
             </Col>
           </FormGroup>
 
-          <FormGroup row  style={{ height: "10%" }}>
+          <FormGroup row  style={{ height: "10%",marginBottom: "12px" }}>
             <Label for="proj_fk_user_num" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               작성자
             </Label>
@@ -132,7 +132,7 @@ const ProjUpdate = () => {
             </Col>
           </FormGroup>
 
-          <FormGroup row style={{ height: "10%" }}>
+          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
             <Label for="proj_fk_dpart_num" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               담당부서
             </Label>
@@ -149,7 +149,7 @@ const ProjUpdate = () => {
             </Col>
             </FormGroup>
 
-          <FormGroup row style={{ height: "10%" }}>
+          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
             <Label for="proj_members" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               담당자
             </Label>
@@ -175,7 +175,7 @@ const ProjUpdate = () => {
             required
           />
 
-          <FormGroup row style={{ height: "10%" }}>
+          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
             <Label for="proj_startdate" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               시작일
             </Label>
@@ -191,7 +191,7 @@ const ProjUpdate = () => {
             </Col>
             </FormGroup>
 
-          <FormGroup row style={{ height: "10%" }}>
+          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
             <Label for="proj_enddate" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               종료일
             </Label>
@@ -207,7 +207,7 @@ const ProjUpdate = () => {
             </Col>
             </FormGroup>
 
-          <FormGroup row style={{ height: "10%" }}>
+          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
             <Label for="proj_import" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               우선순위
             </Label>
@@ -228,7 +228,7 @@ const ProjUpdate = () => {
             </Col>
             </FormGroup>
 
-          <FormGroup row style={{ height: "10%" }}>
+          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
             <Label for="proj_status" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               상태
             </Label>
@@ -248,7 +248,7 @@ const ProjUpdate = () => {
             </Col>
             </FormGroup>
 
-          <FormGroup row style={{ height: "10%" }}>
+          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
             <Label for="proj_desc" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
               내용
             </Label>
