@@ -119,6 +119,7 @@ const FreeCreate = () => {
         </div>
         <button onClick={handleSubmit} type="submit" className="btn btn-primary">게시글 저장</button>
         <button type="button" className="btn btn-secondary" onClick={handleBackToList}>목록</button>
+        <button type="button"className="btn btn-secondary">임시저장</button>
       </form>
       </CardBody>
       </Card>

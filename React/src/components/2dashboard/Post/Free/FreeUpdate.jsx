@@ -102,6 +102,7 @@ const FreeUpdate = () => {
                 </div>
                 <button type="button"className="btn btn-secondary"onClick={handleSubmit}>수정</button>
                 <button type="button"className="btn btn-secondary"onClick={handleDitail}>취소</button>
+                <button type="button"className="btn btn-secondary">임시저장</button>
             </form>
             </CardBody>
         </Card>
