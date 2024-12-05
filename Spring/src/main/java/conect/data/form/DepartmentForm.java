@@ -12,12 +12,12 @@ public class DepartmentForm {
     private String dpart_mail;
     private int dpart_fk_dpart_num;
 
-    public DepartmentEntity toEntity() {
+    public static DepartmentEntity toEntity(DepartmentForm form) {
         DepartmentEntity entity = new DepartmentEntity();
-        entity.setDpart_pk_num(this.dpart_pk_num);
-        entity.setDpart_name(this.dpart_name);
-        entity.setDpart_mail(this.dpart_mail);
-        entity.setDpart_fk_dpart_num(this.dpart_fk_dpart_num);
+        entity.setDpartPkNum(form.getDpart_pk_num());
+        entity.setDpartName(form.getDpart_name());
+        entity.setDpartMail(form.getDpart_mail());
+        entity.setDpartFkDpartNum(form.getDpart_fk_dpart_num());
         return entity;
     }
 }
