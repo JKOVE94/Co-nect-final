@@ -163,7 +163,7 @@ const Header = () => {
                       </Col>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i className="fas fa-file-alt" />
+                          <i className="fas fa-clipboard-list" />
                         </div>
                       </Col>
                     </Row>
@@ -204,7 +204,7 @@ const Header = () => {
                         </span>
                       </Col>
                       <Col className="col-auto">
-                        <div className="icon icon-shape bg-info text-white rounded-circle shadow">
+                        <div className="icon icon-shape bg-pink text-white rounded-circle shadow">
                           <i className="fas fa-file-alt" />
                         </div>
                       </Col>
