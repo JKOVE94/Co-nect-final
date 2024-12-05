@@ -13,12 +13,16 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import ProjStatus from "components/TempComp/ProjStatus";
+import Projtable from "components/TempComp/ProjTable";
+import MainComponent from "components/MainComponent"
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const user = useSelector((state) => state.userData);
+  
+  
 
   useEffect(() => {
     if (user.user_pk_num === 0) {
@@ -53,7 +57,7 @@ const Dashboard = (props) => {
         {/* 조건부 렌더링으로 헤더 선택 */}
         {isProjReadPath ? <BinHeader /> : <Header />}
         <Routes>
-          <Route path="/" element={<MyToDoList />} />
+          <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
         </Routes>
         <Container fluid style={{ padding: "3em" }}>
