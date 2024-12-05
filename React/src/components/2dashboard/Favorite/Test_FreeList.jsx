@@ -29,7 +29,7 @@ const FreeList = () => {
       return;
     } else {
       axios
-      .get("/board/free")
+      .get("/free")
       .then((res) => {
         const allData = res.data;
         setPosts(
@@ -46,7 +46,7 @@ const FreeList = () => {
   const [favorList, setFavorList] = useState([]);
   const handleFavorite = () => {
     axios
-      .get(`/board/favorite/post/${num}`)
+      .get(`/favorite/post/${num}`)
       .then((res) => {
           setFavorList(res.data);
       })
@@ -57,7 +57,7 @@ const FreeList = () => {
 
   const refresh = () => {
     axios
-      .get("/board/free")
+      .get("/free")
       .then((res) => {
         setPosts(res.data);
       })

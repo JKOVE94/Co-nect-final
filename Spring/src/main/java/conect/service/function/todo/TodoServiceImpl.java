@@ -27,27 +27,34 @@ public class TodoServiceImpl implements TodoService {
     }
     
     @Override
+    public void addTodoData(TodoForm bean) {
+		TodoEntity entity = TodoForm.toEntity(bean);
+		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
+		todoRepository.save(entity);
+    }
+    
+    @Override
     public boolean dropTodoData(int id) {
     	try {
     		todoRepository.deleteById(id);
+    		return true;
     	} catch(Exception e) {
     		//예외처리
     		return false;
     	}
-    	return true;
     }
     
     @Override
-    public boolean addTodoData(TodoForm bean) {
+    public boolean editTodoData(TodoForm bean) {
     	try {
     		TodoEntity entity = TodoForm.toEntity(bean);
     		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
     		todoRepository.save(entity);
+    		return true;
     	} catch(Exception e) {
     		System.out.println(e.getMessage());
     		return false;
     	}
-    	return true;
     }
 
 }

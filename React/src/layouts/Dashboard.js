@@ -13,6 +13,11 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import ProjStatus from "components/TempComp/ProjStatus";
+import FreeList from "components/2dashboard/Favorite/Test_FreeList";
+import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
+import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
+import ErrPage from "components/2dashboard/ErrPage";
+import Function from "components/2dashboard/Function/Function";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -55,11 +60,12 @@ const Dashboard = (props) => {
         <Routes>
           <Route path="/" element={<MyToDoList />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
+          <Route path="/freeList" element={<FreeList />} />
+          <Route path="/projfavorite" element={<ProjFavorite />} />
+          <Route path="/freefavorite" element={<FreeFavorite />} />
+          <Route path="/function" element={<Function />} />
+          <Route path="/err" element={<ErrPage />} />
         </Routes>
-        <Container fluid style={{ padding: "3em" }}>
-          <Item1 />
-          <Footer />
-        </Container>
       </div>
     </>
   );

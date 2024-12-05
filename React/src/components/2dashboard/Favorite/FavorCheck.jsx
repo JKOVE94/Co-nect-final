@@ -31,7 +31,7 @@ const FavorCheck = ({pknum, type, favorList}) => {
         }
     }
     const handleAdd = () => {
-        axios.post(`/board/favorite/${type}`,data)
+        axios.post(`/favorite/${type}`,data)
         .then(res => {
             if(!res.data.isSuccess){
                 //에러처리
@@ -40,7 +40,7 @@ const FavorCheck = ({pknum, type, favorList}) => {
         .catch();
     }
     const handleDelete = () => {
-        axios.delete(`/board/favorite/${type}/${num}/${pknum}`)
+        axios.delete(`/favorite/${type}/${num}/${pknum}`)
         .then(res => {
             if(!res.data.isSuccess){
                 //에러처리

@@ -26,6 +26,7 @@ public class ProjectDto {
     private int proj_fk_dpart_num; //프로젝트 부서 번호 [FK, INT]
     private int proj_fk_user_num; //프로젝트 담당자 사번 [FK, INT]
     private int proj_fk_comp_num; //프로젝트 회사 고유번호 [FK, INT]
+    private String user_name; //사용자 이름
 
     public static ProjectDto fromEntity(ProjectEntity entity) {
         ProjectDto dto = new ProjectDto();
@@ -45,7 +46,10 @@ public class ProjectDto {
         dto.setProj_progress(entity.getProjProgress());
         dto.setProj_fk_dpart_num(entity.getDepartmentEntity().getDpartFkDpartNum());
         dto.setProj_fk_user_num(entity.getUserEntity().getUserPkNum());
-        dto.setProj_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
+        if(entity.getCompanyEntity() != null) {
+        	dto.setProj_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
+        }
+        dto.setUser_name(entity.getUserEntity().getUserName());
         return dto;
     }
 }

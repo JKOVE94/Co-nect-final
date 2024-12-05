@@ -21,7 +21,7 @@ public class CompanyEntity {
     private String compName; //회사 명 [VARCHAR]
     private String compPic; //회사 로고사진 경로 [VARCHAR] ( 0_asset/emp_pic)
 
-    @OneToMany(mappedBy = "companyEntity")
+    @OneToMany(mappedBy = "companyEntity",orphanRemoval = true)
     @JsonBackReference
     private List<UserEntity> userEntities;
 }

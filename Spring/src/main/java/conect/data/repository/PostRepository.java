@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.Query;
 public interface PostRepository extends JpaRepository<PostEntity,Integer> {
 	
 	 @Query("SELECT p FROM PostEntity p WHERE p.userEntity.userPkNum = ?1")
-	    List<PostEntity> getPostByTaskFkUserNum(int task_fk_user_num);
+	 List<PostEntity> getPostByTaskFkUserNum(int task_fk_user_num);
 }

@@ -19,7 +19,7 @@ const ProjFavorite = () => {
 
   const getData = () => {
     axios
-      .get("/board/favorite/proj/" + num)
+      .get("/favorite/proj/" + num)
       .then((res) => {
         setFavorProj(res.data);
       })
@@ -31,7 +31,7 @@ const ProjFavorite = () => {
   }, [num]);
 
   const handleClick = (num) => {
-    axios.delete("/board/favorite/"+num)
+    axios.delete("/favorite/"+num)
     .then((res)=>{
       if(res.data.isSuccess){
         getData();

@@ -17,8 +17,9 @@ const FreeFavorite = () => {
   const [favorFree, setFavorFree] = useState([{}]);
   const navigate = useNavigate();
   const getData = () => {
+    console.log('?');
     axios
-      .get("/board/favorite/post/" + num)
+      .get("/favorite/post/" + num)
       .then((res) => {
         setFavorFree(res.data);
       })
@@ -29,7 +30,7 @@ const FreeFavorite = () => {
   }, [num]);
 
   const handleClick = (num) => {
-    axios.delete("/board/favorite/"+num)
+    axios.delete("/favorite/"+num)
     .then((res)=>{
       if(res.data.isSuccess){
         getData();
