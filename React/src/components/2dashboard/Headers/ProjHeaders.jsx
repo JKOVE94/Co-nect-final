@@ -96,6 +96,13 @@ const Header = () => {
               <UncontrolledDropdown nav>
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
+                    {/* 사용자 이름 */}
+                    <Media className="ml-2 d-none d-lg-block">
+                      <span className="mb-0 text-sm font-weight-bold text-white">
+                        {userData.user_name}
+                      </span>
+                      &emsp;
+                    </Media>
                     {/* 사용자 사진 */}
                     <span className="avatar avatar-sm rounded-circle">
                       <img
@@ -103,12 +110,6 @@ const Header = () => {
                         src={require("assets/img/theme/team-4-800x800.jpg")}
                       />
                     </span>
-                    {/* 사용자 이름 */}
-                    <Media className="ml-2 d-none d-lg-block">
-                      <span className="mb-0 text-sm font-weight-bold">
-                        {userData.user_name}
-                      </span>
-                    </Media>
                   </Media>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-menu-arrow" right>
@@ -145,29 +146,8 @@ const Header = () => {
             </div>
             {/* Card stats */}
             <Row className="h-25 justify-content-end ">
-              <Media
-                className=" align-items-center "
-                style={{
-                  position: "relative",
-                  flex: "auto",
-                }}
-              >
-                <span
-                  className="mb-0 "
-                  style={{
-                    fontSize: "2rem", // 폰트 크기 증가
-                    color: "white", // 폰트 색상 흰색으로 변경
-                    fontWeight: "bold",
-                    fontFamily: "",
-                  }}
-                >
-                  {" "}
-                  {/* font-weight-bolder로 변경 */}
-                  {proj.proj_name}
-                </span>
-              </Media>
-              <Col lg="5" xl="2">
-                <Card className="card-stats mb-4 mb-xl-0">
+              <Col lg="5" xl="3">
+                <Card className="card-stats mb-4 mb-xl-0 flex-auto">
                   <CardBody>
                     <Row className="h-25">
                       <Col>
@@ -178,7 +158,7 @@ const Header = () => {
                           프로젝트 기본 정보
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
-                          {proj.proj_pk_num}
+                          {proj.proj_pk_num}.{proj.proj_name}
                         </span>
                       </Col>
                       <Col className="col-auto">
@@ -207,6 +187,37 @@ const Header = () => {
                   </CardBody>
                 </Card>
               </Col>
+              {/* 프로젝트 설명 */}
+              <Col lg="5" xl="3">
+                <Card className="card-stats mb-4 mb-xl-0">
+                  <CardBody>
+                    <Row className="h-25">
+                      <Col>
+                        <CardTitle
+                          tag="h5"
+                          className="text-uppercase text-muted mb-0"
+                        >
+                          프로젝트 설명
+                        </CardTitle>
+                        <span className="h2 font-weight-bold mb-0">
+                          {proj.proj_desc}
+                        </span>
+                      </Col>
+                      <Col className="col-auto">
+                        <div className="icon icon-shape bg-info text-white rounded-circle shadow">
+                          <i className="fas fa-file-alt" />
+                        </div>
+                      </Col>
+                    </Row>
+                    <p className="mt-3 mb-0 text-muted text-sm">
+                      <span className="text-nowrap">
+                        {" "}
+                        태그: {proj.proj_tag}
+                      </span>
+                    </p>
+                  </CardBody>
+                </Card>
+              </Col>
 
               {/* 담당자 정보 카드 */}
               <Col lg="5" xl="2">
@@ -221,7 +232,7 @@ const Header = () => {
                           담당자 정보
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
-                          {proj.proj_fk_user_num}
+                          {userData.user_name}
                         </span>
                       </Col>
                       <Col className="col-auto">
@@ -231,7 +242,7 @@ const Header = () => {
                       </Col>
                     </Row>
                     <p className="mt-3 mb-0 text-muted text-sm">
-                      직책: {proj.proj_tag}
+                      직책: {userData.user_rank}
                     </p>
                   </CardBody>
                 </Card>
