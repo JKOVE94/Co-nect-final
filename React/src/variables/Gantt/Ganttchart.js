@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import Gantt from './components/Gantt';
 import Toolbar from './components/Toolbar';
-
 import { gantt } from 'dhtmlx-gantt';
-import { task } from 'gulp';
-
 
 class Ganttchart extends Component {
     state = {
@@ -41,40 +38,59 @@ class Ganttchart extends Component {
         });
     }
 
-   convertToGanttData = (taskdatas) => {
-    const tasks = [];
+    convertToGanttData = (taskdatas) => {
+        const tasks = [];
 
-    const addTasks = (taskList, parentId = 0) => {
-        taskList.forEach(task => {
-            tasks.push({
-                id: task.task_pk_num,
-                text: task.task_title,
-                start_date: task.task_startdate,
-                duration: task.task_duration,
-                progress: task.task_progress,
-                parent: parentId
+        const addTasks = (taskList, parentId = 0) => {
+            taskList.forEach(task => {
+                tasks.push({
+                    id: task.task_pk_num,
+                    text: task.task_title,
+                    start_date: task.task_startdate,
+                    duration: task.task_duration,
+                    progress: task.task_progress,
+                    parent: task.task_fk_task_num || parentId
+                });
+                
+                if (task.children && task.children.length > 0) {
+                    addTasks(task.children, task.task_pk_num);
+                }
             });
-            
+        };
 
-            if (task.children && task.children.length > 0) {
-                addTasks(task.children, task.task_pk_num);
-            }
-        });
-    };
+        addTasks(taskdatas);
 
-    addTasks(taskdatas);
-
-    return { data: tasks, links: [] };
-}
-     componentDidUpdate(prevProps) {
-        if (prevProps.taskdatas !== this.props.taskdatas) {
-            const ganttData = this.convertToGanttData(this.props.taskdatas);
-            this.props.setTaskdatas(ganttData.data);
-        }
-        
+        return { data: tasks, links: [] };
     }
 
-    render() {
+    componentDidUpdate(prevProps) {
+        if (prevProps.taskdatas !== this.props.taskdatas) {
+            const ganttData = this.convertToGanttData(this.props.taskdatas);
+            gantt.clearAll();
+            gantt.parse(ganttData);
+        }
+    }
+
+    handleTaskUpdate = (id, task) => {
+        const updatedTasks = this.props.taskdatas.map(t => t.task_pk_num === id ? task : t);
+        this.props.setTaskdatas(updatedTasks);
+    }
+
+    handleTaskAdd = (task) => {
+        const newTask = {
+            task_pk_num: task.id,
+            task_title: task.text,
+            task_startdate: task.start_date,
+            task_duration: task.duration,
+            task_progress: task.progress,
+            task_fk_task_num: task.parent,
+            task_depth: task.parent ? 1 : 0 // Assuming task_depth is 1 if it has a parent
+        };
+        const newTasks = [...this.props.taskdatas, newTask];
+        this.props.setTaskdatas(newTasks);
+    }
+
+    componentDidMount() {
         gantt.i18n.setLocale("kr");
         gantt.config.date_format = "%Y-%m-%d %H:%i";
         gantt.config.lightbox.sections = [
@@ -83,23 +99,43 @@ class Ganttchart extends Component {
         ]
         gantt.plugins({ 
             marker: true 
-        }); 
-        
+        });
+
+        // 오늘 날짜를 기준으로 마커 추가
+        const today = new Date();
+        gantt.addMarker({
+            start_date: today,
+            css: "today",
+            text: "Today",
+            title: "Today: " + gantt.templates.date_grid(today)
+        });
+
+        const ganttData = this.convertToGanttData(this.props.taskdatas);
+        gantt.init(this.ganttContainer);
+        gantt.parse(ganttData);
+    }
+
+    render() {
         const { currentZoom, messages } = this.state;
         const { taskdatas } = this.props;
         const ganttData = this.convertToGanttData(taskdatas);
         
-       
         return (
             <>
                 <Toolbar 
                     zoom={currentZoom}
                     onZoomChange={this.handleZoomChange}
                 />
-                <div className="gantt-container">
+                <div 
+                    className="gantt-container" 
+                    ref={(input) => { this.ganttContainer = input }} 
+                    style={{ width: '100%', height: '500px' }} // 적절한 스타일 설정
+                >
                     <Gantt 
                         tasks={ganttData}
                         zoom={this.state.currentZoom}
+                        onTaskUpdate={this.handleTaskUpdate}
+                        onTaskAdd={this.handleTaskAdd}
                     />
                 </div>
                 {/* <MessageArea messages={messages} /> */}

@@ -68,7 +68,7 @@ const Dashboard = (props) => {
         <Header />
         <Container fluid style={{ marginTop: "2em" }}>
           <Routes>
-            <Route path="/" element={<TreeAndGantt />} />
+            <Route path="/*" element={<TreeAndGantt />} />
             <Route path="/projfavorite" element={<ProjFavorite />} />
             <Route path="/freefavorite" element={<FreeFavorite />} />
             <Route path="/function" element={<Function />} />

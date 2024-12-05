@@ -2,7 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Card, Carousel } from "react-bootstrap";
 import { useSelector } from "react-redux";
-// import "../../../assets/css/calendar.css";
+import "../../../assets/css/calendar.css";
 
 const MySchedule = ({ events }) => {
   const [todoList, setTodoList] = useState([]);

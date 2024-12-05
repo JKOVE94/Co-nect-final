@@ -208,6 +208,7 @@ public class BoardController {
 
 	@RequestMapping("/task/proj/{task_fk_proj_num}")
 	public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable int task_fk_proj_num) {
+		System.out.println("task_fk_proj_num : " + task_fk_proj_num);
 		return taskService.getAllTask(task_fk_proj_num);
 	}
 

@@ -1,6 +1,6 @@
 import MyCalendar from "./MyCalendar";
 import MySchedule from "./MySchedule";
-// import "../../../assets/css/calendar.css";
+import "../../../assets/css/calendar.css";
 
 import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import axios from "axios";

@@ -1,46 +1,69 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import TreeTable from "variables/TreeTable_Gantt/TreeTable";
-// import Gantt from "variables/Gantt/Ganttchart";
+import Ganttchart from "variables/Gantt/Ganttchart"; // Ganttchart를 직접 가져옵니다.
 import axios from "axios";
 import "rsuite/dist/rsuite-no-reset.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const TreeAndGantt = () => {
   const [taskdatas, setTaskdatas] = useState([]);
+  const [treetaskdatas, setTreetaskdatas] = useState([]);
+
+  console.log(taskdatas);
+  console.log(treetaskdatas);
+  //일반 구조를 트리구조로
   const convertToTree = (data) => {
     const map = {};
     const roots = [];
 
-    // 각 항목을 맵에 저장하고 children 배열을 `추가합니다.s
     data.forEach((item) => {
       map[item.task_pk_num] = { ...item, children: [] };
     });
 
-    // 각 항목을 순회하며 부모-자식 관계를 설정합니다.
     data.forEach((item) => {
       if (item.task_fk_task_num) {
-        // 하위 업무인 경우 상위 업무의 children 배열에 추가합니다.
         map[item.task_fk_task_num].children.push(map[item.task_pk_num]);
       } else {
-        // 상위 업무인 경우 roots 배열에 추가합니다.
         roots.push(map[item.task_pk_num]);
       }
     });
-
     return roots;
   };
 
+  //트리구조를 일반 구조로
   useEffect(() => {
-    axios.get("/board/task/proj/1").then((response) => {
+    const fetchData = async () => {
+      const response = await axios.get("/board/task/proj/1");
       const treeData = convertToTree(response.data);
-      setTaskdatas(treeData);
-    });
-  }, []);
+      setTaskdatas(response.data);
+      setTreetaskdatas(treeData);
+    };
+
+    fetchData();
+  }, []); // 빈 배열을 두 번째 인자로 전달하여 컴포넌트가 마운트될 때 한 번만 실행되도록 설정
 
   return (
     <>
-      <TreeTable taskdatas={taskdatas} setTaskdatas={setTaskdatas} />
+      <Link to="/main/proj/1/tree">Tree</Link> &nbsp;
+      <Link to="/main/proj/1/gantt">Gantt</Link>
+      <Routes>
+        <Route
+          path="/proj/1/tree"
+          element={
+            <TreeTable
+              taskdatas={treetaskdatas}
+              setTaskdatas={setTreetaskdatas}
+            />
+          }
+        />
+        <Route
+          path="/proj/1/gantt"
+          element={
+            <Ganttchart taskdatas={taskdatas} setTaskdatas={setTaskdatas} />
+          }
+        />
+      </Routes>
     </>
   );
 };

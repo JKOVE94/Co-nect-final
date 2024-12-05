@@ -38,8 +38,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     @Autowired
     private CompanyRepository companyRepository;
-
-
+    
     //GCP Storage 세팅
     @Value("${spring.cloud.gcp.storage.credentials.location}")
     private String keyFileName;
