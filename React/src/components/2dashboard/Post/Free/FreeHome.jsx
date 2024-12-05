@@ -13,15 +13,10 @@ const FreeHome = () => {
   }
   return (
     <div>
- 
      <Routes>
-        {/* /home/free */}
-
-       {/* /home/free/create */}
           <Route path="/" element={<FreeList />} />
           <Route path="/create" element={<FreeCreate />} />
           <Route path="/detail/:postPkNum" element={<FreeDetail />} />
-       
           <Route path="/update/:postPkNum" element={<FreeUpdate />} />
     </Routes>
     </div>
