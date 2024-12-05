@@ -50,16 +50,16 @@ const ProjCreate = () => {
 
     // API 호출
     try {
-      // 실제 서버의 URL로 변경 필요
-      const response = await axios.post("/proj/projadd", formData); // 프로젝트 추가 요청
-
-      const projPkNum = response.data; // 서버에서 받은 프로젝트 번호
-      console.log("프로젝트 생성 성공:", projPkNum);
-
-      // 프로젝트 상세 페이지로 이동
-      navigate(`/main/proj/projread/${projPkNum}`);
+      const response = await axios.post("/proj/projadd", formData);
+      const projPkNum = response.data;
+  
+      // 상태값과 함께 ProjRead로 navigate
+      navigate(`/main/proj/projread/${projPkNum}`, {
+        state: { toastType: 1 }, // 1은 프로젝트 등록 성공
+      });
     } catch (error) {
       console.error("프로젝트 생성 실패:", error);
+      alert("프로젝트 생성에 실패했습니다.");
     }
   };
 
