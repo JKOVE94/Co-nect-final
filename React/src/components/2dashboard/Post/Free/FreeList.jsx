@@ -11,12 +11,14 @@ const FreeList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageBlock, setPageBlock] = useState(0);
   const [totalBlocks, setTotalBlocks] = useState(0);
+  const [sortField, setSortField] = useState("postRegdate"); // 기본 정렬: 최신순
+  const [sortDirection, setSortDirection] = useState("DESC"); // 기본 정렬 방향: 내림차순
 
   const navigate = useNavigate();
 
-  const fetchPosts = (page, block) => {
+  const fetchPosts = (page, block, sortField, sortDirection) => {
     axios
-      .get(`/board/free?page=${page}&pageBlock=${block}`)
+      .get(`/board/free?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}`)
       .then((res) => {
         setPosts(res.data.posts);
         setCurrentPage(res.data.currentPage);
@@ -29,8 +31,8 @@ const FreeList = () => {
   };
 
   useEffect(() => {
-    fetchPosts(0, 0);
-  }, []);
+    fetchPosts(0, 0, sortField, sortDirection);
+  }, [sortField, sortDirection]);
 
   const pagesPerBlock = 5;
   const startPageOfBlock = pageBlock * pagesPerBlock;
@@ -44,16 +46,23 @@ const FreeList = () => {
   const handlePageBlockChange = (direction) => {
     const newPageBlock = pageBlock + direction;
     setPageBlock(newPageBlock);
-    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock);
+    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock, sortField, sortDirection);
   };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock));
+    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock), sortField, sortDirection);
   };
 
   const formatDate = (date) => {
     return format(new Date(date), "yyyy-MM-dd");
+  };
+
+  const handleSortChange = (field) => {
+    // 정렬 필드 변경 시 방향을 토글 (기본: DESC)
+    const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
+    setSortField(field);
+    setSortDirection(newDirection);
   };
 
   return (
@@ -61,6 +70,20 @@ const FreeList = () => {
       <Card style={{ Height: "40em", overflowY: "auto" }}>
         <CardHeader>
           <h2>자유 게시판</h2>
+          <div>
+            <button
+              className="btn btn-secondary"
+              onClick={() => handleSortChange("postRegdate")}
+            >
+              최신순 {sortField === "postRegdate" && (sortDirection === "DESC" ? "▼" : "▲")}
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => handleSortChange("postView")}
+            >
+              조회수순 {sortField === "postView" && (sortDirection === "DESC" ? "▼" : "▲")}
+            </button>
+          </div>
         </CardHeader>
         <CardBody style={{ Height: "40em", overflowY: "auto" }}>
           <table className="table" style={{ fontSize: "1.2rem" }}>
