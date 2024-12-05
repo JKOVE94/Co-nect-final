@@ -8,6 +8,7 @@ import { persistStore } from "redux-persist";
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/scss/argon-dashboard-react.scss";
+import "assets/landing/css/login.css";
 
 import Dashboard from "layouts/Dashboard";
 import Manage from "layouts/Manage";
