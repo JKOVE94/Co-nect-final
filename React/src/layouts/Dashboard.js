@@ -33,6 +33,7 @@ import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
 import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
 import Function from "components/2dashboard/Function/Function";
 import ErrPage from "components/2dashboard/ErrPage";
+import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -67,6 +68,7 @@ const Dashboard = (props) => {
         <Header />
         <Container fluid style={{ marginTop: "2em" }}>
           <Routes>
+            <Route path="/" element={<TreeAndGantt />} />
             <Route path="/projfavorite" element={<ProjFavorite />} />
             <Route path="/freefavorite" element={<FreeFavorite />} />
             <Route path="/function" element={<Function />} />

@@ -1,6 +1,6 @@
 import MyCalendar from "./MyCalendar";
 import MySchedule from "./MySchedule";
-import "../../../assets/css/calendar.css";
+// import "../../../assets/css/calendar.css";
 
 import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import axios from "axios";
@@ -63,7 +63,10 @@ const Function = () => {
         <Row className="mx-0 align-items-start justify-content-center">
           <Col md={8} className="px-0">
             <Card className="mx-auto">
-              <CardBody className="p-10" style={{maxHeight: '45em', overflowY:'auto'}}>
+              <CardBody
+                className="p-10"
+                style={{ maxHeight: "45em", overflowY: "auto" }}
+              >
                 <MyCalendar
                   events={events}
                   handleGetEvent={handleGetEvent}

@@ -53,6 +53,7 @@
     "bootstrap": "^4.6.2",
     "chart.js": "2.9.4",
     "classnames": "2.3.2",
+    "dhtmlx-gantt": "^9.0.3",
     "moment": "2.29.4",
     "nouislider": "15.4.0",
     "react": "18.2.0",
@@ -66,6 +67,7 @@
     "react-router-dom": "6.21.1",
     "react-scripts": "5.0.1",
     "reactstrap": "^8.10.0",
+    "rsuite": "^5.74.2",
     "sass": "1.69.5"
   },
   "devDependencies": {

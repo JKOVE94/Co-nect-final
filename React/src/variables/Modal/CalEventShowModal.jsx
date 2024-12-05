@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../assets/css/calendar.css";
+// import "../../assets/css/calendar.css";
 
 const CalEventShowModal = ({
   isOpen,
