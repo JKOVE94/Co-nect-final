@@ -25,9 +25,10 @@ import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 const Header = () => {
   return (
     <>
-      <div className="header bg-gradient-info pb-6 pt-5 pt-md-8"></div>
-    </>
+      <div className="header bg-gradient-info pt-md-8"></div> 
+    </> 
   );
 };
 
+//  pb-6 이거 넣으면 헤더 길어짐
 export default Header;
