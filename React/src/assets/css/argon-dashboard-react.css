@@ -1949,7 +1949,7 @@ pre code {
   .table-responsive-sm {
     display: block;
     width: 100%;
-    overflow-x: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
   .table-responsive-sm > .table-bordered {
@@ -4064,7 +4064,7 @@ input[type="button"].btn-block {
   ~ .custom-control-label::before {
   border-color: #5e72e4;
   background-color: #5e72e4;
-  box-shadow: ;
+  box-shadow: none;
 }
 
 .custom-checkbox

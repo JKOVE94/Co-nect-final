@@ -67,12 +67,14 @@ const Login = (props) => {
   //부트스트랩 토스트 토글용
   const [showA, setShowA] = useState(false);
   const toggleShowA = () => {
-      setShowA(true)
-      setTimeout(() => {setShowA(false)}, 3000)
-  }
+    setShowA(true);
+    setTimeout(() => {
+      setShowA(false);
+    }, 3000);
+  };
 
   //부트스트래  모달 토글용
-  const [showM, setShowM] = useState(false); 
+  const [showM, setShowM] = useState(false);
   const handleShowM = () => setShowM(true); //모달을 열어주는 함수
   const handleCloseM = () => setShowM(false); //모달을 닫는 함수
 
@@ -89,18 +91,19 @@ const Login = (props) => {
       let res = await axios.post("/login", loginInfo);
       const responseData = res.data;
       await setData(responseData);
-      if (res.data.status === 1) { //로그인 성공
+      if (res.data.status === 1) {
+        //로그인 성공
         dispatch(LOGIN(responseData));
         let dpartsInfo = await axios.get("/login/departs");
         dispatch(SET_DPARTINFO(dpartsInfo.data));
         navigate("/main");
-      } 
-      else if (res.data.status === 2) { //로그인 실패(정보 불일치)
+      } else if (res.data.status === 2) {
+        //로그인 실패(정보 불일치)
         setErrType(res.data.status);
-        toggleShowA()
+        toggleShowA();
         //정보 불일치 => toast로 실패 알림 / 로그인 시도횟수 안내
-      } 
-      else if (res.data.status === 3) {//잠긴계정
+      } else if (res.data.status === 3) {
+        //잠긴계정
         setErrType(res.data.status);
         handleShowM();
 
@@ -199,8 +202,18 @@ const Login = (props) => {
           </div>
         </div>
       </div>
-    <LoginToast showA={showA} toggleShowA={toggleShowA} type={errType} data={data} />
-    <LoginModal handleCloseM={handleCloseM} handleShowM={handleShowM} showM={showM} type={errType}/>
+      <LoginToast
+        showA={showA}
+        toggleShowA={toggleShowA}
+        type={errType}
+        data={data}
+      />
+      <LoginModal
+        handleCloseM={handleCloseM}
+        handleShowM={handleShowM}
+        showM={showM}
+        type={errType}
+      />
     </>
   );
 };

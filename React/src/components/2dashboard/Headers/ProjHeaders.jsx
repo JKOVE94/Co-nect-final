@@ -34,7 +34,6 @@ import {
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import "../../../assets/css/argon-dashboard-react.css";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT } from "../../../Redux/Reducer/userDataReducer";
 import { Link } from "react-router-dom";
@@ -85,11 +84,11 @@ const Header = () => {
 
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-2 pt-md-3">
+      <div className="header bg-gradient-info pb-8 pt-2 pt-md-5">
         <Container fluid>
-          <div className="header-body ">
+          <div className="header-body justify-content-end align-items-end ">
             {/* Card stats */}
-            <Row className="h-25 justify-content-end align-items-end ">
+            <Row className="h-25 ">
               <Col lg="5" xl="2">
                 <Card className="card-stats mb-4 mb-xl-0">
                   <CardBody>
@@ -225,63 +224,60 @@ const Header = () => {
                   </CardBody>
                 </Card>
               </Col>
-              {/* 사용자 프로필 */}
-              <div
-                className="align-items-top d-none d-md-flex pb-6"
-                navbar
-                style={{}}
-              >
-                <UncontrolledDropdown nav>
-                  <DropdownToggle className="pr-0" nav>
-                    <Media className="align-items-center">
-                      {/* 사용자 사진 */}
-                      <span className="avatar avatar-sm rounded-circle">
-                        <img
-                          alt="..."
-                          src={require("assets/img/theme/team-4-800x800.jpg")}
-                        />
-                      </span>
-                      {/* 사용자 이름 */}
-                      <Media className="ml-2 d-none d-lg-block">
-                        <span className="mb-0 text-sm font-weight-bold">
-                          {userData.user_name}
-                        </span>
-                      </Media>
-                    </Media>
-                  </DropdownToggle>
-                  <DropdownMenu className="dropdown-menu-arrow" right>
-                    <DropdownItem className="noti-title" header tag="div">
-                      <h6 className="text-overflow m-0">Welcome!</h6>
-                    </DropdownItem>
-                    <DropdownItem to="/#" tag={Link}>
-                      <i className="ni ni-single-02" />
-                      <span>계정 정보</span>
-                    </DropdownItem>
-                    {/*관리자일 경우에만 설정 메뉴가 보이도록 설정*/}
-                    {userData.user_fk_acc_authornum === 3 ? (
-                      <DropdownItem to="/manage" tag={Link}>
-                        <i className="ni ni-settings-gear-65" />
-                        <span>설정</span>
-                      </DropdownItem>
-                    ) : null}
-                    <DropdownItem to="#" tag={Link}>
-                      <i className="ni ni-calendar-grid-58" />
-                      <span>활동</span>
-                    </DropdownItem>
-
-                    <DropdownItem to="#" tag={Link}>
-                      <i className="ni ni-support-16" />
-                      <span>지원</span>
-                    </DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem onClick={(e) => logout()}>
-                      <i className="ni ni-user-run" />
-                      <span>로그아웃</span>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-              </div>
             </Row>
+
+            {/* 사용자 프로필 */}
+            <div className="d-flex justify-content-end pb-8">
+              <UncontrolledDropdown nav>
+                <DropdownToggle className="pr-0" nav>
+                  <Media className="align-items-center">
+                    {/* 사용자 사진 */}
+                    <span className="avatar avatar-sm rounded-circle">
+                      <img
+                        alt="..."
+                        src={require("assets/img/theme/team-4-800x800.jpg")}
+                      />
+                    </span>
+                    {/* 사용자 이름 */}
+                    <Media className="ml-2 d-none d-lg-block">
+                      <span className="mb-0 text-sm font-weight-bold">
+                        {userData.user_name}
+                      </span>
+                    </Media>
+                  </Media>
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-menu-arrow" right>
+                  <DropdownItem className="noti-title" header tag="div">
+                    <h6 className="text-overflow m-0">Welcome!</h6>
+                  </DropdownItem>
+                  <DropdownItem to="/#" tag={Link}>
+                    <i className="ni ni-single-02" />
+                    <span>계정 정보</span>
+                  </DropdownItem>
+                  {/*관리자일 경우에만 설정 메뉴가 보이도록 설정*/}
+                  {userData.user_fk_acc_authornum === 3 ? (
+                    <DropdownItem to="/manage" tag={Link}>
+                      <i className="ni ni-settings-gear-65" />
+                      <span>설정</span>
+                    </DropdownItem>
+                  ) : null}
+                  <DropdownItem to="#" tag={Link}>
+                    <i className="ni ni-calendar-grid-58" />
+                    <span>활동</span>
+                  </DropdownItem>
+
+                  <DropdownItem to="#" tag={Link}>
+                    <i className="ni ni-support-16" />
+                    <span>지원</span>
+                  </DropdownItem>
+                  <DropdownItem divider />
+                  <DropdownItem onClick={(e) => logout()}>
+                    <i className="ni ni-user-run" />
+                    <span>로그아웃</span>
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+            </div>
           </div>
         </Container>
       </div>
