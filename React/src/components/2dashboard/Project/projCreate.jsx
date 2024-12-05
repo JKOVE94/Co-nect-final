@@ -69,18 +69,25 @@ const ProjCreate = () => {
   };
 
   return (
-    <Card className="shadow rounded" style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}>
+    <Card
+      className="shadow rounded"
+      style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
+    >
       <CardHeader className="border-0">
-      <h2 className="mb-4">프로젝트 작성</h2>
+        <h1 className="mb-4">프로젝트 작성</h1>
       </CardHeader>
-              
+
       <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
         <form onSubmit={handleSubmit}>
-        <FormGroup row  style={{ height: "10%",marginBottom: "12px" }}> 
-            <Label for="proj_name" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_name"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               프로젝트명
             </Label>
-            <Col sm={10} >
+            <Col sm={10}>
               <Input
                 type="text"
                 name="proj_name"
@@ -93,8 +100,12 @@ const ProjCreate = () => {
             </Col>
           </FormGroup>
 
-          <FormGroup row  style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_fk_user_num" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_fk_user_num"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               작성자
             </Label>
             <Col sm={10}>
@@ -110,8 +121,12 @@ const ProjCreate = () => {
             </Col>
           </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_fk_dpart_num" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_fk_dpart_num"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               담당부서
             </Label>
             <Col sm={10}>
@@ -125,10 +140,14 @@ const ProjCreate = () => {
                 placeholder="담당부서를 입력하세요"
               />
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_members" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_members"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               담당자
             </Label>
             <Col sm={10}>
@@ -142,7 +161,7 @@ const ProjCreate = () => {
                 placeholder="담당자를 입력하세요"
               />
             </Col>
-            </FormGroup>
+          </FormGroup>
 
           <Input
             type="hidden"
@@ -153,8 +172,12 @@ const ProjCreate = () => {
             required
           />
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_startdate" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_startdate"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               시작일
             </Label>
             <Col sm={10}>
@@ -167,10 +190,14 @@ const ProjCreate = () => {
                 required
               />
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_enddate" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_enddate"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               종료일
             </Label>
             <Col sm={10}>
@@ -183,10 +210,14 @@ const ProjCreate = () => {
                 required
               />
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_import" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_import"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               우선순위
             </Label>
             <Col sm={10}>
@@ -205,10 +236,14 @@ const ProjCreate = () => {
                 <option value="긴급">긴급</option>
               </Input>
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_status" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_status"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               상태
             </Label>
             <Col sm={10}>
@@ -226,10 +261,14 @@ const ProjCreate = () => {
                 <option value="진행중">진행중</option>
               </Input>
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_desc" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_desc"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               내용
             </Label>
             <Col sm={10}>
@@ -248,12 +287,28 @@ const ProjCreate = () => {
           {/* 버튼들 */}
           <Row form className="justify-content-center">
             <Col sm={1.5} className="text-center">
-              <Button color="primary" block onClick={handleList}>
+              <Button
+                style={{
+                  backgroundColor: "#1E90FF", // 진하면서도 생기 있는 파란색
+                  borderColor: "#1E90FF", // 동일한 색상
+                  color: "white", // 글자 색상 흰색
+                }}
+                block
+                onClick={handleList}
+              >
                 목록
               </Button>
             </Col>
             <Col sm={1.5} className="text-center">
-              <Button color="primary" block type="submit">
+              <Button
+                style={{
+                  backgroundColor: "#1E90FF", // 같은 색상
+                  borderColor: "#1E90FF",
+                  color: "white", // 글자 색상 흰색
+                }}
+                block
+                type="submit"
+              >
                 저장
               </Button>
             </Col>

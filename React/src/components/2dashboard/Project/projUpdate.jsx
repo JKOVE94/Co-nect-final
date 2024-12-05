@@ -40,8 +40,12 @@ const ProjUpdate = () => {
         const projectData = response.data;
 
         // 날짜 형식을 yyyy-MM-dd로 변환
-        const startdate = new Date(projectData.proj_startdate).toISOString().split('T')[0];
-        const enddate = new Date(projectData.proj_enddate).toISOString().split('T')[0];
+        const startdate = new Date(projectData.proj_startdate)
+          .toISOString()
+          .split("T")[0];
+        const enddate = new Date(projectData.proj_enddate)
+          .toISOString()
+          .split("T")[0];
 
         // 데이터 설정
         setFormData({
@@ -70,10 +74,7 @@ const ProjUpdate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
-        `/proj/projedit/${projPkNum}`,
-        formData
-      ); // 수정 API 호출
+      const response = await axios.put(`/proj/projedit/${projPkNum}`, formData); // 수정 API 호출
       console.log("수정 성공:", response.data);
 
       //toast.success("프로젝트가 성공적으로 수정되었습니다!");
@@ -92,17 +93,24 @@ const ProjUpdate = () => {
   };
 
   return (
-    <Card className="shadow rounded" style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}>
-  <CardHeader className="border-0">
-    <h2 className="mb-0">프로젝트 수정</h2>
-  </CardHeader>
-  <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
-    <form onSubmit={handleSubmit}>
-    <FormGroup row  style={{ height: "10%",marginBottom: "12px" }}> 
-            <Label for="proj_name" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+    <Card
+      className="shadow rounded"
+      style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
+    >
+      <CardHeader className="border-0">
+        <h1 className="mb-0">프로젝트 수정</h1>
+      </CardHeader>
+      <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
+        <form onSubmit={handleSubmit}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_name"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               프로젝트명
             </Label>
-            <Col sm={10} >
+            <Col sm={10}>
               <Input
                 type="text"
                 name="proj_name"
@@ -115,8 +123,12 @@ const ProjUpdate = () => {
             </Col>
           </FormGroup>
 
-          <FormGroup row  style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_fk_user_num" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_fk_user_num"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               작성자
             </Label>
             <Col sm={10}>
@@ -132,8 +144,12 @@ const ProjUpdate = () => {
             </Col>
           </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_fk_dpart_num" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_fk_dpart_num"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               담당부서
             </Label>
             <Col sm={10}>
@@ -147,10 +163,14 @@ const ProjUpdate = () => {
                 placeholder="담당부서를 입력하세요"
               />
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_members" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_members"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               담당자
             </Label>
             <Col sm={10}>
@@ -164,7 +184,7 @@ const ProjUpdate = () => {
                 placeholder="담당자를 입력하세요"
               />
             </Col>
-            </FormGroup>
+          </FormGroup>
 
           <Input
             type="hidden"
@@ -175,8 +195,12 @@ const ProjUpdate = () => {
             required
           />
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_startdate" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_startdate"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               시작일
             </Label>
             <Col sm={10}>
@@ -189,10 +213,14 @@ const ProjUpdate = () => {
                 required
               />
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_enddate" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_enddate"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               종료일
             </Label>
             <Col sm={10}>
@@ -205,10 +233,14 @@ const ProjUpdate = () => {
                 required
               />
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_import" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_import"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               우선순위
             </Label>
             <Col sm={10}>
@@ -226,10 +258,14 @@ const ProjUpdate = () => {
                 <option value="긴급">긴급</option>
               </Input>
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_status" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_status"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               상태
             </Label>
             <Col sm={10}>
@@ -246,10 +282,14 @@ const ProjUpdate = () => {
                 <option value="진행중">진행중</option>
               </Input>
             </Col>
-            </FormGroup>
+          </FormGroup>
 
-          <FormGroup row style={{ height: "10%",marginBottom: "12px" }}>
-            <Label for="proj_desc" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_desc"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               내용
             </Label>
             <Col sm={10}>
@@ -264,21 +304,37 @@ const ProjUpdate = () => {
               />
             </Col>
           </FormGroup>
-      <Row form className="justify-content-center">
+          <Row form className="justify-content-center">
             <Col sm={1.5} className="text-center">
-              <Button color="primary" block type="submit">
+              <Button
+                style={{
+                  backgroundColor: "#1E90FF", // 같은 색상
+                  borderColor: "#1E90FF",
+                  color: "white", // 글자 색상 흰색
+                }}
+                block
+                type="submit"
+              >
                 수정 완료
               </Button>
             </Col>
             <Col sm={1.5} className="text-center">
-              <Button color="primary" block onClick={handleCancel}>
+              <Button
+                style={{
+                  backgroundColor: "#1E90FF", // 진하면서도 생기 있는 파란색
+                  borderColor: "#1E90FF", // 동일한 색상
+                  color: "white", // 글자 색상 흰색
+                }}
+                block
+                onClick={handleCancel}
+              >
                 취소
               </Button>
             </Col>
           </Row>
-    </form>
-  </CardBody>
-</Card>
+        </form>
+      </CardBody>
+    </Card>
   );
 };
 
