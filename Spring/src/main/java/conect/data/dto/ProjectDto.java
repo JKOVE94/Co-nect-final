@@ -23,12 +23,13 @@ public class ProjectDto {
     private String proj_tagcol; //프로젝트 태그 컬러 [VARCHAR]
     private String proj_icon; //프로젝트 아이콘 코드 [VARCHAR] => 부트스트랩 아이콘
     private Integer proj_progress; //프로젝트 진행도
+    private int proj_temp; // 프로젝트 임시저장
     private int proj_fk_dpart_num; //프로젝트 부서 번호 [FK, INT]
     private int proj_fk_user_num; //프로젝트 담당자 사번 [FK, INT]
     private int proj_fk_comp_num; //프로젝트 회사 고유번호 [FK, INT]
     private String proj_username;//프로젝트 담당자 이름
     private String proj_userMail;//프로젝트 담당자 메일
-    
+    private String user_name;
 
     public static ProjectDto fromEntity(ProjectEntity entity) {
         ProjectDto dto = new ProjectDto();

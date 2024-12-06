@@ -27,6 +27,7 @@ public class ProjectEntity {
     private Date projCreated; //프로젝트 생성 일시 [DATETIME]
     private Date projUpdated; // 프로젝트 정보 최종 수정 일시 [DATETIME]
     private Integer projProgress;
+    private int projTemp; // 프로젝트 임시저장
     private String projImport; //프로젝트 중요도 [VARCHAR] (낮음, 보통, 높음, 매우높음)
     private String projTag; //임의로 부여하는 프로젝트 태그 [VARCHAR] => 검색용
     private String projTagcol; //프로젝트 태그 컬러 [VARCHAR]

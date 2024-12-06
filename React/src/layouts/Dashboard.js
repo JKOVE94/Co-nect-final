@@ -15,6 +15,7 @@ import { useNavigate } from "react-router";
 import ProjStatus from "components/TempComp/ProjStatus";
 import Projtable from "components/TempComp/ProjTable";
 import MainComponent from "components/MainComponent"
+import ProjectHome from "components/2dashboard/Project/ProjectHome";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -59,6 +60,7 @@ const Dashboard = (props) => {
         <Routes>
           <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
+          <Route path="/proj/*" element={<ProjectHome />}/>
         </Routes>
         <Container fluid style={{ padding: "3em" }}>
           <Item1 />
