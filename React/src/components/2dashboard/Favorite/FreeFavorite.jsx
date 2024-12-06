@@ -12,7 +12,7 @@ const {
   CardBody,
   Table,
   CardHeader,
-  CardTitle
+  Pagination,
 } = require("react-bootstrap");
 
 const FreeFavorite = () => {
@@ -20,35 +20,50 @@ const FreeFavorite = () => {
   const [favorFree, setFavorFree] = useState([{}]);
   const navigate = useNavigate();
 
-  const getData = (page, block) => {
+  //페이징
+  const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    getData();
+  }, [currentPage]);
+
+  const getData = () => {
     axios
-      .get(`/favorite/post/${num}`)
+      .get(`/favorite/post/${num}`, {
+        params: {
+          size: 10,
+          page: currentPage,
+        },
+      })
       .then((res) => {
         //유저의 즐겨찾기 목록을 불러와 favorFree에 저장
         setFavorFree(res.data);
       })
-      .catch((err)=>navigate('/error'));
+      .catch((err) => navigate("/error"));
   };
-  
-  useEffect(() => {
-    getData(0, 0);
-  }, [num]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber - 1);
+  };
 
   const handleClick = (num) => {
-    axios.delete("/favorite/"+num)
-    .then((res)=>{
-      if(res.data){
-        getData(); //삭제 성공 후 데이터 다시 불러오기
-      }
-    })
-    .catch((err)=>navigate('/error'));
-  }
+    axios
+      .delete("/favorite/" + num)
+      .then((res) => {
+        if (res.data) {
+          getData(); //삭제 성공 후 데이터 다시 불러오기
+        }
+      })
+      .catch((err) => navigate("/error"));
+  };
 
   return (
     <Container fluid className={style.container}>
       <Card className="mx-auto">
-          <CardHeader><h2>즐겨찾기 - 자유게시판</h2></CardHeader>
-          <CardBody className="p-10">
+        <CardHeader>
+          <h2>즐겨찾기 - 자유게시판</h2>
+        </CardHeader>
+        <CardBody className="p-10">
           <Table>
             <thead>
               <tr>
@@ -62,30 +77,58 @@ const FreeFavorite = () => {
               </tr>
             </thead>
             <tbody>
-              {favorFree.length>0? favorFree.map((free) => (
-                <tr key={free.favor_id}>
-                  <td>{free.post_pk_num}</td>
-                  <td>
-                    <Link to={`/main/free/detail/${free.post_pk_num}`} >
-                      {free.post_name}
-                    </Link>
-                  </td>
-                  <td>{free.post_tag}</td>
-                  <td>{free.user_name}</td>
-                  <td>{moment(free.post_regdate).format("YYYY-MM-DD")}</td>
-                  <td>{free.post_view}</td>
-                  <td>
-                    <Card.Link className={style.link} onClick={() => handleClick(free.favor_id)}>&times;</Card.Link>
-                  </td>
+              {favorFree.totalElements > 0 ? (
+                favorFree.content.map((free) => (
+                  <tr key={free.favor_id}>
+                    <td>{free.post_pk_num}</td>
+                    <td>
+                      <Link to={`/main/free/detail/${free.post_pk_num}`}>
+                        {free.post_name}
+                      </Link>
+                    </td>
+                    <td>{free.post_tag}</td>
+                    <td>{free.user_name}</td>
+                    <td>{moment(free.post_regdate).format("YYYY-MM-DD")}</td>
+                    <td>{free.post_view}</td>
+                    <td>
+                      <Card.Link
+                        className={style.link}
+                        onClick={() => handleClick(free.favor_id)}
+                      >
+                        &times;
+                      </Card.Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6}>즐겨찾기 등록된 글이 없습니다.</td>
                 </tr>
-              )) : <tr><td colSpan={6}>즐겨찾기 등록된 글이 없습니다.</td></tr>
-            }
+              )}
             </tbody>
           </Table>
+          <Pagination className="justify-content-center">
+            <Pagination.Item
+            
+              onClick={() => handlePageChange(currentPage)}
+              disabled={currentPage === 0}
+            > {'<<'} </Pagination.Item>
+            {[...Array(favorFree.totalPages)].map((num, index) => (
+              <Pagination.Item
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Item
+              onClick={() => handlePageChange(currentPage + 2)}
+              disabled={currentPage === favorFree.totalPages - 1}
+            > {'>>'} </Pagination.Item>
+          </Pagination>
         </CardBody>
       </Card>
     </Container>
   );
-
 };
 export default FreeFavorite;
