@@ -6,7 +6,7 @@ import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
-import conect.data.form.TaskForm;s
+import conect.data.form.TaskForm;
 import conect.service.board.favor.FavorService;
 import conect.service.board.post.PostService;
 import conect.service.board.proj.ProjService;
