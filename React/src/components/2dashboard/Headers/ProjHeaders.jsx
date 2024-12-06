@@ -84,15 +84,23 @@ const Header = () => {
 
   return (
     <>
-      <div className="header bg-gradient-info pb-8 pt-2 pt-md-3">
+      <div
+        className="header bg-gradient-info pb-1 pt-2 pt-md-2"
+        style={{ height: "10.5rem" }}
+      >
         <Container fluid>
-          <div className="header-body ">
+          <div className="header-body">
             {/* 사용자 프로필 */}
             <div
-              className="align-items-end justify-content-end d-none d-md-flex pb-3"
+              className="align-items-center justify-content-end d-none d-md-flex pt-3"
               navbar
+              style={{
+                position: "relative",
+                top: "2rem",
+                right: "1rem",
+              }}
             >
-              <UncontrolledDropdown nav>
+              <UncontrolledDropdown nav style={{ transform: "scale(1.5) " }}>
                 <DropdownToggle className="pr-0" nav>
                   <Media className="align-items-center">
                     {/* 사용자 이름 */}
@@ -144,25 +152,32 @@ const Header = () => {
               </UncontrolledDropdown>
             </div>
             {/* Card stats */}
-            <Row className="h-25 justify-content-end ">
+            <Row
+              className="h-25 justify-content-start "
+              style={{ position: "relative", bottom: "3rem" }}
+            >
+              {/* 프로젝트 제목 */}
               <Col lg="5" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0 flex-auto">
+                <Card className="card-stats mb-4 mb-xl-0 ">
                   <CardBody>
                     <Row className="h-25">
-                      <Col>
+                      <Col style={{ maxHeight: "2rem" }}>
                         <CardTitle
                           tag="h5"
-                          className="text-uppercase text-muted mb-0"
+                          className="text-uppercase text-muted mb-0 "
                         >
                           프로젝트 기본 정보
                         </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
+                        <span
+                          className="h3 font-weight-bold mb-0 "
+                          style={{ overflow: "auto" }}
+                        >
                           {proj.proj_pk_num}.{proj.proj_name}
                         </span>
                       </Col>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i className="fas fa-file-alt" />
+                          <i className="fas fa-clipboard-list" />
                         </div>
                       </Col>
                     </Row>
@@ -186,43 +201,12 @@ const Header = () => {
                   </CardBody>
                 </Card>
               </Col>
-              {/* 프로젝트 설명 */}
-              <Col lg="5" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
-                  <CardBody>
-                    <Row className="h-25">
-                      <Col>
-                        <CardTitle
-                          tag="h5"
-                          className="text-uppercase text-muted mb-0"
-                        >
-                          프로젝트 설명
-                        </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
-                          {proj.proj_desc}
-                        </span>
-                      </Col>
-                      <Col className="col-auto">
-                        <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i className="fas fa-file-alt" />
-                        </div>
-                      </Col>
-                    </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-nowrap">
-                        {" "}
-                        태그: {proj.proj_tag}
-                      </span>
-                    </p>
-                  </CardBody>
-                </Card>
-              </Col>
 
               {/* 담당자 정보 카드 */}
               <Col lg="5" xl="2">
-                <Card className="card-stats mb-4 mb-xl-0">
+                <Card className="card-stats mb-4 mb-xl-0 ">
                   <CardBody>
-                    <Row className="h-25">
+                    <Row className="h-25 flex-nowrap">
                       <Col>
                         <CardTitle
                           tag="h5"
@@ -291,9 +275,9 @@ const Header = () => {
                       <Col>
                         <CardTitle
                           tag="h5"
-                          className="text-uppercase text-muted mb-0"
+                          className="text-uppercase text-muted mb-0 "
                         >
-                          프로젝트 진행 상황
+                          진행 상황
                         </CardTitle>
                         <span className="h2 font-weight-bold mb-0">
                           {proj.proj_progress}

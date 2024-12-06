@@ -52,7 +52,7 @@ const MyToDoList = () => {
 
   return (
     <>
-      <Container fluid style={{ marginTop: "2rem", width: "100%" }}>
+      <Container fluid style={{ marginTop: "10rem", width: "100%" }}>
         <Row>
           {/* 대시보드 게시판 */}
           <Col lg={7} className="px-1">
