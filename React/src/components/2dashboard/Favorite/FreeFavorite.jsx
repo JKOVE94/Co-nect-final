@@ -2,9 +2,9 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import style from "../../../assets/css/2dashboard/favor.module.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Link, useNavigate } from "react-router-dom";
 
 const {
   Container,
@@ -17,14 +17,17 @@ const FreeFavorite = () => {
   const num = useSelector((state) => state.userData.user_pk_num);
   const [favorFree, setFavorFree] = useState([{}]);
   const navigate = useNavigate();
+
   const getData = () => {
     axios
       .get("/favorite/post/" + num)
       .then((res) => {
+        //유저의 즐겨찾기 목록을 불러와 favorFree에 저장
         setFavorFree(res.data);
       })
-      .catch();
+      .catch((err)=>navigate('/error'));
   };
+  
   useEffect(() => {
     getData();
   }, [num]);
@@ -33,11 +36,12 @@ const FreeFavorite = () => {
     axios.delete("/favorite/"+num)
     .then((res)=>{
       if(res.data){
-        getData();
+        getData(); //삭제 성공 후 데이터 다시 불러오기
       }
     })
-    .catch();
+    .catch((err)=>navigate('/error'));
   }
+
   return (
     <Container fluid className={style.container}>
       <Card className="mx-auto">

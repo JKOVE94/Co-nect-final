@@ -3,10 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
-import { useSelector } from "react-redux";
 import Search from "variables/Search/Search";
+import { useSelector } from "react-redux";
 import FavorCheck from "../Favorite/FavorCheck";
-import "../../../assets/css/freepost/freelist.css"
 
 const FreeList = () => {
  
@@ -24,9 +23,9 @@ const FreeList = () => {
 
   const navigate = useNavigate();
 
-  const fetchPosts = (page, block, sortField, sortDirection) => {
+  const fetchPosts = (page, block) => {
     axios
-      .get(`/board/free?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}`)
+      .get(`/board/free?page=${page}&pageBlock=${block}&searchType=${searchType}&searchValue=${searchText}`)
       .then((res) => {
         setPosts(res.data.posts);
         setCurrentPage(res.data.currentPage);
@@ -39,9 +38,9 @@ const FreeList = () => {
   };
 
   useEffect(() => {
-    fetchPosts(0, 0, sortField, sortDirection);
+    fetchPosts(0, 0);
     handleFavorite();
-  }, [sortField, sortDirection]);
+  }, []);
 
   const pagesPerBlock = 5;
   const startPageOfBlock = pageBlock * pagesPerBlock;
@@ -55,23 +54,16 @@ const FreeList = () => {
   const handlePageBlockChange = (direction) => {
     const newPageBlock = pageBlock + direction;
     setPageBlock(newPageBlock);
-    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock, sortField, sortDirection);
+    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock);
   };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock), sortField, sortDirection);
+    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock));
   };
 
   const formatDate = (date) => {
     return format(new Date(date), "yyyy-MM-dd");
-  };
-
-  const handleSortChange = (field) => {
-    // 정렬 필드 변경 시 방향을 토글 (기본: DESC)
-    const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
-    setSortField(field);
-    setSortDirection(newDirection);
   };
 
   //검색
@@ -79,6 +71,7 @@ const FreeList = () => {
     //사용자가 enter입력 시 search 실행
     if (e.keyCode === 13) handleSearch();
   };
+
   const handleChange = (e) => {
     if(e.target.id==="type"){
       setSearchType(e.target.value);
@@ -116,6 +109,13 @@ const FreeList = () => {
         setFavorData(res.data);
       })
       .catch();
+  };
+
+  const handleSortChange = (field) => {
+    // 정렬 필드 변경 시 방향을 토글 (기본: DESC)
+    const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
+    setSortField(field);
+    setSortDirection(newDirection);
   };
 
   return (
@@ -184,14 +184,14 @@ const FreeList = () => {
                   <td colSpan="5">게시글이 없습니다.</td>
                 </tr>
               )}
-              <button
+            </tbody>
+          </table>
+          <button
                 className="btn btn-primary"
                 onClick={() => navigate(`/main/free/create`)}
               >
                 글쓰기
               </button>
-            </tbody>
-          </table>
           <div
             style={{
               display: "flex",

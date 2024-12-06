@@ -1,12 +1,9 @@
-//FullCalendar 관련 라이브러리
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import moment from "moment";
-//Component
 import CalEventShowModal from "../../../variables/Modal/CalEventShowModal";
 import CalEventAddModal from "../../../variables/Modal/CalEventAddModal";
-//css
 import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -14,20 +11,19 @@ import { useNavigate } from "react-router";
 
 
 const MyCalendar = ({events, handleGetEvent, handleToast}) => {
-  
-  const [showModalIsOpen, setShowModalIsOpen] = useState(false); //modal 표시 여부
-  const [modalContent, setModalContent] = useState({}); //modal 내용
-  const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트 추가 modal 표시 여부
 
+  const [modalContent, setModalContent] = useState({}); //modal 내용
+  const [showModalIsOpen, setShowModalIsOpen] = useState(false); //이벤트 상세 modal 표시 여부
+  const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트 추가 modal 표시 여부
 
   const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
   const navigate = useNavigate();
+
   const setTime = (time) => {
     //시간 설정
     time = moment(time).format("YYYY-MM-DDTHH:mm");
     return time;
   };
-  
 
   const renderEventContent = (info) => {
     //표시될 타이틀

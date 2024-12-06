@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import conect.data.dto.PostDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface PostService {
 	// 삽입
@@ -16,8 +18,8 @@ public interface PostService {
 	// 전체 조회
 	List<PostDto> getPostAll();
 
-	// 부분 조회
-	PostDto getPost(int postPkNum);
+	// 부분 조회 및 조회수 증가
+	public PostDto getPostView(Integer postPkNum, HttpServletRequest request, HttpServletResponse response);
 
 	// 수정
 	PostDto updatePost(int postPkNum, PostForm postForm);
@@ -26,7 +28,7 @@ public interface PostService {
 	void deletePost(int postPkNum);
 
 	// 페이징
-	public Page<PostDto> getList(int page, int pageSize);
+	public Page<PostDto> getList(int page, int pageSize, String sortField, String sortDirection);
 	
 	// targetNum 여러명 이름 불러오기
 	public List<Map<Integer,String>> getTargetNames(String targetNumsString);

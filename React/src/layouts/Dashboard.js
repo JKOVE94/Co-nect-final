@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import ProjStatus from "components/TempComp/ProjStatus";
-import FreeList from "components/2dashboard/Favorite/Test_FreeList";
 import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
 import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
 import ErrPage from "components/2dashboard/ErrPage";

@@ -2,8 +2,9 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import style from "../../../assets/css/2dashboard/favor.module.css";
-import { useNavigate } from "react-router-dom";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const {
   Container,
@@ -21,6 +22,7 @@ const ProjFavorite = () => {
     axios
       .get("/favorite/proj/" + num)
       .then((res) => {
+        //유저의 즐겨찾기 목록을 불러와 favorPorj에 저장
         setFavorProj(res.data);
       })
       .catch();
@@ -33,16 +35,11 @@ const ProjFavorite = () => {
   const handleClick = (num) => {
     axios.delete("/favorite/"+num)
     .then((res)=>{
-      if(res.data.isSuccess){
-        getData();
+      if(res.data){
+        getData(); //삭제 성공 후 데이터 다시 불러오기
       }
     })
     .catch();
-  }
-
-  const handlePage = (num) => {
-    //proj read로 이동하는 코드 넣기
-    navigate();
   }
 
   return (
@@ -69,7 +66,9 @@ const ProjFavorite = () => {
                 <tr key={proj.favor_id}>
                   <td>{proj.proj_pk_num}</td>
                   <td>
-                    <Card.Link className={style.link} onClick={() => handlePage(proj.proj_pk_num)}>{proj.proj_name}</Card.Link>
+                    <Link to={``}>
+                      {proj.proj_name}
+                    </Link>
                   </td>
                   <td>{proj.proj_tag}</td>
                   <td>{proj.user_name}</td>

@@ -37,31 +37,48 @@ public class PostController {
 	// 모든 게시글 조회
 	@GetMapping("/free")
 	public ResponseEntity<Map<String, Object>> getAllPosts(
-	    @RequestParam(name = "page", defaultValue = "0") int page,
-	    @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock // 블록 번호 추가
-	   
+	    @RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
+	    @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
+	    @RequestParam(name = "sortField", defaultValue = "postRegdate") String sortField, // 정렬 필드
+	    @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection // 정렬 방향
 	) {
 	    try {
-	        // 한 페이지당 5개씩 페이지 버튼을 표시
-	        int pageSize = 5;
+	        int pageSize = 10; // 한 페이지당 항목 수
+	        int blockSize = 5; // 한 블록당 페이지 버튼 수
 
-	        // 페이지 요청 처리 (블록당 5개의 페이지로 나누기)
-	        Page<PostDto> postPage = postService.getList(page, pageSize);
+	        // 페이징 및 정렬 서비스 호출
+	        Page<PostDto> postPage = postService.getList(page, pageSize, sortField, sortDirection);
 
-	        // 전체 페이지 수를 계산 (블록 기준으로)
+	        // 총 페이지 수
 	        int totalPages = postPage.getTotalPages();
-	        int totalBlocks = (int) Math.ceil((double) totalPages / pageSize); // 총 블록 수
+
+	        // 전체 블록 수
+	        int totalBlocks = (int) Math.ceil((double) totalPages / blockSize);
+
+	        // 현재 블록의 시작 및 끝 페이지 번호 계산
+	        int blockStart = pageBlock * blockSize; // 블록 시작 페이지
+	        int blockEnd = Math.min(blockStart + blockSize, totalPages); // 블록 끝 페이지
+
+	        // 이전 블록 및 다음 블록 존재 여부
+	        boolean hasPreviousBlock = pageBlock > 0;
+	        boolean hasNextBlock = pageBlock < totalBlocks - 1;
 
 	        // 응답 객체 구성
 	        Map<String, Object> response = new HashMap<>();
-	        response.put("posts", postPage.getContent()); // 게시글 내용
-	        response.put("currentPage", postPage.getNumber()); // 현재 페이지
+	        // 페이징 제공 메서드 사용
+	        response.put("posts", postPage.getContent()); // 게시글 데이터 불러오기
+	        response.put("currentPage", postPage.getNumber()); // 현재 페이지 번호
 	        response.put("totalItems", postPage.getTotalElements()); // 전체 게시글 수
+	        // 페이지 당 블럭 설정
 	        response.put("totalPages", totalPages); // 전체 페이지 수
-	        response.put("totalBlocks", totalBlocks); // 전체 블록 수
 	        response.put("currentBlock", pageBlock); // 현재 블록 번호
+	        response.put("totalBlocks", totalBlocks); // 총 블록 수
+	        response.put("blockStart", blockStart); // 현재 블록 시작 페이지 번호
+	        response.put("blockEnd", blockEnd - 1); // 현재 블록 끝 페이지 번호
+	        response.put("hasPreviousBlock", hasPreviousBlock); // 이전 블록 존재 여부
+	        response.put("hasNextBlock", hasNextBlock); // 다음 블록 존재 여부
 
-	        // 페이징 정보 포함된 응답 반환
+	        // 상태 코드 200과 함께 응답 반환
 	        return new ResponseEntity<>(response, HttpStatus.OK);
 	    } catch (Exception e) {
 	        e.printStackTrace();

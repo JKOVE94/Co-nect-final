@@ -15,13 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface PostRepository extends JpaRepository<PostEntity,Integer> {
 	
-	 @Query("SELECT p FROM PostEntity p WHERE p.userEntity.userPkNum = ?1")
-	 List<PostEntity> getPostByTaskFkUserNum(int task_fk_user_num);
-	 
-	 @EntityGraph(attributePaths = {"userEntity"})  // 'user' 관계를 함께 로딩
+	@EntityGraph(attributePaths = {"userEntity"})  // 'user' 관계를 함께 로딩
     List<PostEntity> findAll();
 	
-	// 페이징
+	// 페이징, 정렬 (Sort 포함되어 컨트롤러나 서비스에 전달)
 	Page<PostEntity> findAll(Pageable pageable);
 	
 	// 조회수

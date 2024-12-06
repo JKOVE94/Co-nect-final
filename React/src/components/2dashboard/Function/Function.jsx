@@ -1,23 +1,26 @@
 import MyCalendar from "./MyCalendar";
 import MySchedule from "./MySchedule";
-import "../../../assets/css/2dashboard/function.css"
-import style from '../../../assets/css/2dashboard/calendar.module.css'
-
-import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import axios from "axios";
+import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import CalendarToast from "variables/Toast/CalendarToast";
+import "../../../assets/css/2dashboard/function.css"
+import style from '../../../assets/css/2dashboard/calendar.module.css'
 
 const Function = () => {
+  const num = useSelector((state) => state.userData.user_pk_num);
+  //toast
   const [toastType, setToastType] = useState("");
   const [toastIsOpen, setToastIsOpen] = useState(false);
-  const num = useSelector((state) => state.userData.user_pk_num || 0);
+  //calendar event(일정)
   const [events, setEvents] = useState([{}]);
+
   const handleToast = (text, open) => {
     setToastType(text);
     setToastIsOpen(open);
   };
+
   const handleGetEvent = async () => {
     //캘린더에 표시될 이벤트 불러오기
     axios
