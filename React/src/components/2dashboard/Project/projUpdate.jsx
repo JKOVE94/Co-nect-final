@@ -12,8 +12,6 @@ import {
   Row,
   CardHeader,
 } from "reactstrap";
-//import { toast } from 'react-toastify'; // react-toastify 임포트
-//mport 'react-toastify/dist/ReactToastify.css'; // 스타일시트 임포트
 
 const ProjUpdate = () => {
   const navigate = useNavigate();
@@ -27,7 +25,7 @@ const ProjUpdate = () => {
     proj_startdate: "",
     proj_enddate: "",
     proj_import: "",
-    proj_status: undefined,
+    proj_status: "",
     proj_desc: "",
     proj_fk_comp_num: 1,
   });

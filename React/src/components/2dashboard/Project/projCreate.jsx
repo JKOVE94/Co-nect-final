@@ -130,20 +130,14 @@ const ProjCreate = () => {
             <Col sm={10}>
               <Input
                 type="text"
+                name="proj_fk_user_num"
+                id="proj_fk_user_num"
                 value={writer.user_name}
                 onChange={handleInputChange}
                 required
                 disabled
                 placeholder="작성자를 입력하세요"
               />
-                   <Input
-            type="hidden"
-            name="proj_fk_user_num"
-            id="proj_fk_user_num"
-            value={writer.user_name}
-            onChange={handleInputChange}
-            required
-          />
             </Col>
           </FormGroup>
 
