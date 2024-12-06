@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, ToastContainer } from "react-bootstrap";
 import CloseButton from "react-bootstrap/CloseButton";
 import Toast from "react-bootstrap/Toast";
-import "../../assets/css/calendar.css";
+import style from "../../assets/css/2dashboard/calendar.module.css";
 
 const CalendarToast = ({ toastType, isOpen, onClose }) => {
   const [text, setText] = useState();
@@ -17,21 +17,10 @@ const CalendarToast = ({ toastType, isOpen, onClose }) => {
   }, [toastType]);
   return (
     <ToastContainer position="bottom-end" className="p-1">
-      <Toast
-        className="toast"
-        onClose={onClose}
-        show={isOpen}
-        delay={3000}
-        autohide
-      >
-        <Toast.Body>
+      <Toast onClose={onClose} show={isOpen} delay={3000} autohide>
+        <Toast.Body className={style.text}>
           ℹ️ {text}
-          <Button
-            className="custom-close-btn"
-            size="xs"
-            variant="link"
-            onClick={onClose}
-          >
+          <Button className={style.closeBtn} variant="link" onClick={onClose}>
             &times;
           </Button>
         </Toast.Body>

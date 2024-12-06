@@ -2,7 +2,8 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Card, Carousel } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import "../../../assets/css/calendar.css";
+import "../../../assets/css/2dashboard/function.css"
+import style from '../../../assets/css/2dashboard/calendar.module.css'
 
 const MySchedule = ({ events }) => {
   const [todoList, setTodoList] = useState([]);
@@ -31,10 +32,10 @@ const MySchedule = ({ events }) => {
 
   return (
     <>
-      <Card.Title className="accTitle">오늘의 일정</Card.Title>
+      <Card.Title className={style.title}>오늘의 일정</Card.Title>
       <Card.Body>
         {todoList.length === 0 ? (
-          <Card.Subtitle>오늘의 일정이 없습니다.</Card.Subtitle>
+          <Card.Subtitle className={style.scheduleSub}>오늘의 일정이 없습니다.</Card.Subtitle>
         ) : (
           <Carousel
             slide={false}
@@ -47,12 +48,12 @@ const MySchedule = ({ events }) => {
             interval={null}
           >
             {todoList.map((todo, index) => (
-              <Carousel.Item key={index} style={{ textAlign: "center" }}>
-                <Card.Title>{todo.title}</Card.Title>
-                <Card.Subtitle>
+              <Carousel.Item key={index} className={style.itembox}>
+                <Card.Title className={style.subtitle}>{todo.title}</Card.Title>
+                <Card.Subtitle className={style.sub}>
                   {todo.start} ~ {todo.end}
                 </Card.Subtitle>
-                <Card.Text className="accItem">{todo.content}</Card.Text>
+                <Card.Text className={style.item}>{todo.content}</Card.Text>
               </Carousel.Item>
             ))}
           </Carousel>

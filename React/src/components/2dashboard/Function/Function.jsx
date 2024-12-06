@@ -1,22 +1,26 @@
 import MyCalendar from "./MyCalendar";
 import MySchedule from "./MySchedule";
-import "../../../assets/css/calendar.css";
-
-import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import axios from "axios";
+import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import CalendarToast from "variables/Toast/CalendarToast";
+import "../../../assets/css/2dashboard/function.css";
+import style from "../../../assets/css/2dashboard/calendar.module.css";
 
 const Function = () => {
+  const num = useSelector((state) => state.userData.user_pk_num);
+  //toast
   const [toastType, setToastType] = useState("");
   const [toastIsOpen, setToastIsOpen] = useState(false);
-  const num = useSelector((state) => state.userData.user_pk_num || 0);
+  //calendar event(일정)
   const [events, setEvents] = useState([{}]);
+
   const handleToast = (text, open) => {
     setToastType(text);
     setToastIsOpen(open);
   };
+
   const handleGetEvent = async () => {
     //캘린더에 표시될 이벤트 불러오기
     axios
@@ -59,7 +63,7 @@ const Function = () => {
 
   return (
     <>
-      <Container fluid style={{ marginTop: "2rem" }}>
+      <Container fluid className={style.calendar}>
         <Row className="mx-0 align-items-start justify-content-center">
           <Col md={8} className="px-0">
             <Card className="mx-auto">
@@ -75,19 +79,21 @@ const Function = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col md={4}>
-            <Card className="mx-auto">
-              <CardBody className="p-10">
+          <Col md={4} style={{ marginTop: "2rem" }}>
+            <Card className={style.card2}>
+              <CardBody className={style.cardbody}>
                 <MySchedule events={events} />
               </CardBody>
             </Card>
-            <CalendarToast
-              isOpen={toastIsOpen}
-              onClose={() => setToastIsOpen(false)}
-              toastType={toastType}
-            />
           </Col>
         </Row>
+        <div className={style.toastContainer}>
+          <CalendarToast
+            isOpen={toastIsOpen}
+            onClose={() => setToastIsOpen(false)}
+            toastType={toastType}
+          />
+        </div>
       </Container>
     </>
   );

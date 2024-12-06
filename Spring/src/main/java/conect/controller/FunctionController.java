@@ -32,7 +32,6 @@ public class FunctionController {
 	@Autowired
 	private TodoServiceImpl todoServiceImpl;
 	
-	//유저가 참가한 프로젝트 & 개인일정 불러오기
     @GetMapping("/schedule/{usernum}")
     public ResponseEntity<Object> getDataAll(@PathVariable("usernum")int usernum){
     	Map<String, Object> map = new HashMap<String, Object>();
@@ -46,13 +45,11 @@ public class FunctionController {
         	
         	return ResponseEntity.ok(map);
     	} catch(IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body("Invalid input parameters"); //잘못된 요청이 들어온 경우
+			return ResponseEntity.badRequest().body("Invalid input parameters");
 		} catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
         }
     }
-    
-    //개인 일정 등록
     @PostMapping("/schedule")
     public ResponseEntity<Object> addTodo(@RequestBody TodoForm bean){
     	try {
@@ -85,7 +82,6 @@ public class FunctionController {
     
     @PutMapping("/schedule/{id}")
     public ResponseEntity<Object> editTodo(@PathVariable("id")int id, @RequestBody TodoForm bean){
-    	
     	try {
     		bean.setTodo_pk_num(id);
     		if (todoServiceImpl.editTodoData(bean)) {
@@ -97,6 +93,6 @@ public class FunctionController {
     	} catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
 	    }
-    }
-    
+    }  
+
 }

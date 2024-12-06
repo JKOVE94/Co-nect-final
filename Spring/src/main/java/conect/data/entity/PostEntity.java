@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -28,6 +27,7 @@ public class PostEntity {
 	private String postTag; // 게시글 태그 [VARCHAR]
 	private int postDepth; // 게시글 깊이 [INT] (기본값 0, 답글 설정시 사용)
 	private int postView; // 게시글 조회수 [INT]
+	private int postTemp;// 게시글 임시저장 상태[TINYINT]
 
 	@ManyToOne
 	@JoinColumn(name = "post_fk_user_num")
@@ -39,11 +39,11 @@ public class PostEntity {
 	@JsonIgnore
 	private CompanyEntity companyEntity;
 
-	@OneToMany(mappedBy = "postEntity")
+	@OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JsonBackReference
 	private List<ReplyEntity> replyEntities;
 
-	@OneToMany(mappedBy = "postEntity")
+	@OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JsonBackReference
 	private List<FavoritesEntity> favoritesEntities;
 }

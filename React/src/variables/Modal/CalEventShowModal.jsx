@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../assets/css/calendar.css";
+import style from '../../assets/css/2dashboard/calendar.module.css'
 
 const CalEventShowModal = ({
   isOpen,
   onClose,
   info,
   getEvent,
-  handleToast,
+  handleToast
 }) => {
   const num = useSelector((state) => state.userData.user_pk_num);
   const [data, setData] = useState({});
@@ -70,18 +70,19 @@ const CalEventShowModal = ({
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
-        <Modal.Title style={{ display: "flex", alignItems: "center" }}>
-          <Col md="auto">일정 수정</Col>
+        <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
+          <Col md='100%' style={{fontSize:'1.5rem'}}>일정 수정</Col>
           <Col md={5}>
             <Form.Control
               value={data.todo_tagcol}
               type="color"
               id="todo_tagcol"
               onChange={handleChange}
+              style={{width:'45px'}}
               disabled={read}
             />
           </Col>
-          <Button className="modalCloseBtn" variant="link" onClick={onClose}>
+          <Button className={style.modalCloseBtn} variant="link" onClick={onClose}>
             &times;
           </Button>
         </Modal.Title>
@@ -131,7 +132,7 @@ const CalEventShowModal = ({
       </Modal.Body>
       <Modal.Footer>
         {info.groupId === "0" ? (
-          <Container className="textinfo">
+          <Container className={style.textinfo}>
             프로젝트 일정은 수정할 수 없습니다
           </Container>
         ) : (
