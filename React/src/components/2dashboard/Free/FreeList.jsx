@@ -64,12 +64,12 @@ const FreeList = () => {
   const handlePageBlockChange = (direction) => {
     const newPageBlock = pageBlock + direction;
     setPageBlock(newPageBlock);
-    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock, sortField, sortDirection);
+    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock, sortField, sortDirection, searchType, searchText);
   };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock), sortField, sortDirection);
+    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock), sortField, sortDirection, searchType, searchText);
   };
 
   const formatDate = (date) => {
@@ -197,7 +197,7 @@ const FreeList = () => {
             style={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
+              alignItems: "center"
             }}
           >
             <button

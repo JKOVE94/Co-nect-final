@@ -10,7 +10,7 @@ const CalEventShowModal = ({
   onClose,
   info,
   getEvent,
-  handleToast,
+  handleToast
 }) => {
   const num = useSelector((state) => state.userData.user_pk_num);
   const [data, setData] = useState({});

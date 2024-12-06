@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+
 import conect.data.dto.FavoritesDto;
 import conect.data.dto.PostDto;
 import conect.data.dto.ProjectDto;

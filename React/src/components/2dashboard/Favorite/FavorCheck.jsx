@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const FavorCheck = ({ pknum, type, favorData }) => {
   const num = useSelector((state) => state.userData.user_pk_num);
@@ -9,7 +10,14 @@ const FavorCheck = ({ pknum, type, favorData }) => {
   const [data, setData] = useState({});
   // 서버에 보낼 데이터(usernum, post pk num, proj pk num)
 
+  const location = useLocation();
+  
+
   useEffect(() => {
+    if(location.state != null) {
+      favorData = location.state;
+    }
+
     if (type === "post") {
       setData({ favor_fk_user_num: num, favor_fk_post_num: pknum });
     } else if (type === "proj") {
