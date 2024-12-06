@@ -19,6 +19,7 @@ public class TaskEntity {
     private String taskDesc; //업무 설명 {TEXT]
     private LocalDate taskStartdate; //업무 시작일 {DATETIME]
     private LocalDate taskDeadline; //마감 기한일 [DATETIME]
+    @Column(nullable = true)
     private LocalDate taskEnddate; //업무 종료일 [DATETIME]
     private int taskDuration; //업무 기간 (일 단위) [INT]
     private int taskProgress; //진행률 (%) [INT]
@@ -26,10 +27,10 @@ public class TaskEntity {
     private int taskPriority; //우선순위 [INT]
     private LocalDate taskCreated; //업무 생성 일시 [DATETIME]
     private LocalDate taskUpdated; //업무 정보 최종 수정 일시 [DATETIME]
-    private double taskVersion; //업무 버전 번호 [FLOAT]
     private int taskDepth;
     private String taskTag;
     private String taskTagcol;
+    @Column(nullable = true)
     private Integer taskFkTaskNum;
 
     @ManyToOne

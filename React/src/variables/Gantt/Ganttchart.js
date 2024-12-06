@@ -72,23 +72,47 @@ class Ganttchart extends Component {
     }
 
     handleTaskUpdate = (id, task) => {
-        const updatedTasks = this.props.taskdatas.map(t => t.task_pk_num === id ? task : t);
-        this.props.setTaskdatas(updatedTasks);
-    }
-
-    handleTaskAdd = (task) => {
-        const newTask = {
-            task_pk_num: task.id,
+        const updatedTasks = this.props.taskdatas.map(t => 
+        t.task_pk_num === id ? {
+            ...t,
             task_title: task.text,
             task_startdate: task.start_date,
             task_duration: task.duration,
             task_progress: task.progress,
             task_fk_task_num: task.parent,
-            task_depth: task.parent ? 1 : 0 // Assuming task_depth is 1 if it has a parent
-        };
-        const newTasks = [...this.props.taskdatas, newTask];
-        this.props.setTaskdatas(newTasks);
+            task_updated: new Date().toISOString().split('T')[0] // Assuming task_updated is the current date
+        } : t
+    );
+    console.log(updatedTasks);
+    this.props.setTaskdatas(updatedTasks);
     }
+
+    handleTaskAdd = (task) => {
+    const newTask = {
+        task_pk_num: task.id,
+        task_title: task.text,
+        task_startdate: task.start_date,
+        task_deadline : task.end_date,
+        task_duration: task.duration,
+        task_progress: task.progress,
+        task_fk_task_num: task.parent,
+        task_depth: task.parent ? 1 : 0, // Assuming task_depth is 1 if it has a parent
+        task_created: new Date().toISOString().split('T')[0], // Assuming task_created is the current date
+        task_desc: "",
+
+        task_fk_proj_num: 1, // Assuming a default project number
+        task_fk_user_num: null, // Assuming no user is assigned initially
+        task_priority: 0, // Assuming default priority
+        task_status: "미시작", // Assuming default status
+        task_tag: "0", // Assuming default tag
+        task_tagcol: "red", // Assuming default tag color
+        task_updated: new Date().toISOString().split('T')[0], // Assuming task_updated is the current date
+        task_user_name: "", // Assuming no user name initially
+        task_version: 1 // Assuming default version
+    };
+    const newTasks = [...this.props.taskdatas, newTask];
+    this.props.setTaskdatas(newTasks);
+}
 
     componentDidMount() {
         gantt.i18n.setLocale("kr");

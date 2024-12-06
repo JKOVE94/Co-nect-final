@@ -6,6 +6,7 @@ import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
+import conect.data.form.TaskForm;
 import conect.service.board.favor.FavorService;
 import conect.service.board.post.PostService;
 import conect.service.board.proj.ProjService;
@@ -206,16 +207,29 @@ public class BoardController {
 	@Autowired
 	private TaskService taskService;
 
-	@RequestMapping("/task/proj/{task_fk_proj_num}")
+	@GetMapping("/task/proj/{task_fk_proj_num}")
 	public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable int task_fk_proj_num) {
 		System.out.println("task_fk_proj_num : " + task_fk_proj_num);
 		return taskService.getAllTask(task_fk_proj_num);
 	}
 
-	@RequestMapping("/task/user/{user_pk_num}")
+	@GetMapping("/task/user/{user_pk_num}")
 	public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable int user_pk_num) {
 		return taskService.getAllTaskWithUser(user_pk_num);
 	}
-	
+
+	@PostMapping("/task/insert")
+	public void insertTask(@RequestBody TaskForm form) {
+		taskService.insertTask(form);
+	}
+
+	@PutMapping("/task/update/{task_pk_num}")
+	public void updateTask(@RequestBody TaskForm form) {
+		taskService.updateTask(form);
+	}
+	@DeleteMapping("/task/delete/{task_pk_num}")
+	public void deleteTask(@PathVariable int task_pk_num) {
+		taskService.deleteTask(task_pk_num);
+	}
 
 }

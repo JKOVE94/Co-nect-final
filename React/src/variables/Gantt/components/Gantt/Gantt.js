@@ -89,18 +89,42 @@ export default class Gantt extends Component {
 
     shouldComponentUpdate(nextProps) {
         return this.props.zoom !== nextProps.zoom;
+        
     }
 
     componentDidUpdate() {
+        
         gantt.render();
     }
 
 componentDidMount() {
+    gantt.config.columns = [
+    {name:"text",       label:"작업명",  width:"*", tree:true },
+    {name:"start_date", label:"시작일", align:"center" },
+    {name:"duration",   label:"기한 (일)", align:"center" },
+];
     gantt.config.date_format = "%Y-%m-%d %H:%i"; 
     const { tasks } = this.props;
     gantt.init(this.ganttContainer);
     this.initGanttDataProcessor();
     gantt.parse(tasks);
+
+       gantt.attachEvent("onAfterTaskUpdate", (id, item) => {
+            if (this.props.onTaskUpdate) {
+                this.props.onTaskUpdate(id, item);
+            }
+        });
+
+        gantt.attachEvent("onAfterTaskAdd", (id, item) => {
+            if (this.props.onTaskAdd) {
+                this.props.onTaskAdd(item);
+            }
+        });
+          gantt.attachEvent("onAfterTaskDelete", (id) => {
+            if (this.props.setDeleteTarget) {
+                this.props.setDeleteTarget(id);
+            }
+        });
 }
 
    render() {

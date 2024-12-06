@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class TaskForm {
-    private int task_pk_num; //업무 고유 식별자 [PK, INT, INCREMENT]
+    private Integer task_pk_num; //업무 고유 식별자 [PK, INT, INCREMENT]
     private String task_title; //업무 제목 [VARCHAR]
     private String task_desc; //업무 설명 {TEXT]
     private LocalDate task_startdate; //업무 시작일 {DATETIME]
@@ -22,7 +22,6 @@ public class TaskForm {
     private int task_priority; //우선순위 [INT]
     private LocalDate task_created; //업무 생성 일시 [DATETIME]
     private LocalDate task_updated; //업무 정보 최종 수정 일시 [DATETIME]
-    private double task_version; //업무 버전 번호 [FLOAT]
     private int task_depth;
     private String task_tag;
     private String task_tagcol;
@@ -31,9 +30,10 @@ public class TaskForm {
     private Integer task_fk_task_num; //상위 업무 번호 [FK, INT]
 
     public static TaskEntity toEntity(TaskForm form) {
-        //fk관련된 데이터는 servie단에서 findById로 찾아야 함
         TaskEntity entity = new TaskEntity();
-        entity.setTaskPkNum(form.getTask_pk_num());
+        if (form.getTask_pk_num() != null && form.getTask_pk_num() != 0) {
+            entity.setTaskPkNum(form.getTask_pk_num());
+        }
         entity.setTaskTitle(form.getTask_title());
         entity.setTaskDesc(form.getTask_desc());
         entity.setTaskStartdate(form.getTask_startdate());
@@ -45,10 +45,12 @@ public class TaskForm {
         entity.setTaskPriority(form.getTask_priority());
         entity.setTaskCreated(form.getTask_created());
         entity.setTaskUpdated(form.getTask_updated());
-        entity.setTaskVersion(form.getTask_version());
         entity.setTaskDepth(form.getTask_depth());
         entity.setTaskTag(form.getTask_tag());
         entity.setTaskTagcol(form.getTask_tagcol());
+        if (form.getTask_fk_task_num() != null && form.getTask_fk_task_num() != 0) {
+            entity.setTaskFkTaskNum(form.getTask_fk_task_num());
+        }
         return entity;
     }
 }

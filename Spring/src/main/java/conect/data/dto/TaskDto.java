@@ -22,7 +22,6 @@ public class TaskDto {
     private int task_priority; //우선순위 [INT]
     private LocalDate task_created; //업무 생성 일시 [DATETIME]
     private LocalDate task_updated; //업무 정보 최종 수정 일시 [DATETIME]
-    private double task_version; //업무 버전 번호 [FLOAT]
     private int task_depth;
     private String task_tag;
     private String task_tagcol;
@@ -45,7 +44,6 @@ public class TaskDto {
         dto.setTask_priority(entity.getTaskPriority());
         dto.setTask_created(entity.getTaskCreated());
         dto.setTask_updated(entity.getTaskUpdated());
-        dto.setTask_version(entity.getTaskVersion());
         dto.setTask_fk_task_num(entity.getTaskFkTaskNum());
         dto.setTask_depth(entity.getTaskDepth());
         dto.setTask_tag(entity.getTaskTag());
