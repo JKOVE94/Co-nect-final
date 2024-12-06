@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="conect.service.board.proj.ProjServiceImpl"/>
+    <fullyQualifiedTypeName name="java.lang.Integer"/>
+    <fullyQualifiedTypeName name="conect.data.entity.PostEntity"/>
+    <fullyQualifiedTypeName name="conect.data.repository.ProjectRepository"/>
+    <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+    <fullyQualifiedTypeName name="conect.data.repository.PostRepository"/>
+    <fullyQualifiedTypeName name="java.util.HashMap"/>
+    <fullyQualifiedTypeName name="org.springframework.http.ResponseEntity"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="conect.data.dto.ProjectDto"/>
+    <fullyQualifiedTypeName name="conect.data.dto.PostDto"/>
+</qualifiedTypeNameHistroy>

@@ -6,7 +6,6 @@ import conect.data.form.PostForm;
 import conect.service.board.post.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,6 @@ public class PostController {
 	@Autowired
 	private PostService postService;
 	
-
 	// 게시글 생성
 	@PostMapping("/free")
 	public int createPost(@RequestBody PostForm postForm) {
@@ -37,7 +35,6 @@ public class PostController {
 		}
 		return 0;
 	}
-
 	// 모든 게시글 조회
 	@GetMapping("/free")
 	public ResponseEntity<Map<String, Object>> getAllPosts(
