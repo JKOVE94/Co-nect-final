@@ -24,10 +24,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -190,6 +193,29 @@ public class ProjServiceImpl implements ProjService {
 	public List<ProjectDto> getAllProjInfo(int compNum) {
 		// TODO 프로젝트 목록 가져오기
 		return prepository.findByProjCompNum(compNum)
+				.stream().map(ProjectDto::fromEntity).toList();
+	}
+	
+	//검색용 status list 출력
+	@Override
+	public Set<String> getStatusAll(int compNum) {
+		List<ProjectDto> list = 
+				prepository.findByProjCompNum(compNum).stream().map(ProjectDto::fromEntity).toList();
+		Set<String> statusList = new HashSet<String>();
+		for(ProjectDto dto : list) {
+			String status = dto.getProj_status();
+			if(!status.isEmpty()) {
+				statusList.add(status);
+			}
+		}
+		return statusList;
+	}
+	
+	//검색
+	@Override
+	public List<ProjectDto> getSearchData(String status, String title) {
+		
+		return prepository.findByProjStatusContainsAndProjNameContains(status, title)
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
 

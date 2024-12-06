@@ -1,9 +1,7 @@
 
 /*function*/
 .calendar {
-  margin-top: "2rem";
-  max-height : 700px;
-  overflow-y: auto;
+  margin-top: 2rem;
 }
 .calendar::-webkit-scrollbar{
   display: none;

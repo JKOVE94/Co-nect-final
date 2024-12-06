@@ -4,9 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
-import Search from "variables/Search/Search";
+import PostSearch from "variables/Search/PostSearch";
 import FavorCheck from "../Favorite/FavorCheck";
 import "../../../assets/css/freepost/freelist.css"
+
 
 const FreeList = () => {
  
@@ -137,8 +138,7 @@ const FreeList = () => {
             >
               조회수순 {sortField === "postView" && (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
-              <Search
-              type='post'
+              <PostSearch
               value={searchText}
               onChange={handleChange}
               onSearch={handleSearch}

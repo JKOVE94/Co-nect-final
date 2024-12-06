@@ -20,6 +20,9 @@ import {
 } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
+import FavorCheck from "../Favorite/FavorCheck";
+import { useSelector } from "react-redux";
+import ProjSearch from "variables/Search/ProjSearch";
 
 const ProjectTable = () => {
   const navigate = useNavigate();
@@ -53,6 +56,7 @@ const ProjectTable = () => {
   useEffect(() => {
     setCurrentPage(0);
     fetchHandle();
+    handleFavorite();
   }, [filter, searchTerm, fetchHandle]);
 
   const handleSearch = () => {
@@ -86,6 +90,45 @@ const ProjectTable = () => {
 
   const handleDeleteProject = (projPkNum) => {
     navigate(`/delete-project/${projPkNum}`);
+  };
+
+  //즐겨찾기
+  const num = useSelector((state) => state.userData.user_pk_num);
+  const [favorData, setFavorData] = useState([]);
+  const handleFavorite = () => {
+    axios
+      .get(`/favorite/proj/${num}`)
+      .then((res) => {
+        setFavorData(res.data);
+      })
+      .catch();
+  };
+
+  //검색
+  const [searchType, setSearchType] = useState("");
+  const [searchText, setSearchText] = useState("");
+  const handleKeyDown = (e) => {
+    //사용자가 enter입력 시 search 실행
+    if (e.keyCode === 13) handleSearch();
+  };
+
+  const handleChange = (e) => {
+    if(e.target.id === 'proj_status'){
+      setSearchType(e.target.value);
+    } else {
+      setSearchText(e.target.value.trim());
+    }
+  };
+
+  const fnSearch = async () => {
+    axios.get(`/proj/search`,{
+      params:{
+        status:searchType,
+        searchText:searchText
+      }
+    }).then( res =>
+      setProjects(res.data)
+    ).catch( err => navigate('/error'));
   };
 
   const renderProjectRows = () => {
@@ -122,13 +165,10 @@ const ProjectTable = () => {
         style={{ width: "100%", overflowX: "hidden" }}
       >
         <td className="text-center">
-          <input
-            type="checkbox"
-            checked={project.favorite}
-            onChange={(e) => {
-              const newFavoriteStatus = e.target.checked;
-              // 즐겨찾기 불러오기
-            }}
+          <FavorCheck
+            type="proj"
+            pknum={project.proj_pk_num}
+            favorData={favorData}
           />
         </td>
         <td className="text-truncate" style={{ maxWidth: "150px" }}>
@@ -217,35 +257,12 @@ const ProjectTable = () => {
                     gap: "10px",
                   }}
                 >
-                  <select
-                    className="form-select"
-                    style={{ width: "130px" }}
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                  >
-                    <option value="전체">전체</option>
-                    <option value="예정">예정</option>
-                    <option value="진행중">진행중</option>
-                    <option value="계획">계획</option>
-                  </select>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="검색어를 입력하세요"
-                    value={searchTerm}
-                    onChange={handleSearchInputChange}
-                    onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  <ProjSearch 
+                   value={searchText}
+                   onChange={handleChange}
+                   onSearch={fnSearch}
+                   onKeyDown={handleKeyDown}
                   />
-                  <button
-                    className="btn btn-primary"
-                    style={{
-                      width: "130px",
-                      marginTop: "0",
-                    }}
-                    onClick={handleSearch}
-                  >
-                    검색
-                  </button>
                 </div>
               </CardHeader>
 

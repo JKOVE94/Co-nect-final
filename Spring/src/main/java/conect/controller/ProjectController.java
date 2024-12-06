@@ -7,7 +7,7 @@ import conect.service.board.proj.ProjService;
 import conect.service.board.proj.ProjServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/proj")
@@ -117,6 +118,19 @@ public class ProjectController {
 	@GetMapping("/{compNum}")
 	public List<ProjectDto> getAllProj(@PathVariable("compNum")int compNum){
 		return projServiceImpl.getAllProjInfo(compNum);
+	}
+	
+	//검색 - status list 반환
+	@GetMapping("/status/{compNum}")
+	public Set<String> getStatusList(@PathVariable("compNum")int compNum){
+		return projServiceImpl.getStatusAll(compNum);
+	}
+	
+	//검색데이터 반환
+	@GetMapping("/search")
+	public List<ProjectDto> getSearchData(@RequestParam("status")String status,
+										@RequestParam("searchText")String searchText){	
+		return projServiceImpl.getSearchData(status, searchText);
 	}
 
 }
