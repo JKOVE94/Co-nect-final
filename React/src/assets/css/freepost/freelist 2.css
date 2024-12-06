@@ -1,0 +1,27 @@
+.table-custom {
+    font-size: 5rem !important;
+    /* 폰트 크기를 조절합니다 */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.table td {
+    padding: 0.75rem;
+}
+
+.table .btn {
+    margin: 0;
+}
