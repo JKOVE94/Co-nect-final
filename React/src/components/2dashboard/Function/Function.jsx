@@ -82,13 +82,15 @@ const Function = () => {
                 <MySchedule events={events} />
               </CardBody>
             </Card>
-            <CalendarToast
-              isOpen={toastIsOpen}
-              onClose={() => setToastIsOpen(false)}
-              toastType={toastType}
-            />
-          </Col>
+            </Col>
         </Row>
+        <div className={style.toastContainer}>
+          <CalendarToast
+            isOpen={toastIsOpen}
+            onClose={() => setToastIsOpen(false)}
+            toastType={toastType}
+          />
+        </div>
       </Container>
     </>
   );

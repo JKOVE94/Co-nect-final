@@ -80,6 +80,12 @@
   outline: none;  
   box-shadow: none; 
 }
+.toastContainer {
+  position: fixed;
+  bottom: 20px; /* 화면 하단에서 20px 위 */
+  right: 20px;  /* 화면 오른쪽에서 20px 왼쪽 */
+  z-index: 1050; /* 다른 요소 위에 표시되도록 z-index 설정 */
+}
 
 
 

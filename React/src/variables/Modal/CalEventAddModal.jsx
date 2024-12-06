@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, CloseButton, Col, Form, Modal, Row } from "react-bootstrap";
 import style from '../../assets/css/2dashboard/calendar.module.css'
 
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {

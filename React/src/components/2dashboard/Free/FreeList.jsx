@@ -121,29 +121,31 @@ const FreeList = () => {
   return (
     <Container fluid style={{ Height: "40em", marginTop: "1em" }}>
       <Card style={{ Height: "40em", overflowY: "auto" }}>
-        <CardHeader>
+        <CardHeader style={{display: 'flex', justifyContent: 'space-between'}}>
           <h2>자유 게시판</h2>
-          <div>
+          <div style={{display: 'flex'}}>
             <button
               className="btn btn-secondary"
+              style={{marginTop:'0px', height:'43px'}}
               onClick={() => handleSortChange("postRegdate")}
             >
               최신순 {sortField === "postRegdate" && (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
             <button
               className="btn btn-secondary"
+              style={{marginTop:'0px', height:'43px'}}
               onClick={() => handleSortChange("postView")}
             >
               조회수순 {sortField === "postView" && (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
+              <Search
+              type='post'
+              value={searchText}
+              onChange={handleChange}
+              onSearch={handleSearch}
+              onKeyDown={handleKeyDown}
+            />
           </div>
-          <Search
-            type='post'
-            value={searchText}
-            onChange={handleChange}
-            onSearch={handleSearch}
-            onKeyDown={handleKeyDown}
-          />
         </CardHeader>
         <CardBody style={{ Height: "40em", overflowY: "auto" }}>
           <table className="table" style={{ fontSize: "1.2rem" }}>
