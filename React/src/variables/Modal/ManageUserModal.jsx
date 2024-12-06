@@ -43,6 +43,7 @@ function ManageUserModal(props) {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+    console.log(name, value, files);
     setUserInfo((prevUserInfo) => ({
       ...prevUserInfo,
       [name]: files ? files[0] : value,
@@ -58,7 +59,6 @@ function ManageUserModal(props) {
         data.append(key, userInfo[key] !== null ? String(userInfo[key]) : ""); // 나머지는 문자열로 변환하여 추가
       }
     }
-
     axios
       .put(`/manage/user/${userInfo.user_pk_num}`, data, {
         headers: {

@@ -1,10 +1,15 @@
-import { Outlet } from "react-router";
+import { Routes, Route } from "react-router-dom";
+import UserInfo from "./UserInfo";
+import UserAdd from "./UserAdd";
+import UserUnlock from "./UserUnlock";
 
 const UserHome = () => {
   return (
-    <div>
-      <Outlet />
-    </div>
+    <Routes>
+      <Route path="/info" element={<UserInfo />} />
+      <Route path="/add" element={<UserAdd />} />
+      <Route path="/unlock" element={<UserUnlock />} />
+    </Routes>
   );
 };
 
