@@ -19,6 +19,8 @@ import {
 } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
+import FavorCheck from "../Favorite/FavorCheck";
+import { useSelector } from "react-redux";
 
 const ProjectTable = () => {
   const navigate = useNavigate();
@@ -52,6 +54,7 @@ const ProjectTable = () => {
   useEffect(() => {
     setCurrentPage(0);
     fetchHandle();
+    handleFavorite();
   }, [filter, searchTerm, fetchHandle]);
 
   const handleSearch = () => {
@@ -85,6 +88,18 @@ const ProjectTable = () => {
 
   const handleDeleteProject = (projPkNum) => {
     navigate(`/delete-project/${projPkNum}`);
+  };
+
+  //즐겨찾기
+  const num = useSelector((state) => state.userData.user_pk_num);
+  const [favorData, setFavorData] = useState([]);
+  const handleFavorite = () => {
+    axios
+      .get(`/favorite/proj/${num}`)
+      .then((res) => {
+        setFavorData(res.data);
+      })
+      .catch();
   };
 
   const renderProjectRows = () => {
@@ -121,14 +136,11 @@ const ProjectTable = () => {
         style={{ width: "100%", overflowX: "hidden" }}
       >
         <td className="text-center">
-          <input
-            type="checkbox"
-            checked={project.favorite}
-            onChange={(e) => {
-              const newFavoriteStatus = e.target.checked;
-              // 즐겨찾기 불러오기
-            }}
-          />
+        <FavorCheck
+          type="proj"
+          pknum={project.proj_pk_num}
+          favorData={favorData}
+        />
         </td>
         <td className="text-truncate" style={{ maxWidth: "150px" }}>
           {project.proj_name}

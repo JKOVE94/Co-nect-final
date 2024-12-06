@@ -11,7 +11,6 @@ import conect.service.board.favor.FavorService;
 import conect.service.board.post.PostService;
 import conect.service.board.proj.ProjService;
 
-import conect.service.board.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;

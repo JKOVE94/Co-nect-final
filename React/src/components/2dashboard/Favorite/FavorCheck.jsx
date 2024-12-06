@@ -20,9 +20,11 @@ const FavorCheck = ({ pknum, type, favorData }) => {
     if (Array.isArray(favorData)) {
       //List가 넘어올 경우(post list, proj list)
       favorData.forEach((data) => {
-        if (data.post_pk_num === pknum) {
+        if (type === "post" && data.post_pk_num === pknum) {
           setIsCheck(true);
           //즐겨찾기에 등록되어있다면 true
+        } else if(type==="proj" && data.proj_pk_num === pknum){
+          setIsCheck(true);
         }
       });
     } else {

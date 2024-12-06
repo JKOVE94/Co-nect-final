@@ -66,7 +66,7 @@ const ProjFavorite = () => {
                 <tr key={proj.favor_id}>
                   <td>{proj.proj_pk_num}</td>
                   <td>
-                    <Link to={``}>
+                    <Link to={`/main/proj/projread/${proj.proj_pk_num}`}>
                       {proj.proj_name}
                     </Link>
                   </td>
