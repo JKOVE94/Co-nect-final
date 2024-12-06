@@ -9,7 +9,6 @@ const ProjToast = (props) => {
           <>
             <Toast.Header>
               <img
-                src="holder.js/20x20?text=%20"
                 className="rounded me-2"
                 alt=""
               />
@@ -27,7 +26,6 @@ const ProjToast = (props) => {
           <>
             <Toast.Header>
               <img
-                src="holder.js/20x20?text=%20"
                 className="rounded me-2"
                 alt=""
               />
