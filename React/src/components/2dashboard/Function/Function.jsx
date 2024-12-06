@@ -65,9 +65,9 @@ const Function = () => {
     <>
       <Container fluid className={style.calendar} >
         <Row className="mx-0 align-items-start justify-content-center">
-          <Col md={8} className="px-0">
+          <Col md={8} className="px-0" style={{marginTop: "2rem"}}>
             <Card className={style.card}>
-              <CardBody>
+              <CardBody className={style.cardBody}>
                 <MyCalendar 
                   events={events}
                   handleGetEvent={handleGetEvent}
@@ -76,7 +76,7 @@ const Function = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col md={4} >
+          <Col md={4} style={{marginTop: "2rem"}}>
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
                 <MySchedule events={events} />

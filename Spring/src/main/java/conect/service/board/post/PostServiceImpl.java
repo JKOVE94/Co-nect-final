@@ -160,7 +160,6 @@ public class PostServiceImpl implements PostService {
     	} else {
     		postPage = frepository.findAll(pageable);
     	}
-	System.out.println(searchType+" "+ searchText);
 	    // PostEntity -> PostDto 변환
 	    return postPage.map(PostDto::fromEntity);
 	}
