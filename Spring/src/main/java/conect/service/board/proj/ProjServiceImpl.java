@@ -58,6 +58,7 @@ public class ProjServiceImpl implements ProjService {
         List<ProjectEntity> entities = prepository.findAll();
         return entities.stream().map(ProjectDto::fromEntity).collect(Collectors.toList());
     }
+    /*
     // 페이징, 정렬
  	public Page<ProjectDto> getList(int page, int pageSize) {
  	    // 정렬 정보 생성
@@ -70,7 +71,7 @@ public class ProjServiceImpl implements ProjService {
  	    //	ProjectEntity -> dto 변환
  	    return postPage.map(ProjectDto::fromEntity);
  	}
-    
+    */
 	public List<ProjectDto> getScheduleAll(int usernum){
 		String pattern = "(?<=,|^)"+ usernum + "(?=,|$)";
 		return prepository.findByProjMembersContaining(pattern)

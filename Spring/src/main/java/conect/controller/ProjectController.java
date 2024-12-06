@@ -35,7 +35,7 @@ public class ProjectController {
 	private ProjService projService;
 	
 	// 프로젝트 목록 조회
-		@GetMapping
+		@GetMapping("/projlist")
 		public ResponseEntity<List<ProjectDto>> getAllProjects() {
 			try {
 				List<ProjectDto> projects = projService.getAllProjects();
@@ -45,7 +45,7 @@ public class ProjectController {
 				return ResponseEntity.status(500).build();
 			}
 		}
-
+		/*
 		// 모든 게시글 조회
 		@GetMapping("/projlist")
 		public ResponseEntity<Map<String, Object>> getAllPosts(
@@ -72,6 +72,7 @@ public class ProjectController {
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		    }
 		}
+		*/
 	
 	@GetMapping("/projread")
 	public List<ProjectDto> getListAll(){
