@@ -28,6 +28,7 @@ const ProjUpdate = () => {
     proj_status: "",
     proj_desc: "",
     proj_fk_comp_num: 1,
+    user_name: "", // 작성자 이름
   });
 
   const [departments, setDepartments] = useState([]);
@@ -158,10 +159,10 @@ const ProjUpdate = () => {
                 type="text"
                 name="proj_fk_user_num"
                 id="proj_fk_user_num"
-                value={formData.proj_fk_user_num}
-                onChange={handleEditChange}
+                value={formData.user_name} // 이름 표시
+                onChange={handleInputChange}
                 required
-                placeholder="작성자를 입력하세요"
+                disabled // 사용자가 수정하지 못하도록
               />
             </Col>
           </FormGroup>
@@ -179,15 +180,13 @@ const ProjUpdate = () => {
                 type="select"
                 name="proj_fk_dpart_num"
                 id="proj_fk_dpart_num"
-                value={formData.proj_fk_dpart_num} // 이 값은 부서 번호
+                value={formData.proj_fk_dpart_num}
                 onChange={handleInputChange}
                 required
               >
                 <option value="">부서를 선택하세요</option>
                 {departments.map((dept) => (
                   <option key={dept.dpart_pk_num} value={dept.dpart_pk_num}>
-                    {" "}
-                    {/* dpart_num 사용 */}
                     {dept.dpart_name}
                   </option>
                 ))}
