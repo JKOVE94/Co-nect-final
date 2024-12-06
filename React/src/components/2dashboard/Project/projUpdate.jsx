@@ -167,31 +167,33 @@ const ProjUpdate = () => {
           </FormGroup>
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-  <Label
-    for="proj_fk_dpart_num"
-    sm={2}
-    style={{ fontSize: "14px", fontWeight: "bold" }}
-  >
-    담당부서
-  </Label>
-  <Col sm={10}>
-    <Input
-      type="select"
-      name="proj_fk_dpart_num"
-      id="proj_fk_dpart_num"
-      value={formData.proj_fk_dpart_num} // 이 값은 부서 번호
-      onChange={handleInputChange}
-      required
-    >
-      <option value="">부서를 선택하세요</option>
-      {departments.map((dept) => (
-        <option key={dept.dpart_pk_num} value={dept.dpart_pk_num}> {/* dpart_num 사용 */}
-          {dept.dpart_name}
-        </option>
-      ))}
-    </Input>
-  </Col>
-</FormGroup>
+            <Label
+              for="proj_fk_dpart_num"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
+              담당부서
+            </Label>
+            <Col sm={10}>
+              <Input
+                type="select"
+                name="proj_fk_dpart_num"
+                id="proj_fk_dpart_num"
+                value={formData.proj_fk_dpart_num} // 이 값은 부서 번호
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">부서를 선택하세요</option>
+                {departments.map((dept) => (
+                  <option key={dept.dpart_pk_num} value={dept.dpart_pk_num}>
+                    {" "}
+                    {/* dpart_num 사용 */}
+                    {dept.dpart_name}
+                  </option>
+                ))}
+              </Input>
+            </Col>
+          </FormGroup>
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
@@ -332,7 +334,7 @@ const ProjUpdate = () => {
               />
             </Col>
           </FormGroup>
-          <br/>
+          <br />
           <Row form className="justify-content-center">
             <Col sm={1.5} className="text-center">
               <Button

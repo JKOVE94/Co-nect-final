@@ -17,7 +17,7 @@ import {
 const ProjCreate = () => {
   const navigate = useNavigate();
   const { projPkNum } = useParams(); // URL에서 projPkNum 가져오기
-  const writer= useSelector((state)=>state.userData); // Redux에서 로그인한 유저 정보 가져오기
+  const writer = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
 
   // 프로젝트 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
@@ -57,7 +57,6 @@ const ProjCreate = () => {
       [name]: value,
     }));
   };
-
 
   // 폼 제출 시 실행 (현재는 실제 API 호출 없이 콘솔 로그로만 처리)
   const handleSubmit = async (e) => {
@@ -141,34 +140,34 @@ const ProjCreate = () => {
             </Col>
           </FormGroup>
 
-
-
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-  <Label
-    for="proj_fk_dpart_num"
-    sm={2}
-    style={{ fontSize: "14px", fontWeight: "bold" }}
-  >
-    담당부서
-  </Label>
-  <Col sm={10}>
-    <Input
-      type="select"
-      name="proj_fk_dpart_num"
-      id="proj_fk_dpart_num"
-      value={formData.proj_fk_dpart_num} // 이 값은 부서 번호
-      onChange={handleInputChange}
-      required
-    >
-      <option value="">부서를 선택하세요</option>
-      {departments.map((dept) => (
-        <option key={dept.dpart_pk_num} value={dept.dpart_pk_num}> {/* dpart_num 사용 */}
-          {dept.dpart_name}
-        </option>
-      ))}
-    </Input>
-  </Col>
-</FormGroup>
+            <Label
+              for="proj_fk_dpart_num"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
+              담당부서
+            </Label>
+            <Col sm={10}>
+              <Input
+                type="select"
+                name="proj_fk_dpart_num"
+                id="proj_fk_dpart_num"
+                value={formData.proj_fk_dpart_num} // 이 값은 부서 번호
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">부서를 선택하세요</option>
+                {departments.map((dept) => (
+                  <option key={dept.dpart_pk_num} value={dept.dpart_pk_num}>
+                    {" "}
+                    {/* dpart_num 사용 */}
+                    {dept.dpart_name}
+                  </option>
+                ))}
+              </Input>
+            </Col>
+          </FormGroup>
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
@@ -199,8 +198,6 @@ const ProjCreate = () => {
             onChange={handleInputChange}
             required
           />
-
-     
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
