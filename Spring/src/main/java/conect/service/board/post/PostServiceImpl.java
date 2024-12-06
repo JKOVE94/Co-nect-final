@@ -142,8 +142,8 @@ public class PostServiceImpl implements PostService {
 		frepository.deleteById(postPkNum);
 	}
 
-	// 페이징, 정렬
-	public Page<PostDto> getList(int page, int pageSize, String sortField, String sortDirection) {
+	// 페이징, 정렬, 검색
+	public Page<PostDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText) {
 	    // 정렬 정보 생성
 	    Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
 
@@ -151,8 +151,16 @@ public class PostServiceImpl implements PostService {
 	    Pageable pageable = PageRequest.of(page, pageSize, sort);
 	    
 	    // Repository를 통해 데이터를 조회
-	    Page<PostEntity> postPage = this.frepository.findAll(pageable);
-
+    	Page<PostEntity> postPage = Page.empty();
+    	
+    	if (searchType.equalsIgnoreCase("post_name")) {
+    		postPage = frepository.findByPostNameContains(searchText, pageable);
+    	} else if(searchType.equalsIgnoreCase("user_name")) {
+    		postPage = frepository.findByUserEntity_UserNameContains(searchText, pageable);
+    	} else {
+    		postPage = frepository.findAll(pageable);
+    	}
+	System.out.println(searchType+" "+ searchText);
 	    // PostEntity -> PostDto 변환
 	    return postPage.map(PostDto::fromEntity);
 	}

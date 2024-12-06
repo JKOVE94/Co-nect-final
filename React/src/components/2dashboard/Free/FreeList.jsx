@@ -24,9 +24,18 @@ const FreeList = () => {
 
   const navigate = useNavigate();
 
-  const fetchPosts = (page, block, sortField, sortDirection) => {
-    axios
-      .get(`/board/free?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}`)
+  const fetchPosts = (page, block, sortField, sortDirection, searchType, searchText) => {
+   axios
+      .get('/board/free', {
+        params:{
+          page:page,
+          pageBlock:block,
+          sortField:sortField,
+          sortDirection:sortDirection,
+          searchType:searchType,
+          searchText:searchText
+        }
+      })
       .then((res) => {
         setPosts(res.data.posts);
         setCurrentPage(res.data.currentPage);
@@ -39,7 +48,7 @@ const FreeList = () => {
   };
 
   useEffect(() => {
-    fetchPosts(0, 0, sortField, sortDirection);
+    fetchPosts(0, 0, sortField, sortDirection, searchType, searchText);
     handleFavorite();
   }, [sortField, sortDirection]);
 
@@ -87,22 +96,12 @@ const FreeList = () => {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if(searchType === "" || searchType === null){
       //사용자가 type을 선택하지 않았거나 입력값이 없을 경우 search 실행하지 않음
       return;
     } else {
-      axios
-      .get("/board/free")
-      .then((res) => {
-        const allData = res.data.posts;
-        setPosts(
-          allData.filter((data) =>
-            data[searchType].replace(/\s+/g, "").includes(searchText)
-            //제목, 사용자명에 검색어가 포함된 데이터만 불러오기
-          )
-        );
-      })
+      fetchPosts(0, 0, sortField, sortDirection, searchType, searchText);
     }
   };
 
@@ -186,14 +185,14 @@ const FreeList = () => {
                   <td colSpan="5">게시글이 없습니다.</td>
                 </tr>
               )}
-              <button
+            </tbody>
+          </table>
+          <button
                 className="btn btn-primary"
                 onClick={() => navigate(`/main/free/create`)}
               >
                 글쓰기
               </button>
-            </tbody>
-          </table>
           <div
             style={{
               display: "flex",

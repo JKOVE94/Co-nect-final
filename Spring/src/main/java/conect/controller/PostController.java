@@ -41,14 +41,16 @@ public class PostController {
 	    @RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
 	    @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
 	    @RequestParam(name = "sortField", defaultValue = "postRegdate") String sortField, // 정렬 필드
-	    @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection // 정렬 방향
+	    @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
+	    @RequestParam(name = "searchType", defaultValue = "") String searchType, // 검색분류
+	    @RequestParam(name = "searchText", defaultValue = "") String searchText // 검색어
 	) {
 	    try {
 	        int pageSize = 10; // 한 페이지당 항목 수
 	        int blockSize = 5; // 한 블록당 페이지 버튼 수
 
 	        // 페이징 및 정렬 서비스 호출
-	        Page<PostDto> postPage = postService.getList(page, pageSize, sortField, sortDirection);
+	        Page<PostDto> postPage = postService.getList(page, pageSize, sortField, sortDirection, searchType, searchText);
 
 	        // 총 페이지 수
 	        int totalPages = postPage.getTotalPages();

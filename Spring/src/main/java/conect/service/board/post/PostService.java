@@ -28,7 +28,7 @@ public interface PostService {
 	void deletePost(int postPkNum);
 
 	// 페이징
-	public Page<PostDto> getList(int page, int pageSize, String sortField, String sortDirection);
+	public Page<PostDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
 	
 	// targetNum 여러명 이름 불러오기
 	public List<Map<Integer,String>> getTargetNames(String targetNumsString);
