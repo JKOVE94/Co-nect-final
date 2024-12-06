@@ -59,8 +59,9 @@ public class ProjServiceImpl implements ProjService {
                 .collect(Collectors.toList());
     }
     
+    @Override
     public Map<String, Object> getUserRelatedData(int userPkNum) {
-        Map<String, Object> result = new HashMap<String, Object>();
+    	Map<String, Object> result = new HashMap<String, Object>();
         result.put("tasks", taskRepository.getTaskByTaskFkUserNum(userPkNum).stream()
                 .map(TaskDto:: fromEntity)
                 .collect(Collectors.toList()));
@@ -72,4 +73,6 @@ public class ProjServiceImpl implements ProjService {
                 .collect(Collectors.toList()));
         return result;
     }
+    
 }
+  

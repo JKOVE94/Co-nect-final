@@ -11,6 +11,7 @@ const {
   Card,
   CardBody,
   Table,
+  CardHeader,
 } = require("react-bootstrap");
 
 const ProjFavorite = () => {
@@ -45,9 +46,8 @@ const ProjFavorite = () => {
   return (
     <Container fluid className={style.container}>
       <Card className="mx-auto">
-        <CardBody className="p-10">
-          <Card.Title><h3>즐겨찾기</h3></Card.Title>
-          <Card.Subtitle className={style.subtitle}>프로젝트</Card.Subtitle>
+          <CardHeader><h2>즐겨찾기 - 프로젝트</h2></CardHeader>
+          <CardBody className="p-10">
           <Table>
             <thead>
               <tr>

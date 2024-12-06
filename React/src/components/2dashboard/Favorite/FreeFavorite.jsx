@@ -10,7 +10,9 @@ const {
   Container,
   Card,
   CardBody,
-  Table
+  Table,
+  CardHeader,
+  CardTitle
 } = require("react-bootstrap");
 
 const FreeFavorite = () => {
@@ -18,9 +20,9 @@ const FreeFavorite = () => {
   const [favorFree, setFavorFree] = useState([{}]);
   const navigate = useNavigate();
 
-  const getData = () => {
+  const getData = (page, block) => {
     axios
-      .get("/favorite/post/" + num)
+      .get(`/favorite/post/${num}`)
       .then((res) => {
         //유저의 즐겨찾기 목록을 불러와 favorFree에 저장
         setFavorFree(res.data);
@@ -29,7 +31,7 @@ const FreeFavorite = () => {
   };
   
   useEffect(() => {
-    getData();
+    getData(0, 0);
   }, [num]);
 
   const handleClick = (num) => {
@@ -45,9 +47,8 @@ const FreeFavorite = () => {
   return (
     <Container fluid className={style.container}>
       <Card className="mx-auto">
-        <CardBody className="p-10">
-          <Card.Title><h3>즐겨찾기</h3></Card.Title>
-          <Card.Subtitle className={style.subtitle}>자유게시글</Card.Subtitle>
+          <CardHeader><h2>즐겨찾기 - 자유게시판</h2></CardHeader>
+          <CardBody className="p-10">
           <Table>
             <thead>
               <tr>
@@ -84,5 +85,6 @@ const FreeFavorite = () => {
       </Card>
     </Container>
   );
+
 };
 export default FreeFavorite;

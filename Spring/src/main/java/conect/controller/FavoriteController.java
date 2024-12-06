@@ -1,10 +1,12 @@
 package conect.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import conect.data.dto.FavoritesDto;
@@ -34,7 +37,7 @@ public class FavoriteController {
 	//즐겨찾기
 	//유저가 즐겨찾기 등록한 자유게시글 목록
 	@GetMapping("/post/{usernum}")
-    public ResponseEntity<Object> getAllFavoritePost(@PathVariable("usernum") int usernum) {
+	public ResponseEntity<Object> getAllFavoritePost(@PathVariable("usernum") int usernum) {
         try {
             List<Map<String, Object>> favorList = favorService.getFavoritePost(usernum);
             return ResponseEntity.ok(favorList);
@@ -42,25 +45,27 @@ public class FavoriteController {
 			return ResponseEntity.badRequest().body("Invalid input parameters"); //잘못된 요청이 들어온 경우
 		} catch(ConfigDataResourceNotFoundException e) { ///즐겨찾기 목록이 없는 경우
         	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource Not Found");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
-        }
-    }
-	
-	//유저가 즐겨찾기 등록한 프로젝트 목록
-	@GetMapping("/proj/{usernum}")
-	public ResponseEntity<Object> getAllFavoriteProj(@PathVariable("usernum")int usernum){
-		try {
-            List<Map<String, Object>> favorList = favorService.getFavoriteProj(usernum);
-            return ResponseEntity.ok(favorList);
-        } catch(IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body("Invalid input parameters"); //잘못된 요청이 들어온 경우
-		} catch(ConfigDataResourceNotFoundException e) { //즐겨찾기 목록이 없는 경우
-        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource Not Found");
-        } catch (Exception e) {
+		} catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
         }
 	}
+	
+	//즐겨찾기
+	//유저가 즐겨찾기 등록한 자유게시글 목록
+	@GetMapping("/proj/{usernum}")
+	public ResponseEntity<Object> getAllFavoriteProj(@PathVariable("usernum")int usernum){
+    	
+    	try {
+            List<Map<String, Object>> favorList = favorService.getFavoriteProj(usernum);
+            return ResponseEntity.ok(favorList);
+    	} catch(IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body("Invalid input parameters"); //잘못된 요청이 들어온 경우
+		} catch(ConfigDataResourceNotFoundException e) { ///즐겨찾기 목록이 없는 경우
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource Not Found");
+		} catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
+        }
+    }
 	
 	//즐겨찾기에 등록되어있는지 확인
 	//type : 자유게시글(post)/프로젝트(proj), usernum : 유저번호, pknum : 글 번호
@@ -76,10 +81,9 @@ public class FavoriteController {
 			}
 		} catch(IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Invalid input parameters"); //잘못된 요청이 들어온 경우
-		} catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
-		}
-		
+		} catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
+        }
 	}
 	
 	//즐겨찾기 등록
