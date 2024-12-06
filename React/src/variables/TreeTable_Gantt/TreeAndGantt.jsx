@@ -9,7 +9,9 @@ import { Card, CardBody, CardHeader } from "react-bootstrap";
 import TreeGanttModal from "variables/Modal/TreeGanttModal";
 import { set } from "rsuite/esm/internals/utils/date";
 
-const TreeAndGantt = () => {
+const TreeAndGantt = (projPkNum) => {
+  console.log("projPkNum: " + projPkNum);
+
   const [projectNum, setProjectNum] = useState(1);
   const [editData, setEditData] = useState({
     task_title: "",
@@ -103,8 +105,8 @@ const TreeAndGantt = () => {
 
   return (
     <>
-      <Link to="/main/proj/tree">Tree</Link> &nbsp;
-      <Link to="/main/proj/gantt">Gantt</Link>
+      <Link to="/main/proj/projdetail/:projPkNum/tree">Tree</Link> &nbsp;
+      <Link to="/main/proj/projdetail/:projPkNum/gantt">Gantt</Link>
       <Card>
         <CardHeader>
           <h2 style={{ margin: "0" }}>업무 관리 테이블</h2>
@@ -119,7 +121,7 @@ const TreeAndGantt = () => {
         <CardBody>
           <Routes>
             <Route
-              path="/proj/tree"
+              path="/tree"
               element={
                 <TreeTable
                   taskdatas={taskdatas}
@@ -134,7 +136,7 @@ const TreeAndGantt = () => {
               }
             />
             <Route
-              path="/proj/gantt"
+              path={`/`}
               element={
                 <Ganttchart
                   taskdatas={taskdatas}
