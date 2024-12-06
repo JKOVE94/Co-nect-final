@@ -27,7 +27,7 @@ public interface ProjService {
 	List<ProjectDto> getAllProjects();
 	
 	// 페이징
-	public Page<ProjectDto> getList(int page, int pageSize);
+	//public Page<ProjectDto> getList(int page, int pageSize);
 
 	// 모든 부서목록 반환
 	List<DepartmentDto> getAllDepartments();

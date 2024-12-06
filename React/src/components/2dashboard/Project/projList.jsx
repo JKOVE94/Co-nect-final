@@ -20,9 +20,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-//import Header from "components/2dashboard/Headers/ProjHeaders";
-
     const ProjectTable = () => {
         const navigate = useNavigate();
         const [projects, setProjects] = useState([]);
