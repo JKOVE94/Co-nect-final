@@ -1,5 +1,6 @@
 package conect.service.board.proj;
 
+import conect.data.dto.DepartmentDto;
 import conect.data.dto.PostDto;
 import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
@@ -63,6 +64,13 @@ public class ProjServiceImpl implements ProjService {
 		return prepository.findByIdWithUser(projPkNum).map(ProjectDto::fromEntity)
 				.orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
 	}
+	
+	// 모든 부서를 DTO로 반환 (셀렉트 박스용)
+    public List<DepartmentDto> getAllDepartments() {
+        return deptRepository.findAll().stream()
+                .map(DepartmentDto::fromEntity)  // DepartmentEntity를 DepartmentDto로 변환
+                .collect(Collectors.toList());
+    }
 
 	// 프로젝트 생성 메서드
 	@Transactional

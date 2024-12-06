@@ -1,5 +1,7 @@
 package conect.controller;
+import conect.data.dto.DepartmentDto;
 import conect.data.dto.ProjectDto;
+import conect.data.entity.DepartmentEntity;
 import conect.data.form.ProjectForm;
 import conect.service.board.proj.ProjServiceImpl;
 
@@ -40,6 +42,12 @@ public class ProjectController {
 	public ProjectDto getProjById(@PathVariable("projPkNum") int projPkNum) {
 		return projServiceImpl.getProjById(projPkNum);
 	}
+	
+	// 모든 부서 목록 반환 (셀렉트 박스용)
+    @GetMapping("/departments")
+    public List<DepartmentDto> getAllDepartments() {
+        return projServiceImpl.getAllDepartments();
+    }
 
 	// 프로젝트 생성
 	@PostMapping("/projadd")

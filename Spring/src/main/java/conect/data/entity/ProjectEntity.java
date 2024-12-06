@@ -31,6 +31,7 @@ public class ProjectEntity {
     private String projTag; //임의로 부여하는 프로젝트 태그 [VARCHAR] => 검색용
     private String projTagcol; //프로젝트 태그 컬러 [VARCHAR]
     private String projIcon; //프로젝트 아이콘 코드 [VARCHAR] => 부트스트랩 아이콘
+    private int projTemp; // 프로젝트 임시저장
 
     @ManyToOne
     @JoinColumn(name="proj_fk_dpart_num")

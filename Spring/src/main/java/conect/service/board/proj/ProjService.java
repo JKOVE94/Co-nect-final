@@ -1,5 +1,6 @@
 package conect.service.board.proj;
 
+import conect.data.dto.DepartmentDto;
 import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
 import conect.data.form.ProjectForm;
@@ -18,6 +19,9 @@ public interface ProjService {
 	List<ProjectDto> getListAll();
 
 	ProjectDto getProjById(int projPkNum);
+	
+	// 모든 부서목록 반환
+	List<DepartmentDto> getAllDepartments();
 	
 	// 프로젝트 생성
 	int addProject(ProjectForm form);

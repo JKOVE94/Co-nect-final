@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import {
   Input,
@@ -30,6 +30,22 @@ const ProjCreate = () => {
     proj_desc: "", // 내용
     proj_fk_comp_num: 1, // 회사번호 (기본값 1)
   });
+
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    // 부서 목록 가져오기
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get("/proj/departments");
+        setDepartments(response.data); // 데이터 저장
+      } catch (error) {
+        console.error("부서 목록 가져오기 실패:", error);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
 
   // 입력값이 변경될 때마다 상태 업데이트
   const handleInputChange = (e) => {
@@ -122,25 +138,31 @@ const ProjCreate = () => {
           </FormGroup>
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-            <Label
-              for="proj_fk_dpart_num"
-              sm={2}
-              style={{ fontSize: "14px", fontWeight: "bold" }}
-            >
-              담당부서
-            </Label>
-            <Col sm={10}>
-              <Input
-                type="text"
-                name="proj_fk_dpart_num"
-                id="proj_fk_dpart_num"
-                value={formData.proj_fk_dpart_num}
-                onChange={handleInputChange}
-                required
-                placeholder="담당부서를 입력하세요"
-              />
-            </Col>
-          </FormGroup>
+  <Label
+    for="proj_fk_dpart_num"
+    sm={2}
+    style={{ fontSize: "14px", fontWeight: "bold" }}
+  >
+    담당부서
+  </Label>
+  <Col sm={10}>
+    <Input
+      type="select"
+      name="proj_fk_dpart_num"
+      id="proj_fk_dpart_num"
+      value={formData.proj_fk_dpart_num} // 이 값은 부서 번호
+      onChange={handleInputChange}
+      required
+    >
+      <option value="">부서를 선택하세요</option>
+      {departments.map((dept) => (
+        <option key={dept.dpart_pk_num} value={dept.dpart_pk_num}> {/* dpart_num 사용 */}
+          {dept.dpart_name}
+        </option>
+      ))}
+    </Input>
+  </Col>
+</FormGroup>
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
