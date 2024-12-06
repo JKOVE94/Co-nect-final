@@ -16,6 +16,12 @@ import ProjStatus from "components/TempComp/ProjStatus";
 import Projtable from "components/TempComp/ProjTable";
 import MainComponent from "components/MainComponent"
 import ProjectHome from "components/2dashboard/Project/ProjectHome";
+import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
+import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
+import ErrPage from "components/2dashboard/ErrPage";
+import Function from "components/2dashboard/Function/Function";
+import FreeHome from "components/2dashboard/Free/FreeHome";
+
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -61,11 +67,12 @@ const Dashboard = (props) => {
           <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
           <Route path="/proj/*" element={<ProjectHome />}/>
+          <Route path="/free/*" element={<FreeHome />} />
+          <Route path="/projfavorite" element={<ProjFavorite />} />
+          <Route path="/freefavorite" element={<FreeFavorite />} />
+          <Route path="/function" element={<Function />} />
+          <Route path="/err" element={<ErrPage />} />
         </Routes>
-        <Container fluid style={{ padding: "3em" }}>
-          <Item1 />
-          <Footer />
-        </Container>
       </div>
     </>
   );

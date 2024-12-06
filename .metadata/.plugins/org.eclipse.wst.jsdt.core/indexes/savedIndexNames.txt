@@ -1,6 +1,0 @@
-INDEX VERSION 1.4+C:\Users\acorn\Downloads\Co-nect-final\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-2424713704.index
-3904958286.index
-3891482676.index
-2411036699.index
-1783919666.index

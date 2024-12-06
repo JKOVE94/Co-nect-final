@@ -24,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +33,10 @@ import java.util.stream.Collectors;
 @Service
 public class ProjServiceImpl implements ProjService {
 
-    @Autowired
-    private ProjectRepository prepository;
-    
-    @Autowired
+	@Autowired
+	private ProjectRepository prepository;
+
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -46,54 +45,54 @@ public class ProjServiceImpl implements ProjService {
 	@Autowired
 	private CompanyRepository compRepository;
 
-    @Autowired
-    private TaskRepository taskRepository;
-    
-    @Autowired
-    private PostRepository postRepository;
-    
-	
-    @Override
-    public List<ProjectDto> getAllProjects() {
-        List<ProjectEntity> entities = prepository.findAll();
-        return entities.stream().map(ProjectDto::fromEntity).collect(Collectors.toList());
-    }
-    /*
-    // 페이징, 정렬
- 	public Page<ProjectDto> getList(int page, int pageSize) {
- 	    // 정렬 정보 생성
- 	   
- 	    // Pageable 객체 생성 (페이지와 정렬 정보 포함)
- 	    Pageable pageable = PageRequest.of(page, pageSize);
- 	   
- 	    // Repository를 통해 데이터를 조회
- 	    Page<ProjectEntity> postPage = this.prepository.findAll(pageable);
- 	    //	ProjectEntity -> dto 변환
- 	    return postPage.map(ProjectDto::fromEntity);
- 	}
-    */
-	public List<ProjectDto> getScheduleAll(int usernum){
-		String pattern = "(?<=,|^)"+ usernum + "(?=,|$)";
+	@Autowired
+	private TaskRepository taskRepository;
+
+	@Autowired
+	private PostRepository postRepository;
+
+	@Override
+	public List<ProjectDto> getAllProjects() {
+		List<ProjectEntity> entities = prepository.findAll();
+		return entities.stream().map(ProjectDto::fromEntity).collect(Collectors.toList());
+	}
+
+	/*
+	 * // 페이징, 정렬
+	 * public Page<ProjectDto> getList(int page, int pageSize) {
+	 * // 정렬 정보 생성
+	 * 
+	 * // Pageable 객체 생성 (페이지와 정렬 정보 포함)
+	 * Pageable pageable = PageRequest.of(page, pageSize);
+	 * 
+	 * // Repository를 통해 데이터를 조회
+	 * Page<ProjectEntity> postPage = this.prepository.findAll(pageable);
+	 * // ProjectEntity -> dto 변환
+	 * return postPage.map(ProjectDto::fromEntity);
+	 * }
+	 */
+	public List<ProjectDto> getScheduleAll(int usernum) {
+		String pattern = "(?<=,|^)" + usernum + "(?=,|$)";
 		return prepository.findByProjMembersContaining(pattern)
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
-	
-	public List<ProjectDto> getListAll(){
+
+	public List<ProjectDto> getListAll() {
 		return prepository.findAll().stream().map(ProjectDto::fromEntity).toList();
 	}
-	
+
 	public ProjectDto getProjById(int projPkNum) {
-	    return prepository.findByIdWithUser(projPkNum)
-	        .map(ProjectDto::fromEntity)
-	        .orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
+		return prepository.findByIdWithUser(projPkNum)
+				.map(ProjectDto::fromEntity)
+				.orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
 	}
-	
+
 	// 모든 부서를 DTO로 반환 (셀렉트 박스용)
-    public List<DepartmentDto> getAllDepartments() {
-        return deptRepository.findAll().stream()
-                .map(DepartmentDto::fromEntity)  // DepartmentEntity를 DepartmentDto로 변환
-                .collect(Collectors.toList());
-    }
+	public List<DepartmentDto> getAllDepartments() {
+		return deptRepository.findAll().stream()
+				.map(DepartmentDto::fromEntity) // DepartmentEntity를 DepartmentDto로 변환
+				.collect(Collectors.toList());
+	}
 
 	// 프로젝트 생성 메서드
 	@Transactional
@@ -158,40 +157,40 @@ public class ProjServiceImpl implements ProjService {
 		prepository.save(entity); // 수정된 Entity 저장
 	}
 
-    @Override
-    public List<TaskDto> getAllTask(int task_fk_proj_num) {
-        return taskRepository.getTaskByTaskFkProjNum(task_fk_proj_num).stream()
-                .map(TaskDto:: fromEntity)
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<TaskDto> getAllTask(int task_fk_proj_num) {
+		return taskRepository.getTaskByTaskFkProjNum(task_fk_proj_num).stream()
+				.map(TaskDto::fromEntity)
+				.collect(Collectors.toList());
+	}
 
-    @Override
-    public List<TaskDto> getAllTaskWithUser(int user_pk_num) {
-        return taskRepository.getTaskByTaskFkUserNum(user_pk_num).stream()
-                .map(TaskDto:: fromEntity)
-                .collect(Collectors.toList());
-    }
-    
-    public Map<String, Object> getUserRelatedData(int userPkNum) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        result.put("tasks", taskRepository.getTaskByTaskFkUserNum(userPkNum).stream()
-                .map(TaskDto:: fromEntity)
-                .collect(Collectors.toList()));
-        result.put("projects", prepository.getProjByTaskFkUserNum(userPkNum).stream()
-                .map(ProjectDto:: fromEntity)
-                .collect(Collectors.toList()));
-        result.put("posts", postRepository.getPostByTaskFkUserNum(userPkNum).stream()
-                .map(PostDto:: fromEntity)
-                .collect(Collectors.toList()));
-        return result;
-    }
-    
+	@Override
+	public List<TaskDto> getAllTaskWithUser(int user_pk_num) {
+		return taskRepository.getTaskByTaskFkUserNum(user_pk_num).stream()
+				.map(TaskDto::fromEntity)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Map<String, Object> getUserRelatedData(int userPkNum) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("tasks", taskRepository.getTaskByTaskFkUserNum(userPkNum).stream()
+				.map(TaskDto::fromEntity)
+				.collect(Collectors.toList()));
+		result.put("projects", prepository.getProjByTaskFkUserNum(userPkNum).stream()
+				.map(ProjectDto::fromEntity)
+				.collect(Collectors.toList()));
+		result.put("posts", postRepository.getPostByTaskFkUserNum(userPkNum).stream()
+				.map(PostDto::fromEntity)
+				.collect(Collectors.toList()));
+		return result;
+	}
+
 	@Override
 	public List<ProjectDto> getAllProjInfo(int compNum) {
 		// TODO 프로젝트 목록 가져오기
-		return  prepository.findByProjCompNum(compNum)
+		return prepository.findByProjCompNum(compNum)
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
-    
-    
+
 }
