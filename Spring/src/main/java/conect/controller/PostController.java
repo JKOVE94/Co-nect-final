@@ -1,9 +1,11 @@
 package conect.controller;
 
 import conect.data.dto.PostDto;
+import conect.data.dto.TemporaryDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
 import conect.service.board.post.PostService;
+import conect.service.board.temporary.TempService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -17,14 +19,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/board")
 public class PostController {
 
 	@Autowired
 	private PostService postService;
-
+	@Autowired
+	private TempService tempService;
 
 	// 게시글 생성
 	@PostMapping("/free")
@@ -109,22 +112,24 @@ public class PostController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-}
+
 //-----------------------------------------------------------------------------------------------
-//    // 임시 저장된 게시글 생성
-//    @PostMapping("/temporary")
-//    public TemporaryDto saveTemporary(@RequestBody PostForm postForm) {
-//        return TemporaryDto.fromEntity(tempService.saveTemporary(postForm));
-//    }
-//
-//    // 임시 저장된 게시글 목록 조회
-//    @GetMapping("/temporary")
-//    public List<TemporaryDto> getAllTemporary() {
-//        return tempService.getAllTemporary();
-//    }
-//
-//    // 임시 저장된 게시글 삭제
-//    @DeleteMapping("/temporary/{postPkNum}")
-//    public void deleteTemporary(@PathVariable int postPkNum) {
-//    	tempService.deleteTemporary(postPkNum);
-//    }
+    // 임시 저장된 게시글 생성
+    @PostMapping("/temporary")
+    public TemporaryDto saveTemporary(@RequestBody PostForm postForm) {
+        return TemporaryDto.fromEntity(tempService.saveTemporary(postForm));
+    }
+
+    // 임시 저장된 게시글 목록 조회
+    @GetMapping("/temporary")
+    public List<TemporaryDto> getAllTemporary() {
+        return tempService.getAllTemporary();
+    }
+
+    // 임시 저장된 게시글 삭제
+    @DeleteMapping("/temporary/{postPkNum}")
+    public void deleteTemporary(@PathVariable("postPkNum") int postPkNum) {
+    	System.out.println("숫자 확인 :"+postPkNum);
+    	tempService.deleteTemporary(postPkNum);
+    }
+}
