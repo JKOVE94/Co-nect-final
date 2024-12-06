@@ -37,12 +37,14 @@ import { useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT } from "../../../Redux/Reducer/userDataReducer";
 import { Link } from "react-router-dom";
+import ProjNavbar from "../Navbars/ProjNavbar";
+import "./projHeaders.css";
 
 const Header = () => {
   const [proj, setProj] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { id } = useParams();
+  const { projPkNum } = useParams();
   const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const user = useSelector((state) => state.userData);
@@ -61,7 +63,7 @@ const Header = () => {
     setLoading(true);
     setError(null);
     axios
-      .get(`/proj/projread/${id}`)
+      .get(`/proj/projread/${projPkNum}`)
       .then((res) => {
         setProj(res.data);
       })
@@ -72,7 +74,7 @@ const Header = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [id]);
+  }, [projPkNum]);
 
   useEffect(() => {
     fetchProjectData();
@@ -100,56 +102,7 @@ const Header = () => {
                 right: "1rem",
               }}
             >
-              <UncontrolledDropdown nav style={{ transform: "scale(1.5) " }}>
-                <DropdownToggle className="pr-0" nav>
-                  <Media className="align-items-center">
-                    {/* 사용자 이름 */}
-                    <Media className="ml-2 d-none d-lg-block">
-                      <span className="mb-0 text-sm font-weight-bold text-white">
-                        {userData.user_name}
-                      </span>
-                      &emsp;
-                    </Media>
-                    {/* 사용자 사진 */}
-                    <span className="avatar avatar-sm rounded-circle">
-                      <img
-                        alt="..."
-                        src={require("assets/img/theme/team-4-800x800.jpg")}
-                      />
-                    </span>
-                  </Media>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-menu-arrow" right>
-                  <DropdownItem className="noti-title" header tag="div">
-                    <h6 className="text-overflow m-0">Welcome!</h6>
-                  </DropdownItem>
-                  <DropdownItem to="/#" tag={Link}>
-                    <i className="ni ni-single-02" />
-                    <span>계정 정보</span>
-                  </DropdownItem>
-                  {/*관리자일 경우에만 설정 메뉴가 보이도록 설정*/}
-                  {userData.user_fk_acc_authornum === 3 ? (
-                    <DropdownItem to="/manage" tag={Link}>
-                      <i className="ni ni-settings-gear-65" />
-                      <span>설정</span>
-                    </DropdownItem>
-                  ) : null}
-                  <DropdownItem to="#" tag={Link}>
-                    <i className="ni ni-calendar-grid-58" />
-                    <span>활동</span>
-                  </DropdownItem>
-
-                  <DropdownItem to="#" tag={Link}>
-                    <i className="ni ni-support-16" />
-                    <span>지원</span>
-                  </DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem onClick={(e) => logout()}>
-                    <i className="ni ni-user-run" />
-                    <span>로그아웃</span>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+              <ProjNavbar />
             </div>
             {/* Card stats */}
             <Row

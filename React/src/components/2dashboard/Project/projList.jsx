@@ -132,7 +132,7 @@ const ProjectTable = () => {
           />
         </td>
         <td className="text-truncate" style={{ maxWidth: "150px" }}>
-          <Link to={`/main/proj/projdetail/${project.proj_pk_num}`}>
+          <Link to={`/main/proj/projdetail/${project.proj_pk_num}/tree`}>
             {project.proj_name}
           </Link>
         </td>
