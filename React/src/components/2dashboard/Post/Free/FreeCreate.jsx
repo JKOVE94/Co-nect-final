@@ -45,7 +45,9 @@ const FreeCreate = () => {
       .post("/board/free", formToSubmit)
       .then((response) => {
         if (response.data !== 0) {
-          navigate(`/main/free/detail/${response.data}`);
+          navigate(`/main/free/detail/${response.data}`, {
+            state: { actionType: "create" },
+          });
         }
       })
       .catch((error) => {

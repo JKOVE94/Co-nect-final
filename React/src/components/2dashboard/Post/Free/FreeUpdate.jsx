@@ -40,7 +40,9 @@ const FreeUpdate = () => {
           const response = await axios.put(`/board/free/${postPkNum}`, post);
           if (response.status === 200) {
             // 수정 성공 시 상태 전달
-            navigate(`/main/free/detail/${postPkNum}`, { state: { success: true } });
+            navigate(`/main/free/detail/${postPkNum}`, {
+                state: { actionType: "update" },
+              });
           }
         } catch (error) {
           console.error("Error updating post:", error);
@@ -56,7 +58,7 @@ const FreeUpdate = () => {
     return (
         <Container fluid style={{Height: "40em", marginTop: "2em" }}>
            
-              <Card style={{ Height: "40em", overflowY: "auto" }}>
+              <Card style={{ Height: "40em", overflowY: "auto",zIndex: 100 }}>
               <CardHeader>
             <h2>게시글 수정</h2>
             </CardHeader>
