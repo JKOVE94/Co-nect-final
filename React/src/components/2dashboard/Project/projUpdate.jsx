@@ -99,13 +99,13 @@ const ProjUpdate = () => {
     e.preventDefault();
     try {
       const response = await axios.put(`/proj/projedit/${projPkNum}`, formData); // 수정 API 호출
-      console.log("수정 성공:", response.data);
+      // console.log("수정 성공:", response.data);
 
       navigate(`/main/proj/projread/${projPkNum}`, {
         state: { actionType: "update" },
       }); // 수정 후 목록 페이지로 이동
     } catch (error) {
-      console.error("수정 실패:", error);
+      // console.error("수정 실패:", error);
     }
   };
 

@@ -43,7 +43,7 @@ function ManageUserModal(props) {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    console.log(name, value, files);
+    // console.log(name, value, files);
     setUserInfo((prevUserInfo) => ({
       ...prevUserInfo,
       [name]: files ? files[0] : value,

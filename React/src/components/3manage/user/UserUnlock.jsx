@@ -51,7 +51,7 @@ const UserUnlock = () => {
         }
       })
       .catch((err) => {
-        console.log("handlePermit err : " + err);
+        // console.log("handlePermit err : " + err);
       });
   };
 
