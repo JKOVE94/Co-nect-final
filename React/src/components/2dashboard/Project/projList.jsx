@@ -80,7 +80,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
     };
 
     const handleEditProject = (projPkNum) => {
-        navigate(`/edit-project/${projPkNum}`);
+        navigate(`/main/proj/projedit/${projPkNum}`);
     };
 
     const handleDeleteProject = (projPkNum) => {
