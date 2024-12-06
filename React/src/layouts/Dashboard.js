@@ -13,6 +13,9 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import ProjStatus from "components/TempComp/ProjStatus";
+import Projtable from "components/TempComp/ProjTable";
+import MainComponent from "components/MainComponent"
+import ProjectHome from "components/2dashboard/Project/ProjectHome";
 import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
 import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
 import ErrPage from "components/2dashboard/ErrPage";
@@ -20,11 +23,14 @@ import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 import Function from "components/2dashboard/Function/Function";
 import FreeHome from "components/2dashboard/Free/FreeHome";
 
+
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const user = useSelector((state) => state.userData);
+  
+  
 
   useEffect(() => {
     if (user.user_pk_num === 0) {
@@ -55,12 +61,13 @@ const Dashboard = (props) => {
         }}
       />
       <div className="main-content" ref={mainContent}>
-        <Navbar />
+        {isProjReadPath ? "" : <Navbar />}
         {/* 조건부 렌더링으로 헤더 선택 */}
         {isProjReadPath ? <BinHeader /> : <Header />}
         <Routes>
-          <Route path="/" element={<MyToDoList />} />
+          <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
+          <Route path="/proj/*" element={<ProjectHome />}/>
           <Route path="/free/*" element={<FreeHome />} />
           <Route path="/projfavorite" element={<ProjFavorite />} />
           <Route path="/freefavorite" element={<FreeFavorite />} />

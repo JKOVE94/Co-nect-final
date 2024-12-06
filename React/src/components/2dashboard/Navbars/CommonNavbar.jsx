@@ -18,7 +18,7 @@ const CommonNavbar = () => {
             </SubMenu>
             <SubMenu label="프로젝트" icon={<i className="fa fa-briefcase text-info text-sm opacity-10" />}>
               <NavItem>
-                <NavLink to="/" tag={NavLinkRRD}>프로젝트</NavLink>
+              <NavLink to="/main/proj/projlist" tag={NavLinkRRD}>프로젝트 목록</NavLink>
               </NavItem>
             </SubMenu>
             <SubMenu label="게시판" icon={<i className="fa fa-window-maximize text-success text-sm opacity-10" />}>
