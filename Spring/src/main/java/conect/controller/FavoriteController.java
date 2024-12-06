@@ -36,13 +36,13 @@ public class FavoriteController {
 	@Autowired
 	private FavorService favorService;
 
-	// 즐겨찾기
 	// 유저가 즐겨찾기 등록한 자유게시글 목록
 	@GetMapping("/post/{usernum}")
-	public ResponseEntity<Object> getAllFavoritePost(@PathVariable("usernum") int usernum) {
-		
+	public ResponseEntity<Object> getAllFavoritePost(@PathVariable("usernum") int usernum,
+													@RequestParam(name="page", defaultValue = "0") int page,
+													@RequestParam(name="size", defaultValue = "10") int size) {
 		try {
-			List<Map<String, Object>> favorList = favorService.getFavoritePost(usernum);
+			Page<Object> favorList = favorService.getFavoritePost(usernum, page, size);
 			return ResponseEntity.ok(favorList);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Invalid input parameters"); // 잘못된 요청이 들어온 경우
@@ -53,13 +53,14 @@ public class FavoriteController {
 		}
 	}
 
-	// 즐겨찾기
-	// 유저가 즐겨찾기 등록한 자유게시글 목록
+	// 유저가 즐겨찾기 등록한 프로젝트 목록
 	@GetMapping("/proj/{usernum}")
-	public ResponseEntity<Object> getAllFavoriteProj(@PathVariable("usernum") int usernum) {
+	public ResponseEntity<Object> getAllFavoriteProj(@PathVariable("usernum") int usernum,
+													@RequestParam(name="page", defaultValue = "0") int page,
+													@RequestParam(name="size", defaultValue = "10") int size) {
 
 		try {
-			List<Map<String, Object>> favorList = favorService.getFavoriteProj(usernum);
+			Page<Object> favorList = favorService.getFavoriteProj(usernum, page, size);
 			return ResponseEntity.ok(favorList);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Invalid input parameters"); // 잘못된 요청이 들어온 경우

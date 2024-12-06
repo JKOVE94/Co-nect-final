@@ -35,7 +35,7 @@ const Function = () => {
           starttime: data.proj_startdate,
           endtime: data.proj_enddate,
           groupId: 0,
-          color: data.proj_tagcol || '#1E74B1',
+          color: data.proj_tagcol || "#b0e0e6",
           editable: false,
         }));
 
