@@ -29,13 +29,6 @@ public class PostEntity {
 	private int postView; // 게시글 조회수 [INT]
 	private int postTemp;// 게시글 임시저장 상태[TINYINT]
 
-	
-	@Column(name = "post_fk_comp_num", insertable = false, updatable = false)  // DB 필드와 연결
-    	private Integer postFkCompNum;  // DB에 저장되는 값과 동일
-	
-	@Column(name = "post_fk_user_num", insertable = false, updatable = false)
-	private Integer postFkUserNum;
-	
 	@ManyToOne
 	@JoinColumn(name = "post_fk_user_num")
 	@JsonIgnore
