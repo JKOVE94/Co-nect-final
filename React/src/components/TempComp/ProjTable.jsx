@@ -49,7 +49,7 @@ export default function Projtable() {
 
   const navigate = useNavigate();
   const gotoProjLists = (compNum) => {
-    navigate(`/board/projread/${compNum}`);
+    navigate(`/proj/${compNum}`);
   };
 
   //기한 날짜 yyyy-mm-dd 양식 설정

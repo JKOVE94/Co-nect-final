@@ -33,7 +33,7 @@ const MyToDoList = () => {
     setLoading(true);
     setError(null);
     axios
-      .get(`post/${user_pk_num}`)
+      .get(`/proj/user/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
       })
@@ -76,7 +76,7 @@ const MyToDoList = () => {
                 </thead>
                 <tbody>
                   {data.posts && data.posts.length > 0 ? (
-                    data.posts.map((item) => (
+                    data.posts.slice(0,4).map((item) => (
                       <tr key={item.post_pk_num}>
                         <td>
                           <h6 className="text-sm mb-0">{item.post_pk_num}</h6>
