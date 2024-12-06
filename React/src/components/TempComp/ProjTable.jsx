@@ -53,7 +53,6 @@ export default function Projtable(){
     },[]);
 
     const navigate = useNavigate();
-
     const gotoProjLists = (compNum) => {
         navigate(`/board/projread/${compNum}`);
     };
@@ -72,11 +71,11 @@ export default function Projtable(){
 
       return (
         <Container fluid style={{ marginTop: "2rem", width: "100%", height: "30vh" }}>
-        <Row style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+        <Row style={{ display: "flex", flexWrap: "wrap", gap: "20px", maxHeight:"45vh"}}>
         <Col lg={13}  style={{width: "100%",  height: "100%" }}>
         <Card style={{width: "100%", height: "100%"}}>
             <CardHeader className="border-0">
-              <h className="mb-0">프로젝트 테이블</h>
+              <h className="mb-0" style={{ fontWeight: "bold"}}>프로젝트 테이블</h>
               <Button color="outline-primary" size="sm" className="btnview" onClick={() => gotoProjLists(compNum)}>
                 더 보기
               </Button>
