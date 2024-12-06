@@ -12,6 +12,7 @@ import conect.data.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,17 +101,17 @@ public class FavorServiceImpl implements FavorService {
 	
 	//즐겨찾기에 등록된 글인지 확인 (Read용)
 	@Override
-	public FavoritesDto checkFavorite(String type, int usernum, int num) {
+	public Optional<FavoritesDto> checkFavorite(String type, int usernum, int num) {
 	
 		if(type.equalsIgnoreCase("proj")) {
 			FavoritesEntity entity = favorRepository.findByUserEntity_userPkNumAndProjectEntity_projPkNum(usernum, num);
-			return FavoritesDto.fromEntity(entity);
+			return Optional.ofNullable(FavoritesDto.fromEntity(entity));
 			
 		} else if (type.equalsIgnoreCase("post")) {
 			FavoritesEntity entity = favorRepository.findByUserEntity_userPkNumAndPostEntity_postPkNum(usernum, num);
-			return FavoritesDto.fromEntity(entity);
+			return Optional.ofNullable(FavoritesDto.fromEntity(entity));
 		} else {
-			return null;
+			return Optional.empty();
 		}
 		
 	}

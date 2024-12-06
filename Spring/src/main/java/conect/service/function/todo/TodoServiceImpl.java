@@ -37,8 +37,9 @@ public class TodoServiceImpl implements TodoService {
     public boolean dropTodoData(int id) {
     	try {
     		todoRepository.deleteById(id);
-        	return true;
+    		return true;
     	} catch(Exception e) {
+    		//예외처리
     		return false;
     	}
     }
@@ -49,9 +50,11 @@ public class TodoServiceImpl implements TodoService {
     		TodoEntity entity = TodoForm.toEntity(bean);
     		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
     		todoRepository.save(entity);
-        	return true;
+    		return true;
     	} catch(Exception e) {
+    		System.out.println(e.getMessage());
     		return false;
     	}
     }
+
 }

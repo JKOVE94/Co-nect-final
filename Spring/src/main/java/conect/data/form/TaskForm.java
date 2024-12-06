@@ -27,7 +27,7 @@ public class TaskForm {
     private String task_tagcol;
     private int task_fk_user_num; //담당자 사번 [FK, INT]
     private int task_fk_proj_num; //연관된 프로젝트 번호 [FK, INT]
-    private int task_fk_task_num; //상위 업무 번호 [FK, INT]
+    private Integer task_fk_task_num; //상위 업무 번호 [FK, INT]
 
     public static TaskEntity toEntity(TaskForm form) {
         //fk관련된 데이터는 servie단에서 findById로 찾아야 함

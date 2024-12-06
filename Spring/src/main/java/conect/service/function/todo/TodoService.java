@@ -18,4 +18,5 @@ public interface TodoService {
 	
 	//Todo 수정
 	boolean editTodoData(TodoForm bean);
+	
 }

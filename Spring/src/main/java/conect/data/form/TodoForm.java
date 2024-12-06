@@ -13,8 +13,8 @@ public class TodoForm {
     private int todo_pk_num; //투두리스트 고유 식별자 [PK, INT, INCREMENT]
     private String todo_title; // 투두리스트 제목 [VARCHAR]
     private String todo_content; //투두리스트 내용 [VARCHAR]
-    private LocalDateTime todo_start; //투두리스트 시작일 [DATETIME]
-    private LocalDateTime todo_end; //투두리스트 종료일 [DATETIME]
+    private LocalDateTime  todo_start; //투두리스트 시작일 [DATETIME]
+    private LocalDateTime  todo_end; //투두리스트 종료일 [DATETIME]
     private int todo_icon;
     private String todo_tagcol;
     private int todo_fk_user_num; //투두리스트 작성자 [INT}
