@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   Card,
@@ -143,7 +144,9 @@ const ProjectTable = () => {
         />
         </td>
         <td className="text-truncate" style={{ maxWidth: "150px" }}>
-          {project.proj_name}
+          <Link to={`/main/proj/projdetail/${project.proj_pk_num}`}>
+            {project.proj_name}
+          </Link>
         </td>
         <td className="text-truncate" style={{ maxWidth: "200px" }}>
           {project.proj_desc}
