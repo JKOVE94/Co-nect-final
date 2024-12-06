@@ -10,14 +10,7 @@ const FavorCheck = ({ pknum, type, favorData }) => {
   const [data, setData] = useState({});
   // 서버에 보낼 데이터(usernum, post pk num, proj pk num)
 
-  const location = useLocation();
-  
-
   useEffect(() => {
-    if(location.state != null) {
-      favorData = location.state;
-    }
-
     if (type === "post") {
       setData({ favor_fk_user_num: num, favor_fk_post_num: pknum });
     } else if (type === "proj") {
@@ -33,13 +26,9 @@ const FavorCheck = ({ pknum, type, favorData }) => {
         }
       });
     } else {
-      if (favorData) {
-        //boolean이 넘어올 경우(post detail, proj detail)
-        setIsCheck(true);
-        //즐겨찾기에 등록되어있다면 true
-      } else {
-        setIsCheck(false);
-      }
+      axios.get(`/favorite/${type}/${num}/${pknum}`)
+      .then(res => setIsCheck(res.data))
+      .catch(err => setIsCheck(false));
     }
   }, [num, pknum, type, favorData]);
 
