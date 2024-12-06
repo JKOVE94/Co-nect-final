@@ -62,7 +62,7 @@ const FreeFavorite = () => {
               </tr>
             </thead>
             <tbody>
-              {favorFree.map((free) => (
+              {favorFree.length>0? favorFree.map((free) => (
                 <tr key={free.favor_id}>
                   <td>{free.post_pk_num}</td>
                   <td>
@@ -78,7 +78,8 @@ const FreeFavorite = () => {
                     <Card.Link className={style.link} onClick={() => handleClick(free.favor_id)}>&times;</Card.Link>
                   </td>
                 </tr>
-              ))}
+              )) : <tr><td colSpan={6}>즐겨찾기 등록된 글이 없습니다.</td></tr>
+            }
             </tbody>
           </Table>
         </CardBody>

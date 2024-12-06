@@ -130,6 +130,7 @@ public class PostController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+}
 
 //-----------------------------------------------------------------------------------------------
 //     // 임시 저장된 게시글 생성

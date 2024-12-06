@@ -62,7 +62,7 @@ const ProjFavorite = () => {
               </tr>
             </thead>
             <tbody>
-              {favorProj.map((proj) => (
+              {favorProj.length >0 ? favorProj.map((proj) => (
                 <tr key={proj.favor_id}>
                   <td>{proj.proj_pk_num}</td>
                   <td>
@@ -79,7 +79,7 @@ const ProjFavorite = () => {
                     <Card.Link className={style.link} onClick={() => handleClick(proj.favor_id)}>&times;</Card.Link>
                   </td>
                 </tr>
-              ))}
+              )) : <tr><td colSpan={7}>즐겨찾기 등록된 글이 없습니다.</td></tr>}
             </tbody>
           </Table>
         </CardBody>
