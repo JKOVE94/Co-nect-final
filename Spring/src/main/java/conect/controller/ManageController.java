@@ -24,13 +24,13 @@ public class ManageController {
 
     //유저 전체 정보 얻기
     @GetMapping("/user/{userno}")
-    public UserDto getUserOne(@PathVariable int userno){
+    public UserDto getUserOne(@PathVariable(name="userno") int userno){
         return manageUserService.getUserOne(userno);
     }
 
     //유저 삭제
     @DeleteMapping("/user/{userno}")
-    public boolean deleteUser(@PathVariable int userno){
+    public boolean deleteUser(@PathVariable(name="userno") int userno){
         return manageUserService.deleteUser(userno);
     }
 
