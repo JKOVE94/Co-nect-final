@@ -13,6 +13,7 @@ import conect.data.repository.AccountRepository;
 import conect.data.repository.CompanyRepository;
 import conect.data.repository.DepartmentRepository;
 import conect.data.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
@@ -38,7 +39,6 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     @Autowired
     private CompanyRepository companyRepository;
-
 
     //GCP Storage 세팅
     @Value("${spring.cloud.gcp.storage.credentials.location}")

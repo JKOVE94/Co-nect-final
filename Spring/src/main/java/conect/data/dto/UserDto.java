@@ -37,7 +37,7 @@ public class UserDto {
         dto.setUser_lastlogin(entity.getUserLastlogin());
         dto.setUser_trynum(entity.getUserTrynum());
         dto.setUser_locked(entity.getUserLocked());
-        dto.setUser_fk_dpart_num(entity.getDepartmentEntity().getDpartFkDpartNum());
+        dto.setUser_fk_dpart_num(entity.getDepartmentEntity().getDpartPkNum());
         dto.setUser_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
         dto.setUser_fk_acc_authornum(entity.getAccountEntity().getAccPkAuthornum());
         return dto;

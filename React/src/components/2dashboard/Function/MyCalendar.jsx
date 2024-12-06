@@ -9,11 +9,9 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
-
-const MyCalendar = ({events, handleGetEvent, handleToast}) => {
-
+const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
+  const [showModalIsOpen, setShowModalIsOpen] = useState(false); //modal 표시 여부
   const [modalContent, setModalContent] = useState({}); //modal 내용
-  const [showModalIsOpen, setShowModalIsOpen] = useState(false); //이벤트 상세 modal 표시 여부
   const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트 추가 modal 표시 여부
 
   const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번

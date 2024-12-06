@@ -5,8 +5,8 @@ import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import CalendarToast from "variables/Toast/CalendarToast";
-import "../../../assets/css/2dashboard/function.css"
-import style from '../../../assets/css/2dashboard/calendar.module.css'
+import "../../../assets/css/2dashboard/function.css";
+import style from "../../../assets/css/2dashboard/calendar.module.css";
 
 const Function = () => {
   const num = useSelector((state) => state.userData.user_pk_num);
@@ -63,12 +63,15 @@ const Function = () => {
 
   return (
     <>
-      <Container fluid className={style.calendar} >
+      <Container fluid className={style.calendar}>
         <Row className="mx-0 align-items-start justify-content-center">
-          <Col md={8} className="px-0" style={{marginTop: "2rem"}}>
-            <Card className={style.card}>
-              <CardBody className={style.cardBody}>
-                <MyCalendar 
+          <Col md={8} className="px-0">
+            <Card className="mx-auto">
+              <CardBody
+                className="p-10"
+                style={{ maxHeight: "45em", overflowY: "auto" }}
+              >
+                <MyCalendar
                   events={events}
                   handleGetEvent={handleGetEvent}
                   handleToast={handleToast}
@@ -76,13 +79,13 @@ const Function = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col md={4} style={{marginTop: "2rem"}}>
+          <Col md={4} style={{ marginTop: "2rem" }}>
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
                 <MySchedule events={events} />
               </CardBody>
             </Card>
-            </Col>
+          </Col>
         </Row>
         <div className={style.toastContainer}>
           <CalendarToast

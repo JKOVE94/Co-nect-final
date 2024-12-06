@@ -1,0 +1,13 @@
+.card-link:hover{
+    cursor: pointer;
+}
+.del {
+    width:80px;
+}
+.table {
+    table-layout: fixed;
+    text-align: center;
+}
+.container-fluid {
+    margin-top: 2rem;
+}

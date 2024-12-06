@@ -20,9 +20,7 @@ public class ManageController {
     //----------유저관리 (/manage/user)----------
     //유저 전체 정보 얻기
     @GetMapping("/user")
-    public List<UserDto> getUserAll(){
-        return manageUserService.getUserAll();
-    }
+    public List<UserDto> getUserAll(){ return manageUserService.getUserAll(); }
 
     //유저 전체 정보 얻기
     @GetMapping("/user/{userno}")
@@ -44,10 +42,7 @@ public class ManageController {
 
     //잠긴 계정 정보 수정
     @PutMapping("/user/locked")
-    public boolean getLockedAll(@RequestBody List<UserForm> forms){
-        System.out.println("forms : "+forms.get(0).getUser_pk_num());
-        return manageUserService.unlockUser(forms);
-    }
+    public boolean getLockedAll(@RequestBody List<UserForm> forms){ return manageUserService.unlockUser(forms); }
 
     /* 반환 코드 정리
     1. 성공
@@ -79,7 +74,5 @@ public class ManageController {
 
     //사원 정보 수정
     @PutMapping("/user/{user_pk_num}")
-    public boolean updateUser(@ModelAttribute UserForm form){
-        return manageUserService.updateUser(form);
-    }
+    public boolean updateUser(@ModelAttribute UserForm form){ return manageUserService.updateUser(form); }
 }

@@ -54,6 +54,9 @@
     "bootstrap-icons": "^1.11.3",
     "chart.js": "2.9.4",
     "classnames": "2.3.2",
+    "dhtmlx-gantt": "^9.0.3",
+    "dhx-suite": "^9.0.0",
+    "jqwidgets-scripts": "^20.0.0",
     "date-fns": "^4.1.0",
     "moment": "2.29.4",
     "nouislider": "15.4.0",
@@ -69,6 +72,7 @@
     "react-router-dom": "6.21.1",
     "react-scripts": "5.0.1",
     "reactstrap": "^8.10.0",
+    "rsuite": "^5.74.2",
     "redux-persist": "^6.0.0",
     "sass": "1.69.5"
   },
