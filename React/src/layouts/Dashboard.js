@@ -29,7 +29,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import FreeHome from "components/2dashboard/Post/Free/FreeHome";
-import TemporaryHome from "components/2dashboard/Temporary/TemporaryHome";
+//import TemporaryHome from "components/2dashboard/Temporary/TemporaryHome";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -67,7 +67,7 @@ const Dashboard = (props) => {
           
         <Routes>
           <Route path="/free/*" element={<FreeHome />}/>
-          <Route path="/temporary/*" element={<TemporaryHome/>}/> 
+          {/* <Route path="/temporary/*" element={<TemporaryHome/>}/>  */}
        </Routes>
 
        </CardBody>

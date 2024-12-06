@@ -23,4 +23,13 @@ public interface PostRepository extends JpaRepository<PostEntity, Integer> {
 	@Modifying
     @Query("UPDATE PostEntity p SET p.postView = p.postView + 1 WHERE p.postPkNum = :postPkNum")
     int incrementView(@Param("postPkNum") Integer postPkNum);
+	
+	// 임시 저장된 게시글만 조회하는 쿼리 메서드 추가
+	List<PostEntity> findByPostTemp(int postTemp);
+
+	// 특정 ID의 임시 저장 게시글만 삭제
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM PostEntity p WHERE p.postTemp = 1 AND p.postPkNum = :postPkNum")
+	void deleteTemporaryById(@Param("postPkNum") int postPkNum);
 }
