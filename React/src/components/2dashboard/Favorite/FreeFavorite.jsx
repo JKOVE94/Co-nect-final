@@ -66,7 +66,7 @@ const FreeFavorite = () => {
                 <tr key={free.favor_id}>
                   <td>{free.post_pk_num}</td>
                   <td>
-                    <Link to={`/main/free/detail/${free.post_pk_num}`}>
+                    <Link to={`/main/free/detail/${free.post_pk_num}`}  state={{favorData : true}}>
                       {free.post_name}
                     </Link>
                   </td>
