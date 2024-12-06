@@ -25,6 +25,9 @@ public interface PostRepository extends JpaRepository<PostEntity, Integer> {
 	@Modifying
     @Query("UPDATE PostEntity p SET p.postView = p.postView + 1 WHERE p.postPkNum = :postPkNum")
     int incrementView(@Param("postPkNum") Integer postPkNum);
+
+	@Query("SELECT p FROM PostEntity p WHERE p.userEntity.userPkNum = ?1")
+	List<PostEntity> getPostByTaskFkUserNum(int task_fk_user_num);
 	
 	//검색 - post name
 	Page<PostEntity> findByPostNameContains(String searchText, Pageable pageable);

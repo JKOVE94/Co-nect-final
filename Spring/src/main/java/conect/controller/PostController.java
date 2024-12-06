@@ -1,11 +1,11 @@
 package conect.controller;
 
 import conect.data.dto.PostDto;
-import conect.data.dto.TemporaryDto;
+//import conect.data.dto.TemporaryDto;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
 import conect.service.board.post.PostService;
-import conect.service.board.temporary.TempService;
+//import conect.service.board.temporary.TempService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

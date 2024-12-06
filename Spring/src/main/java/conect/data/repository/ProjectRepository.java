@@ -1,5 +1,6 @@
 package conect.data.repository;
 
+import conect.data.entity.PostEntity;
 import conect.data.entity.ProjectEntity;
 import conect.data.entity.TaskEntity;
 
@@ -23,6 +24,11 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity,Integer> 
 	 
 	 @Query("SELECT p FROM ProjectEntity p WHERE p.userEntity.userPkNum = ?1")
 	    List<ProjectEntity> getProjByTaskFkUserNum(int task_fk_user_num);
+
+
+
+
+
 
 
 }
