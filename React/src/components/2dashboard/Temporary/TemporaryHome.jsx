@@ -1,26 +1,18 @@
-
-
-// import { Route, Routes, useNavigate, userNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 // import ProjectTemporaryUpdate from "./ProjectTemporaryUpdate";
-// import AllTemporaryList from "./AllTemporaryList";
-// import FreeTemporaryUpdate from "./FreeTemporaryUpdate";
+import AllTemporaryList from "./AllTemporaryList";
+import FreeTemporaryUpdate from "./FreeTemporaryUpdate";
 
+const TemporaryHome = () => {
+  return (
+    <Routes>
+      {/* 기본 경로에서 AllTemporaryList를 보여줌 */}
+      <Route index element={<AllTemporaryList />} />
+      {/* 개별 경로 */}
+      <Route path="update/:postPkNum" element={<FreeTemporaryUpdate />} />
+    {/*   <Route path="projecttemporaryupdate/:postPkNum" element={<ProjectTemporaryUpdate />} /> */}
+    </Routes>
+  );
+};
 
-// const FreeHome = () => {
-//   const navi = useNavigate();
-//   const move = () =>{
-//     navi("/main/FreeTemporaryUpdate/list");
-//   }
-//   return (
-//     <div>
-//      <Routes>
-//        {/* /home/free/create */}
-//           <Route path="/" element={<AllTemporaryList />} />
-//           <Route path="/freetemporaryupdate/:postPkNum" element={<FreeTemporaryUpdate />} />
-//           <Route path="/projecttemporaryupdate/:postPkNum" element={<ProjectTemporaryUpdate />} />
-//     </Routes>
-//     </div>
-//   );
-// };
-
-// export default FreeHome;
+export default TemporaryHome;

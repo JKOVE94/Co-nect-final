@@ -28,10 +28,7 @@ const CommonNavbar = () => {
             </SubMenu>
             <SubMenu label="업무관리" icon={<i className="ni ni-calendar-grid-58 text-warning text-sm opacity-10" />}>
               <NavItem>
-                <NavLink to="" tag={NavLinkRRD}>일정관리</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="" tag={NavLinkRRD}>임시저장</NavLink>
+                <NavLink to="/main/temp" tag={NavLinkRRD}>임시저장</NavLink>
               </NavItem>
             </SubMenu>
           </Menu>

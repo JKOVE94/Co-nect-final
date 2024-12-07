@@ -5,7 +5,6 @@ import { format } from "date-fns"; // 날짜 포맷팅
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const FreeList = () => {
- 
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -15,8 +14,9 @@ const FreeList = () => {
   const navigate = useNavigate();
 
   const fetchPosts = (page, block) => {
+    // post_temp=0 조건을 추가하여 필터링
     axios
-      .get(`/board/free?page=${page}&pageBlock=${block}`)
+      .get(`/board/free?page=${page}&pageBlock=${block}&post_temp=0`) // post_temp=0 추가
       .then((res) => {
         setPosts(res.data.posts);
         setCurrentPage(res.data.currentPage);
@@ -57,12 +57,12 @@ const FreeList = () => {
   };
 
   return (
-    <Container fluid style={{ Height: "40em", marginTop: "1em" }}>
-      <Card style={{ Height: "40em", overflowY: "auto" }}>
+    <Container fluid style={{ height: "40em", marginTop: "1em" }}>
+      <Card style={{ height: "40em", overflowY: "auto" }}>
         <CardHeader>
           <h2>자유 게시판</h2>
         </CardHeader>
-        <CardBody style={{ Height: "40em", overflowY: "auto" }}>
+        <CardBody style={{ height: "40em", overflowY: "auto" }}>
           <table className="table" style={{ fontSize: "1.2rem" }}>
             <thead>
               <tr>
