@@ -13,11 +13,15 @@ import {
   CardBody,
   CardHeader,
 } from "reactstrap";
+import ReactMention from "variables/mention/ReactMention";
 
 const ProjCreate = () => {
   const navigate = useNavigate();
   const { projPkNum } = useParams(); // URL에서 projPkNum 가져오기
   const writer = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
+
+  //멘션
+  const [userId, setUserId] = useState("");
 
   // 프로젝트 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
@@ -45,7 +49,6 @@ const ProjCreate = () => {
         console.error("부서 목록 가져오기 실패:", error);
       }
     };
-
     fetchDepartments();
   }, []);
 
@@ -67,18 +70,18 @@ const ProjCreate = () => {
     console.log("Navigating to:", `/main/proj/projread/${projPkNum}`); // 이동할 페이지
 
     // API 호출
-    try {
-      const response = await axios.post("/proj/projadd", formData);
-      const projPkNum = response.data;
+    // try {
+    //   const response = await axios.post("/proj/projadd", formData);
+    //   const projPkNum = response.data;
 
-      // 상태값과 함께 ProjRead로 navigate
-      navigate(`/main/proj/projread/${projPkNum}`, {
-        state: { actionType: "create" },
-      });
-    } catch (error) {
-      console.error("프로젝트 생성 실패:", error);
-      alert("프로젝트 생성에 실패했습니다.");
-    }
+    //   // 상태값과 함께 ProjRead로 navigate
+    //   navigate(`/main/proj/projread/${projPkNum}`, {
+    //     state: { actionType: "create" },
+    //   });
+    // } catch (error) {
+    //   console.error("프로젝트 생성 실패:", error);
+    //   alert("프로젝트 생성에 실패했습니다.");
+    // }
   };
 
   // 목록 버튼 클릭 시 목록으로 이동
@@ -178,7 +181,7 @@ const ProjCreate = () => {
               담당자
             </Label>
             <Col sm={10}>
-              <Input
+              {/* <Input
                 type="text"
                 name="proj_members"
                 id="proj_members"
@@ -186,7 +189,12 @@ const ProjCreate = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="담당자를 입력하세요"
-              />
+              /> */}
+              <ReactMention 
+                value={formData.proj_members}
+                onChange={(e) => handleInputChange({ target: { name: "proj_members", value: e.target.value } })}
+                text="담당자를 입력하세요"
+                />
             </Col>
           </FormGroup>
 

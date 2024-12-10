@@ -26,11 +26,6 @@ const CalEventShowModal = ({
       todo_tagcol: info.tagcol || "#000000",
     });
     setRead(true);
-    // if (info.groupId === "0") {
-    //   setRead(true);
-    // } else {
-    //   setRead(false);
-    // }
   }, [isOpen, onClose, info, getEvent, handleToast, num]);
 
   const handleChange = (e) => {
