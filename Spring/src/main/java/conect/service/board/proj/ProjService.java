@@ -7,6 +7,7 @@ import conect.data.form.ProjectForm;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 
@@ -19,6 +20,10 @@ public interface ProjService {
 
 	// 로그인한 사용자가 참여하고 있는 프로젝트 반환 - Calendar
 	List<ProjectDto> getScheduleAll(int usernum);
+	
+	// 검색
+	Set<String> getStatusAll(int compNum);
+	List<ProjectDto> getSearchData(String status, String title);
 
 	List<ProjectDto> getListAll();
 

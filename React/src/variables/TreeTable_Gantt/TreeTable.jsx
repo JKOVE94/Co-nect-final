@@ -9,8 +9,8 @@ const TreeTable = (props) => {
   const [dateValue, setDateValue] = useState(""); // 날짜 값을 관리하는 상태
 
   const convertToTree = (data) => {
-    const map = {};
-    const roots = [];
+    const map = {}; // task_pk_num을 key로 사용하여 taskdatas를 저장
+    const roots = []; //루트 노드 저장 (부모 노드)
 
     data.forEach((item) => {
       map[item.task_pk_num] = { ...item, children: [] };
@@ -18,6 +18,9 @@ const TreeTable = (props) => {
 
     data.forEach((item) => {
       if (item.task_fk_task_num) {
+        if (!map[item.task_fk_task_num].children) {
+          map[item.task_fk_task_num].children = [];
+        }
         map[item.task_fk_task_num].children.push(map[item.task_pk_num]);
       } else {
         roots.push(map[item.task_pk_num]);
@@ -37,21 +40,21 @@ const TreeTable = (props) => {
     const updatedData = {
       ...rowData,
       [key]: newValue,
-      task_updated: new Date().toISOString().split("T")[0], // Assuming task_updated is the current date
+      task_updated: new Date().toISOString().split("T")[0], // ISO 8601 형식의 날짜 문자열   "2011-10-05T14:48:00.000Z" 그래서 split("T")[0]을 사용하여 날짜만 가져옴
     };
-    props.setUpdatedData(updatedData);
+    props.setUpdatedData({ tree: updatedData });
     const updatedTaskdatas = props.taskdatas.map((task) =>
       task.task_pk_num === rowData.task_pk_num ? updatedData : task
     );
-    props.setTaskdatas(updatedData);
+    props.setTaskdatas(updatedTaskdatas);
   };
+
   useEffect(() => {
     convertToTree(props.taskdatas);
   }, [props.taskdatas]);
 
   const handleDateBlur = () => {
     setEditing(null);
-    // 여기서 서버로 업데이트된 날짜를 전송할 수 있습니다.
   };
 
   // 삭제 버튼 클릭 시 실행되는 함수
@@ -75,7 +78,7 @@ const TreeTable = (props) => {
         data={treeData}
         expandColumnKey="task_title" // 트리 토글을 표시할 열의 키
         renderTreeToggle={(icon, rowData) => {
-          if (rowData.children && rowData.children.length === 0) {
+          if (!rowData.children || rowData.children.length === 0) {
             return null; // 자식이 없는 노드의 경우 토글 버튼을 표시하지 않음
           }
           return icon; // 자식이 있는 노드의 경우 토글 버튼을 표시
@@ -89,7 +92,7 @@ const TreeTable = (props) => {
           <HeaderCell style={{ textAlign: "center" }}>업무명</HeaderCell>
           <Cell dataKey="task_title" />
         </Column>
-        <Column width={300}>
+        <Column width={270}>
           <HeaderCell style={{ textAlign: "center" }}>업무 설명</HeaderCell>
           <Cell dataKey="task_desc" />
         </Column>
@@ -131,7 +134,7 @@ const TreeTable = (props) => {
                   }}
                   onClick={() => handleDateClick(rowData, "task_startdate")}
                 >
-                  <span>{rowData.task_created || "날짜를 입력하세요"}</span>
+                  <span>{rowData.task_startdate || "날짜를 입력하세요"}</span>
                 </div>
               )
             }

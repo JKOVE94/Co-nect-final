@@ -47,7 +47,7 @@ const Dashboard = (props) => {
   }, [location]);
 
   // 조건부 렌더링을 위한 변수 설정
-  const isProjReadPath = location.pathname.includes("/proj/projread");
+  const isProjReadPath = location.pathname.includes("/proj/projdetail");
 
   return (
     <>

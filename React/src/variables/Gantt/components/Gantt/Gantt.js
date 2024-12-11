@@ -110,10 +110,8 @@ componentDidMount() {
     gantt.parse(tasks);
 
        gantt.attachEvent("onAfterTaskUpdate", (id, item) => {
-            if (this.props.onTaskUpdate) {
-                this.props.onTaskUpdate(id, item);
-            }
-        });
+                this.props.setUpdatedData({"gantt":item});
+            });
 
         gantt.attachEvent("onAfterTaskAdd", (id, item) => {
             if (this.props.onTaskAdd) {
@@ -121,9 +119,7 @@ componentDidMount() {
             }
         });
           gantt.attachEvent("onAfterTaskDelete", (id) => {
-            if (this.props.setDeleteTarget) {
                 this.props.setDeleteTarget(id);
-            }
         });
 }
 

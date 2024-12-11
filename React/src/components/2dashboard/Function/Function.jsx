@@ -35,7 +35,7 @@ const Function = () => {
           starttime: data.proj_startdate,
           endtime: data.proj_enddate,
           groupId: 0,
-          color: data.proj_tagcol,
+          color: data.proj_tagcol || "#b0e0e6",
           editable: false,
         }));
 
@@ -79,7 +79,7 @@ const Function = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col md={4} style={{ marginTop: "2rem" }}>
+          <Col md={4} >
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
                 <MySchedule events={events} />

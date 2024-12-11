@@ -13,10 +13,10 @@ const ProjectHome = () => {
   return (
     <div>
       <Routes>
-        {/* /home/proj/projdetail/:projPkNum */}
+        {/* /main/proj/projdetail/:projPkNum */}
         <Route path="/projlist" element={<ProjList />} />
         <Route path="/projadd" element={<ProjCreate />} />
-        <Route path="/projdetail/:projPkNum" element={<ProjDetail />} />
+        <Route path="/projdetail/:projPkNum/*" element={<ProjDetail />} />
         <Route path="/projedit/:projPkNum" element={<ProjUpdate />} />
       </Routes>
     </div>

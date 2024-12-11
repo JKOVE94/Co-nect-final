@@ -16,7 +16,7 @@ export default class Toolbar extends Component {
         };
 
         return (
-            <div className="tool-bar" style={{display:"flex", justifyContent:"flex-end", marginBottom:"1em"}}>
+            <div className="tool-bar" style={{display:"flex", justifyContent:"flex-end", marginBottom:"1em", marginRight:"1.8em"}}>
                 <b>시간 범위 선택:&nbsp; </b>
                 <select value={this.props.zoom} onChange={this.handleZoomChange}>
                     {Object.keys(names).map((key) => (

@@ -12,6 +12,7 @@ const {
   CardBody,
   Table,
   CardHeader,
+  Pagination,
 } = require("react-bootstrap");
 
 const ProjFavorite = () => {
@@ -19,35 +20,50 @@ const ProjFavorite = () => {
   const [favorProj, setFavorProj] = useState([{}]);
   const navigate = useNavigate();
 
+  //페이징
+  const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    getData();
+  }, [currentPage]);
+
   const getData = () => {
     axios
-      .get("/favorite/proj/" + num)
+      .get(`/favorite/proj/${num}`, {
+        params: {
+          size: 10,
+          page: currentPage,
+        },
+      })
       .then((res) => {
         //유저의 즐겨찾기 목록을 불러와 favorPorj에 저장
         setFavorProj(res.data);
       })
-      .catch();
+      .catch((err) => navigate("/error"));
   };
 
-  useEffect(() => {
-    getData();
-  }, [num]);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber - 1);
+  };
 
   const handleClick = (num) => {
-    axios.delete("/favorite/"+num)
-    .then((res)=>{
-      if(res.data){
-        getData(); //삭제 성공 후 데이터 다시 불러오기
-      }
-    })
-    .catch();
-  }
+    axios
+      .delete("/favorite/" + num)
+      .then((res) => {
+        if (res.data) {
+          getData(); //삭제 성공 후 데이터 다시 불러오기
+        }
+      })
+      .catch();
+  };
 
   return (
     <Container fluid className={style.container}>
       <Card className="mx-auto">
-          <CardHeader><h2>즐겨찾기 - 프로젝트</h2></CardHeader>
-          <CardBody className="p-10">
+        <CardHeader>
+          <h2>즐겨찾기 - 프로젝트</h2>
+        </CardHeader>
+        <CardBody className="p-10">
           <Table>
             <thead>
               <tr>
@@ -62,26 +78,61 @@ const ProjFavorite = () => {
               </tr>
             </thead>
             <tbody>
-              {favorProj.length >0 ? favorProj.map((proj) => (
-                <tr key={proj.favor_id}>
-                  <td>{proj.proj_pk_num}</td>
-                  <td>
-                    <Link to={`/main/proj/projread/${proj.proj_pk_num}`}>
-                      {proj.proj_name}
-                    </Link>
-                  </td>
-                  <td>{proj.proj_tag}</td>
-                  <td>{proj.user_name}</td>
-                  <td>{proj.proj_import}</td>
-                  <td>{moment(proj.proj_startdate).format("YYYY-MM-DD")}</td>
-                  <td>{moment(proj.proj_enddate).format("YYYY-MM-DD")}</td>
-                  <td>
-                    <Card.Link className={style.link} onClick={() => handleClick(proj.favor_id)}>&times;</Card.Link>
-                  </td>
+              {favorProj.totalElements > 0 ? (
+                favorProj.content.map((proj) => (
+                  <tr key={proj.favor_id}>
+                    <td>{proj.proj_pk_num}</td>
+                    <td>
+                      <Link to={`/main/proj/projdetail/${proj.proj_pk_num}`}>
+                        {proj.proj_name}
+                      </Link>
+                    </td>
+                    <td>{proj.proj_tag}</td>
+                    <td>{proj.user_name}</td>
+                    <td>{proj.proj_import}</td>
+                    <td>{moment(proj.proj_startdate).format("YYYY-MM-DD")}</td>
+                    <td>{moment(proj.proj_enddate).format("YYYY-MM-DD")}</td>
+                    <td>
+                      <Card.Link
+                        className={style.link}
+                        onClick={() => handleClick(proj.favor_id)}
+                      >
+                        &times;
+                      </Card.Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7}>즐겨찾기 등록된 글이 없습니다.</td>
                 </tr>
-              )) : <tr><td colSpan={7}>즐겨찾기 등록된 글이 없습니다.</td></tr>}
+              )}
             </tbody>
           </Table>
+          <Pagination className="justify-content-center">
+            <Pagination.Item
+              onClick={() => handlePageChange(currentPage)}
+              disabled={currentPage === 0}
+            >
+              {" "}
+              {"<<"}{" "}
+            </Pagination.Item>
+            {[...Array(favorProj.totalPages)].map((num, index) => (
+              <Pagination.Item
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Item
+              onClick={() => handlePageChange(currentPage + 2)}
+              disabled={currentPage === favorProj.totalPages - 1}
+            >
+              {" "}
+              {">>"}{" "}
+            </Pagination.Item>
+          </Pagination>
         </CardBody>
       </Card>
     </Container>

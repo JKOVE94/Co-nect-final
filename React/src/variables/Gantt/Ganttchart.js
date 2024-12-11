@@ -83,7 +83,7 @@ class Ganttchart extends Component {
             task_updated: new Date().toISOString().split('T')[0] // Assuming task_updated is the current date
         } : t
     );
-    console.log(updatedTasks);
+    // console.log(updatedTasks);
     this.props.setTaskdatas(updatedTasks);
     }
 
@@ -139,6 +139,8 @@ class Ganttchart extends Component {
         gantt.parse(ganttData);
     }
 
+    
+
     render() {
         const { currentZoom, messages } = this.state;
         const { taskdatas } = this.props;
@@ -160,6 +162,8 @@ class Ganttchart extends Component {
                         zoom={this.state.currentZoom}
                         onTaskUpdate={this.handleTaskUpdate}
                         onTaskAdd={this.handleTaskAdd}
+                        setDeleteTarget={this.props.setDeleteTarget}
+                        setUpdatedData={this.props.setUpdatedData}
                     />
                 </div>
                 {/* <MessageArea messages={messages} /> */}

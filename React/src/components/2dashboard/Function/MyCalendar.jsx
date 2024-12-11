@@ -84,6 +84,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
         editable={true} // 이벤트 수정 가능
         eventResizableFromStart={true}
         dayMaxEventRows={3}
+        height='auto'
         headerToolbar={{
           start: "today", //오늘날짜, 이전달, 다음달 버튼
           center: "title", //현재 달

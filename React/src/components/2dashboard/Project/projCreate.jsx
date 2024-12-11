@@ -64,10 +64,10 @@ const ProjCreate = () => {
   // 폼 제출 시 실행 (현재는 실제 API 호출 없이 콘솔 로그로만 처리)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // 폼 데이터 출력
-    console.log("Submitted formData:", formData);
-    console.log("Response data from server:", projPkNum); // 서버에서 응답 받은 프로젝트 번호
-    console.log("Navigating to:", `/main/proj/projread/${projPkNum}`); // 이동할 페이지
+    // console.log(formData); // 폼 데이터 출력
+    // console.log("Submitted formData:", formData);
+    // console.log("Response data from server:", projPkNum); // 서버에서 응답 받은 프로젝트 번호
+    // console.log("Navigating to:", `/main/proj/projread/${projPkNum}`); // 이동할 페이지
 
     // API 호출
     // try {
