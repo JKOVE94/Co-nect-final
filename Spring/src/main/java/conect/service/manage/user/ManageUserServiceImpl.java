@@ -79,6 +79,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         }
         return imgUrl;
     }
+    
     @Override
     public boolean deleteImage(int user_pk_num) {
         UserEntity user = userRepository.findById(user_pk_num).get();
