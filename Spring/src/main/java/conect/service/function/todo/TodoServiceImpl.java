@@ -1,12 +1,16 @@
 package conect.service.function.todo;
 
+import conect.data.dto.ShareDto;
 import conect.data.dto.TodoDto;
+import conect.data.entity.ShareEntity;
 import conect.data.entity.TodoEntity;
 import conect.data.form.TodoForm;
+import conect.data.repository.ShareRepository;
 import conect.data.repository.TodoRepository;
 import conect.data.repository.UserRepository;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +22,41 @@ public class TodoServiceImpl implements TodoService {
     private TodoRepository todoRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ShareRepository shareRepository;
     
     
     @Override
     public List<TodoDto> getTodoAll(int usernum) {
-    	return todoRepository.findByUser_UserPkNum(usernum)
-        			.stream().map(TodoDto::fromEntity).toList();
+    	
+    	//로그인한 사원의 개인일정목록
+    	List<TodoEntity> todoList = todoRepository.findByUser_UserPkNum(usernum);
+    	
+    	//공유된 일정목록
+    	List<ShareEntity> list = shareRepository.findAll();
+    	
+    	//로그인한 사원에게 공유된 일정인 경우 todoList에 추가
+    	for(ShareEntity share:list) {
+    		String userList = share.getShareUser();
+    		StringTokenizer token = new StringTokenizer(userList, ",");
+
+    		while(token.hasMoreTokens()) {
+    			if(Integer.parseInt(token.nextToken()) == usernum) {
+    				todoList.add(share.getTodo());
+    			}
+    		}
+    	}
+    	
+    	List<TodoDto> todo = todoList.stream().map(TodoDto::fromEntity).toList();
+    	for(TodoDto dto : todo) {
+    		if(dto.getShareUser() != null) {
+    			dto.setSharer(userRepository.findById(dto.getTodo_fk_user_num()).get().getUserName());
+
+    			
+    		}
+    	}
+    	
+    	return todo;
     }
     
     @Override

@@ -8,12 +8,16 @@ import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import CalEventEditModal from "variables/Modal/CalEventEditModal";
 
 const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
-  const [showModalIsOpen, setShowModalIsOpen] = useState(false); //modal 표시 여부
-  const [modalContent, setModalContent] = useState({}); //modal 내용
-  const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트 추가 modal 표시 여부
 
+  const [showModalIsOpen, setShowModalIsOpen] = useState(false); //상세보기 modal
+  const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트추가 modal
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false); //이벤트수정 modal
+
+  const [modalContent, setModalContent] = useState({}); //modal 내용
+  
   const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
   const navigate = useNavigate();
 
@@ -25,26 +29,35 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
 
   const renderEventContent = (info) => {
     //표시될 타이틀
+    //공유된 일정인 경우 타이틀에 [공유] 표기
     return (
       <div>
-        <span>{info.event.title}</span>
+        {info.event.extendedProps.sharer !== num ?
+        <span>[공유] {info.event.title}</span>
+        :<span>{info.event.title}</span>
+      }
       </div>
     );
   };
 
   const handleEventClick = (info) => {
-    //이벤트 클릭시 modal 열기
     setModalContent({
       //modal에 표시될 내용
-      title: info.event.title,
-      content: info.event.extendedProps.content,
-      start: setTime(info.event.extendedProps.starttime),
-      end: setTime(info.event.extendedProps.endtime),
-      groupId: info.event.groupId,
-      id: info.event.id,
-      tagcol: info.event.backgroundColor,
+      title: info.event.title, //제목
+      content: info.event.extendedProps.content, //내용
+      start: setTime(info.event.extendedProps.starttime), //시작일
+      end: setTime(info.event.extendedProps.endtime), //종료일
+      id: info.event.id, //일정 pk num
+      sharer:info.event.extendedProps.sharer, //일정 작성자(공유자)
+      shared:info.event.extendedProps.shared, //일정 공유된 사람 목록
+      tagcol: info.event.backgroundColor, //일정 색깔
     });
-    setShowModalIsOpen(true);
+
+    if(info.event.extendedProps.sharer === num){
+      setEditModalIsOpen(true);
+    } else {
+      setShowModalIsOpen(true);
+    }
   };
 
   const handleEventChange = async (info) => {
@@ -115,12 +128,21 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
         handleToast={handleToast}
       />
 
+      <CalEventEditModal
+        isOpen={editModalIsOpen}
+        onClose={() => setEditModalIsOpen(false)}
+        getEvent={handleGetEvent}
+        info={modalContent}
+        handleToast={handleToast}
+      />
+
       <CalEventAddModal
         isOpen={addModalIsOpen}
         onClose={() => setAddModalIsOpen(false)}
         getEvent={handleGetEvent}
         handleToast={handleToast}
       />
+
     </>
   );
 };

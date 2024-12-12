@@ -8,75 +8,17 @@ import style from '../../assets/css/2dashboard/calendar.module.css'
 const CalEventShowModal = ({
   isOpen,
   onClose,
-  info,
-  getEvent,
-  handleToast
+  info
 }) => {
-  const num = useSelector((state) => state.userData.user_pk_num);
-  const [data, setData] = useState({});
-  const [read, setRead] = useState(); //수정 가능 여부
-
-  useEffect(() => {
-    setData({
-      todo_fk_user_num: num,
-      todo_title: info.title || "",
-      todo_content: info.content || "",
-      todo_start: info.start || "",
-      todo_end: info.end || "",
-      todo_tagcol: info.tagcol || "#000000",
-    });
-    setRead(true);
-  }, [isOpen, onClose, info, getEvent, handleToast, num]);
-
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.id]: e.target.value });
-  };
-
-  const handleUpdateForm = () => {
-    setRead(false);
-  };
-
-  const handleUpdate = () => {
-    axios
-      .put("/function/schedule/" + info.id, data)
-      .then((res) => {
-        if (res.data) {
-          handleToast("update", true);
-          getEvent();
-        }
-      })
-      .catch((err) => navigator(`/error`));
-    onClose();
-  };
-
-  const handleDelete = () => {
-    axios
-      .delete("/function/schedule/" + info.id)
-      .then((res) => {
-        if (res.data) {
-          handleToast("del", true);
-          getEvent();
-        }
-      })
-      .catch((err) => navigator(`/error`));
-    onClose();
-  };
-
+  useEffect(()=>{
+    console.log(info);
+  })
+  
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
         <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
-          <Col md='100%' style={{fontSize:'1.5rem'}}>일정 수정</Col>
-          <Col md={5}>
-            <Form.Control
-              value={data.todo_tagcol}
-              type="color"
-              id="todo_tagcol"
-              onChange={handleChange}
-              style={{width:'45px'}}
-              disabled={read}
-            />
-          </Col>
+          <Col md='100%' style={{fontSize:'1.5rem'}}>일정 상세</Col>
           <Button className={style.modalCloseBtn} variant="link" onClick={onClose}>
             &times;
           </Button>
@@ -88,9 +30,8 @@ const CalEventShowModal = ({
           <Form.Control
             type="text"
             id="todo_title"
-            value={data.todo_title}
-            onChange={handleChange}
-            disabled={read}
+            value={info.title}
+            disabled
           />
         </Form.Group>
         <Form.Group className="mb-2">
@@ -99,9 +40,8 @@ const CalEventShowModal = ({
             as="textarea"
             rows={10}
             id="todo_content"
-            value={data.todo_content}
-            onChange={handleChange}
-            disabled={read}
+            value={info.content}
+            disabled
           />
         </Form.Group>
         <Form.Group className="mb-2">
@@ -109,37 +49,33 @@ const CalEventShowModal = ({
           <Form.Control
             type="datetime-local"
             id="todo_start"
-            value={data.todo_start}
-            onChange={handleChange}
-            disabled={read}
+            value={info.start}
+            disabled
           />
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>종료일</Form.Label>
           <Form.Control
             type="datetime-local"
-            value={data.todo_end}
+            value={info.end}
             id="todo_end"
-            onChange={handleChange}
-            disabled={read}
+            disabled
+          />
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>공유자</Form.Label>
+          <Form.Control
+            type="text"
+            id="todo_title"
+            value={info.sharer}
+            disabled
           />
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>
-        {info.groupId === "0" ? (
-          <Container className={style.textinfo}>
-            프로젝트 일정은 수정할 수 없습니다
-          </Container>
-        ) : (
-          <>
-            {read ? (
-              <Button onClick={handleUpdateForm}>수정</Button>
-            ) : (
-              <Button onClick={handleUpdate}>수정확인</Button>
-            )}
-            <Button onClick={handleDelete}>삭제</Button>
-          </>
-        )}
+        <Container className={style.textinfo}>
+          공유된 일정입니다.
+        </Container>
       </Modal.Footer>
     </Modal>
   );
