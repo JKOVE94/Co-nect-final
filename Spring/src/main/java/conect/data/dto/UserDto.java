@@ -23,6 +23,7 @@ public class UserDto {
     private int user_fk_dpart_num; //사용자 부서번호 [FK, INT]
     private int user_fk_acc_authornum; //사용자 계정 권한 번호 [FK, INT]
     private int user_fk_comp_num; //사용자 회사 고유번호 [FK, INT] (랜딩 페이지에서 입력한 회사 번호가 모든 페이지에서 따라다닐수 있도록 redux에 설정
+    private String dpartName; //부서명
 
     public static UserDto fromEntity(UserEntity entity) {
         UserDto dto = new UserDto();
@@ -40,6 +41,7 @@ public class UserDto {
         dto.setUser_fk_dpart_num(entity.getDepartmentEntity().getDpartPkNum());
         dto.setUser_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
         dto.setUser_fk_acc_authornum(entity.getAccountEntity().getAccPkAuthornum());
+        dto.setDpartName(entity.getDepartmentEntity().getDpartName());
         return dto;
     }
 }

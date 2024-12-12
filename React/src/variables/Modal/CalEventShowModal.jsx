@@ -10,9 +10,6 @@ const CalEventShowModal = ({
   onClose,
   info
 }) => {
-  useEffect(()=>{
-    console.log(info);
-  })
   
   return (
     <Modal show={isOpen} onHide={onClose} centered>
@@ -66,7 +63,7 @@ const CalEventShowModal = ({
           <Form.Label>공유자</Form.Label>
           <Form.Control
             type="text"
-            id="todo_title"
+            id="shareUser"
             value={info.sharer}
             disabled
           />

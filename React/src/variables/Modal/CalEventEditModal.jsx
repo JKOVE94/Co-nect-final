@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from '../../assets/css/2dashboard/calendar.module.css'
+import ReactMention from "variables/mention/ReactMention";
 
 const CalEventEditModal = ({
   isOpen,
@@ -24,6 +25,7 @@ const CalEventEditModal = ({
       todo_start: info.start || "",
       todo_end: info.end || "",
       todo_tagcol: info.tagcol || "#000000",
+      shareUser:info.shared || ""
     });
     setRead(true);
   }, [isOpen, onClose, info, getEvent, handleToast, num]);
@@ -61,6 +63,7 @@ const CalEventEditModal = ({
       .catch((err) => navigator(`/error`));
     onClose();
   };
+
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
@@ -124,22 +127,25 @@ const CalEventEditModal = ({
             disabled={read}
           />
         </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>일정 공유</Form.Label>
+          <Form.Control
+            type="text"
+            id="shareUser"
+            value={data.shareUser}
+            disabled={read}
+          />
+        </Form.Group>
       </Modal.Body>
       <Modal.Footer>
-        {info.groupId === "0" ? (
-          <Container className={style.textinfo}>
-            프로젝트 일정은 수정할 수 없습니다
-          </Container>
-        ) : (
-          <>
-            {read ? (
-              <Button onClick={handleUpdateForm}>수정</Button>
-            ) : (
-              <Button onClick={handleUpdate}>수정확인</Button>
-            )}
-            <Button onClick={handleDelete}>삭제</Button>
-          </>
-        )}
+        <>
+          {read ? (
+            <Button onClick={handleUpdateForm}>수정</Button>
+          ) : (
+            <Button onClick={handleUpdate}>수정확인</Button>
+          )}
+          <Button onClick={handleDelete}>삭제</Button>
+        </>
       </Modal.Footer>
     </Modal>
   );

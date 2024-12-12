@@ -19,9 +19,6 @@ public class TodoDto {
     private String todo_tagcol;
     private int todo_fk_user_num; //투두리스트 작성자 [INT}
     private String shareUser; //일정 공유된 인원 목록
-    
-    private String sharer;
-    private String shared;
 
     public static TodoDto fromEntity(TodoEntity entity) {
         TodoDto dto = new TodoDto();

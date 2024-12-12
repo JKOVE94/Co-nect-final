@@ -35,6 +35,10 @@
 .sub{
   font-size : 0.8rem;
 }
+/*share schedule*/
+.ul{
+  list-style-type: none;
+}
 
 /*modal*/
 .modalCloseBtn{

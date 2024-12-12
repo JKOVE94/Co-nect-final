@@ -29,7 +29,7 @@ public class TodoEntity {
     @JsonIgnore
     private UserEntity user;
     
-    @OneToOne(mappedBy = "todo")
+    @OneToOne(mappedBy = "todo", cascade = CascadeType.REMOVE)
     private ShareEntity share;
     
 }

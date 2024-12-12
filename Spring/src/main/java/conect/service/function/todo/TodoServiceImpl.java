@@ -47,23 +47,22 @@ public class TodoServiceImpl implements TodoService {
     		}
     	}
     	
-    	List<TodoDto> todo = todoList.stream().map(TodoDto::fromEntity).toList();
-    	for(TodoDto dto : todo) {
-    		if(dto.getShareUser() != null) {
-    			dto.setSharer(userRepository.findById(dto.getTodo_fk_user_num()).get().getUserName());
-
-    			
-    		}
-    	}
-    	
-    	return todo;
+    	return todoList.stream().map(TodoDto::fromEntity).toList();
     }
     
     @Override
     public void addTodoData(TodoForm bean) {
+    	
 		TodoEntity entity = TodoForm.toEntity(bean);
 		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
-		todoRepository.save(entity);
+		TodoEntity todo = todoRepository.save(entity);
+		
+		if(bean.getShareUser() != null) {
+			ShareEntity share = new ShareEntity();
+			share.setTodo(todo);
+			share.setShareUser(bean.getShareUser());
+			shareRepository.save(share);
+		}
     }
     
     @Override

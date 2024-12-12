@@ -2,30 +2,47 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, CloseButton, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Modal } from "react-bootstrap";
 import style from '../../assets/css/2dashboard/calendar.module.css'
+import ReactMention from "variables/mention/ReactMention";
 
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버
   const [data, setData] = useState(); //전달할 데이터
+  const [mention, setMention] = useState(""); //멘션
   const [color, setColor] = useState("#318AAE");
 
-  useEffect(() => {
-    setData((pre) => ({ ...pre, todo_fk_user_num: num }));
-  }, [num]);
+  useEffect(()=>{
+    setData((pre) => ({ ...pre, todo_fk_user_num: num, todo_tagcol: color }));
+    handleMention();
+  },[mention, num])
 
   const handleChange = (e) => {
     if (e.target.id === "todo_tagcol") setColor(e.target.value);
-    setData({ ...data, [e.target.id]: e.target.value });
+    setData({ ...data, [e.target.id]: e.target.value});
   };
 
-  const handleClick = () => {
+  const handleMention = () => {
+    const regex = /\[.*?\]\((\d+)\)/g;
+    let matches;
+    const numbers = [];
+
+    while ((matches = regex.exec(mention)) !== null) {
+        numbers.push(matches[1]); 
+    }
+    let str = numbers.join(',');
+
+    setData((pre)=> ({...pre, 'shareUser':str}));
+  }
+
+  const handleClick = async () => {
     axios
       .post("/function/schedule", data)
       .then((res) => {
         if (res.data) {
           handleToast("add", true);
           getEvent();
+          setMention();
         }
       })
       .catch((err) => navigator(`/error`));
@@ -58,7 +75,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
       <Modal.Body>
         <Form.Group className="mb-2">
           <Form.Label>제목</Form.Label>
-          <Form.Control type="text" id="todo_title" onChange={handleChange} />
+          <Form.Control type="text" id="todo_title" onChange={handleChange} required/>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>내용</Form.Label>
@@ -75,6 +92,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
             type="datetime-local"
             id="todo_start"
             onChange={handleChange}
+            required
           />
         </Form.Group>
         <Form.Group className="mb-2">
@@ -83,6 +101,16 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
             type="datetime-local"
             id="todo_end"
             onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>일정 공유</Form.Label>
+          <ReactMention
+            id="share_user"
+            value={mention}
+            onChange={(e)=>setMention(e.target.value)}
+            text="공유할 사람을 입력해주세요"
           />
         </Form.Group>
       </Modal.Body>
