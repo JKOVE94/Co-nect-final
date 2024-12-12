@@ -8,6 +8,7 @@ import conect.data.form.TodoForm;
 import conect.data.repository.ShareRepository;
 import conect.data.repository.TodoRepository;
 import conect.data.repository.UserRepository;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -77,11 +78,15 @@ public class TodoServiceImpl implements TodoService {
     }
     
     @Override
+    @Transactional
     public boolean editTodoData(TodoForm bean) {
     	try {
     		TodoEntity entity = TodoForm.toEntity(bean);
     		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
-    		todoRepository.save(entity);
+    		TodoEntity todo = todoRepository.save(entity);
+    		if(bean.getShareUser() != null) {
+    			shareRepository.saveByTodo(bean.getShareUser(), todo.getTodoPkNum());
+    		}
     		return true;
     	} catch(Exception e) {
     		System.out.println(e.getMessage());

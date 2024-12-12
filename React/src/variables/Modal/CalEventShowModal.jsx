@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from '../../assets/css/2dashboard/calendar.module.css'
+import ReactMention from "variables/mention/ReactMention";
 
 const CalEventShowModal = ({
   isOpen,
@@ -61,11 +62,10 @@ const CalEventShowModal = ({
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>공유자</Form.Label>
-          <Form.Control
-            type="text"
+          <ReactMention
             id="shareUser"
-            value={info.sharer}
-            disabled
+            disabled={true}
+            selectId={info.sharer}
           />
         </Form.Group>
       </Modal.Body>

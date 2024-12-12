@@ -9,30 +9,20 @@ import ReactMention from "variables/mention/ReactMention";
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버
   const [data, setData] = useState(); //전달할 데이터
-  const [mention, setMention] = useState(""); //멘션
   const [color, setColor] = useState("#318AAE");
 
   useEffect(()=>{
     setData((pre) => ({ ...pre, todo_fk_user_num: num, todo_tagcol: color }));
-    handleMention();
-  },[mention, num])
+  },[num])
 
   const handleChange = (e) => {
     if (e.target.id === "todo_tagcol") setColor(e.target.value);
     setData({ ...data, [e.target.id]: e.target.value});
   };
 
-  const handleMention = () => {
-    const regex = /\[.*?\]\((\d+)\)/g;
-    let matches;
-    const numbers = [];
-
-    while ((matches = regex.exec(mention)) !== null) {
-        numbers.push(matches[1]); 
-    }
-    let str = numbers.join(',');
-
-    setData((pre)=> ({...pre, 'shareUser':str}));
+  const handleMention = (mention) => {
+    let str = mention.join(",").slice(0, -1); 
+    setData({...data,shareUser:str});
   }
 
   const handleClick = async () => {
@@ -42,7 +32,6 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
         if (res.data) {
           handleToast("add", true);
           getEvent();
-          setMention();
         }
       })
       .catch((err) => navigator(`/error`));
@@ -107,9 +96,8 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
         <Form.Group className="mb-2">
           <Form.Label>일정 공유</Form.Label>
           <ReactMention
-            id="share_user"
-            value={mention}
-            onChange={(e)=>setMention(e.target.value)}
+            id="shareUser"
+            onMention={handleMention}
             text="공유할 사람을 입력해주세요"
           />
         </Form.Group>

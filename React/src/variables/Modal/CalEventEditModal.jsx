@@ -38,6 +38,11 @@ const CalEventEditModal = ({
     setRead(false);
   };
 
+  const handleMention = (mention) => {
+    let str = mention.join(",");
+    setData({...data,shareUser:str});
+  }
+
   const handleUpdate = () => {
     axios
       .put("/function/schedule/" + info.id, data)
@@ -63,7 +68,6 @@ const CalEventEditModal = ({
       .catch((err) => navigator(`/error`));
     onClose();
   };
-
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
@@ -128,12 +132,12 @@ const CalEventEditModal = ({
           />
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>일정 공유</Form.Label>
-          <Form.Control
-            type="text"
+          <Form.Label>참석자</Form.Label>
+          <ReactMention
             id="shareUser"
-            value={data.shareUser}
             disabled={read}
+            onMention={handleMention}
+            userList={info.shared}
           />
         </Form.Group>
       </Modal.Body>

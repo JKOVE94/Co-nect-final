@@ -11,10 +11,12 @@ import lombok.Setter;
 @Entity
 @Table(name = "share")
 public class ShareEntity {
-   @Id
+	@Id
+   @Column(name = "share_user")
    private String shareUser; // 공유된 사원 목록
    
    @OneToOne
    @JoinColumn(name="share_fk_todo_num")
    private TodoEntity todo;
 }
+
