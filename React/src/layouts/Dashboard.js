@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import ProjStatus from "components/TempComp/ProjStatus";
 import Projtable from "components/TempComp/ProjTable";
-import MainComponent from "components/MainComponent"
+import MainComponent from "components/MainComponent";
 import ProjectHome from "components/2dashboard/Project/ProjectHome";
 import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
 import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
@@ -23,14 +23,11 @@ import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 import Function from "components/2dashboard/Function/Function";
 import FreeHome from "components/2dashboard/Free/FreeHome";
 
-
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const user = useSelector((state) => state.userData);
-  
-  
 
   useEffect(() => {
     if (user.user_pk_num === 0) {
@@ -47,7 +44,7 @@ const Dashboard = (props) => {
   }, [location]);
 
   // 조건부 렌더링을 위한 변수 설정
-  const isProjReadPath = location.pathname.includes("/proj/projread");
+  const isProjReadPath = location.pathname.includes("/projdetail");
 
   return (
     <>
@@ -67,7 +64,7 @@ const Dashboard = (props) => {
         <Routes>
           <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
-          <Route path="/proj/*" element={<ProjectHome />}/>
+          <Route path="/proj/*" element={<ProjectHome />} />
           <Route path="/free/*" element={<FreeHome />} />
           <Route path="/projfavorite" element={<ProjFavorite />} />
           <Route path="/freefavorite" element={<FreeFavorite />} />

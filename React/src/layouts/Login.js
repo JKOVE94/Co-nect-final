@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useState, useEffect } from "react";
 import "assets/landing/css/login.css";
 import ConectTextLogo from "assets/img/logo/ConectTextLogo";
@@ -41,6 +23,7 @@ const Login = (props) => {
   const [errType, setErrType] = useState(0); //로그인 실패시 에러타입 설정
   const [data, setData] = useState({}); //로그인 성공시 데이터 저장
   const navigate = useNavigate();
+  const [isReversed, setIsReversed] = useState(false); //로그인 성공시 역방향 트랜스폼
 
   const toggle = () => {
     setIsSignIn((prev) => !prev);
@@ -81,13 +64,6 @@ const Login = (props) => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      /*
-      res에 담기는 정보
-      comp_pk_num; //회사번호
-      user_pk_num; //사번
-      status; //로그인 상태 번호로 표시 1 성공, 2 : 정보 불일치, 3 : 잠긴 계정
-      user_trynum; //유저가 로그인 시도 횟수
-      */
       let res = await axios.post("/login", loginInfo);
       const responseData = res.data;
       await setData(responseData);
@@ -96,30 +72,30 @@ const Login = (props) => {
         dispatch(LOGIN(responseData));
         let dpartsInfo = await axios.get("/login/departs");
         dispatch(SET_DPARTINFO(dpartsInfo.data));
-        navigate("/main");
+        setIsReversed(true); // 역방향 트랜스폼 적용
+        setTimeout(() => {
+          navigate("/ProjSel");
+        }, 1000); // 트랜지션 시간에 맞춰 조정
       } else if (res.data.status === 2) {
         //로그인 실패(정보 불일치)
         setErrType(res.data.status);
         toggleShowA();
-        //정보 불일치 => toast로 실패 알림 / 로그인 시도횟수 안내
       } else if (res.data.status === 3) {
         //잠긴계정
         setErrType(res.data.status);
         handleShowM();
-
-        //잠긴계정 => modal로 잠긴계정 안내
       }
     } catch (error) {
-      //로그인 실패에 대한 정보도 상태정보에 담겨있기 때문에 해당 에러는 서버와의 연결문제
       console.error("로그인 실패:", error);
     }
   };
+
   return (
     <>
       <div
         className={`login-container ${
           isFirst ? "" : isSignIn ? "sign-in" : "sign-up"
-        }`}
+        } ${isReversed ? "reverse" : ""}`}
       >
         <div className="row">
           <div className="col align-items-center flex-col sign-up">

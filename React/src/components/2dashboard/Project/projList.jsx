@@ -113,7 +113,7 @@ const ProjectTable = () => {
   };
 
   const handleChange = (e) => {
-    if(e.target.id === 'proj_status'){
+    if (e.target.id === "proj_status") {
       setSearchType(e.target.value);
     } else {
       setSearchText(e.target.value.trim());
@@ -121,14 +121,15 @@ const ProjectTable = () => {
   };
 
   const fnSearch = async () => {
-    axios.get(`/proj/search`,{
-      params:{
-        status:searchType,
-        searchText:searchText
-      }
-    }).then( res =>
-      setProjects(res.data)
-    ).catch( err => navigate('/error'));
+    axios
+      .get(`/proj/search`, {
+        params: {
+          status: searchType,
+          searchText: searchText,
+        },
+      })
+      .then((res) => setProjects(res.data))
+      .catch((err) => navigate("/error"));
   };
 
   const renderProjectRows = () => {
@@ -172,9 +173,13 @@ const ProjectTable = () => {
           />
         </td>
         <td className="text-truncate" style={{ maxWidth: "150px" }}>
-          <Link to={`/main/proj/projdetail/${project.proj_pk_num}`}>
-            {project.proj_name}
-          </Link>
+          {project.proj_pk_num ? (
+            <Link to={`/main/proj/projdetail/${project.proj_pk_num}`}>
+              {project.proj_name}
+            </Link>
+          ) : (
+            <span>{project.proj_name}</span>
+          )}
         </td>
         <td className="text-truncate" style={{ maxWidth: "200px" }}>
           {project.proj_desc}
@@ -257,11 +262,11 @@ const ProjectTable = () => {
                     gap: "10px",
                   }}
                 >
-                  <ProjSearch 
-                   value={searchText}
-                   onChange={handleChange}
-                   onSearch={fnSearch}
-                   onKeyDown={handleKeyDown}
+                  <ProjSearch
+                    value={searchText}
+                    onChange={handleChange}
+                    onSearch={fnSearch}
+                    onKeyDown={handleKeyDown}
                   />
                 </div>
               </CardHeader>

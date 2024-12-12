@@ -79,7 +79,8 @@ public class ProjectController {
 		return projServiceImpl.getListAll();
 	}
 
-	@GetMapping("/projread/{projPkNum}")
+	
+	@GetMapping("/projdetail/{projPkNum}")
 		public ProjectDto getProjById(@PathVariable("projPkNum")int projPkNum){
 		return projServiceImpl.getProjById(projPkNum);
 	}
