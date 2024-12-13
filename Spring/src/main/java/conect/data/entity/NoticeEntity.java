@@ -1,5 +1,7 @@
 package conect.data.entity;
 import java.time.LocalDate;
+
+import com.google.common.io.Files;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,5 +32,6 @@ public class NoticeEntity {
     @ManyToOne
     @JoinColumn(name = "noti_fk_user_num")
     private UserEntity userEntity;
-	
+
+
 }
