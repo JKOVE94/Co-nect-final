@@ -5,11 +5,11 @@ import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
 import conect.data.form.ProjectForm;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-
 
 
 public interface ProjService {
@@ -30,8 +30,14 @@ public interface ProjService {
 	
 	List<ProjectDto> getAllProjects();
 
-	// 프로젝트  삭제
+	// 프로젝트 모달 삭제
 	void deleteProject(int projPkNum);
+	
+	
+	// 페이징
+	public Page<ProjectDto> getList(int page, int pageSize, String searchType, String searchText);
+	
+
 
 	// 모든 부서목록 반환
 	List<DepartmentDto> getAllDepartments();
@@ -46,4 +52,8 @@ public interface ProjService {
 
 	// 회사코드 관련 프로젝트 읽어오기
 	List<ProjectDto> getAllProjInfo(int compNum);
+
+	
+
+	
 }

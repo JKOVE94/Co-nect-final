@@ -16,11 +16,14 @@ import conect.data.repository.ProjectRepository;
 import conect.data.repository.TaskRepository;
 import conect.data.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,21 +63,35 @@ public class ProjServiceImpl implements ProjService {
 		return entities.stream().map(ProjectDto::fromEntity).collect(Collectors.toList());
 	}
 
-	/*
-	 * // 페이징, 정렬
-	 * public Page<ProjectDto> getList(int page, int pageSize) {
-	 * // 정렬 정보 생성
-	 * 
-	 * // Pageable 객체 생성 (페이지와 정렬 정보 포함)
-	 * Pageable pageable = PageRequest.of(page, pageSize);
-	 * 
-	 * // Repository를 통해 데이터를 조회
-	 * Page<ProjectEntity> postPage = this.prepository.findAll(pageable);
-	 * // ProjectEntity -> dto 변환
-	 * return postPage.map(ProjectDto::fromEntity);
-	 * }
-	 */
-	public List<ProjectDto> getScheduleAll(int usernum) {
+
+	// 페이징, 검색
+	@Override
+	public Page<ProjectDto> getList(
+	    int page, int pageSize,  String searchType, String searchText
+	) {
+	    
+	    // Pageable 객체 생성 (페이지와 정렬 정보 포함)
+	    Pageable pageable = PageRequest.of(page, pageSize);
+
+	    // Repository를 통해 데이터를 조회
+	    Page<ProjectEntity> projectPage;
+
+	    if (searchType.equalsIgnoreCase("proj_name")) {
+	        // 프로젝트 이름 검색
+	        projectPage = prepository.findByProjNameContains(searchText, pageable);
+	    } else if (searchType.equalsIgnoreCase("user_name")) {
+	        // 사용자 이름 검색
+	        projectPage = prepository.findByUserEntity_UserNameContains(searchText, pageable);
+	    } else {
+	        // 전체 조회
+	        projectPage = prepository.findAll(pageable);
+	    }
+
+	    // ProjectEntity를 ProjectDto로 변환하여 반환
+	    return projectPage.map(ProjectDto::fromEntity);
+	}
+
+		public List<ProjectDto> getScheduleAll(int usernum) {
 		String pattern = "(?<=,|^)" + usernum + "(?=,|$)";
 		return prepository.findByProjMembersContaining(pattern)
 				.stream().map(ProjectDto::fromEntity).toList();
@@ -222,12 +239,16 @@ public class ProjServiceImpl implements ProjService {
 	// 프로젝트 삭제
 	@Transactional
 	public void deleteProject(int projPkNum) {
+	    ProjectEntity entity = prepository.findById(projPkNum)
+	        .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
 
-		ProjectEntity entity = prepository.findById(projPkNum)
-				.orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
-
-
-		prepository.delete(entity);
+	    prepository.delete(entity);
 	}
 
+
+
+
+
+
+	
 }
