@@ -28,4 +28,8 @@ public class TodoEntity {
     @JoinColumn(name = "todo_fk_user_num")
     @JsonIgnore
     private UserEntity user;
+    
+    @OneToOne(mappedBy = "todo", cascade = CascadeType.REMOVE)
+    private ShareEntity share;
+    
 }

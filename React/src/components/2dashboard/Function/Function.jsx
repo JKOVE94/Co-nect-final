@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import CalendarToast from "variables/Toast/CalendarToast";
 import "../../../assets/css/2dashboard/function.css";
 import style from "../../../assets/css/2dashboard/calendar.module.css";
+import MyShareSchedule from "./MyShareSchedule";
 
 const Function = () => {
   const num = useSelector((state) => state.userData.user_pk_num);
@@ -26,31 +27,23 @@ const Function = () => {
     axios
       .get("/function/schedule/" + num)
       .then((res) => {
-        let projEvent = res.data.proj.map((data) => ({
-          id: data.proj_pk_num,
-          title: data.proj_name,
-          start: data.proj_startdate,
-          end: data.proj_enddate,
-          content: data.proj_desc,
-          starttime: data.proj_startdate,
-          endtime: data.proj_enddate,
-          groupId: 0,
-          color: data.proj_tagcol || "#b0e0e6",
-          editable: false,
-        }));
 
-        let todoEvent = res.data.todo.map((data) => ({
-          id: data.todo_pk_num,
-          title: data.todo_title,
-          start: data.todo_start,
-          end: data.todo_end,
-          content: data.todo_content,
+        let todoEvent = res.data.map((data) => ({
+          id: data.todo_pk_num, //일정 pk num
+          title: data.todo_title, //일정 제목
+          content: data.todo_content, //일정 내용
+          start: data.todo_start, //일정 시작일
+          end: data.todo_end, //일정 종료일
           starttime: data.todo_start,
           endtime: data.todo_end,
-          color: data.todo_tagcol,
+          color: data.todo_tagcol, //일정 색깔
+          sharer: data.todo_fk_user_num, //일정 작성자(공유자)
+          shared: data.shareUser, //일정 공유된 사람목록
           allDay: true,
+          //일정 작성자만 수정 가능하게 설정
+          editable : data.todo_fk_user_num === num? true : false
         }));
-        setEvents([...projEvent, ...todoEvent]);
+        setEvents([...todoEvent]);
       })
       .catch((err) => {
         console.log(err);
@@ -65,9 +58,21 @@ const Function = () => {
     <>
       <Container fluid className={style.calendar}>
         <Row className="mx-0 align-items-start justify-content-center">
+          <Col md={4} >
+            <Card className={style.card2}>
+              <CardBody className={style.cardbody}>
+                <MySchedule events={events} />
+              </CardBody>
+            </Card>
+            <Card className={style.card2}>
+              <CardBody className={style.cardbody}>
+                <MyShareSchedule events={events} />
+              </CardBody>
+            </Card>
+          </Col>
           <Col md={8} className="px-0">
-            <Card className="mx-auto" >
-              <CardBody 
+            <Card className="mx-auto">
+              <CardBody
                 className="p-10"
                 style={{ maxHeight: "45em", overflowY: "auto" }}
               >
@@ -76,13 +81,6 @@ const Function = () => {
                   handleGetEvent={handleGetEvent}
                   handleToast={handleToast}
                 />
-              </CardBody>
-            </Card>
-          </Col>
-          <Col md={4} >
-            <Card className={style.card2}>
-              <CardBody className={style.cardbody}>
-                <MySchedule events={events} />
               </CardBody>
             </Card>
           </Col>

@@ -24,6 +24,7 @@ import FavorCheck from "../Favorite/FavorCheck";
 import { useSelector } from "react-redux";
 import ProjSearch from "variables/Search/ProjSearch";
 
+
 const ProjectTable = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);

@@ -18,6 +18,7 @@ public class TodoForm {
     private int todo_icon;
     private String todo_tagcol;
     private int todo_fk_user_num; //투두리스트 작성자 [INT}
+    private String shareUser;
 
     public static TodoEntity toEntity(TodoForm form) {
         //fk관련된 데이터는 servie단에서 findById로 찾아야 함
@@ -28,6 +29,7 @@ public class TodoForm {
         entity.setTodoStart(form.getTodo_start());
         entity.setTodoEnd(form.getTodo_end());
         entity.setTodoTagcol(form.getTodo_tagcol());
+
         return entity;
     }
 }

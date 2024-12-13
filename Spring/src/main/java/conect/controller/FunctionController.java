@@ -32,19 +32,13 @@ public class FunctionController {
 	@Autowired
 	private TodoServiceImpl todoServiceImpl;
 	
-	//유저의 프로젝트, 개인 일정 리스트
+	//유저의 개인 일정 리스트
     @GetMapping("/schedule/{usernum}")
     public ResponseEntity<Object> getDataAll(@PathVariable("usernum")int usernum){
-    	Map<String, Object> map = new HashMap<String, Object>();
-    	
     	try {
-    		List<ProjectDto> projList = projServiceImpl.getScheduleAll(usernum);
         	List<TodoDto> todoList = todoServiceImpl.getTodoAll(usernum);
         	
-        	map.put("proj", projList);
-        	map.put("todo", todoList);
-        	
-        	return ResponseEntity.ok(map);
+        	return ResponseEntity.ok(todoList);
     	} catch(IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Invalid input parameters");
 		} catch (Exception e) {
