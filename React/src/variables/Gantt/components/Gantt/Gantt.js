@@ -16,15 +16,6 @@ export default class Gantt extends Component {
         gantt.ext.zoom.init({
             levels: [
                 {
-                    name: "Hours",
-                    scale_height: 60,
-                    min_column_width: 30,
-                    scales: [
-                        { unit: "day", step: 1, format: (date) => (date.getMonth() + 1) + "월 " + date.getDate() + "일" },
-                        { unit: "hour", step: 1, format: "%H" }
-                    ]
-                },
-                {
                     name: "Days",
                     scale_height: 60,
                     min_column_width: 70,

@@ -8,29 +8,6 @@ class Ganttchart extends Component {
         currentZoom: 'Days',
         messages: [],
     };
-    
-    addMessage = (message) => {
-        const maxLogLength = 5;
-        const newMessage = { message };
-        const messages = [
-            newMessage,
-            ...this.state.messages
-        ];
-
-        if(messages.length > maxLogLength) {
-            messages.length = maxLogLength;
-        }
-        this.setState({ messages });
-    }
-
-    logDataUpdate = (entityType, action, itemData, id) => {
-        let text = itemData && itemData.text ? ` (${itemData.text})` : '';
-        let message = `${entityType} ${action}: ${id} ${text}`;
-        if (entityType === 'link' && action !== 'delete') {
-            message += ` ( source: ${itemData.source}, target: ${itemData.target} )`;
-        }
-        this.addMessage(message);
-    }
 
     handleZoomChange = (zoom) => {
         this.setState({
@@ -61,30 +38,6 @@ class Ganttchart extends Component {
         addTasks(taskdatas);
 
         return { data: tasks, links: [] };
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.taskdatas !== this.props.taskdatas) {
-            const ganttData = this.convertToGanttData(this.props.taskdatas);
-            gantt.clearAll();
-            gantt.parse(ganttData);
-        }
-    }
-
-    handleTaskUpdate = (id, task) => {
-        const updatedTasks = this.props.taskdatas.map(t => 
-        t.task_pk_num === id ? {
-            ...t,
-            task_title: task.text,
-            task_startdate: task.start_date,
-            task_duration: task.duration,
-            task_progress: task.progress,
-            task_fk_task_num: task.parent,
-            task_updated: new Date().toISOString().split('T')[0] // Assuming task_updated is the current date
-        } : t
-    );
-    // console.log(updatedTasks);
-    this.props.setTaskdatas(updatedTasks);
     }
 
     handleTaskAdd = (task) => {
@@ -124,6 +77,8 @@ class Ganttchart extends Component {
         gantt.plugins({ 
             marker: true 
         });
+        gantt.attachEvent("onTaskDblClick", function(id,e){return false;});
+        gantt.attachEvent("onBeforeTaskDrag", function(id,e){return false;});
 
         // 오늘 날짜를 기준으로 마커 추가
         const today = new Date();
@@ -139,7 +94,13 @@ class Ganttchart extends Component {
         gantt.parse(ganttData);
     }
 
-    
+     componentDidUpdate(prevProps) {
+        if (prevProps.taskdatas !== this.props.taskdatas) {
+            const ganttData = this.convertToGanttData(this.props.taskdatas);
+            gantt.clearAll();
+            gantt.parse(ganttData);
+        }
+    }
 
     render() {
         const { currentZoom, messages } = this.state;
