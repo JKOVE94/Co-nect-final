@@ -27,22 +27,6 @@ const WikiUpdate = () => {
     user_name: "", // 작성자 이름
   });
 
-  const [projects, setProjects] = useState([]);
-
-  useEffect(() => {
-    // 프로젝트 목록 가져오기
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get("/wiki/projects");
-        setProjects(response.data); // 데이터 저장
-      } catch (error) {
-        console.error("프로젝트 목록 가져오기 실패:", error);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
   // API에서 데이터 불러오기
   useEffect(() => {
     const fetchWikiData = async () => {
@@ -103,36 +87,28 @@ const WikiUpdate = () => {
       style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
     >
       <CardHeader className="border-1">
-        <h1 className="mb-0">문서 수정</h1>
+        <h2 className="mb-0">문서 수정</h2>
       </CardHeader>
 
       <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
         <form onSubmit={handleSubmit}>
-          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+        <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="wiki_fk_proj_num"
+              for="wiki_name"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
-              프로젝트명
+              제목 
             </Label>
             <Col sm={10}>
               <Input
-                type="select"
-                name="wiki_fk_proj_num"
-                id="wiki_fk_proj_num"
-                value={formData.proj_pk_num} // 이 값은 부서 번호
+                type="text"
+                name="wiki_name"
+                id="wiki_name"
+                value={formData.wiki_name} 
                 onChange={handleEditChange}
                 required
-              >
-                <option value="">프로젝트를 선택하세요</option>
-                {projects.map((proj) => (
-                  <option key={proj.proj_pk_num} value={proj.proj_pk_num}>
-                    {" "}
-                    {proj.proj_name}
-                  </option>
-                ))}
-              </Input>
+              />
             </Col>
           </FormGroup>
 
