@@ -22,6 +22,7 @@ import ErrPage from "components/2dashboard/ErrPage";
 import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 import Function from "components/2dashboard/Function/Function";
 import FreeHome from "components/2dashboard/Free/FreeHome";
+import FileHome from "components/2dashboard/File/FileHome";
 
 
 const Dashboard = (props) => {
@@ -69,6 +70,7 @@ const Dashboard = (props) => {
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
           <Route path="/proj/*" element={<ProjectHome />}/>
           <Route path="/free/*" element={<FreeHome />} />
+          <Route path="/file/*" element={<FileHome />} />
           <Route path="/projfavorite" element={<ProjFavorite />} />
           <Route path="/freefavorite" element={<FreeFavorite />} />
           <Route path="/function" element={<Function />} />

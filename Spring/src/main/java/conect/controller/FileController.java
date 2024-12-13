@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.FileDto;
 import conect.data.entity.FileEntity;
@@ -96,16 +98,33 @@ public class FileController {
 
 	// 게시글 생성
 	@PostMapping("/")
-	public int createPost(@RequestBody FileForm fileForm) {
-		// POST 요청으로 전달된 게시글 데이터를 저장
-		try {
-			FileEntity entity = fileService.insertPost(fileForm); // 게시글 저장 서비스 호출
-			return entity.getFilePkNum(); // 저장된 게시글의 PK 반환
-		} catch (Exception e) {
-			System.out.println("Insert err :" + e); // 오류 메시지 출력
-		}
-		return 0; // 실패 시 0 반환
+	public ResponseEntity<Integer> createPostWithFile(
+	    @ModelAttribute FileForm fileForm, // 게시물 데이터
+	    @RequestParam("file") MultipartFile file // 업로드된 파일
+	) {
+	    try {
+	        // 파일 검증 로직
+	        long maxFileSize = 10 * 1024 * 1024; // 10MB
+	        if (!file.getContentType().contains("image")) {
+	            return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE); // 파일 타입 오류
+	        }
+	        if (file.getSize() > maxFileSize) {
+	            return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE); // 파일 크기 초과
+	        }
+
+	        // 파일 저장 로직 (예: 파일 경로 설정 및 실제 저장)
+	        String filePath = fileService.saveFile(fileForm, file); // 파일 저장 서비스 호출
+	        fileForm.setFile_path(filePath); // 저장된 파일 경로를 폼에 설정
+
+	        // 게시물 저장
+	        FileEntity entity = fileService.insertPost(file, fileForm); // 게시물 저장 서비스 호출
+	        return new ResponseEntity<>(entity.getFilePkNum(), HttpStatus.CREATED); // 생성된 게시물 PK 반환
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 오류 로그 출력
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 서버 오류
+	    }
 	}
+
 	
 	// 게시글 수정
 	@PutMapping("/{filePkNum}")

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.FileDto;
 import conect.data.dto.PostDto;
@@ -14,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface FileService {
 	// 삽입
-	FileEntity insertPost(FileForm fileForm);
+	FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException;
 
 	// 전체 조회
 	List<FileDto> getPostAll();
@@ -32,5 +33,5 @@ public interface FileService {
 	public Page<FileDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
 
 	// 파일 저장 메소드
-	public String saveFile(FileForm form) throws IOException; 
+	public String saveFile(FileForm form, MultipartFile file) throws IOException; 
 }

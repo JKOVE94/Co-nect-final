@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Blob;
@@ -53,36 +54,46 @@ public class FileServiceImpl implements FileService {
 
 	// 파일 저장
 	@Override
-	public String saveFile(FileForm form) throws IOException {
+	public String saveFile(FileForm form, MultipartFile file) throws IOException {
 		InputStream keyFile = null;
-		String imgUrl = "";
+		String fileUrl = "";
 		try {
 			keyFile = ResourceUtils.getURL(keyFileName).openStream();
 
-			String fileName = "file/" + form.getFile_fk_user_num() + "_" + form.getFile_pk_num();
+			String originalFileName = file.getOriginalFilename();
+			String fileName = "file/" +originalFileName;
 			// String ext = form.getUser_picfile().getContentType();
-
-			Storage storage = StorageOptions.newBuilder().setCredentials(GoogleCredentials.fromStream(keyFile)).build()
+			
+			
+			Storage storage = StorageOptions.newBuilder()
+					.setCredentials(GoogleCredentials.fromStream(keyFile))
+					.build()
 					.getService();
+			
+			// BlobInfo 생성 (파일 정보)
+	        BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, form.getFile_name()).build();
 
-			imgUrl = "https://storage.googleapis.com/" + bucketName + "/" + fileName;
+	        // Google Cloud Storage에 파일 업로드
+	        storage.create(blobInfo, file.getBytes());
+
+			fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + fileName;
 
 		} finally {
 			if (keyFile != null) {
 				keyFile.close();
 			}
 		}
-		return imgUrl;
+		return fileUrl;
 	}
 	
 	// 삽입
 	@Override
-	public FileEntity insertPost(FileForm fileForm) {
+	public FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException{
 		FileEntity fileEntity = new FileEntity();
 
 		fileEntity.setFilePostName(fileForm.getFile_post_name());
 		fileEntity.setFileName(fileForm.getFile_name());
-		fileEntity.setFilePath(fileForm.getFile_path());
+		fileEntity.setFilePath(saveFile(fileForm, file));
 		fileEntity.setFileSize(fileForm.getFile_size());
 		fileEntity.setFileType(fileForm.getFile_type());
 		fileEntity.setFileDownload(fileForm.getFile_download());

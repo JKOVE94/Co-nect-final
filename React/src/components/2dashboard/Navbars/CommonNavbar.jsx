@@ -25,6 +25,9 @@ const CommonNavbar = () => {
               <NavItem>
                 <NavLink to="/main/free" tag={NavLinkRRD}>자유게시판</NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink to="/main/file" tag={NavLinkRRD}>파일게시판</NavLink>
+              </NavItem>
             </SubMenu>
             <SubMenu label="업무관리" icon={<i className="ni ni-calendar-grid-58 text-warning text-sm opacity-10" />}>
               <NavItem>
