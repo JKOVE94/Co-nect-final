@@ -16,6 +16,7 @@ public class WikiDto {
 	private Date wiki_regdate; // 작성일
 	private int wiki_fk_proj_num; // 프로젝트 번호
 	private int wiki_fk_user_num; // 문서 작성자
+	private String user_name; // 사용자 이름
 	
 	public static WikiDto fromEntity(WikiEntity entity) {
         WikiDto dto = new WikiDto();
@@ -26,6 +27,7 @@ public class WikiDto {
         dto.setWiki_regdate(entity.getWikiRegdate());
         dto.setWiki_fk_proj_num(entity.getProjectEntity().getProjPkNum());
         dto.setWiki_fk_user_num(entity.getUserEntity().getUserPkNum());
+        dto.setUser_name(entity.getUserEntity().getUserName());
         return dto;
     }
 }

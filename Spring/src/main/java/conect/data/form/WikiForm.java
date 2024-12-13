@@ -28,5 +28,3 @@ public class WikiForm {
         return entity;
     }
 }
-
-
