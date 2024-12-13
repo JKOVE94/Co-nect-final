@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
     Card,
@@ -23,6 +23,7 @@ import {
     ModalFooter,
     Button,
 } from "reactstrap";
+import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import FavorCheck from "../Favorite/FavorCheck";
 import { useSelector } from "react-redux";
@@ -30,7 +31,6 @@ import ProjSearch from "variables/Search/ProjSearch";
 
 const ProjectTable = () => {
     const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useSearchParams();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -62,29 +62,23 @@ const ProjectTable = () => {
             });
     }, [filter, searchTerm, currentPage]);
 
-    // Initialize the page from URL params on load
     useEffect(() => {
-        const pageFromParams = parseInt(searchParams.get("page") || "0", 10);
-        if (!isNaN(pageFromParams)) {
-            setCurrentPage(pageFromParams);
-        }
-    }, [searchParams]);
-
-    // Fetch data when dependencies change
-    useEffect(() => {
+        setCurrentPage(0);
         fetchHandle();
         handleFavorite();
-    }, [filter, searchTerm, currentPage, fetchHandle]);
+    }, [filter, searchTerm, fetchHandle]);
 
     const handleSearch = () => {
         setCurrentPage(0);
+        fetchHandle();
     };
 
     const debouncedSearch = useCallback(
         debounce((searchValue) => {
             setSearchTerm(searchValue);
+            fetchHandle();
         }, 100),
-        []
+        [fetchHandle]
     );
 
     const handleSearchInputChange = (e) => {
@@ -112,7 +106,7 @@ const ProjectTable = () => {
         if (projectToDelete) {
             axios
                 .delete(`/proj/projdelete/${projectToDelete}`)
-                .then(() => {
+                .then((res) => {
                     setProjects(projects.filter((project) => project.proj_pk_num !== projectToDelete));
                     setIsModalOpen(false);
                 })
@@ -127,7 +121,7 @@ const ProjectTable = () => {
         setIsModalOpen(false);
     };
 
-    // Handle favorite data
+    //즐겨찾기
     const num = useSelector((state) => state.userData.user_pk_num);
     const [favorData, setFavorData] = useState([]);
     const handleFavorite = () => {
@@ -137,6 +131,33 @@ const ProjectTable = () => {
                 setFavorData(res.data);
             })
             .catch();
+    };
+
+    //검색
+    const [searchType, setSearchType] = useState("");
+    const [searchText, setSearchText] = useState("");
+    const handleKeyDown = (e) => {
+        //사용자가 enter입력 시 search 실행
+        if (e.keyCode === 13) handleSearch();
+    };
+
+    const handleChange = (e) => {
+        if (e.target.id === 'proj_status') {
+            setSearchType(e.target.value);
+        } else {
+            setSearchText(e.target.value.trim());
+        }
+    };
+
+    const fnSearch = async () => {
+        axios.get(`/proj/search`, {
+            params: {
+                status: searchType,
+                searchText: searchText,
+            },
+        }).then(res =>
+            setProjects(res.data)
+        ).catch(err => navigate('/error'));
     };
 
     const renderProjectRows = () => {
@@ -168,7 +189,10 @@ const ProjectTable = () => {
             );
 
         return projects.slice(0, 8).map((project, index) => (
-            <tr key={project.proj_pk_num || index}>
+            <tr
+                key={project.proj_pk_num || index}
+                style={{ width: "100%", overflowX: "hidden" }}
+            >
                 <td className="text-center">
                     <FavorCheck
                         type="proj"
@@ -223,72 +247,117 @@ const ProjectTable = () => {
         ));
     };
 
-    // Handle pagination and update query params
-    const handlePageChange = (newPage) => {
-        setCurrentPage(newPage);
-        searchParams.set("page", newPage);
-        searchParams.set("filter", filter);
-        searchParams.set("searchTerm", searchTerm);
-        setSearchParams(searchParams);
-    };
-
     return (
         <>
-            <Container className="mt--7" fluid>
+            <Container className="mt--7" fluid style={{ overflowX: "auto" }}>
                 <Row>
                     <Col>
-                        <Card className="shadow d-flex flex-column" style={{ marginTop: "95px" }}>
+                        <Card
+                            className="shadow d-flex flex-column"
+                            style={{
+                                marginTop: "95px", // 카드 위치 조정
+                            }}
+                        >
                             <CardHeader
                                 className="d-flex align-items-center"
                                 style={{
                                     display: "flex",
                                     justifyContent: "space-between",
-                                    padding: "15px",
+                                    alignItems: "center",
+                                    flexWrap: "wrap",
+                                    paddingTop: "15px",
+                                    paddingBottom: "15px",
+                                    position: "sticky", // 스크롤 시 상단에 고정
+                                    top: "0", // 상단에 고정
+                                    backgroundColor: "white", // 배경색을 설정하여 가독성 향상
+                                    zIndex: 10, // 다른 요소들 위에 오도록 설정
+                                }}
+                            >
+                                <h1
+                                    className="mb-0"
+                                    style={{ flex: "1 0 auto", marginRight: "20px" }}
+                                >
+                                    프로젝트 목록
+                                </h1>
+                                <div
+                                    className="d-flex align-items-center"
+                                    style={{
+                                        flex: "0 1 auto",
+                                        gap: "10px",
+                                    }}
+                                >
+                                    <ProjSearch
+                                        value={searchText}
+                                        onChange={handleChange}
+                                        onSearch={fnSearch}
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </div>
+                            </CardHeader>
+
+                            <div
+                                className="table-responsive"
+                                style={{
+                                    flexGrow: 1,
+                                    display: "flex",
+                                    overflowX: "visible",
+                                    marginTop: "0px", // 테이블 위치 조정
+                                }}
+                            >
+                                <Table style={{ width: "100%", overflowX: "visible" }}>
+                                    <thead>
+                                    <tr>
+                                        <th className="text-center" style={{ width: "10%" }}>
+                                            즐겨찾기
+                                        </th>
+                                        <th style={{ width: "20%" }}>프로젝트</th>
+                                        <th style={{ width: "15%" }}>담당자</th>
+                                        <th style={{ width: "15%" }}>상태</th>
+                                        <th style={{ width: "15%" }}>기한</th>
+                                        <th style={{ width: "15%" }}>진행도</th>
+                                        <th className="text-right" style={{ width: "10%" }}>
+                                            작업
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody style={{ overflowX: "visible" }}>
+                                    {renderProjectRows()}
+                                    </tbody>
+                                </Table>
+                            </div>
+
+                            <CardFooter
+                                className="d-flex justify-content-between align-items-center mt-auto "
+                                style={{
                                     backgroundColor: "white",
                                     zIndex: 10,
                                 }}
                             >
-                                <h1>프로젝트 목록</h1>
-                                <ProjSearch
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    onSearch={fetchHandle}
-                                />
-                            </CardHeader>
-
-                            <div className="table-responsive">
-                                <Table>
-                                    <thead>
-                                    <tr>
-                                        <th>즐겨찾기</th>
-                                        <th>프로젝트</th>
-                                        <th>담당자</th>
-                                        <th>상태</th>
-                                        <th>기한</th>
-                                        <th>진행도</th>
-                                        <th>작업</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>{renderProjectRows()}</tbody>
-                                </Table>
-                            </div>
-
-                            <CardFooter>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => navigate("/main/proj/projadd")}
+                                >
+                                    프로젝트 생성
+                                </button>
                                 <Pagination>
                                     <PaginationItem disabled={currentPage === 0}>
-                                        <PaginationLink onClick={() => handlePageChange(currentPage - 1)}>
+                                        <PaginationLink
+                                            onClick={() => setCurrentPage(currentPage - 1)}
+                                        >
                                             이전
                                         </PaginationLink>
                                     </PaginationItem>
                                     {[0, 1, 2].map((page) => (
                                         <PaginationItem active={currentPage === page} key={page}>
-                                            <PaginationLink onClick={() => handlePageChange(page)}>
+                                            <PaginationLink onClick={() => setCurrentPage(page)}>
                                                 {page + 1}
                                             </PaginationLink>
                                         </PaginationItem>
                                     ))}
                                     <PaginationItem>
-                                        <PaginationLink onClick={() => handlePageChange(currentPage + 1)}>
+                                        <PaginationLink
+                                            onClick={() => setCurrentPage(currentPage + 1)}
+                                        >
                                             다음
                                         </PaginationLink>
                                     </PaginationItem>
@@ -299,9 +368,12 @@ const ProjectTable = () => {
                 </Row>
             </Container>
 
+            {/* 모달창 */}
             <Modal isOpen={isModalOpen} toggle={cancelDelete}>
                 <ModalHeader toggle={cancelDelete}>프로젝트 삭제</ModalHeader>
-                <ModalBody>정말로 이 프로젝트를 삭제하시겠습니까?</ModalBody>
+                <ModalBody>
+                    정말로 이 프로젝트를 삭제하시겠습니까?
+                </ModalBody>
                 <ModalFooter>
                     <Button color="secondary" onClick={cancelDelete}>
                         취소
