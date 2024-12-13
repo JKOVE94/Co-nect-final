@@ -27,7 +27,7 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/ProjSel" element={<ProjectSelect />} />
+          <Route path="/ProjSel/:id" element={<ProjectSelect />} />
           <Route path="/main/*" element={<Dashboard />} />
           <Route path="/manage/*" element={<Manage />} />
           <Route path="proj/projread/:id" element={<ProjHeaders />} />

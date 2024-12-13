@@ -29,6 +29,7 @@ public class ProjectDto {
     private int proj_fk_comp_num; // 프로젝트 회사 고유번호 [FK, INT]
     private String proj_username;// 프로젝트 담당자 이름
     private String proj_userMail;// 프로젝트 담당자 메일
+    private String dpart_name;//부서 이름
     private String user_name; // 사용자 이름
 
     public static ProjectDto fromEntity(ProjectEntity entity) {
@@ -48,6 +49,7 @@ public class ProjectDto {
         dto.setProj_icon(entity.getProjIcon());
         dto.setProj_progress(entity.getProjProgress());
         dto.setProj_fk_dpart_num(entity.getDepartmentEntity().getDpartFkDpartNum());
+        dto.setDpart_name(entity.getDepartmentEntity().getDpartName());
         dto.setProj_fk_user_num(entity.getUserEntity().getUserPkNum());
         dto.setProj_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
         dto.setProj_username(entity.getUserEntity().getUserName());

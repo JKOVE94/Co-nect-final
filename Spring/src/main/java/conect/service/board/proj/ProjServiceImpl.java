@@ -4,6 +4,7 @@ import conect.data.dto.DepartmentDto;
 import conect.data.dto.PostDto;
 import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
+import conect.data.dto.TodoDto;
 import conect.data.entity.CompanyEntity;
 import conect.data.entity.DepartmentEntity;
 import conect.data.entity.ProjectEntity;
@@ -14,6 +15,7 @@ import conect.data.repository.DepartmentRepository;
 import conect.data.repository.PostRepository;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.TaskRepository;
+import conect.data.repository.TodoRepository;
 import conect.data.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -53,6 +55,9 @@ public class ProjServiceImpl implements ProjService {
 
 	@Autowired
 	private PostRepository postRepository;
+	
+	@Autowired
+	private TodoRepository todoRepository;
 
 	@Override
 	public List<ProjectDto> getAllProjects() {
@@ -186,8 +191,19 @@ public class ProjServiceImpl implements ProjService {
 		result.put("posts", postRepository.getPostByTaskFkUserNum(userPkNum).stream()
 				.map(PostDto::fromEntity)
 				.collect(Collectors.toList()));
+		result.put("todos", todoRepository.getTodoByTaskFkUserNum(userPkNum).stream()
+				.map(TodoDto::fromEntity)
+				.collect(Collectors.toList()));
 		return result;
 	}
+	@Override
+	public List<ProjectDto> getUserProjectData(int userPkNum){
+		
+		return prepository.getProjByTaskFkUserNum(userPkNum).stream()
+				.map(ProjectDto::fromEntity)
+				.collect(Collectors.toList());
+	}
+	
 
 	@Override
 	public List<ProjectDto> getAllProjInfo(int compNum) {

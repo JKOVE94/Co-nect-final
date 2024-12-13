@@ -1,25 +1,36 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import "../../assets/css/2dashboard/function.css";
+import style from "../../assets/css/2dashboard/calendar.module.css";
 
 import {
   Button,
   Card,
   CardHeader,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  CardText,
   Col,
   Container,
   Row,
   Table,
+  Carousel,
+  CarouselItem,
 } from "reactstrap";
+import moment from "moment";
 
 const MyToDoList = () => {
   const [data, setData] = useState({
     tasks: [],
     projects: [],
     posts: [],
+    events: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [todoList, setTodoList] = useState([]);
 
   const user_pk_num = useSelector((state) => state.userData.user_pk_num);
 
@@ -36,6 +47,7 @@ const MyToDoList = () => {
       .get(`/proj/user/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
+        updateTodoList(res.data.events);
       })
       .catch((error) => {
         setError("데이터를 불러오는데 실패했습니다.");
@@ -45,6 +57,28 @@ const MyToDoList = () => {
         setLoading(false);
       });
   }, [user_pk_num]);
+
+  const updateTodoList = useCallback((events) => {
+    const today = new Date();
+    const day = moment(today).startOf("day");
+    let dbList = [];
+    events.forEach((event) => {
+      const sday = moment(event.start).startOf("day");
+      const eday = moment(event.end).endOf("day");
+      if (sday <= day && day <= eday) {
+        dbList.push({
+          title: event.title,
+          content: event.content,
+          start: moment(event.start).format("hh:mm A"),
+          end:
+            eday > moment(today).endOf("day")
+              ? moment().format("12:00 A")
+              : moment(event.end).format("hh:mm A"),
+        });
+      }
+    });
+    setTodoList(dbList);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -76,7 +110,7 @@ const MyToDoList = () => {
                 </thead>
                 <tbody>
                   {data.posts && data.posts.length > 0 ? (
-                    data.posts.slice(0,4).map((item) => (
+                    data.posts.slice(0, 4).map((item) => (
                       <tr key={item.post_pk_num}>
                         <td>
                           <h6 className="text-sm mb-0">{item.post_pk_num}</h6>
@@ -120,57 +154,32 @@ const MyToDoList = () => {
           {/* 이번주 나의 업무 */}
           <Col lg={5} className="px-1">
             <Card className="shadow">
-              <CardHeader className="border-0">
-                <h3 className="mb-0 ms-4">이번 주 나의 업무</h3>
-                <Button color="outline-primary" size="sm" className="btnview">
-                  더 보기
-                </Button>
-              </CardHeader>
-              <Table responsive style={{ marginBottom: "1rem" }}>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">업무 번호</th>
-                    <th scope="col">업무</th>
-                    <th scope="col">마감일</th>
-                    <th scope="col">내용</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.tasks && data.tasks.length > 0 ? (
-                    data.tasks.map((item) => (
-                      <tr key={item.task_pk_num}>
-                        <td>
-                          <i
-                            style={{ color: item.task_tagcol }}
-                            className="bi"
-                            data-icon={item.task_tag}
-                          ></i>
-                          <h6 className="text-sm mb-0">{item.task_pk_num}</h6>
-                        </td>
-                        <td>
-                          <h6 className="text-sm mb-0">{item.task_title}</h6>
-                        </td>
-                        <td>
-                          <h6 className="text-sm mb-0">
-                            {new Date(item.task_deadline).toLocaleDateString()}
-                          </h6>
-                        </td>
-                        <td>
-                          <h6 className="text-sm mb-0">{item.task_desc}</h6>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="text-center">
-                        <h6 className="text-sm mb-0">
-                          업무 데이터가 없습니다.
-                        </h6>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
+              <CardBody>
+                <CardTitle className={style.title}>오늘의 일정</CardTitle>
+                {todoList.length === 0 ? (
+                  <CardSubtitle className={style.scheduleSub}>
+                    오늘의 일정이 없습니다.
+                  </CardSubtitle>
+                ) : (
+                  <Carousel>
+                    {todoList.map((todo, index) => (
+                      <CarouselItem key={index}>
+                        <div className={style.itembox}>
+                          <CardTitle className={style.subtitle}>
+                            {todo.title}
+                          </CardTitle>
+                          <CardSubtitle className={style.sub}>
+                            {todo.start} ~ {todo.end}
+                          </CardSubtitle>
+                          <CardText className={style.item}>
+                            {todo.content}
+                          </CardText>
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </Carousel>
+                )}
+              </CardBody>
             </Card>
           </Col>
         </Row>

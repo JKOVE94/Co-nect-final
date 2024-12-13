@@ -31,6 +31,8 @@ public interface ProjService {
 	
 	List<ProjectDto> getAllProjects();
 	
+	List<ProjectDto> getUserProjectData(int userPkNum);
+	
 	// 페이징
 	//public Page<ProjectDto> getList(int page, int pageSize);
 

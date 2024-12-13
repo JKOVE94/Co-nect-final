@@ -78,10 +78,15 @@ public class ProjectController {
 	public List<ProjectDto> getListAll(){
 		return projServiceImpl.getListAll();
 	}
+	
+	@GetMapping("/ProjSel/{user_pk_num}")
+	public List<ProjectDto> getUserProject(@PathVariable("user_pk_num") int user_pk_num){
+		return projServiceImpl.getUserProjectData(user_pk_num);
+	}
 
 	
 	@GetMapping("/projdetail/{projPkNum}")
-		public ProjectDto getProjById(@PathVariable("projPkNum")int projPkNum){
+		public ProjectDto getProjById(@PathVariable("projPkNum") int projPkNum){
 		return projServiceImpl.getProjById(projPkNum);
 	}
 	

@@ -74,7 +74,7 @@ const Login = (props) => {
         dispatch(SET_DPARTINFO(dpartsInfo.data));
         setIsReversed(true); // 역방향 트랜스폼 적용
         setTimeout(() => {
-          navigate("/ProjSel");
+          navigate(`/ProjSel/${loginInfo.user_pk_num}`);
         }, 1000); // 트랜지션 시간에 맞춰 조정
       } else if (res.data.status === 2) {
         //로그인 실패(정보 불일치)
