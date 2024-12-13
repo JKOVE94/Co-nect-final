@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +103,7 @@ public class ProjServiceImpl implements ProjService {
 
 		// proj_created가 null인 경우 현재 날짜로 설정
 		if (entity.getProjCreated() == null) {
-			entity.setProjCreated(new Date());
+			entity.setProjCreated(LocalDate.now());
 		}
 
 		// 부서, 담당자, 회사 설정
@@ -140,7 +141,7 @@ public class ProjServiceImpl implements ProjService {
 		entity.setProjImport(updatedEntity.getProjImport());
 		entity.setProjStatus(updatedEntity.getProjStatus());
 		entity.setProjDesc(updatedEntity.getProjDesc());
-		entity.setProjUpdated(new Date()); // 프로젝트 수정 날짜 설정
+		entity.setProjUpdated(LocalDate.now()); // 프로젝트 수정 날짜 설정
 
 		// 부서, 담당자, 회사 설정
 		DepartmentEntity deptEntity = deptRepository.findById(form.getProj_fk_dpart_num())

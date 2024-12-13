@@ -1,6 +1,7 @@
 package conect.controller;
 import conect.data.dto.TaskDto;
 import conect.data.form.TaskForm;
+import conect.data.form.TaskSearchForm;
 import conect.service.board.proj.ProjServiceImpl;
 
 import conect.service.board.task.TaskService;
@@ -43,6 +44,10 @@ public class TaskController {
         taskService.deleteTask(task_pk_num);
     }
 
+    @PostMapping("/task/search")
+    public List<TaskDto> getTaskBySearching(@RequestBody TaskSearchForm form) {
+        return taskService.getTaskBySearching(form.getProjectNum(), form.getSearchType(), form.getSearchValue());
 
+    }
 
 }

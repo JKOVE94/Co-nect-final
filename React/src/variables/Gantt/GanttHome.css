@@ -21,10 +21,13 @@
 
 #searchBox {
   display: flex;
+  position: relative;
+  left: 5em;
   align-items: center;
   padding: 0 1em;
   width: 384px;
   height: 38px;
+  top: 0em;
   opacity: 1;
   background: #ffffff;
   box-sizing: border-box;
@@ -39,4 +42,29 @@
 .search {
   margin-left: 1em;
   border: none;
+}
+
+.selectboxDate {
+  position: relative;
+  height: 38px;
+  right: -1em;
+  top: -6em;
+  width: 4em;
+  opacity: 1;
+  background: #ffffff;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+}
+
+.selectboxSearch {
+  position: absolute;
+  height: 38px;
+  width: 4.5em;
+  left: 2em;
+  top: 2.55em;
+  opacity: 1;
+  background: #ffffff;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
 }
