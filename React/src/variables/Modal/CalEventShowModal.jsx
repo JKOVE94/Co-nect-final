@@ -65,7 +65,7 @@ const CalEventShowModal = ({
           <ReactMention
             id="shareUser"
             disabled={true}
-            selectId={info.sharer}
+            userList={info.sharer}
           />
         </Form.Group>
       </Modal.Body>

@@ -48,7 +48,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
       start: setTime(info.event.extendedProps.starttime), //시작일
       end: setTime(info.event.extendedProps.endtime), //종료일
       id: info.event.id, //일정 pk num
-      sharer:info.event.extendedProps.sharer, //일정 작성자(공유자)
+      sharer:info.event.extendedProps.sharer.toString(), //일정 작성자(공유자)
       shared:info.event.extendedProps.shared, //일정 공유된 사람 목록
       tagcol: info.event.backgroundColor, //일정 색깔
     });

@@ -4,35 +4,34 @@ import { Form, FormControl } from "react-bootstrap";
 import { Mention } from "react-mentions";
 import { MentionsInput } from "react-mentions";
 import { Input } from "reactstrap";
+import style from "../../assets/css/mention.module.css";
 
-const ReactMention = ({ onMention, text, disabled, selectId, userList }) => {
-  const [user, setUser] = useState([]);
-  const [data, setData] = useState("");
+const ReactMention = ({ onMention, text, disabled, userList }) => {
+  //onMention : 멘션 선택 시 동작, text : placeholder, disabled : boolean값
+  //userList : 멘션 렌더링 시 default 값 (문자열)
 
-  useEffect(() => {
+  const [user, setUser] = useState([]); //전체 사원 목록
+  const [data, setData] = useState(""); //멘션 input 입력값
+
+  useEffect(() => { 
+    //최초 렌더링 시 전체 사원 목록 가져오기기
     getUserData();
   }, []);
 
   useEffect(() => {
-    if (selectId) {
-      const userObj = user.find(user => user.id === parseInt(selectId));
-      if (userObj) {
-        setData(`@[${userObj.display}](${selectId})`);
-      }
-    }
-  }, [selectId, user]);
+    //userList값을 받은 경우, 멘션 input에 값 입력되어 렌더링
+    //ex) userList : "1,3,5" -> 김일번, 김삼번, 김오번
 
-  useEffect(()=>{
-    if(userList){
-        const list = userList.split(",");
-        const selectedUsers = list.map((id) => {
-            const userObj = user.find((user) => user.id === parseInt(id));
-            return userObj ? `@[${userObj.display}](${id})` : "";
-          });
-      
-          setData(selectedUsers.join(" "));
-        }
-  }, [userList, user])
+    if (userList) {
+      const list = userList.split(",");
+      const selectedUsers = list.map((id) => {
+        const userObj = user.find((user) => user.id === parseInt(id));
+        return userObj ? `@[${userObj.display}](${id})` : "";
+      });
+
+      setData(selectedUsers.join(" "));
+    }
+  }, [userList, user]);
 
   const getUserData = () => {
     axios
@@ -50,33 +49,40 @@ const ReactMention = ({ onMention, text, disabled, selectId, userList }) => {
   };
 
   const handleChange = (e, newValue, newPlainTextValue, mentions) => {
+    //onMention에 멘션된 유저의 pk num 전달
     setData(e.target.value);
-    
+
     let data = [];
     mentions.forEach((mention) => {
-        data.push(mention.id);
-    })
+      data.push(mention.id);
+    });
     onMention(data);
-  }
+  };
 
   const findById = (search) => {
+    //pk num으로 검색 가능
     return user.filter((user) => {
-      return user.display.includes(search) || user.id.toString().includes(search);
+      return (
+        user.display.includes(search) || user.id.toString().includes(search)
+      );
     });
-  };    
+  };
 
   return (
-    <>
+    <div>
       <MentionsInput
         value={data}
         onChange={handleChange}
         placeholder={text}
         disabled={disabled}
-        > 
+        className="mentions"
+        classNames={style}
+      >
         <Mention
+          className={style.mentions__mention} 
           appendSpaceOnAdd={true}
-          trigger="@"
-          data={(search) => findById(search)} 
+          trigger="@" //input 박스에 @ 입력 시 멘션 기능 활성화
+          data={(search) => findById(search)}
           renderSuggestion={(
             suggestion,
             search,
@@ -101,7 +107,7 @@ const ReactMention = ({ onMention, text, disabled, selectId, userList }) => {
           )}
         />
       </MentionsInput>
-    </>
+    </div>
   );
 };
 export default ReactMention;
