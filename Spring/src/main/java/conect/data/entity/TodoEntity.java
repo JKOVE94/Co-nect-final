@@ -4,9 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Setter
@@ -19,17 +23,20 @@ public class TodoEntity {
     private int todoPkNum; //투두리스트 고유 식별자 [PK, INT, INCREMENT]
     private String todoTitle; // 투두리스트 제목 [VARCHAR]
     private String todoContent; //투두리스트 내용 [VARCHAR]
-    private LocalDateTime todoStart; //투두리스트 시작일 [DATETIME]
-    private LocalDateTime todoEnd; //투두리스트 종료일 [DATETIME]
-    private int todoIcon;
-    private String todoTagcol;
+    private LocalDate todoStartdate; //투두리스트 시작일 [DATE] 
+    private LocalDate todoEnddate; //투두리스트 종료일 [DATE]
+    private Time todoStarttime; //투두리스트 시작 시간 [TIME]
+    private Time todoEndtime; //투두리스트 종료 시간 [TIME]
+    private String todoCategory; //투두리스트 카테고리 [VARCHAR]
+
 
     @ManyToOne
     @JoinColumn(name = "todo_fk_user_num")
     @JsonIgnore
     private UserEntity user;
     
-    @OneToOne(mappedBy = "todo", cascade = CascadeType.REMOVE)
-    private ShareEntity share;
+    @OneToMany(mappedBy = "todo",orphanRemoval = true)
+    @JsonBackReference
+    private List<ShareEntity> shareEntities;
     
 }

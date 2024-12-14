@@ -34,17 +34,12 @@ public class TodoServiceImpl implements TodoService {
     	List<TodoEntity> todoList = todoRepository.findByUser_UserPkNum(usernum);
     	
     	//공유된 일정목록
-    	List<ShareEntity> list = shareRepository.findAll();
+    	List<ShareEntity> shareList = shareRepository.findByShareUser(usernum);
     	
     	//로그인한 사원에게 공유된 일정인 경우 todoList에 추가
-    	for(ShareEntity share:list) {
-    		String userList = share.getShareUser();
-    		StringTokenizer token = new StringTokenizer(userList, ",");
-
-    		while(token.hasMoreTokens()) {
-    			if(Integer.parseInt(token.nextToken()) == usernum) {
-    				todoList.add(share.getTodo());
-    			}
+    	for(ShareEntity share:shareList) {
+    		if (share.getShareUser() == usernum) {
+    			todoList.add(share.getTodo());
     		}
     	}
     	
@@ -58,11 +53,13 @@ public class TodoServiceImpl implements TodoService {
 		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
 		TodoEntity todo = todoRepository.save(entity);
 		
-		if(bean.getShareUser() != null) {
-			ShareEntity share = new ShareEntity();
-			share.setTodo(todo);
-			share.setShareUser(bean.getShareUser());
-			shareRepository.save(share);
+		if(bean.getShareList() != null) {
+			for(int num:bean.getShareList()) {
+				ShareEntity share = new ShareEntity();
+				share.setTodo(todo);
+				share.setShareUser(num);
+				shareRepository.save(share);
+			}
 		}
     }
     
@@ -78,14 +75,18 @@ public class TodoServiceImpl implements TodoService {
     }
     
     @Override
-    @Transactional
     public boolean editTodoData(TodoForm bean) {
     	try {
     		TodoEntity entity = TodoForm.toEntity(bean);
     		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
     		TodoEntity todo = todoRepository.save(entity);
-    		if(bean.getShareUser() != null) {
-    			shareRepository.saveByTodo(bean.getShareUser(), todo.getTodoPkNum());
+    		if(bean.getShareList() != null) {
+    			for(int num:bean.getShareList()) {
+    				ShareEntity share = new ShareEntity();
+    				share.setTodo(todo);
+    				share.setShareUser(num);
+    				shareRepository.save(share);
+    			}
     		}
     		return true;
     	} catch(Exception e) {

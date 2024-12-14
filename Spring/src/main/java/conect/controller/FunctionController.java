@@ -27,9 +27,6 @@ import conect.service.function.todo.TodoServiceImpl;
 public class FunctionController {
 	
 	@Autowired
-	private ProjServiceImpl projServiceImpl;
-	
-	@Autowired
 	private TodoServiceImpl todoServiceImpl;
 	
 	//유저의 개인 일정 리스트

@@ -21,12 +21,6 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
   const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
   const navigate = useNavigate();
 
-  const setTime = (time) => {
-    //시간 설정
-    time = moment(time).format("YYYY-MM-DDTHH:mm");
-    return time;
-  };
-
   const renderEventContent = (info) => {
     //표시될 타이틀
     //공유된 일정인 경우 타이틀에 [공유] 표기
@@ -41,46 +35,26 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
   };
 
   const handleEventClick = (info) => {
-    setModalContent({
-      //modal에 표시될 내용
-      title: info.event.title, //제목
-      content: info.event.extendedProps.content, //내용
-      start: setTime(info.event.extendedProps.starttime), //시작일
-      end: setTime(info.event.extendedProps.endtime), //종료일
-      id: info.event.id, //일정 pk num
-      sharer:info.event.extendedProps.sharer.toString(), //일정 작성자(공유자)
-      shared:info.event.extendedProps.shared, //일정 공유된 사람 목록
-      tagcol: info.event.backgroundColor, //일정 색깔
-    });
+    console.log(info);
+    // setModalContent({
+    //   //modal에 표시될 내용
+    //   title: info.event.title, //제목
+    //   content: info.event.extendedProps.content, //내용
+    //   startdate: moment(info.event.extendedProps.start).format("YYYY-MM-DD"), //시작일
+    //   enddate: moment(info.event.extendedProps.end).format("YYYY-MM-DD"), //종료일
+    //   starttime : moment(info.event.extendedProps.start).format("HH:mm:dd"),
+    //   endtime : moment(info.event.extendedProps.end).format("HH:mm:dd"),
+    //   category : info.event.extendedProps.category,
+    //   id: info.event.id, //일정 pk num
+    //   sharer:info.event.extendedProps.sharer.toString(), //일정 작성자(공유자)
+    //   shared:info.event.extendedProps.shared, //일정 공유된 사람 목록
+    // });
 
-    if(info.event.extendedProps.sharer === num){
-      setEditModalIsOpen(true);
-    } else {
-      setShowModalIsOpen(true);
-    }
-  };
-
-  const handleEventChange = async (info) => {
-    const data = {
-      todo_fk_user_num: num,
-      todo_title: info.event.title,
-      todo_content: info.event.extendedProps.content,
-      todo_start: setTime(info.event._instance.range.start),
-      todo_end: setTime(info.event._instance.range.end),
-      todo_tagcol: info.event.backgroundColor,
-    };
-
-    axios
-      .put("/function/schedule/" + info.event._def.publicId, data)
-      .then((res) => {
-        if (res.data) {
-          handleGetEvent();
-          handleToast("update", true);
-        }
-      })
-      .catch((err) => {
-        navigator(`/error`);
-      });
+    // if(info.event.extendedProps.sharer === num){
+    //   setEditModalIsOpen(true);
+    // } else {
+    //   setShowModalIsOpen(true);
+    // }
   };
 
   const handleAdd = () => {
@@ -94,8 +68,6 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth" // 월별 보기
         locale="ko"
-        editable={true} // 이벤트 수정 가능
-        eventResizableFromStart={true}
         dayMaxEventRows={3}
         height='auto'
         headerToolbar={{
@@ -117,7 +89,6 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
         events={events} //표시될 이벤트
         eventContent={renderEventContent} //달력에 표시될 내용
         eventClick={handleEventClick} //이벤트 클릭
-        eventChange={handleEventChange} //이벤트 드롭 & 리사이즈
       />
 
       <CalEventShowModal

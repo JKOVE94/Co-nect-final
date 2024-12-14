@@ -14,9 +14,9 @@ public class MentionServiceImpl {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public List<UserDto> getAccountAll() {
+	public List<UserDto> getUserAll(int compno) {
 		return userRepository
-				.findAll()
+				.findByCompanyEntity_compPkNum(compno)
 				.stream()
 				.map(UserDto::fromEntity)
 				.toList();

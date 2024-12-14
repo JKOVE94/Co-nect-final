@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Col, Form, Modal } from "react-bootstrap";
 import style from '../../assets/css/2dashboard/calendar.module.css'
 import ReactMention from "variables/mention/ReactMention";
+import { Input } from "reactstrap";
 
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버
@@ -77,11 +78,14 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>시작일</Form.Label>
-          <Form.Control
-            type="datetime-local"
+          <Input
+            type="date"
             id="todo_start"
             onChange={handleChange}
             required
+          />
+          <Input
+          
           />
         </Form.Group>
         <Form.Group className="mb-2">

@@ -6,5 +6,5 @@ import conect.data.dto.UserDto;
 
 public interface MentionService {
 	
-	List<UserDto> getAccountAll();
+	List<UserDto> getUserAll(int compno);
 }

@@ -8,9 +8,12 @@ import CalendarToast from "variables/Toast/CalendarToast";
 import "../../../assets/css/2dashboard/function.css";
 import style from "../../../assets/css/2dashboard/calendar.module.css";
 import MyShareSchedule from "./MyShareSchedule";
+import moment from "moment";
 
 const Function = () => {
-  const num = useSelector((state) => state.userData.user_pk_num);
+  
+  const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
+    
   //toast
   const [toastType, setToastType] = useState("");
   const [toastIsOpen, setToastIsOpen] = useState(false);
@@ -31,18 +34,24 @@ const Function = () => {
         let todoEvent = res.data.map((data) => ({
           id: data.todo_pk_num, //일정 pk num
           title: data.todo_title, //일정 제목
+          start: moment(data.todo_startdate).startOf("day"),
+          end : moment(data.todo_enddate).endOf("day"),
+          startdate: data.todo_starttime? // 일정 시작
+            new Date(`${data.todo_startdate}T${data.todo_starttime}`):
+            new Date(moment(data.todo_startdate).startOf('day')), 
+          enddate: data.todo_endtime? // 일정 종료
+            new Date(`${data.todo_enddate}T${data.todo_endtime}`):
+            new Date(moment(data.todo_enddate).endOf('day')), 
           content: data.todo_content, //일정 내용
-          start: data.todo_start, //일정 시작일
-          end: data.todo_end, //일정 종료일
-          starttime: data.todo_start,
-          endtime: data.todo_end,
-          color: data.todo_tagcol, //일정 색깔
-          sharer: data.todo_fk_user_num, //일정 작성자(공유자)
-          shared: data.shareUser, //일정 공유된 사람목록
-          allDay: true,
-          //일정 작성자만 수정 가능하게 설정
-          editable : data.todo_fk_user_num === num? true : false
-        }));
+          category : data.todo_category, //일정 카테고리
+          sharer: data.todo_fk_user_num, //일정 작성자
+          shared: data.shareList, //일정 참여자 목록
+          allday: false,
+          backgroundColor : data.todo_category === "회의" ? "#53A0EC" : 
+            data.todo_category === "출장" ? "#FFCC66" :
+            data.todo_category === "개인일정" ? "#FF9999" :
+            data.todo_category === "기타" ? "#9966FF" : "#FFF"
+  }));
         setEvents([...todoEvent]);
       })
       .catch((err) => {
@@ -52,7 +61,8 @@ const Function = () => {
 
   useEffect(() => {
     handleGetEvent();
-  }, [num]);
+    console.log(events);
+  }, []);
 
   return (
     <>

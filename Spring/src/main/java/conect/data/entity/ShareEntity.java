@@ -12,10 +12,11 @@ import lombok.Setter;
 @Table(name = "share")
 public class ShareEntity {
    @Id
-   private String shareUser; // 공유된 사원 목록
+   private int shareUser; // 일정 공유된 pk num
    
-   @OneToOne
+   @ManyToOne
    @JoinColumn(name="share_fk_todo_num")
+   @JsonIgnore
    private TodoEntity todo;
 }
 

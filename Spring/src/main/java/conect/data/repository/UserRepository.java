@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
     @Query("SELECT u FROM UserEntity u WHERE u.userLocked=1")
     List<UserEntity> findLockedUser();
+    
+    List<UserEntity> findByCompanyEntity_compPkNum(int compno);
 }

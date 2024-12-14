@@ -38,7 +38,6 @@ const RecHome = () => {
         axios.get(`/${comp}/rec/${projPkNum}`)
             .then((res) => {
                 setDatas(res.data);
-                handleProgress(res);
             })
             .catch();
     }
@@ -48,10 +47,9 @@ const RecHome = () => {
     },[])
 
     const handleProgress = (all, voter) => {
-        setAllArr([...all.split(",")]);
-        setVoteArr([...voter.split(",")]);
-
-        
+        // setAllArr([...all.split(",")]);
+        // setVoteArr([...voter.split(",")]);
+        // return (voteArr.length/allArr.length); 
     }
 
   return (
