@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,8 +21,8 @@ public class TodoDto {
     private String todo_content; //투두리스트 내용 [VARCHAR]
     private LocalDate todo_startdate; //투두리스트 시작일 [DATE] 
     private LocalDate todo_enddate; //투두리스트 종료일 [DATE]
-    private Time todo_starttime; //투두리스트 시작 시간 [TIME]
-    private Time todo_endtime; //투두리스트 종료 시간 [TIME]
+    private LocalTime todo_starttime; //투두리스트 시작 시간 [TIME]
+    private LocalTime todo_endtime; //투두리스트 종료 시간 [TIME]
     private String todo_category; //투두리스트 카테고리 [VARCHAR]
     
     private int todo_fk_user_num;

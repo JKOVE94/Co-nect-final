@@ -42,8 +42,8 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
     //   content: info.event.extendedProps.content, //내용
     //   startdate: moment(info.event.extendedProps.start).format("YYYY-MM-DD"), //시작일
     //   enddate: moment(info.event.extendedProps.end).format("YYYY-MM-DD"), //종료일
-    //   starttime : moment(info.event.extendedProps.start).format("HH:mm:dd"),
-    //   endtime : moment(info.event.extendedProps.end).format("HH:mm:dd"),
+    //   starttime : moment(info.event.extendedProps.start).format("HH:mm:dd"), //시작시간
+    //   endtime : moment(info.event.extendedProps.end).format("HH:mm:dd"), //종료시간
     //   category : info.event.extendedProps.category,
     //   id: info.event.id, //일정 pk num
     //   sharer:info.event.extendedProps.sharer.toString(), //일정 작성자(공유자)

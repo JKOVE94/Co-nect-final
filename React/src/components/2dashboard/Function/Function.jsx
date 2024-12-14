@@ -30,23 +30,19 @@ const Function = () => {
     axios
       .get("/function/schedule/" + num)
       .then((res) => {
-
         let todoEvent = res.data.map((data) => ({
           id: data.todo_pk_num, //일정 pk num
           title: data.todo_title, //일정 제목
-          start: moment(data.todo_startdate).startOf("day"),
-          end : moment(data.todo_enddate).endOf("day"),
-          startdate: data.todo_starttime? // 일정 시작
-            new Date(`${data.todo_startdate}T${data.todo_starttime}`):
-            new Date(moment(data.todo_startdate).startOf('day')), 
-          enddate: data.todo_endtime? // 일정 종료
-            new Date(`${data.todo_enddate}T${data.todo_endtime}`):
-            new Date(moment(data.todo_enddate).endOf('day')), 
+          start: data.todo_starttime? // 일정 시작
+            moment(data.todo_startdate + ' ' + data.todo_starttime, 'YYYY-MM-DD HH:mm:ss').toISOString():
+            moment(data.todo_startdate).startOf('day').toISOString(), 
+          end : data.todo_endtime? // 일정 종료
+            moment(data.todo_enddate + ' ' + data.todo_endtime, 'YYYY-MM-DD HH:mm:ss').toISOString():
+            moment(data.todo_enddate).endOf('day').toISOString(), 
           content: data.todo_content, //일정 내용
           category : data.todo_category, //일정 카테고리
           sharer: data.todo_fk_user_num, //일정 작성자
           shared: data.shareList, //일정 참여자 목록
-          allday: false,
           backgroundColor : data.todo_category === "회의" ? "#53A0EC" : 
             data.todo_category === "출장" ? "#FFCC66" :
             data.todo_category === "개인일정" ? "#FF9999" :
@@ -61,7 +57,6 @@ const Function = () => {
 
   useEffect(() => {
     handleGetEvent();
-    console.log(events);
   }, []);
 
   return (

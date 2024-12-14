@@ -6,24 +6,24 @@ import { Button, Col, Form, Modal } from "react-bootstrap";
 import style from '../../assets/css/2dashboard/calendar.module.css'
 import ReactMention from "variables/mention/ReactMention";
 import { Input } from "reactstrap";
+import { Select } from "@mui/material";
 
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버
+  const compno = useSelector((state) =>  state.userData.user_fk_comp_num); // 회사번호
   const [data, setData] = useState(); //전달할 데이터
-  const [color, setColor] = useState("#318AAE");
+  const [timeZon, setTimeZon] = useState();
 
   useEffect(()=>{
-    setData((pre) => ({ ...pre, todo_fk_user_num: num, todo_tagcol: color }));
+    setData((pre) => ({ ...pre, todo_fk_user_num: num}));
   },[num])
 
   const handleChange = (e) => {
-    if (e.target.id === "todo_tagcol") setColor(e.target.value);
     setData({ ...data, [e.target.id]: e.target.value});
   };
 
   const handleMention = (mention) => {
-    let str = mention.join(",").slice(0, -1); 
-    setData({...data,shareUser:str});
+    setData({...data,shareList:mention});
   }
 
   const handleClick = async () => {
@@ -37,22 +37,18 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
       })
       .catch((err) => navigator(`/error`));
     onClose();
+    console.log(data);
   };
+
+  const handleCheck = (e) => {
+    setTimeZon(e.target.checked);
+  }
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
         <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%'}}>
           <Col md='100%' style={{fontSize:'1.5rem'}}>일정 추가</Col>
-          <Col md={5}>
-            <Form.Control
-              type="color"
-              id="todo_tagcol"
-              value={color}
-              onChange={handleChange}
-              style={{width:'45px'}}
-            />
-          </Col>
           <Button
             className={style.modalCloseBtn}
             variant="link"
@@ -76,31 +72,67 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
             onChange={handleChange}
           />
         </Form.Group>
-        <Form.Group className="mb-2">
+        <Form.Group className="mb-2" >
           <Form.Label>시작일</Form.Label>
-          <Input
-            type="date"
-            id="todo_start"
-            onChange={handleChange}
-            required
-          />
-          <Input
-          
-          />
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_startdate"
+                onChange={handleChange}
+                required
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_starttime"
+                onChange={handleChange}
+                hidden={timeZon}
+              />
+            </Col>
+          </div>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>종료일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            id="todo_end"
-            onChange={handleChange}
-            required
-          />
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_enddate"
+                onChange={handleChange}
+                required
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_endtime"
+                onChange={handleChange}
+                hidden={timeZon}
+              />
+            </Col>
+          </div>
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>종일</Form.Label>
+          <input type="checkbox" onClick={handleCheck}/>
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>카테고리</Form.Label>
+          <Form.Select id="todo_category" onChange={handleChange}>
+            <option hidden>--카테고리 선택--</option>
+            <option value="회의">회의</option>
+            <option value="출장">출장</option>
+            <option value="개인일정">개인일정</option>
+            <option value="기타">기타</option>
+          </Form.Select>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>일정 공유</Form.Label>
           <ReactMention
-            id="shareUser"
+            id="shareList"
+            compno={compno}
             onMention={handleMention}
             text="공유할 사람을 입력해주세요"
           />

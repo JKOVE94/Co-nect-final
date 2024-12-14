@@ -6,7 +6,7 @@ import { MentionsInput } from "react-mentions";
 import { Input } from "reactstrap";
 import style from "../../assets/css/mention.module.css";
 
-const ReactMention = ({ onMention, text, disabled, userList }) => {
+const ReactMention = ({ onMention, text, disabled, userList, compno }) => {
   //onMention : 멘션 선택 시 동작, text : placeholder, disabled : boolean값
   //userList : 멘션 렌더링 시 default 값 (문자열)
 
@@ -20,22 +20,20 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
 
   useEffect(() => {
     //userList값을 받은 경우, 멘션 input에 값 입력되어 렌더링
-    //ex) userList : "1,3,5" -> 김일번, 김삼번, 김오번
-
-    if (userList) {
-      const list = userList.split(",");
-      const selectedUsers = list.map((id) => {
+    if(userList){
+      const selectedUsers = userList.map((id) => {
         const userObj = user.find((user) => user.id === parseInt(id));
         return userObj ? `@[${userObj.display}](${id})` : "";
       });
 
       setData(selectedUsers.join(" "));
     }
+     
   }, [userList, user]);
 
   const getUserData = () => {
     axios
-      .get("/mention")
+      .get(`/mention/${compno}`)
       .then((res) => {
         const userData = res.data.map((data) => ({
           id: data.user_pk_num,
