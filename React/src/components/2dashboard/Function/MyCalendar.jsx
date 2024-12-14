@@ -36,25 +36,26 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
 
   const handleEventClick = (info) => {
     console.log(info);
-    // setModalContent({
-    //   //modal에 표시될 내용
-    //   title: info.event.title, //제목
-    //   content: info.event.extendedProps.content, //내용
-    //   startdate: moment(info.event.extendedProps.start).format("YYYY-MM-DD"), //시작일
-    //   enddate: moment(info.event.extendedProps.end).format("YYYY-MM-DD"), //종료일
-    //   starttime : moment(info.event.extendedProps.start).format("HH:mm:dd"), //시작시간
-    //   endtime : moment(info.event.extendedProps.end).format("HH:mm:dd"), //종료시간
-    //   category : info.event.extendedProps.category,
-    //   id: info.event.id, //일정 pk num
-    //   sharer:info.event.extendedProps.sharer.toString(), //일정 작성자(공유자)
-    //   shared:info.event.extendedProps.shared, //일정 공유된 사람 목록
-    // });
+    setModalContent({
+      //modal에 표시될 내용
+      title: info.event.title, //제목
+      content: info.event.extendedProps.content, //내용
+      startdate: moment(info.event._instance.range.start).format("YYYY-MM-DD"), //시작일
+      enddate: moment(info.event._instance.range.end).format("YYYY-MM-DD"), //종료일
+      starttime : moment(info.event._instance.range.start).format("HH:mm"), //시작시간
+      endtime : moment(info.event._instance.range.end).format("HH:mm"), //종료시간
+      category : info.event.extendedProps.category,
+      id: info.event.id, //일정 pk num
+      sharer:info.event.extendedProps.sharer, //일정 작성자(공유자)
+      shared:info.event.extendedProps.shared, //일정 공유된 사람 목록
+    });
 
-    // if(info.event.extendedProps.sharer === num){
-    //   setEditModalIsOpen(true);
-    // } else {
-    //   setShowModalIsOpen(true);
-    // }
+    if(info.event.extendedProps.sharer === num){
+      setEditModalIsOpen(true);
+    } else {
+      setShowModalIsOpen(true);
+    }
+
   };
 
   const handleAdd = () => {
@@ -68,6 +69,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth" // 월별 보기
         locale="ko"
+        timeZone="Asia/Seoul"
         dayMaxEventRows={3}
         height='auto'
         headerToolbar={{

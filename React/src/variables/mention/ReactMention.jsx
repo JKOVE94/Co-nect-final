@@ -5,12 +5,14 @@ import { Mention } from "react-mentions";
 import { MentionsInput } from "react-mentions";
 import { Input } from "reactstrap";
 import style from "../../assets/css/mention.module.css";
+import { useSelector } from "react-redux";
 
-const ReactMention = ({ onMention, text, disabled, userList, compno }) => {
+const ReactMention = ({ onMention, text, disabled, userList }) => {
   //onMention : 멘션 선택 시 동작, text : placeholder, disabled : boolean값
   //userList : 멘션 렌더링 시 default 값 (문자열)
 
-  const [user, setUser] = useState([]); //전체 사원 목록
+  const compno = useSelector((state) =>  state.userData.user_fk_comp_num); // 회사번호
+  const [users, setUsers] = useState([]); //전체 사원 목록
   const [data, setData] = useState(""); //멘션 input 입력값
 
   useEffect(() => { 
@@ -22,14 +24,14 @@ const ReactMention = ({ onMention, text, disabled, userList, compno }) => {
     //userList값을 받은 경우, 멘션 input에 값 입력되어 렌더링
     if(userList){
       const selectedUsers = userList.map((id) => {
-        const userObj = user.find((user) => user.id === parseInt(id));
+        const userObj = users.find((user) => user.id === parseInt(id));
         return userObj ? `@[${userObj.display}](${id})` : "";
       });
 
       setData(selectedUsers.join(" "));
     }
      
-  }, [userList, user]);
+  }, [userList, users]);
 
   const getUserData = () => {
     axios
@@ -41,7 +43,7 @@ const ReactMention = ({ onMention, text, disabled, userList, compno }) => {
           buser: data.dpartName,
           display: data.user_name,
         }));
-        setUser(userData);
+        setUsers(userData);
       })
       .catch((err) => console.log(err));
   };
@@ -59,7 +61,7 @@ const ReactMention = ({ onMention, text, disabled, userList, compno }) => {
 
   const findById = (search) => {
     //pk num으로 검색 가능
-    return user.filter((user) => {
+    return users.filter((user) => {
       return (
         user.display.includes(search) || user.id.toString().includes(search)
       );

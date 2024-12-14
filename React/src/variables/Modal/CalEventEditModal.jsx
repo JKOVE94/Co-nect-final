@@ -22,10 +22,12 @@ const CalEventEditModal = ({
       todo_fk_user_num: num,
       todo_title: info.title || "",
       todo_content: info.content || "",
-      todo_start: info.start || "",
-      todo_end: info.end || "",
-      todo_tagcol: info.tagcol || "#000000",
-      shareUser:info.shared || ""
+      todo_startdate: info.startdate || "",
+      todo_enddate: info.enddate || "",
+      todo_starttime : info.starttime || "",
+      todo_endtime : info.endtime || "",
+      todo_category: info.category || "",
+      share_user:info.shared || ""
     });
     setRead(true);
   }, [isOpen, onClose, info, getEvent, handleToast, num]);
@@ -74,16 +76,6 @@ const CalEventEditModal = ({
       <Modal.Header>
         <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
           <Col md='100%' style={{fontSize:'1.5rem'}}>일정 수정</Col>
-          <Col md={5}>
-            <Form.Control
-              value={data.todo_tagcol}
-              type="color"
-              id="todo_tagcol"
-              onChange={handleChange}
-              style={{width:'45px'}}
-              disabled={read}
-            />
-          </Col>
           <Button className={style.modalCloseBtn} variant="link" onClick={onClose}>
             &times;
           </Button>
@@ -111,33 +103,68 @@ const CalEventEditModal = ({
             disabled={read}
           />
         </Form.Group>
-        <Form.Group className="mb-2">
+        <Form.Group className="mb-2" >
           <Form.Label>시작일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            id="todo_start"
-            value={data.todo_start}
-            onChange={handleChange}
-            disabled={read}
-          />
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_startdate"
+                value={data.todo_startdate}
+                onChange={handleChange}
+                disabled={read}
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_starttime"
+                value={data.todo_starttime}
+                onChange={handleChange}
+                disabled={read}
+              />
+            </Col>
+          </div>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>종료일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            value={data.todo_end}
-            id="todo_end"
-            onChange={handleChange}
-            disabled={read}
-          />
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_enddate"
+                value={data.todo_enddate}
+                onChange={handleChange}
+                disabled={read}
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_endtime"
+                value={data.todo_endtime}
+                onChange={handleChange}
+                disabled={read}
+              />
+            </Col>
+          </div>
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>참석자</Form.Label>
+          <Form.Label>카테고리</Form.Label>
+          <Form.Select id="todo_category" value={data.todo_category} disabled={read}>
+            <option hidden>--카테고리 선택--</option>
+            <option value="회의">회의</option>
+            <option value="출장">출장</option>
+            <option value="개인일정">개인일정</option>
+            <option value="기타">기타</option>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>참여자</Form.Label>
           <ReactMention
             id="shareUser"
             disabled={read}
-            onMention={handleMention}
-            userList={info.shared}
+            userList={data.dictionaryshare_user}
           />
         </Form.Group>
       </Modal.Body>

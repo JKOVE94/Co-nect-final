@@ -11,7 +11,7 @@ const CalEventShowModal = ({
   onClose,
   info
 }) => {
-  
+
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
@@ -42,30 +42,64 @@ const CalEventShowModal = ({
             disabled
           />
         </Form.Group>
-        <Form.Group className="mb-2">
+        <Form.Group className="mb-2" >
           <Form.Label>시작일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            id="todo_start"
-            value={info.start}
-            disabled
-          />
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_startdate"
+                value={info.startdate}
+                disabled
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_starttime"
+                value={info.starttime}
+                disabled
+              />
+            </Col>
+          </div>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>종료일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            value={info.end}
-            id="todo_end"
-            disabled
-          />
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_enddate"
+                value={info.enddate}
+                disabled
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_endtime"
+                value={info.endtime}
+                disabled
+              />
+            </Col>
+          </div>
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>공유자</Form.Label>
+          <Form.Label>카테고리</Form.Label>
+          <Form.Select id="todo_category" value={info.category} disabled>
+            <option hidden>--카테고리 선택--</option>
+            <option value="회의">회의</option>
+            <option value="출장">출장</option>
+            <option value="개인일정">개인일정</option>
+            <option value="기타">기타</option>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>참여자</Form.Label>
           <ReactMention
             id="shareUser"
             disabled={true}
-            userList={info.sharer}
+            userList={info.shared && [...info.shared, info.sharer]}
           />
         </Form.Group>
       </Modal.Body>

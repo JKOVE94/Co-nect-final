@@ -10,7 +10,6 @@ import { Select } from "@mui/material";
 
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버
-  const compno = useSelector((state) =>  state.userData.user_fk_comp_num); // 회사번호
   const [data, setData] = useState(); //전달할 데이터
   const [timeZon, setTimeZon] = useState();
 
@@ -129,10 +128,9 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
           </Form.Select>
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>일정 공유</Form.Label>
+          <Form.Label>참여자</Form.Label>
           <ReactMention
             id="shareList"
-            compno={compno}
             onMention={handleMention}
             text="공유할 사람을 입력해주세요"
           />

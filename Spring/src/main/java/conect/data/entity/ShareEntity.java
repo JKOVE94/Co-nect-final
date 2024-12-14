@@ -2,7 +2,13 @@ package conect.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,13 +16,16 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "share")
+@IdClass(ShareId.class)
 public class ShareEntity {
-   @Id
-   private int shareUser; // 일정 공유된 pk num
-   
-   @ManyToOne
-   @JoinColumn(name="share_fk_todo_num")
-   @JsonIgnore
-   private TodoEntity todo;
-}
 
+    @Id
+    @Column(name = "share_user")
+    private int shareUser; // 복합 키 필드 2
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "share_fk_todo_num")
+    @JsonIgnore
+    private TodoEntity todo; // 관계 매핑
+}
