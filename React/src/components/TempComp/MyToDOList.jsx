@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Card, Carousel } from "react-bootstrap";
 import "../../assets/css/2dashboard/function.css";
 import style from "../../assets/css/2dashboard/calendar.module.css";
 
 import {
   Button,
-  Card,
   CardHeader,
   CardBody,
   CardTitle,
@@ -16,7 +16,6 @@ import {
   Container,
   Row,
   Table,
-  Carousel,
   CarouselItem,
 } from "reactstrap";
 import moment from "moment";
@@ -26,7 +25,7 @@ const MyToDoList = () => {
     tasks: [],
     projects: [],
     posts: [],
-    events: [],
+    todos: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,7 +46,7 @@ const MyToDoList = () => {
       .get(`/proj/user/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
-        updateTodoList(res.data.events);
+        updateTodoList(res.data.todos);
       })
       .catch((error) => {
         setError("데이터를 불러오는데 실패했습니다.");
@@ -58,25 +57,17 @@ const MyToDoList = () => {
       });
   }, [user_pk_num]);
 
-  const updateTodoList = useCallback((events) => {
-    const today = new Date();
-    const day = moment(today).startOf("day");
-    let dbList = [];
-    events.forEach((event) => {
-      const sday = moment(event.start).startOf("day");
-      const eday = moment(event.end).endOf("day");
-      if (sday <= day && day <= eday) {
-        dbList.push({
-          title: event.title,
-          content: event.content,
-          start: moment(event.start).format("hh:mm A"),
-          end:
-            eday > moment(today).endOf("day")
-              ? moment().format("12:00 A")
-              : moment(event.end).format("hh:mm A"),
-        });
-      }
-    });
+  const updateTodoList = useCallback((todos) => {
+    const today = moment().startOf('day');
+    let dbList = todos.filter(todo => {
+      const startDate = moment(todo.todo_startdate);
+      const endDate = moment(todo.todo_enddate);
+      return today.isSameOrAfter(startDate) && today.isSameOrBefore(endDate);
+    }).map(todo => ({
+      ...todo,
+      start: todo.todo_starttime || '00:00',
+      end: todo.todo_endtime || '23:59'
+    }));
     setTodoList(dbList);
   }, []);
 
@@ -161,21 +152,30 @@ const MyToDoList = () => {
                     오늘의 일정이 없습니다.
                   </CardSubtitle>
                 ) : (
-                  <Carousel>
+                  <Carousel
+            slide={false}
+            data-bs-theme="dark"
+            prevLabel=""
+            nextLabel=""
+            prevIcon="<"
+            nextIcon=">"
+            indicators={false}
+            interval={null}
+          >
                     {todoList.map((todo, index) => (
-                      <CarouselItem key={index}>
+                      <Carousel.Item key={index}>
                         <div className={style.itembox}>
                           <CardTitle className={style.subtitle}>
-                            {todo.title}
+                            {todo.todo_title}
                           </CardTitle>
                           <CardSubtitle className={style.sub}>
                             {todo.start} ~ {todo.end}
                           </CardSubtitle>
                           <CardText className={style.item}>
-                            {todo.content}
+                            {todo.todo_content}
                           </CardText>
                         </div>
-                      </CarouselItem>
+                      </Carousel.Item>
                     ))}
                   </Carousel>
                 )}

@@ -196,7 +196,7 @@ public class ProjServiceImpl implements ProjService {
 				.collect(Collectors.toList()));
 		return result;
 	}
-	@Override
+	
 	public List<ProjectDto> getUserProjectData(int userPkNum){
 		
 		return prepository.getProjByTaskFkUserNum(userPkNum).stream()
