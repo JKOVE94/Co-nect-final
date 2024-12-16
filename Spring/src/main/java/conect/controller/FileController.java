@@ -89,10 +89,9 @@ public class FileController {
 	// 특정 게시글 조회
 	@GetMapping("/{filePkNum}")
 	public ResponseEntity<FileDto> getPost(
-	    @PathVariable("filePkNum") Integer filePkNum, // 경로 변수로 게시글 번호 전달
-	    HttpServletRequest request, HttpServletResponse response) {
+	    @PathVariable("filePkNum") Integer filePkNum) {
 		// 요청 정보와 함께 서비스 호출
-		FileDto fileDto = fileService.getPostView(filePkNum, request, response);
+		FileDto fileDto = fileService.getPostView(filePkNum);
 		return new ResponseEntity<>(fileDto, HttpStatus.OK); // 성공 시 게시글 데이터 반환
 	}
 

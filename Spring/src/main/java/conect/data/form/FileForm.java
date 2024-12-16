@@ -1,9 +1,7 @@
 package conect.data.form;
 
-import java.time.LocalDate;
-
 import org.springframework.web.multipart.MultipartFile;
-
+import conect.data.entity.FileEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,13 +10,22 @@ import lombok.Setter;
 public class FileForm {
 	// 이거 MultipartFile로 타입 변환하기
 	private int file_pk_num; // 파일 고유 번호 [PK,INT]
-	private String file_post_name; // 파일이 업로드된 게시글 이름 [VARCHAR]
 	private String file_name; // 업로드된 파일 이름 [VARCHAR]
 	private String file_path; // 파일 구글 클라우드 경로 [VARCHAR]
 	private int file_size; // 파일 크기  [BIGINT]
 	private String file_type; // 파일 타입 [VARCHAR]
-	private int file_download; // 파일 다운로드 수 [INT]
-	private int file_fk_user_num; // 파일 업로드한 유저의 사번 [FK, INT]
-	private LocalDate file_regdate; // 파일 등록일 [DATETIME]
 	private MultipartFile file;
+	private int file_fk_wiki_num; // 문서 번호
+	
+	public static FileEntity toEntity(FileForm form) {
+        // fk관련된 데이터는 service단에서 findById로 찾아야 함
+		FileEntity entity = new FileEntity();
+        entity.setFilePkNum(form.getFile_pk_num());
+        entity.setFileName(form.getFile_name());
+        entity.setFilePath(form.getFile_path());
+        entity.setFileSize(form.getFile_size());
+        entity.setFileType(form.getFile_type());
+        return entity;
+    }
+
 }

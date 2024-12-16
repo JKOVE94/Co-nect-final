@@ -20,8 +20,8 @@ public interface FileService {
 	// 전체 조회
 	List<FileDto> getPostAll();
 
-	// 부분 조회 및 조회수 증가
-	public FileDto getPostView(Integer filePkNum, HttpServletRequest request, HttpServletResponse response);
+	// 부분 조회
+	public FileDto getPostView(Integer filePkNum);
 
 	// 수정
 	FileDto updatePost(int filePkNum, FileForm fileForm);

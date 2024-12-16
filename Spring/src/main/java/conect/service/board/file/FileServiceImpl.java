@@ -41,9 +41,6 @@ public class FileServiceImpl implements FileService {
 	
 	@Autowired
 	private FileRepository fileRepository;
-	
-	@Autowired
-	private UserRepository userRepository;
 
 	// GCP Storage 세팅
 	@Value("${spring.cloud.gcp.storage.credentials.location}")
@@ -61,7 +58,7 @@ public class FileServiceImpl implements FileService {
 			keyFile = ResourceUtils.getURL(keyFileName).openStream();
 
 			String originalFileName = file.getOriginalFilename();
-			String fileName = "file/" +originalFileName;
+			String fileName = "file/" + originalFileName;
 			// String ext = form.getUser_picfile().getContentType();
 			
 			
@@ -71,7 +68,7 @@ public class FileServiceImpl implements FileService {
 					.getService();
 			
 			// BlobInfo 생성 (파일 정보)
-	        BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, form.getFile_name()).build();
+	        BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName).build();
 
 	        // Google Cloud Storage에 파일 업로드
 	        storage.create(blobInfo, file.getBytes());
@@ -91,14 +88,10 @@ public class FileServiceImpl implements FileService {
 	public FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException{
 		FileEntity fileEntity = new FileEntity();
 
-		fileEntity.setFilePostName(fileForm.getFile_post_name());
 		fileEntity.setFileName(fileForm.getFile_name());
 		fileEntity.setFilePath(saveFile(fileForm, file));
 		fileEntity.setFileSize(fileForm.getFile_size());
-		fileEntity.setFileType(fileForm.getFile_type());
-		fileEntity.setFileDownload(fileForm.getFile_download());
-		fileEntity.setUserEntity(userRepository.findById(fileForm.getFile_fk_user_num()).get());
-		fileEntity.setFileRegdate(fileForm.getFile_regdate());
+		fileEntity.setFileType(file.getContentType());
 		
 		return fileRepository.save(fileEntity);
 	}
@@ -111,39 +104,7 @@ public class FileServiceImpl implements FileService {
 
 	// 부분 조회, 조회수(Cookie)
 	@Override
-    public FileDto getPostView(Integer filePkNum, HttpServletRequest request, HttpServletResponse response) {
-        // 조회수 증가 로직
-		// frepository.incrementView(postPkNum); // 조회수 증가 쿼리 실행
-		
-        Cookie oldCookie = null;
-        Cookie[] cookies = request.getCookies();
-        
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("postView")) {
-                    oldCookie = cookie;
-                }
-            }
-        }
-
-        if (oldCookie != null) {
-            // 쿠키 값에 게시글 ID가 없다면 조회수 증가
-            if (!oldCookie.getValue().contains("[" + filePkNum.toString() + "]")) {
-                updateHits(filePkNum); // 조회수 증가
-                oldCookie.setValue(oldCookie.getValue() + "_[" + filePkNum + "]"); // 쿠키 값에 게시글 ID 추가
-                oldCookie.setMaxAge(60 * 60 * 24); // 쿠키 유효 기간 1일
-                oldCookie.setPath("/"); // 쿠키 경로 설정
-                response.addCookie(oldCookie); // 변경된 쿠키를 클라이언트에 추가
-            }
-        } else {
-            // 쿠키가 없다면 새로운 쿠키 생성 후 조회수 증가
-            updateHits(filePkNum);
-            Cookie newCookie = new Cookie("postView", "[" + filePkNum + "]");
-            newCookie.setMaxAge(60 * 60 * 24); // 쿠키 유효 기간 1일
-            newCookie.setPath("/"); // 쿠키 경로 설정
-            response.addCookie(newCookie); // 새로운 쿠키를 클라이언트에 추가
-        }
-
+    public FileDto getPostView(Integer filePkNum) {
         // 게시글 정보 조회 후 DTO 반환
         Optional<FileEntity> fileEntityOptional = fileRepository.findById(filePkNum);
         if (fileEntityOptional.isPresent()) {
@@ -154,24 +115,16 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-	// 조회수 증가 메소드
-    @Transactional
-    public int updateHits(Integer filePkNum) {
-        return fileRepository.incrementView(filePkNum); // 해당 게시글의 조회수를 증가시키는 메소드
-    }
 
 	// 수정
 	@Override
 	public FileDto updatePost(int filePkNum, FileForm fileForm) { // postId를 postPkNum으로 변경
 		FileEntity updatePost = fileRepository.findById(filePkNum).orElse(null); // postId를 postPkNum으로 변경
 		if (updatePost != null) {
-			updatePost.setFilePostName(fileForm.getFile_post_name());
 			updatePost.setFileName(fileForm.getFile_name());
 			updatePost.setFilePath(fileForm.getFile_path());
 			updatePost.setFileSize(fileForm.getFile_size());
 			updatePost.setFileType(fileForm.getFile_type());
-			updatePost.setFileDownload(fileForm.getFile_download());
-			updatePost.setFileRegdate(fileForm.getFile_regdate());
 			
 			return FileDto.fromEntity(fileRepository.save(updatePost));
 		}
@@ -197,8 +150,6 @@ public class FileServiceImpl implements FileService {
     	
     	if (searchType.equalsIgnoreCase("file_name")) {
     		postPage = fileRepository.findByFileNameContains(searchText, pageable);
-    	} else if(searchType.equalsIgnoreCase("user_name")) {
-    		postPage = fileRepository.findByUserEntity_UserNameContains(searchText, pageable);
     	} else {
     		postPage = fileRepository.findAll(pageable);
     	}

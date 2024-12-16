@@ -9,12 +9,12 @@ import FavorCheck from "../Favorite/FavorCheck";
 import "../../../assets/css/freepost/freelist.css";
 
 const FileList = () => {
-  const [posts, setPosts] = useState([]);
+  const [files, setFiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [pageBlock, setPageBlock] = useState(0);
   const [totalBlocks, setTotalBlocks] = useState(0);
-  const [sortField, setSortField] = useState("fileRegdate"); // 기본 정렬: 최신순
+  const [sortField, setSortField] = useState("wikiRegdate"); // 기본 정렬: 최신순
   const [sortDirection, setSortDirection] = useState("DESC"); // 기본 정렬 방향: 내림차순
 
   //검색 type:title,name
@@ -23,7 +23,7 @@ const FileList = () => {
 
   const navigate = useNavigate();
 
-  const fetchPosts = (
+  const fetchFiles = (
     page,
     block,
     sortField,
@@ -43,7 +43,7 @@ const FileList = () => {
         },
       })
       .then((res) => {
-        setPosts(res.data.posts);
+        setFiles(res.data.files);
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);
         setTotalBlocks(res.data.totalBlocks);
@@ -54,7 +54,7 @@ const FileList = () => {
   };
 
   useEffect(() => {
-    fetchPosts(0, 0, sortField, sortDirection, searchType, searchText);
+    fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
     handleFavorite();
   }, [sortField, sortDirection]);
 
@@ -70,7 +70,7 @@ const FileList = () => {
   const handlePageBlockChange = (direction) => {
     const newPageBlock = pageBlock + direction;
     setPageBlock(newPageBlock);
-    fetchPosts(
+    fetchFiles(
       newPageBlock * pagesPerBlock,
       newPageBlock,
       sortField,
@@ -82,7 +82,7 @@ const FileList = () => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    fetchPosts(
+    fetchFiles(
       pageNumber,
       Math.floor(pageNumber / pagesPerBlock),
       sortField,
@@ -122,7 +122,7 @@ const FileList = () => {
       //사용자가 type을 선택하지 않았거나 입력값이 없을 경우 search 실행하지 않음
       return;
     } else {
-      fetchPosts(0, 0, sortField, sortDirection, searchType, searchText);
+      fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
     }
   };
 
@@ -189,26 +189,26 @@ const FileList = () => {
                 <th>제목</th>
                 <th>작성자</th>
                 <th
-                  onClick={() => handleSortChange("fileRegdate")}
+                  onClick={() => handleSortChange("wikiRegdate")}
                   style={{ cursor: "pointer" }}
                 >
-                  등록일
-                  {sortField === "fileRegdate" &&
+                  작성일
+                  {sortField === "wikiRegdate" &&
                     (sortDirection === "DESC" ? "▼" : "▲")}
                 </th>
                 <th
-                  onClick={() => handleSortChange("fileDownload")}
+                  onClick={() => handleSortChange("wikiView")}
                   style={{ cursor: "pointer" }}
                 >
-                  다운로드수
-                  {sortField === "fileDownload" &&
+                  조회수
+                  {sortField === "wikiView" &&
                     (sortDirection === "DESC" ? "▼" : "▲")}
                 </th>
               </tr>
             </thead>
             <tbody>
-              {posts.length > 0 ? (
-                posts.map((post, index) => (
+              {files.length > 0 ? (
+                files.map((post, index) => (
                   <tr key={post.file_pk_num || `post-${index}`}>
                     <td style={{ display: "flex", justifyContent: "center" }}>
                       <FavorCheck
@@ -220,12 +220,11 @@ const FileList = () => {
                     <td>{post.file_pk_num}</td>
                     <td>
                       <Link to={`/main/file/detail/${post.file_pk_num}`}>
-                        {post.file_post_name}
+                        {post.file_name}
                       </Link>
                     </td>
-                    <td>{post.file_type}</td>
-                    <td>{formatDate(post.file_regdate)}</td>
-                    <td>{post.file_download}</td>
+                    <td>{formatDate(post.wiki_regdate)}</td>
+                    <td>{post.wiki_view}</td>
                   </tr>
                 ))
               ) : (
