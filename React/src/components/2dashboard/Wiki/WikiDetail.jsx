@@ -71,7 +71,7 @@ const WikiDetail = () => {
     <Container fluid style={{ Height: "40em", marginTop: "2em" }}>
       <Card style={{ Height: "40em", overflowY: "auto", zIndex: 100 }}>
         <CardHeader>
-          <h2>위키문서</h2> {/* 카드 제목 */}
+          <h2>문서 상세보기</h2> {/* 카드 제목 */}
         </CardHeader>
         <CardBody
           style={{
@@ -121,10 +121,16 @@ const WikiDetail = () => {
                   </tr>
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>
-                      작 성 일
+                      등 록 일
                     </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {new Date(wiki.wiki_regdate).toISOString().split("T")[0]}{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}> 파일</td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {wiki.wiki_fk_file_num} {/* 파일명 / 번호로 파일명 불러오자요*/}
                     </td>
                   </tr>
                   <tr>
@@ -141,6 +147,7 @@ const WikiDetail = () => {
             <br />
 
             {/* 버튼 섹션 */}
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>  
             <button
               className="btn btn-primary"
               onClick={() => navigate(`/main/wiki/wikiedit/${wikiPkNum}`)}
@@ -156,6 +163,7 @@ const WikiDetail = () => {
             >
               목록 {/* 목록으로 돌아가기 버튼 */}
             </button>
+          </div>  
           </div>
           <br />
         </CardBody>

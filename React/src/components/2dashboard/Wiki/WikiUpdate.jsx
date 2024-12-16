@@ -12,6 +12,7 @@ import {
   Row,
   CardHeader,
 } from "reactstrap";
+import { Checkbox } from "rsuite";
 
 const WikiUpdate = () => {
   const navigate = useNavigate();
@@ -61,6 +62,14 @@ const WikiUpdate = () => {
     }));
   };
 
+  // 공지 여부 체크박스 상태 업데이트
+  const handleCheckboxChange = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      wiki_is_notice: !prevData.wiki_is_notice,
+    }));
+  };
+
   // 수정 요청
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,66 +101,43 @@ const WikiUpdate = () => {
 
       <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
         <form onSubmit={handleSubmit}>
-        <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
               for="wiki_name"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
-              제목 
+              제목
             </Label>
             <Col sm={10}>
               <Input
                 type="text"
                 name="wiki_name"
                 id="wiki_name"
-                value={formData.wiki_name} 
+                value={formData.wiki_name}
                 onChange={handleEditChange}
                 required
               />
             </Col>
           </FormGroup>
 
-          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-            <Label
-              for="wiki_fk_user_num"
-              sm={2}
-              style={{ fontSize: "14px", fontWeight: "bold" }}
-            >
-              작성자
-            </Label>
-            <Col sm={10}>
-              <Input
-                type="text"
-                name="wiki_fk_user_num"
-                id="wiki_fk_user_num"
-                value={formData.user_name} // 이름 표시
-                onChange={handleEditChange}
-                required
-                disabled // 사용자가 수정하지 못하도록
-              />
-            </Col>
-          </FormGroup>
+          <Input
+            type="hidden"
+            name="wiki_fk_user_num"
+            id="wiki_fk_user_num"
+            value={formData.user_name} // 이름 표시
+            onChange={handleEditChange}
+            required
+          />
 
-          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-            <Label
-              for="wiki_regdate"
-              sm={2}
-              style={{ fontSize: "14px", fontWeight: "bold" }}
-            >
-              등록일
-            </Label>
-            <Col sm={10}>
-              <Input
-                type="date"
-                name="wiki_regdate"
-                id="wiki_regdate"
-                value={formData.wiki_regdate}
-                onChange={handleEditChange}
-                required
-              />
-            </Col>
-          </FormGroup>
+          <Input
+            type="hidden"
+            name="wiki_regdate"
+            id="wiki_regdate"
+            value={formData.wiki_regdate}
+            onChange={handleEditChange}
+            required
+          />
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
@@ -174,34 +160,80 @@ const WikiUpdate = () => {
             </Col>
           </FormGroup>
           <br />
-          <Row form>
-            <Col sm={1.5} className="text-center">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: "12px",
+            }}
+          >
+            {/* 공지 여부 */}
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Label
+                check
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                }}
+              >
+                중요 여부
+              </Label>
+              <Checkbox
+                name="wiki_is_notice"
+                checked={formData.wiki_is_notice}
+                onChange={handleCheckboxChange}
+              />
+            </div>
+            {/* 파일 선택 버튼 */}
               <Button
                 style={{
-                  backgroundColor: "#1E90FF", // 같은 색상
-                  borderColor: "#1E90FF",
-                  color: "white", // 글자 색상 흰색
+                  backgroundColor: "#696969", // 밝은 회색 배경
+                  color: "white", // 흰 글자
+                  padding: "5px 10px", // 작게 조정된 내부 여백
+                  fontSize: "14px", // 작은 글자 크기
+                  borderRadius: "5px", // 둥근 모서리
+                  width: "auto", // 글자 크기에 맞춰 버튼 크기 자동 설정
                 }}
-                block
-                type="submit"
               >
-                수정 완료
+                파일 선택
               </Button>
-            </Col>
+              <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+              (한 번에 하나의 파일만 업로드할 수 있습니다.<br />
+              여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
+            </p>
+
+            {/* 버튼들 */}
+            <Row form style={{ display: "flex", justifyContent: "flex-end" }}>
             <Col sm={1.5} className="text-center">
-              <Button
-                style={{
-                  backgroundColor: "#1E90FF", // 진하면서도 생기 있는 파란색
-                  borderColor: "#1E90FF", // 동일한 색상
-                  color: "white", // 글자 색상 흰색
-                }}
-                block
-                onClick={handleCancel}
-              >
-                취소
-              </Button>
-            </Col>
-          </Row>
+                <Button
+                className="btn btn-primary"
+                  style={{
+                    backgroundColor: "#007bff",
+                    borderColor: "#007bff",
+                    color: "white",
+                  }}
+                  block
+                  type="submit"
+                >
+                  수정
+                </Button>
+              </Col>
+              <Col sm={1.5} className="text-center">
+                <Button
+                  style={{
+                    backgroundColor: "#696969",
+                    borderColor: "#696969",
+                    color: "white",
+                  }}
+                  block
+                  onClick={handleCancel}
+                >
+                  목록
+                </Button>
+              </Col>
+            </Row>
+          </div>
         </form>
       </CardBody>
     </Card>

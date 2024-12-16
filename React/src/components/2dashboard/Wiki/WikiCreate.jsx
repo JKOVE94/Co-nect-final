@@ -87,7 +87,7 @@ const WikiCreate = () => {
       style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
     >
       <CardHeader className="border-1">
-        <h2 className="mb-0">문서 작성</h2>
+        <h2 className="mb-0">새 글</h2>
       </CardHeader>
 
       <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
@@ -112,46 +112,24 @@ const WikiCreate = () => {
             </Col>
           </FormGroup>
 
-          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-            <Label
-              for="wiki_fk_user_num"
-              sm={2}
-              style={{ fontSize: "14px", fontWeight: "bold" }}
-            >
-              작성자
-            </Label>
-            <Col sm={10}>
-              <Input
-                type="text"
-                name="wiki_fk_user_num"
-                id="wiki_fk_user_num"
-                value={writer.user_name}
-                onChange={handleInputChange}
-                required
-                disabled
-              />
-            </Col>
-          </FormGroup>
+          <Input
+            type="hidden"
+            name="wiki_fk_user_num"
+            id="wiki_fk_user_num"
+            value={writer.user_name}
+            onChange={handleInputChange}
+            required
+            disabled
+          />
 
-          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-            <Label
-              for="wiki_regdate"
-              sm={2}
-              style={{ fontSize: "14px", fontWeight: "bold" }}
-            >
-              등록일
-            </Label>
-            <Col sm={10}>
-              <Input
-                type="date"
-                name="wiki_regdate"
-                id="wiki_regdate"
-                value={formData.wiki_regdate}
-                onChange={handleInputChange}
-                required
-              />
-            </Col>
-          </FormGroup>
+          <Input
+            type="hidden"
+            name="wiki_regdate"
+            id="wiki_regdate"
+            value={formData.wiki_regdate}
+            onChange={handleInputChange}
+            required
+          />
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
@@ -173,50 +151,73 @@ const WikiCreate = () => {
               />
             </Col>
           </FormGroup>
-          
-          <FormGroup check row style={{ height: "10%", marginBottom: "12px" }}>
-            <Label check sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
-              공지 여부
-            </Label>
-            <Col sm={10}>
-              <Checkbox
-                name="wiki_is_notice"
-                checked={formData.wiki_is_notice}
-                onChange={handleCheckboxChange}
-              />
-            </Col>
-          </FormGroup>
 
-          <br />
-          {/* 버튼들 */}
-          <Row form>
-            <Col sm={1.5} className="text-center">
-              <Button
-                style={{
-                  backgroundColor: "#1E90FF", // 진하면서도 생기 있는 파란색
-                  borderColor: "#1E90FF",
-                  color: "white", // 글자 색상 흰색
-                }}
-                block
-                onClick={handleList}
-              >
-                목록
-              </Button>
-            </Col>
-            <Col sm={1.5} className="text-center">
-              <Button
-                style={{
-                  backgroundColor: "#1E90FF",
-                  borderColor: "#1E90FF",
-                  color: "white",
-                }}
-                block
-                type="submit"
-              >
-                저장
-              </Button>
-            </Col>
-          </Row>
+          {/* 중요 여부와 버튼들 */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "10px" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+    <Label
+      check
+      style={{
+        fontSize: "14px",
+        fontWeight: "bold",
+      }}
+    >
+      중요 여부
+    </Label>
+    <Checkbox
+      name="wiki_is_notice"
+      checked={formData.wiki_is_notice}
+      onChange={handleCheckboxChange}
+    />
+  </div>
+  
+  {/* 파일 선택 버튼 */}
+  <Button
+    style={{
+      backgroundColor: "#696969", // 밝은 회색 배경
+      color: "white", // 흰 글자
+      padding: "5px 10px", // 작게 조정된 내부 여백
+      fontSize: "14px", // 작은 글자 크기
+      borderRadius: "5px", // 둥근 모서리
+      width: "auto", // 글자 크기에 맞춰 버튼 크기 자동 설정
+    }}
+  >
+    파일 선택
+  </Button>
+  <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+  (한 번에 하나의 파일만 업로드할 수 있습니다.<br />
+  여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
+</p>
+  {/* 버튼들 */}
+  <Row form style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+  <Col sm={1.5} className="text-center" style={{ display: "flex", justifyContent: "flex-end" }}>
+      <Button
+        style={{
+          backgroundColor: "#007bff",
+          borderColor: "#007bff",
+          color: "white",
+        }}
+        block
+        type="submit"
+      >
+        등록
+      </Button>
+    </Col>
+    <Col sm={1.5} className="text-center" style={{ display: "flex", justifyContent: "flex-end" }}>
+      <Button
+        style={{
+          backgroundColor: "#696969",
+          borderColor: "#696969",
+          color: "white",
+        }}
+        block
+        onClick={handleList}
+      >
+        목록
+      </Button>
+    </Col>
+  </Row>
+</div>
         </form>
       </CardBody>
     </Card>

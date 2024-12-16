@@ -113,7 +113,7 @@ const WikiList = () => {
     <Container fluid style={{ Height: "40em", marginTop: "1em" }}>
       <Card style={{ Height: "40em", overflowY: "auto" }}>
         <CardHeader>
-          <h2>위키문서 게시판</h2>
+          <h2>문서 게시판</h2>
           <div>
             <select
               onChange={(e) => setSearchType(e.target.value)}
@@ -182,29 +182,33 @@ const WikiList = () => {
                 <th>제목</th>
                 <th>작성자</th>
                 <th>등록일</th>
+                <th>조회수</th>
               </tr>
             </thead>
             <tbody>
               {wikis.length > 0 ? (
                 wikis.map((wiki, index) => (
                   <tr
-  key={wiki.wiki_pk_num || `wiki-${index}`}
-  style={{ fontWeight: wiki.is_notice === 1 ? "bold" : "normal" }} // is_notice가 1일 때 강조
->
-  <td>{wiki.wiki_pk_num}</td>
-  <td>
-    {wiki.is_notice === 1 && ( // 공지사항일 때만 표시
-      <span role="img" aria-label="bell">
-        🔔
-      </span>
-    )}
-    <Link to={`/main/wiki/wikidetail/${wiki.wiki_pk_num}`}>
-      {wiki.wiki_name}
-    </Link>
-  </td>
-  <td>{wiki.user_name}</td>
-  <td>{formatDate(wiki.wiki_regdate)}</td>
-</tr>
+                    key={wiki.wiki_pk_num || `wiki-${index}`}
+                    style={{
+                      fontWeight: wiki.is_notice === 1 ? "bold" : "normal",
+                    }} // is_notice가 1일 때 강조
+                  >
+                    <td>{wiki.wiki_pk_num}</td>
+                    <td>
+                      {wiki.is_notice === 1 && ( // 공지사항일 때만 표시
+                        <span role="img" aria-label="bell">
+                          🔔
+                        </span>
+                      )}
+                      <Link to={`/main/wiki/wikidetail/${wiki.wiki_pk_num}`}>
+                        {wiki.wiki_name}
+                      </Link>
+                    </td>
+                    <td>{wiki.user_name}</td>
+                    <td>{formatDate(wiki.wiki_regdate)}</td>
+                    <td>{wiki.wiki_view}</td>
+                  </tr>
                 ))
               ) : (
                 <tr>
@@ -214,12 +218,14 @@ const WikiList = () => {
             </tbody>
           </table>
           <br />
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <button
             className="btn btn-primary"
             onClick={() => navigate(`/main/wiki/wikiadd`)}
           >
-            등록
+            문서 등록
           </button>
+          </div>
           <div
             style={{
               display: "flex",

@@ -7,15 +7,6 @@ const WikiToast = (props) => {
       case "create":
         return (
           <>
-            <Toast.Header>
-              <img
-                className="rounded me-2"
-                alt=""
-              />
-              <strong className="me-auto" style={{ fontSize: "1rem" }}>
-                🔔 알림 🔔
-              </strong>
-            </Toast.Header>
             <Toast.Body style={{ fontSize: "1rem" }}>
               문서가 등록 되었습니다.
             </Toast.Body>
@@ -24,15 +15,6 @@ const WikiToast = (props) => {
       case "update":
         return (
           <>
-            <Toast.Header>
-              <img
-                className="rounded me-2"
-                alt=""
-              />
-              <strong className="me-auto" style={{ fontSize: "1rem" }}>
-                🔔 알림 🔔
-              </strong>
-            </Toast.Header>
             <Toast.Body style={{ fontSize: "1rem" }}>
               문서가 수정 되었습니다.
             </Toast.Body>

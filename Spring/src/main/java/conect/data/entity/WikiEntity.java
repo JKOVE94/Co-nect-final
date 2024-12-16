@@ -1,7 +1,9 @@
 package conect.data.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -10,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +29,7 @@ public class WikiEntity {
 	private String wikiDesc; // 문서 작성 내용
 	private boolean wikiIsNotice; // 공지 여부
 	private Date wikiRegdate; // 작성일
+	private int wikiView; //조회수
 	
 	@ManyToOne
 	@JoinColumn(name = "wiki_fk_proj_num")
@@ -36,4 +40,8 @@ public class WikiEntity {
 	@JoinColumn(name = "wiki_fk_user_num")
 	@JsonIgnore
 	private UserEntity userEntity;
+	
+	@OneToMany(mappedBy = "wikiEntity",orphanRemoval = true)
+    @JsonBackReference
+    private List<FileEntity> fileEntities;
 }
