@@ -19,6 +19,6 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Integer> {
     Optional<NoticeEntity> getoneNotice(int notiNum);
 
     // notice 제목 검색용
-    Page<NoticeEntity> findNoticeByNoticeName(String searchName);
+    //Page<NoticeEntity> findNoticeByNoticeName(String searchName);
 
 }

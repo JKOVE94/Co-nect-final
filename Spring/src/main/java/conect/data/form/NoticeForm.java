@@ -1,9 +1,7 @@
 package conect.data.form;
 
 import java.time.LocalDate;
-
 import conect.data.entity.NoticeEntity;
-import conect.data.entity.TaskEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +22,7 @@ public class NoticeForm {
         entity.setNotiPkNum(form.getNoti_pk_num());
         entity.setNotiName(form.getNoti_name());
         entity.setNotiDesc(form.getNoti_desc());
+		entity.setNotiRegdate(form.getNoti_regdate()); // noti_regdate 설정 추가
         return entity;
     }
 

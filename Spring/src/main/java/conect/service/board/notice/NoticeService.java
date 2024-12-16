@@ -14,9 +14,9 @@ public interface NoticeService {
     //부분 조회
     Optional<NoticeDto> getOneNotice(int notiNum);
     //공지글 추가
-    NoticeEntity addNotice(NoticeForm form);
+    void addNotice(NoticeForm form);
     //공지글 수정
-    NoticeDto upNotice(int notiNum, NoticeForm form);
+    void upNotice(NoticeForm form);
     //공지글 삭제
     void delNotice(int notiNum);
     //페이징
