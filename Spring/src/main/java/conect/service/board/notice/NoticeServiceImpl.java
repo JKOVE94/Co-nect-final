@@ -8,6 +8,7 @@ import conect.data.repository.ProjectRepository;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -52,6 +53,7 @@ public class NoticeServiceImpl implements NoticeService {
         notiRepository.save(entity);
     }
 
+    @Transactional
     @Override
     public void upNotice(NoticeForm form) {
         NoticeEntity entity = notiRepository.findById(form.getNoti_pk_num()).orElseThrow();
@@ -59,12 +61,13 @@ public class NoticeServiceImpl implements NoticeService {
         entity.setNotiDesc(form.getNoti_desc()); // 사용자 입력 내용 반영
 
         // 등록일을 현재 날짜로 갱신
-        entity.setNotiRegdate(LocalDate.now());
-
+        //entity.setNotiRegdate(LocalDate.now());
         // 프로젝트 정보와 작성자 정보는 기존 데이터 유지
-        entity.setProjectEntity(entity.getProjectEntity());
-        entity.setUserEntity(entity.getUserEntity());
+        //entity.setProjectEntity(entity.getProjectEntity());
+        //entity.setUserEntity(entity.getUserEntity());
+        // 변경 사항을 데이터베이스에 저장
 
+        notiRepository.save(entity);
     }
 
     @Override
