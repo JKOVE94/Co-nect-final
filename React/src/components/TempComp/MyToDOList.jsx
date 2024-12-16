@@ -83,7 +83,7 @@ const MyToDoList = () => {
         fluid
         style={{ width: "100%", display: "flex", flexDirection: "column" }}
       >
-        <Row style={{ maxHeight: "13rem" }}>
+        <Row style={{ maxHeight: "14rem" }}>
           {/* 대시보드 게시판 */}
           <Col lg={7} className="px-1">
             <Card className="shadow">
@@ -172,7 +172,7 @@ const MyToDoList = () => {
                         <div
                           className={style.itembox}
                           style={{
-                            minHeight: "13.5rem",
+                            minHeight: "12.5rem",
                             textAlign: "center",
                             alignItems: "center",
                             alignContent: "center",
