@@ -17,4 +17,5 @@ public class LoginDto {
     private int user_fk_comp_num; //회사 번호
     private int status; //로그인 상태 번호로 표시 1 성공, 2 : 정보 불일치, 3 : 잠긴 계정
     private int user_trynum; //유저가 로그인 시도 횟수
+    private String token; // JWT 토큰
 }
