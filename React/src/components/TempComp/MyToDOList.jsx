@@ -83,7 +83,7 @@ const MyToDoList = () => {
         fluid
         style={{ width: "100%", display: "flex", flexDirection: "column" }}
       >
-        <Row>
+        <Row style={{ maxHeight: "13rem" }}>
           {/* 대시보드 게시판 */}
           <Col lg={7} className="px-1">
             <Card className="shadow">
