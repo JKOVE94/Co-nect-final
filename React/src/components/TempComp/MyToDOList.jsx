@@ -79,7 +79,10 @@ const MyToDoList = () => {
 
   return (
     <>
-      <Container fluid style={{ width: "100%" }}>
+      <Container
+        fluid
+        style={{ width: "100%", display: "flex", flexDirection: "column" }}
+      >
         <Row>
           {/* 대시보드 게시판 */}
           <Col lg={7} className="px-1">
@@ -146,8 +149,8 @@ const MyToDoList = () => {
           </Col>
           {/* 이번주 나의 업무 */}
           <Col lg={5} className="px-1">
-            <Card className="shadow">
-              <CardBody>
+            <Card className="shadow" style={{ minHeight: "10rem" }}>
+              <CardBody style={{ minHeight: "10rem" }}>
                 <CardTitle className={style.title}>오늘의 일정</CardTitle>
                 {todoList.length === 0 ? (
                   <CardSubtitle className={style.scheduleSub}>
@@ -166,7 +169,15 @@ const MyToDoList = () => {
                   >
                     {todoList.map((todo, index) => (
                       <Carousel.Item key={index}>
-                        <div className={style.itembox}>
+                        <div
+                          className={style.itembox}
+                          style={{
+                            minHeight: "13.5rem",
+                            textAlign: "center",
+                            alignItems: "center",
+                            alignContent: "center",
+                          }}
+                        >
                           <CardTitle className={style.subtitle}>
                             {todo.todo_title}
                           </CardTitle>

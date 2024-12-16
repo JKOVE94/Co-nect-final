@@ -70,7 +70,12 @@ export default function Tasktable({ projectNum }) {
   return (
     <Container
       fluid
-      style={{ marginTop: "2rem", width: "100%", height: "30vh" }}
+      style={{
+        marginTop: "2rem",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
       <Row
         style={{
