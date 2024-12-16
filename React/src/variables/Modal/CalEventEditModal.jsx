@@ -16,6 +16,8 @@ const CalEventEditModal = ({
   const num = useSelector((state) => state.userData.user_pk_num);
   const [data, setData] = useState({});
   const [read, setRead] = useState(); //수정 가능 여부
+  const [users, setUsers] = useState([]);
+  const [allDay, setAllDay] = useState();
 
   useEffect(() => {
     setData({
@@ -24,12 +26,14 @@ const CalEventEditModal = ({
       todo_content: info.content || "",
       todo_startdate: info.startdate || "",
       todo_enddate: info.enddate || "",
-      todo_starttime : info.starttime || "",
-      todo_endtime : info.endtime || "",
+      todo_starttime : info.all? "" : info.starttime,
+      todo_endtime : info.all? "" : info.endtime,
       todo_category: info.category || "",
       share_user:info.shared || ""
     });
     setRead(true);
+    setUsers(info.shared);
+    setAllDay(info.all);
   }, [isOpen, onClose, info, getEvent, handleToast, num]);
 
   const handleChange = (e) => {
@@ -38,11 +42,11 @@ const CalEventEditModal = ({
 
   const handleUpdateForm = () => {
     setRead(false);
+    setAllDay(false);
   };
 
   const handleMention = (mention) => {
-    let str = mention.join(",");
-    setData({...data,shareUser:str});
+    setData({...data,share_user:mention});
   }
 
   const handleUpdate = () => {
@@ -54,7 +58,7 @@ const CalEventEditModal = ({
           getEvent();
         }
       })
-      .catch((err) => navigator(`/error`));
+      .catch((err) => console.log(err));
     onClose();
   };
 
@@ -70,6 +74,13 @@ const CalEventEditModal = ({
       .catch((err) => navigator(`/error`));
     onClose();
   };
+  
+  const handleCheck = (e) => {
+    setAllDay(e.target.checked);
+    if(e.target.checked){
+      setData({...data, todo_starttime:null, todo_endtime:null})
+    }
+  }
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
@@ -120,6 +131,7 @@ const CalEventEditModal = ({
                 type="time"
                 id="todo_starttime"
                 value={data.todo_starttime}
+                hidden={allDay}
                 onChange={handleChange}
                 disabled={read}
               />
@@ -144,14 +156,19 @@ const CalEventEditModal = ({
                 id="todo_endtime"
                 value={data.todo_endtime}
                 onChange={handleChange}
+                hidden={allDay}
                 disabled={read}
               />
             </Col>
           </div>
         </Form.Group>
+        <Form.Group className="mb-2 justify-content-start align-items-center" hidden={read}>
+          <Form.Label>종일</Form.Label>
+          <input type="checkbox" onClick={handleCheck}  className={style.check}/>
+        </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>카테고리</Form.Label>
-          <Form.Select id="todo_category" value={data.todo_category} disabled={read}>
+          <Form.Select className="form-control" id="todo_category" value={data.todo_category} disabled={read} onChange={handleChange}>
             <option hidden>--카테고리 선택--</option>
             <option value="회의">회의</option>
             <option value="출장">출장</option>
@@ -164,7 +181,8 @@ const CalEventEditModal = ({
           <ReactMention
             id="shareUser"
             disabled={read}
-            userList={data.dictionaryshare_user}
+            onMention={handleMention}
+            userList={users}
           />
         </Form.Group>
       </Modal.Body>

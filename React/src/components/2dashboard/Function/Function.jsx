@@ -9,6 +9,7 @@ import "../../../assets/css/2dashboard/function.css";
 import style from "../../../assets/css/2dashboard/calendar.module.css";
 import MyShareSchedule from "./MyShareSchedule";
 import moment from "moment";
+import ScheduleCategory from "./ScheduleCategory";
 
 const Function = () => {
   
@@ -19,6 +20,7 @@ const Function = () => {
   const [toastIsOpen, setToastIsOpen] = useState(false);
   //calendar event(일정)
   const [events, setEvents] = useState([{}]);
+  const [allEvents, setAllEvents] = useState([{}]);
 
   const handleToast = (text, open) => {
     setToastType(text);
@@ -43,12 +45,14 @@ const Function = () => {
           category : data.todo_category, //일정 카테고리
           sharer: data.todo_fk_user_num, //일정 작성자
           shared: data.shareList, //일정 참여자 목록
+          all:data.todo_starttime===null ? true:false,
           backgroundColor : data.todo_category === "회의" ? "#53A0EC" : 
             data.todo_category === "출장" ? "#FFCC66" :
             data.todo_category === "개인일정" ? "#FF9999" :
             data.todo_category === "기타" ? "#9966FF" : "#FFF"
-  }));
+        }));
         setEvents([...todoEvent]);
+        setAllEvents([...todoEvent]);
       })
       .catch((err) => {
         console.log(err);
@@ -63,15 +67,20 @@ const Function = () => {
     <>
       <Container fluid className={style.calendar}>
         <Row className="mx-0 align-items-start justify-content-center">
-          <Col md={4} >
+          <Col md={3} >
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
-                <MySchedule events={events} />
+                <MySchedule events={allEvents} />
               </CardBody>
             </Card>
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
-                <MyShareSchedule events={events} />
+                <MyShareSchedule events={allEvents} />
+              </CardBody>
+            </Card>
+            <Card className={style.card2}>
+              <CardBody className={style.cardbody}>
+                <ScheduleCategory events={allEvents} setEvents={setEvents}/>
               </CardBody>
             </Card>
           </Col>

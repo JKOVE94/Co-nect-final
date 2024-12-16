@@ -38,6 +38,15 @@
 /*share schedule*/
 .ul{
   list-style-type: none;
+  margin:0px;
+}
+
+/*ScheduleCategory*/
+.colorBox {
+  width: 0.8em;       /* 너비 */
+  height: 0.8em;      /* 높이 */
+  border-radius: 50%; /* 모서리를 50%로 둥글게 */
+  display: inline-block; /* 한 줄에 배치 */
 }
 
 /*modal*/
@@ -63,6 +72,12 @@
   width : 100%;
   color : #abababc8;
   text-align: left;
+}
+.check{
+  margin-left : 10px;
+  margin-bottom: .5rem;
+  width : 1em;
+  height: 1em;
 }
 
 /*toast*/

@@ -53,8 +53,8 @@ public class TodoServiceImpl implements TodoService {
 		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
 		TodoEntity todo = todoRepository.save(entity);
 		
-		if(bean.getShareList() != null) {
-			for(int num:bean.getShareList()) {
+		if(bean.getShare_user() != null) {
+			for(int num:bean.getShare_user()) {
 				ShareEntity share = new ShareEntity();
 				share.setTodo(todo);
 				share.setShareUser(num);
@@ -67,6 +67,7 @@ public class TodoServiceImpl implements TodoService {
     public boolean dropTodoData(int id) {
     	try {
     		todoRepository.deleteById(id);
+    		
     		return true;
     	} catch(Exception e) {
     		//예외처리
@@ -75,18 +76,24 @@ public class TodoServiceImpl implements TodoService {
     }
     
     @Override
+    @Transactional
     public boolean editTodoData(TodoForm bean) {
     	try {
     		TodoEntity entity = TodoForm.toEntity(bean);
     		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
     		TodoEntity todo = todoRepository.save(entity);
-    		if(bean.getShareList() != null) {
-    			for(int num:bean.getShareList()) {
-    				ShareEntity share = new ShareEntity();
-    				share.setTodo(todo);
-    				share.setShareUser(num);
-    				shareRepository.save(share);
-    			}
+    		
+    		if(bean.getShare_user() != null) {
+    			shareRepository.deleteByTodo_TodoPkNum(bean.getTodo_pk_num());
+
+                for (int num : bean.getShare_user()) {
+                    ShareEntity share = new ShareEntity();
+                    share.setTodo(todo);
+                    share.setShareUser(num);
+
+                    // 중복된 ShareEntity가 없다면 추가
+                    shareRepository.save(share);
+                }
     		}
     		return true;
     	} catch(Exception e) {

@@ -22,7 +22,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   };
 
   const handleMention = (mention) => {
-    setData({...data,shareList:mention});
+    setData({...data,share_user:mention});
   }
 
   const handleClick = async () => {
@@ -34,13 +34,16 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
           getEvent();
         }
       })
-      .catch((err) => navigator(`/error`));
+      .catch((err) => console.log(err));
     onClose();
     console.log(data);
   };
 
   const handleCheck = (e) => {
     setTimeZon(e.target.checked);
+    if(e.target.checked){
+      setData({...data, todo_starttime:null, todo_endtime:null})
+    }
   }
 
   return (
@@ -113,13 +116,13 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
             </Col>
           </div>
         </Form.Group>
-        <Form.Group className="mb-2">
+        <Form.Group className="mb-2 d-flex justify-content-start align-items-center">
           <Form.Label>종일</Form.Label>
-          <input type="checkbox" onClick={handleCheck}/>
+          <input type="checkbox" onClick={handleCheck} className={style.check}/>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>카테고리</Form.Label>
-          <Form.Select id="todo_category" onChange={handleChange}>
+          <Form.Select className="form-control" id="todo_category" onChange={handleChange}>
             <option hidden>--카테고리 선택--</option>
             <option value="회의">회의</option>
             <option value="출장">출장</option>
@@ -130,7 +133,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
         <Form.Group className="mb-2">
           <Form.Label>참여자</Form.Label>
           <ReactMention
-            id="shareList"
+            id="share_user"
             onMention={handleMention}
             text="공유할 사람을 입력해주세요"
           />

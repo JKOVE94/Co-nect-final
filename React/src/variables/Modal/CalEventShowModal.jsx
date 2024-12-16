@@ -86,7 +86,7 @@ const CalEventShowModal = ({
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>카테고리</Form.Label>
-          <Form.Select id="todo_category" value={info.category} disabled>
+          <Form.Select className="form-control" id="todo_category" value={info.category} disabled>
             <option hidden>--카테고리 선택--</option>
             <option value="회의">회의</option>
             <option value="출장">출장</option>

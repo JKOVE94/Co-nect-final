@@ -2,6 +2,7 @@ package conect.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -24,7 +25,7 @@ public class ShareEntity {
     private int shareUser; // 복합 키 필드 2
 
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "share_fk_todo_num")
     @JsonIgnore
     private TodoEntity todo; // 관계 매핑

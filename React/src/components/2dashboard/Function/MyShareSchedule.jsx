@@ -25,7 +25,7 @@ const MyShareSchedule = ({ events }) => {
         data.map((d, iedex) => (
           <li key={iedex}>
             <b>{d.title}</b><br/> 
-            <small>{moment(d.start).format("YY-MM-DD HH:mm")} ~ {moment(d.end).format("YY-MM-DD HH:mm")}</small>
+            <small>{moment(d.start).format("MM월 DD일 HH:mm")} ~ {moment(d.end).format("MM월 DD일 HH:mm")}</small>
           </li>
         ))}
         </ul>

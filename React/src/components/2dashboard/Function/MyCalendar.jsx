@@ -45,6 +45,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
       starttime : moment(info.event._instance.range.start).format("HH:mm"), //시작시간
       endtime : moment(info.event._instance.range.end).format("HH:mm"), //종료시간
       category : info.event.extendedProps.category,
+      all : info.event.extendedProps.all,
       id: info.event.id, //일정 pk num
       sharer:info.event.extendedProps.sharer, //일정 작성자(공유자)
       shared:info.event.extendedProps.shared, //일정 공유된 사람 목록

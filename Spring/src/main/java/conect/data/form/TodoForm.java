@@ -24,7 +24,7 @@ public class TodoForm {
     private String todo_category; //투두리스트 카테고리 [VARCHAR]
     
     private int todo_fk_user_num; //투두리스트 작성자 [INT}
-    private List<Integer> shareList; //공유된 사람
+    private List<Integer> share_user; //공유된 사람
 
     public static TodoEntity toEntity(TodoForm form) {
         //fk관련된 데이터는 servie단에서 findById로 찾아야 함

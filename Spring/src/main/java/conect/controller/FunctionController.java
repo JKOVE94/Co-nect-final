@@ -80,7 +80,8 @@ public class FunctionController {
     public ResponseEntity<Object> editTodo(@PathVariable("id")int id, @RequestBody TodoForm bean){
     	try {
     		bean.setTodo_pk_num(id);
-    		if (todoServiceImpl.editTodoData(bean)) {
+    		if(todoServiceImpl.editTodoData(bean)) {
+
         		return ResponseEntity.ok(true); //수정 성공
         	} else {
         		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input parameters"); 
