@@ -38,6 +38,7 @@ public class NoticeController {
         System.out.println("update:"+form.getNoti_desc());
         System.out.println("update:"+form.getNoti_fk_user_num());
         System.out.println("update:"+form.getNoti_fk_proj_num());
+        System.out.println("update:"+form.getNoti_regdate());
         noticeService.upNotice(form);
     }
 
