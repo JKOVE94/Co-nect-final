@@ -31,15 +31,8 @@ public class NoticeController {
 
     //공지 게시글 수정
     @PutMapping("update/{notiPkNum}")
-    public void updateNotice(@RequestBody NoticeForm form){
-        System.out.println("update notiForm :"+ form);
-        System.out.println("update notiPkNum:" +form.getNoti_pk_num());
-        System.out.println("update:"+form.getNoti_name());
-        System.out.println("update:"+form.getNoti_desc());
-        System.out.println("update:"+form.getNoti_fk_user_num());
-        System.out.println("update:"+form.getNoti_fk_proj_num());
-        System.out.println("update:"+form.getNoti_regdate());
-        noticeService.upNotice(form);
+    public void updateNotice(@PathVariable int notiPkNum,@RequestBody NoticeForm form){
+        noticeService.upNotice(notiPkNum, form);
     }
 
     //공지 게시글 추가

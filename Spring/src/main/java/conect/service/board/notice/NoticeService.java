@@ -16,7 +16,7 @@ public interface NoticeService {
     //공지글 추가
     void addNotice(NoticeForm form);
     //공지글 수정
-    void upNotice(NoticeForm form);
+    void upNotice(int notiNum ,NoticeForm form);
     //공지글 삭제
     void delNotice(int notiNum);
     //페이징
