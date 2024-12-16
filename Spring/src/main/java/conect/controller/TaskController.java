@@ -17,10 +17,17 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping("/task/proj/{task_fk_proj_num}")
-    public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable int task_fk_proj_num) {
+    public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable("task_fk_proj_num") int task_fk_proj_num) {
         System.out.println("task_fk_proj_num : " + task_fk_proj_num);
         return taskService.getAllTask(task_fk_proj_num);
     }
+    
+    @GetMapping("/task/proj/{projectNum}/user/{userNum}")
+    public List<TaskDto> getTaskByProjectAndUser(@PathVariable("projectNum") int projectNum, @PathVariable("userNum") int userNum) {
+        return taskService.getAllTaskByProjectAndUser(projectNum, userNum);
+    }
+
+
 
     @GetMapping("/task/user/{user_pk_num}")
     public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable int user_pk_num) {

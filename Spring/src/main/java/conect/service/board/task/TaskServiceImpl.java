@@ -30,6 +30,14 @@ public class TaskServiceImpl implements TaskService {
                 .map(TaskDto::fromEntity)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public List<TaskDto> getAllTaskByProjectAndUser(int projectNum, int userNum) {
+        return taskRepository.getTaskByProjectNumAndUserNum(projectNum, userNum).stream()
+                .map(TaskDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public List<TaskDto> getAllTaskWithUser(int user_pk_num) {

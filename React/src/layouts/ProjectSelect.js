@@ -33,7 +33,7 @@ const ProjectSelect = () => {
   };
 
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const user_pk_num = useSelector((state) => state.userData.user_pk_num);
@@ -87,7 +87,7 @@ const ProjectSelect = () => {
                 }}
               >
                 <Link
-                  to={`/main`}
+                  to={`/main?proj=${proj.proj_pk_num}&user=${user_pk_num}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <CardBody className="p-5">

@@ -58,16 +58,18 @@ const MyToDoList = () => {
   }, [user_pk_num]);
 
   const updateTodoList = useCallback((todos) => {
-    const today = moment().startOf('day');
-    let dbList = todos.filter(todo => {
-      const startDate = moment(todo.todo_startdate);
-      const endDate = moment(todo.todo_enddate);
-      return today.isSameOrAfter(startDate) && today.isSameOrBefore(endDate);
-    }).map(todo => ({
-      ...todo,
-      start: todo.todo_starttime || '00:00',
-      end: todo.todo_endtime || '23:59'
-    }));
+    const today = moment().startOf("day");
+    let dbList = todos
+      .filter((todo) => {
+        const startDate = moment(todo.todo_startdate);
+        const endDate = moment(todo.todo_enddate);
+        return today.isSameOrAfter(startDate) && today.isSameOrBefore(endDate);
+      })
+      .map((todo) => ({
+        ...todo,
+        start: todo.todo_starttime || "00:00",
+        end: todo.todo_endtime || "23:59",
+      }));
     setTodoList(dbList);
   }, []);
 
@@ -77,7 +79,7 @@ const MyToDoList = () => {
 
   return (
     <>
-      <Container fluid style={{ marginTop: "10rem", width: "100%" }}>
+      <Container fluid style={{ width: "100%" }}>
         <Row>
           {/* 대시보드 게시판 */}
           <Col lg={7} className="px-1">
@@ -153,15 +155,15 @@ const MyToDoList = () => {
                   </CardSubtitle>
                 ) : (
                   <Carousel
-            slide={false}
-            data-bs-theme="dark"
-            prevLabel=""
-            nextLabel=""
-            prevIcon="<"
-            nextIcon=">"
-            indicators={false}
-            interval={null}
-          >
+                    slide={false}
+                    data-bs-theme="dark"
+                    prevLabel=""
+                    nextLabel=""
+                    prevIcon="<"
+                    nextIcon=">"
+                    indicators={false}
+                    interval={null}
+                  >
                     {todoList.map((todo, index) => (
                       <Carousel.Item key={index}>
                         <div className={style.itembox}>

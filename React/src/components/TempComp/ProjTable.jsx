@@ -1,13 +1,12 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 import {
   Button,
   Col,
   Card,
-  CardBody,
   Table,
   Row,
   Progress,
@@ -15,52 +14,57 @@ import {
   CardHeader,
 } from "reactstrap";
 
-export default function Projtable() {
-  const [projs, setProjs] = useState([]);
-  //나중에 reducer 공유자원에서 가져올 compNum
-  const compNum = useSelector((state) => state.userData).user_fk_comp_num;
-  //const compNum = 1; //테스트용 임시 값 지워주기
+export default function Tasktable({ projectNum }) {
+  const [tasks, setTasks] = useState([]);
+  const userNum = useSelector((state) => state.userData?.user_pk_num);
+  const navigate = useNavigate();
 
-  //const compNum = useSelector((state) =>state.compNum);
-  console.log(compNum);
+  console.log(userNum, projectNum);
 
-  console.log(compNum);
-  const showList = () => {
+  const showList = useCallback(() => {
+    if (!projectNum || !userNum) {
+      console.log("프로젝트 번호 또는 사용자 번호가 유효하지 않습니다.");
+      return;
+    }
+
     axios
-      .get(`/proj/${compNum}`)
+      .get(`/board/task/proj/${projectNum}/user/${userNum}`)
       .then((res) => {
         console.log(res.data);
-        //최신 날짜 기준으로 프로젝트 5개만 자르기
         const sortData = res.data
           .sort(
-            (a, b) => new Date(b.proj_startdate) - new Date(a.proj_startdate)
+            (a, b) => new Date(b.task_startdate) - new Date(a.task_startdate)
           )
           .slice(0, 4);
-        setProjs(sortData);
+        setTasks(sortData);
       })
       .catch((error) => {
-        console.log("showList 오류:" + error);
+        console.error("showList 오류:", error);
       });
-  };
+  }, [projectNum, userNum]);
 
   useEffect(() => {
-    showList();
-  }, []);
+    if (projectNum && userNum) {
+      showList();
+    }
+  }, [projectNum, userNum, showList]);
 
-  const navigate = useNavigate();
-  const gotoProjLists = (compNum) => {
-    navigate(`/proj/${compNum}`);
+  const gotoTaskLists = () => {
+    if (projectNum && userNum) {
+      navigate(`/board/task/proj/${projectNum}/user/${userNum}`);
+    } else {
+      console.log("프로젝트 번호 또는 사용자 번호가 유효하지 않습니다.");
+    }
   };
 
-  //기한 날짜 yyyy-mm-dd 양식 설정
+  // 기한 날짜 yyyy-mm-dd 양식 설정
   const dateForm = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
 
-    let yyyy_mm_dd = `${year}-${month}-${day}`;
-    return yyyy_mm_dd;
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -80,56 +84,43 @@ export default function Projtable() {
           <Card style={{ width: "100%" }}>
             <CardHeader className="border-0">
               <h className="mb-0" style={{ fontWeight: "bold" }}>
-                프로젝트 테이블
+                업무 테이블
               </h>
               <Button
                 color="outline-primary"
                 size="sm"
                 className="btnview"
-                onClick={() => gotoProjLists(compNum)}
+                onClick={gotoTaskLists}
               >
                 더 보기
               </Button>
             </CardHeader>
-            <Table responsive style={{ marginBottom: "1rem" }}>
+            <Table responsive>
               <thead className="thead-light">
                 <tr style={{ color: "gray", textAlign: "center" }}>
-                  <th style={{ fontSize: "1rem" }}>프로젝트</th>
-                  <th style={{ fontSize: "1rem" }}>담당자</th>
+                  <th style={{ fontSize: "1rem" }}>태스크</th>
                   <th style={{ fontSize: "1rem" }}>상태</th>
                   <th style={{ fontSize: "1rem" }}>기한</th>
+                  <th style={{ fontSize: "1rem" }}>우선순위</th>
                   <th style={{ fontSize: "1rem" }}>진행도</th>
                 </tr>
               </thead>
               <tbody>
-                {projs.length === 0 ? (
+                {tasks.length === 0 ? (
                   <tr>
-                    <td colSpan="6">프로젝트 데이터가 없습니다.</td>
+                    <td colSpan="5">업무 데이터가 없습니다.</td>
                   </tr>
                 ) : (
-                  projs.map((proj) => (
-                    <tr key={proj.proj_pk_num}>
+                  tasks.map((task) => (
+                    <tr key={task.task_pk_num}>
                       <td style={{ fontWeight: "bold", fontSize: "1rem" }}>
-                        {proj.proj_name}
+                        {task.task_title}
                       </td>
-                      <td>
-                        <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
-                          {proj.proj_username}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "0.8rem",
-                            color: "gray",
-                            textAlign: "center",
-                          }}
-                        >
-                          ({proj.proj_userMail})
-                        </div>
-                      </td>
-                      <td style={{ fontSize: "1rem" }}>{proj.proj_status}</td>
+                      <td style={{ fontSize: "1rem" }}>{task.task_status}</td>
                       <td style={{ fontSize: "1rem" }}>
-                        {dateForm(proj.proj_enddate)}
+                        {dateForm(task.task_deadline)}
                       </td>
+                      <td style={{ fontSize: "1rem" }}>{task.task_priority}</td>
                       <td
                         style={{
                           display: "flex",
@@ -139,7 +130,7 @@ export default function Projtable() {
                         }}
                       >
                         <Progress
-                          value={proj.proj_progress}
+                          value={task.task_progress}
                           max={100}
                           style={{ height: "8px" }}
                         />
@@ -151,7 +142,7 @@ export default function Projtable() {
                             textAlign: "center",
                           }}
                         >
-                          {`진행률: ${proj.proj_progress || 0}%`}
+                          {`진행률: ${task.task_progress || 0}%`}
                         </div>
                       </td>
                     </tr>
