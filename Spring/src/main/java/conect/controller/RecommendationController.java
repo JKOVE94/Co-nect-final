@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import conect.data.dto.ReclikesDto;
 import conect.data.dto.RecommendationDto;
 import conect.service.board.recommendation.recommendationServiceImpl;
 
@@ -23,7 +24,12 @@ public class RecommendationController {
 	@GetMapping("/{proj}")
 	public ResponseEntity<Object> getRecList(@PathVariable(name="compno")int compno, @PathVariable(name="proj")int projnum){
 		try {
+			
 			List<RecommendationDto> list = recService.getRecAll(projnum);
+			
+			//List<ReclikesDto> like =
+			
+			
 			return ResponseEntity.ok(list);
 		} catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");

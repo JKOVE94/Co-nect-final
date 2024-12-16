@@ -46,5 +46,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity",orphanRemoval = true)
     @JsonBackReference
     private List<FavoritesEntity> favoritesEntities;
+    
+    
 
 }
