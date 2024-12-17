@@ -7,6 +7,7 @@ import { GET_DPARTINFO } from "../../../Redux/Reducer/departDataReducer";
 
 import "assets/css/3manage/userinfo.css";
 import ManageUserModal from "variables/Modal/ManageUserModal";
+import UserDropdown from "variables/Dropdown/UserDropdown";
 
 const UserInfo = () => {
   const [users, setUsers] = useState([]);
@@ -18,6 +19,8 @@ const UserInfo = () => {
   const [departData, setDepartData] = useState([]);
 
   const departDataOrigin = useSelector((state) => state.departData);
+
+  const nav = useNavigate();
 
   useEffect(() => {
     handleFetch();
@@ -55,13 +58,23 @@ const UserInfo = () => {
       .dpart_name;
   };
 
+  const moveToAddUser = () => {
+    nav("/manage/user/add");
+  };
+
   return (
     <Container fluid style={{ marginTop: "2em" }}>
       <Row>
         <Col>
           <Card>
             <CardHeader>
-              <h2>전체 직원 관리</h2>
+              <h2>전체 사원 정보</h2>
+              <button
+                className="btn btn-primary"
+                onClick={() => moveToAddUser()}
+              >
+                사원 추가
+              </button>
             </CardHeader>
             <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
               <table className="table" style={{ fontSize: "1.2rem" }}>
@@ -85,19 +98,7 @@ const UserInfo = () => {
                       <td>{getDepartmentName(user.user_fk_dpart_num)}</td>
                       <td>{user.user_regdate.slice(0, 10)}</td>
                       <td colSpan={2}>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => updateUser(user.user_pk_num)}
-                        >
-                          수정
-                        </button>{" "}
-                        &nbsp;
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => deleteUser(user.user_pk_num)}
-                        >
-                          삭제
-                        </button>
+                        <UserDropdown pkNum={user.user_pk_num}></UserDropdown>
                       </td>
                     </tr>
                   ))}

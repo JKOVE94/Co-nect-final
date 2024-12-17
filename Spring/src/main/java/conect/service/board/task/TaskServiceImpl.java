@@ -71,13 +71,36 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(int task_pk_num) {
 
-        List<Integer> childlist =  taskRepository.findChildTask(task_pk_num);
-        if(childlist.size() > 0){
+        List<Integer> childlist = taskRepository.findChildTask(task_pk_num);
+        if (childlist.size() > 0) {
             childlist.forEach(taskNum -> {
                 taskRepository.deleteById(taskNum);
             });
             taskRepository.deleteById(task_pk_num);
+        } else taskRepository.deleteById(task_pk_num);
+    }
+
+    @Override
+    public List<TaskDto> getTaskBySearching(int projectNum, String searchType, String searchValue) {
+        if (searchValue.equals("")) {
+            return taskRepository.getTaskByTaskFkProjNum(projectNum).stream()
+                    .map(TaskDto::fromEntity)
+                    .collect(Collectors.toList());
+        } else {
+            if (searchType.equals("taskName")) {
+                return taskRepository.getTaskBySearchingTitle(projectNum, searchValue).stream()
+                        .peek(task -> task.setTaskDepth(0))
+                        .map(TaskDto::fromEntity)
+                        .peek(taskDto -> taskDto.setTask_fk_task_num(null))
+                        .collect(Collectors.toList());
+            } else if (searchType.equals("taskUser")) {
+                return taskRepository.getTaskBySearchingUser(projectNum, searchValue).stream()
+                        .peek(task -> task.setTaskDepth(0))
+                        .map(TaskDto::fromEntity)
+                        .peek(taskDto -> taskDto.setTask_fk_task_num(null))
+                        .collect(Collectors.toList());
+            }
         }
-        else taskRepository.deleteById(task_pk_num);
+        return null;
     }
 }

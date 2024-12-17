@@ -17,7 +17,7 @@ const FavorCheck = ({ pknum, type, favorData }) => {
       setData({ favor_fk_user_num: num, favor_fk_proj_num: pknum });
     }
 
-    if (Array.isArray(favorData) && type==="post") {
+    if (Array.isArray(favorData)) {
       //List가 넘어올 경우(post list, proj list)
       favorData.forEach((data) => {
         if (data.post_pk_num === pknum) {
@@ -25,12 +25,6 @@ const FavorCheck = ({ pknum, type, favorData }) => {
           //즐겨찾기에 등록되어있다면 true
         }
       });
-    } else if(Array.isArray(favorData) && type==="proj"){
-      favorData.forEach((data) => {
-        if (data.proj_pk_num === pknum) {
-          setIsCheck(true);
-        }
-      })
     } else {
       axios.get(`/favorite/${type}/${num}/${pknum}`)
       .then(res => setIsCheck(res.data))

@@ -32,7 +32,6 @@ public class FunctionController {
 	@Autowired
 	private TodoServiceImpl todoServiceImpl;
 	
-	//유저의 프로젝트, 개인 일정 리스트
     @GetMapping("/schedule/{usernum}")
     public ResponseEntity<Object> getDataAll(@PathVariable("usernum")int usernum){
     	Map<String, Object> map = new HashMap<String, Object>();
@@ -51,8 +50,6 @@ public class FunctionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
         }
     }
-    
-    //개인 일정 등록
     @PostMapping("/schedule")
     public ResponseEntity<Object> addTodo(@RequestBody TodoForm bean){
     	try {
@@ -66,7 +63,6 @@ public class FunctionController {
 	    }
     }
     
-    //개인 일정 삭제
     @DeleteMapping("/schedule/{id}")
     public ResponseEntity<Object> dropTodo(@PathVariable("id")int id){
     	try {
@@ -84,7 +80,6 @@ public class FunctionController {
 	    }
     }
     
-    //개인 일정 수정
     @PutMapping("/schedule/{id}")
     public ResponseEntity<Object> editTodo(@PathVariable("id")int id, @RequestBody TodoForm bean){
     	try {

@@ -105,7 +105,7 @@ const UserNavbar = (props) => {
                   <span>계정 정보</span>
                 </DropdownItem>
                 {/*관리자일 경우에만 설정 메뉴가 보이도록 설정*/}
-                {userData.user_fk_acc_authornum === 3 ? 
+                {userData.user_author === 3 || 2 ? 
                 <DropdownItem to="/manage" tag={Link}>
                   <i className="ni ni-settings-gear-65" />
                   <span>설정</span>

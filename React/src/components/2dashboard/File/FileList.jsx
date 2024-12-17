@@ -32,7 +32,7 @@ const FileList = () => {
     searchText
   ) => {
     axios
-      .get("/file", {
+      .get("/file/", {
         params: {
           page: page,
           pageBlock: block,

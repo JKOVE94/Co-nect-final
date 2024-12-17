@@ -41,7 +41,7 @@ public class FileController {
 	public ResponseEntity<Map<String, Object>> getAllPosts(
 	    @RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
 	    @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
-	    @RequestParam(name = "sortField", defaultValue = "fileRegdate") String sortField, // 정렬 필드
+	    @RequestParam(name = "sortField", defaultValue = "wikiRegdate") String sortField, // 정렬 필드
 	    @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
 	    @RequestParam(name = "searchType", defaultValue = "") String searchType, // 검색 분류
 	    @RequestParam(name = "searchText", defaultValue = "") String searchText // 검색어
@@ -91,8 +91,13 @@ public class FileController {
 	public ResponseEntity<FileDto> getPost(
 	    @PathVariable("filePkNum") Integer filePkNum) {
 		// 요청 정보와 함께 서비스 호출
-		FileDto fileDto = fileService.getPostView(filePkNum);
-		return new ResponseEntity<>(fileDto, HttpStatus.OK); // 성공 시 게시글 데이터 반환
+		try {
+	        FileDto fileDto = fileService.getPostView(filePkNum);
+	        return new ResponseEntity<>(fileDto, HttpStatus.OK); // 성공 시 게시글 데이터 반환
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 게시글 미존재 시 404 응답 반환
+	    }
 	}
 
 	// 게시글 생성
@@ -145,7 +150,7 @@ public class FileController {
 
 	// 게시글 삭제
 	@DeleteMapping("/{filePkNum}")
-	public ResponseEntity<Void> deletePost(@PathVariable("filePkNum") int filePkNum) {
+	public ResponseEntity<Void> deleteFile(@PathVariable("filePkNum") int filePkNum) {
 		try {
 			fileService.deletePost(filePkNum); // 게시글 삭제 호출
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 성공 시 204 응답 반환

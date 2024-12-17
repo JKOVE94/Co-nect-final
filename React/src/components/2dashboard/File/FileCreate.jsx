@@ -10,9 +10,11 @@ const FileCreate = () => {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
-    file_post_name: "",
-    file_fk_user_num: writer.user_pk_num || "1", // 로그인한 유저의 pk_num을 기본값으로 설정
-    file_content: "",
+    file_name: "",
+    file_fk_wiki_num: 0,
+    file_path: "",
+    file_size: 0,
+    file_type: "",
   });
 
   const handleChange = (e) => {
@@ -35,7 +37,7 @@ const FileCreate = () => {
     console.log('Form data before submitting:', formToSubmit);
     
     axios
-      .post("/file", formToSubmit)
+      .post("/file/", formToSubmit)
       .then((response) => {
         if (response.data !== 0) {
           navigate(`/main/file/detail/${response.data}`);
@@ -77,14 +79,13 @@ const FileCreate = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="file_path">파일 첨부:</label>
+              <label htmlFor="file">파일 첨부:</label>
               <input
                 type="file"
                 className="form-control"
-                id="file_path"
-                name="file_path"
-                value={formData.file_path}
-                onChange={handleChange}
+                id="file"
+                name="file"
+                onChange={handleFileChange}
                 required
               />
             </div>
@@ -94,12 +95,34 @@ const FileCreate = () => {
                 className="form-control"
                 id="file_content"
                 name="file_content"
-                value={formData.post_content}
+                value={formData.file_content}
                 onChange={handleChange}
                 required
               ></textarea>
             </div>
-            <button onClick={handleSubmit} type="submit" className="btn btn-primary">게시글 저장</button>
+            <div className="form-group">
+              <label htmlFor="file_size">파일 크기:</label>
+              <input
+                type="number"
+                className="form-control"
+                id="file_size"
+                name="file_size"
+                value={formData.file_size}
+                readOnly
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="file_type">파일 타입:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="file_type"
+                name="file_type"
+                value={formData.file_type}
+                readOnly
+              />
+            </div>
+            <button type="submit" className="btn btn-primary">게시글 저장</button>
             <button type="button" className="btn btn-secondary" onClick={handleBackToList}>목록</button>
           </form>
         </CardBody>

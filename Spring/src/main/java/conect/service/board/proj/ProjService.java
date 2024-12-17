@@ -1,13 +1,11 @@
 package conect.service.board.proj;
 
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
 import conect.data.form.ProjectForm;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 
@@ -20,10 +18,6 @@ public interface ProjService {
 
 	// 로그인한 사용자가 참여하고 있는 프로젝트 반환 - Calendar
 	List<ProjectDto> getScheduleAll(int usernum);
-	
-	// 검색
-	Set<String> getStatusAll(int compNum);
-	List<ProjectDto> getSearchData(String status, String title);
 
 	List<ProjectDto> getListAll();
 
@@ -33,9 +27,6 @@ public interface ProjService {
 	
 	// 페이징
 	//public Page<ProjectDto> getList(int page, int pageSize);
-
-	// 모든 부서목록 반환
-	List<DepartmentDto> getAllDepartments();
 
 	// 프로젝트 생성
 	int addProject(ProjectForm form);

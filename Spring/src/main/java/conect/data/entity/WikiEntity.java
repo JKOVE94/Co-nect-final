@@ -1,47 +1,35 @@
 package conect.data.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "wiki")
+@Table(name="wiki")
 public class WikiEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int wikiPkNum; // 위키문서 번호
-	private String wikiName; // 문서 이름
-	private String wikiDesc; // 문서 작성 내용
-	private boolean wikiIsNotice; // 공지 여부
-	private Date wikiRegdate; // 작성일
-	private int wikiView; //조회수
-	
-	@ManyToOne
-	@JoinColumn(name = "wiki_fk_proj_num")
-	@JsonIgnore
-	private ProjectEntity projectEntity;
-	
-	@ManyToOne
-	@JoinColumn(name = "wiki_fk_user_num")
-	@JsonIgnore
-	private UserEntity userEntity;
-	
-	@OneToMany(mappedBy = "wikiEntity",orphanRemoval = true)
-    @JsonBackReference
-    private List<FileEntity> fileEntities;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int wikiPkNum; //위키 고유번호 [PK, INT]
+    private String wikiTitle; //위키 제목 [VARCHAR]
+    private String wikiContent; //위키 내용 [TEXT]
+    private Boolean wikiIsnotice; //공지사항 여부 [Boolean] (0, 1)
+    private LocalDate wikiRegdate; //작성일 [DATE]
+    private int wikiView; //조회수 [INT]
+    private Boolean wikiBoardtype; //게시판 종류 [Boolean] (1, 2)
+
+    @OneToOne(mappedBy = "wikiEntity")
+    private FileEntity fileEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "wiki_fk_user_num")
+    private UserEntity userEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "wiki_fk_proj_num")
+    private ProjectEntity projectEntity;
 }

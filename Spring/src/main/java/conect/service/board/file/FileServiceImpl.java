@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,13 @@ import conect.data.dto.FileDto;
 import conect.data.dto.PostDto;
 import conect.data.entity.FileEntity;
 import conect.data.entity.PostEntity;
+import conect.data.entity.WikiEntity;
 import conect.data.form.FileForm;
 import conect.data.form.PostForm;
 import conect.data.form.UserForm;
 import conect.data.repository.FileRepository;
 import conect.data.repository.UserRepository;
+import conect.data.repository.WikiRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,6 +44,9 @@ public class FileServiceImpl implements FileService {
 	
 	@Autowired
 	private FileRepository fileRepository;
+	
+	@Autowired
+    private WikiRepository wikiRepository;
 
 	// GCP Storage 세팅
 	@Value("${spring.cloud.gcp.storage.credentials.location}")
@@ -54,11 +60,12 @@ public class FileServiceImpl implements FileService {
 	public String saveFile(FileForm form, MultipartFile file) throws IOException {
 		InputStream keyFile = null;
 		String fileUrl = "";
+		
 		try {
 			keyFile = ResourceUtils.getURL(keyFileName).openStream();
 
 			String originalFileName = file.getOriginalFilename();
-			String fileName = "file/" + originalFileName;
+            String uniqueFileName = "file/" + UUID.randomUUID().toString() + "_" + originalFileName;
 			// String ext = form.getUser_picfile().getContentType();
 			
 			
@@ -68,12 +75,12 @@ public class FileServiceImpl implements FileService {
 					.getService();
 			
 			// BlobInfo 생성 (파일 정보)
-	        BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName).build();
+            BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, uniqueFileName).build();
 
 	        // Google Cloud Storage에 파일 업로드
 	        storage.create(blobInfo, file.getBytes());
 
-			fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + fileName;
+			fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + uniqueFileName;
 
 		} finally {
 			if (keyFile != null) {
@@ -83,18 +90,32 @@ public class FileServiceImpl implements FileService {
 		return fileUrl;
 	}
 	
-	// 삽입
-	@Override
-	public FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException{
-		FileEntity fileEntity = new FileEntity();
+	// 게시글 생성 시 파일 저장 및 WikiEntity와 연결
+	public FileEntity insertPost(MultipartFile file, FileForm fileForm) {
+	    try {
+	        // WikiEntity 조회 (wiki_pk_num을 사용하여 WikiEntity 객체를 조회)
+	        WikiEntity wikiEntity = wikiRepository.findById(fileForm.getWiki_pk_num())
+	                .orElseThrow(() -> new RuntimeException("Wiki가 존재하지 않습니다"));
 
-		fileEntity.setFileName(fileForm.getFile_name());
-		fileEntity.setFilePath(saveFile(fileForm, file));
-		fileEntity.setFileSize(fileForm.getFile_size());
-		fileEntity.setFileType(file.getContentType());
-		
-		return fileRepository.save(fileEntity);
+	        // FileEntity 객체 생성
+	        FileEntity fileEntity = new FileEntity();
+	        fileEntity.setFileName(file.getOriginalFilename());
+	        fileEntity.setFilePath(fileForm.getFile_path());
+	        fileEntity.setFileType(file.getContentType());
+	        fileEntity.setFileSize((int) file.getSize());
+	        fileEntity.setWikiEntity(wikiEntity); // WikiEntity 객체를 설정
+
+	        // 파일 저장
+	        fileRepository.save(fileEntity);
+
+	        return fileEntity;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new RuntimeException("파일 저장 중 오류 발생");
+	    }
 	}
+
+
 
 	// 전체 조회
 	@Override
@@ -102,17 +123,21 @@ public class FileServiceImpl implements FileService {
 		return fileRepository.findAll().stream().map(FileDto::fromEntity).collect(Collectors.toList());
 	}
 
-	// 부분 조회, 조회수(Cookie)
+	// 부분 조회
 	@Override
     public FileDto getPostView(Integer filePkNum) {
-        // 게시글 정보 조회 후 DTO 반환
-        Optional<FileEntity> fileEntityOptional = fileRepository.findById(filePkNum);
-        if (fileEntityOptional.isPresent()) {
-            FileEntity fileEntity = fileEntityOptional.get();
-            return FileDto.fromEntity(fileEntity); // DTO로 변환하여 반환
-        } else {
-            throw new RuntimeException("게시글을 찾을 수 없습니다.");
+        FileEntity fileEntity = fileRepository.findById(filePkNum).orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다"));
+
+        // FileDto로 변환
+        FileDto fileDto = FileDto.fromEntity(fileEntity);
+
+        // WikiEntity 정보 추가 조회
+        if (fileEntity.getWikiEntity() != null) {
+            WikiEntity wikiEntity = fileEntity.getWikiEntity(); // WikiEntity 가져오기
+            fileDto.setWiki_regdate(wikiEntity.getWikiRegdate()); // 예시: Wiki의 regdate
         }
+
+        return fileDto; // WikiEntity의 추가 정보 포함된 FileDto 반환
     }
 
 
@@ -148,12 +173,10 @@ public class FileServiceImpl implements FileService {
 	    // Repository를 통해 데이터를 조회
     	Page<FileEntity> postPage = Page.empty();
     	
-    	if (searchType.equalsIgnoreCase("file_name")) {
-    		postPage = fileRepository.findByFileNameContains(searchText, pageable);
-    	} else {
+    	
     		postPage = fileRepository.findAll(pageable);
-    	}
-	    // PostEntity -> PostDto 변환
+    	
+	    // PostEntity -> postDto 변환
 	    return postPage.map(FileDto::fromEntity);
 	}
 }
