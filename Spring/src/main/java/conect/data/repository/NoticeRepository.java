@@ -16,7 +16,7 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity,Integer> {
 
     //하나의 프로젝트 가져오기
     @Query("SELECT n, n.userEntity.userName, n.projectEntity.projName FROM NoticeEntity n WHERE n.notiPkNum = ?1")
-    Optional<NoticeEntity> getoneNotice(int notiNum);
+    Optional<NoticeEntity> getOneNotice(int notiNum);
 
     //임시삭제 기능
     @Modifying
