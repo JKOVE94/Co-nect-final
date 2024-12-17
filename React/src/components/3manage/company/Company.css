@@ -1,0 +1,19 @@
+.CompanyInfo {
+  margin: 2em;
+}
+
+.CompanyInfo td {
+  padding-bottom: 1em;
+}
+.CompanyEdit label {
+  font-size: 1.1em;
+}
+
+.CompanyEdit input {
+  width: 20em;
+  margin-bottom: 1em;
+  border-radius: 3px;
+  border: solid 1px #ccc;
+  height: 2em;
+  padding: 0.8em;
+}

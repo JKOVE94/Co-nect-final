@@ -21,15 +21,33 @@ const ProjCreate = () => {
 
   // 프로젝트 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
-    proj_title: "", // 프로젝트명
+    proj_name: "", // 프로젝트명
     proj_fk_user_num: writer.user_pk_num, // 작성자 번호
+    proj_fk_dpart_num: "", // 담당부서
+    proj_members: "", // 담당자
     proj_startdate: "", // 시작일
     proj_enddate: "", // 종료일
     proj_import: "", // 우선순위
     proj_status: "", // 상태
-    proj_content: "", // 내용
+    proj_desc: "", // 내용
     proj_fk_comp_num: 1, // 회사번호 (기본값 1),
   });
+
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    // 부서 목록 가져오기
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get("/proj/departments");
+        setDepartments(response.data); // 데이터 저장
+      } catch (error) {
+        console.error("부서 목록 가져오기 실패:", error);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
 
   // 입력값이 변경될 때마다 상태 업데이트
   const handleInputChange = (e) => {
@@ -81,7 +99,7 @@ const ProjCreate = () => {
         <form onSubmit={handleSubmit}>
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="proj_title"
+              for="proj_name"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
@@ -90,9 +108,9 @@ const ProjCreate = () => {
             <Col sm={10}>
               <Input
                 type="text"
-                name="proj_title"
-                id="proj_title"
-                value={formData.proj_title}
+                name="proj_name"
+                id="proj_name"
+                value={formData.proj_name}
                 onChange={handleInputChange}
                 required
                 placeholder="프로젝트명을 입력하세요"
@@ -118,6 +136,56 @@ const ProjCreate = () => {
                 required
                 disabled
                 placeholder="작성자를 입력하세요"
+              />
+            </Col>
+          </FormGroup>
+
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_fk_dpart_num"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
+              담당부서
+            </Label>
+            <Col sm={10}>
+              <Input
+                type="select"
+                name="proj_fk_dpart_num"
+                id="proj_fk_dpart_num"
+                value={formData.proj_fk_dpart_num} // 이 값은 부서 번호
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">부서를 선택하세요</option>
+                {departments.map((dept) => (
+                  <option key={dept.dpart_pk_num} value={dept.dpart_pk_num}>
+                    {" "}
+                    {/* dpart_num 사용 */}
+                    {dept.dpart_name}
+                  </option>
+                ))}
+              </Input>
+            </Col>
+          </FormGroup>
+
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
+              for="proj_members"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
+              담당자
+            </Label>
+            <Col sm={10}>
+              <Input
+                type="text"
+                name="proj_members"
+                id="proj_members"
+                value={formData.proj_members}
+                onChange={handleInputChange}
+                required
+                placeholder="담당자를 입력하세요"
               />
             </Col>
           </FormGroup>
@@ -173,6 +241,32 @@ const ProjCreate = () => {
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
+              for="proj_import"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
+              우선순위
+            </Label>
+            <Col sm={10}>
+              <Input
+                type="select"
+                name="proj_import"
+                id="proj_import"
+                value={formData.proj_import}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">선택하세요</option>
+                <option value="낮음">낮음</option>
+                <option value="보통">보통</option>
+                <option value="중요">중요</option>
+                <option value="긴급">긴급</option>
+              </Input>
+            </Col>
+          </FormGroup>
+
+          <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
+            <Label
               for="proj_status"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
@@ -198,7 +292,7 @@ const ProjCreate = () => {
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="proj_content"
+              for="proj_desc"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
@@ -207,9 +301,9 @@ const ProjCreate = () => {
             <Col sm={10}>
               <Input
                 type="textarea"
-                name="proj_content"
-                id="proj_content"
-                value={formData.proj_content}
+                name="proj_desc"
+                id="proj_desc"
+                value={formData.proj_desc}
                 onChange={handleInputChange}
                 required
                 placeholder="프로젝트 내용을 입력하세요"

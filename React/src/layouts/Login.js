@@ -91,6 +91,7 @@ const Login = (props) => {
       let res = await axios.post("/login", loginInfo);
       const responseData = res.data;
       await setData(responseData);
+      // console.log(responseData);
       if (res.data.status === 1) {
         //로그인 성공
         dispatch(LOGIN(responseData));

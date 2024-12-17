@@ -24,8 +24,6 @@ const CommonNavbar = () => {
             <SubMenu label="게시판" icon={<i className="fa fa-window-maximize text-success text-sm opacity-10" />}>
               <NavItem>
                 <NavLink to="/main/free" tag={NavLinkRRD}>자유게시판</NavLink>
-                <NavLink to="/main/notice/noticelist" tag={NavLinkRRD}>공지사항</NavLink>
-                <NavLink to="/main/wiki/wikilist" tag={NavLinkRRD}>위키문서</NavLink>
               </NavItem>
             </SubMenu>
             <SubMenu label="업무관리" icon={<i className="ni ni-calendar-grid-58 text-warning text-sm opacity-10" />}>

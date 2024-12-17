@@ -1,5 +1,5 @@
 import ProjList from "./projList";
-import { Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ProjCreate from "./projCreate";
 import ProjRead from "./projRead";
 import ProjUpdate from "./projUpdate";
@@ -8,7 +8,7 @@ import ProjDetail from "./ProjDetail";
 const ProjectHome = () => {
   const navigate = useNavigate();
   const navigateToProjList = () => {
-    navigate(`/main/proj/projlist`);
+    navigate("/main/proj/projlist");
   };
   return (
     <div>
