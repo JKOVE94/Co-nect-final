@@ -4,6 +4,8 @@ import conect.data.form.NoticeForm;
 import conect.service.Notice.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,9 +26,11 @@ public class NoticeController {
     @GetMapping("/{notiNum}")
     public Optional<NoticeDto> getNoticeOne(@PathVariable("notiNum") int notiPkNum){
         System.out.println("notiNum:"+ notiPkNum);
-        noticeService.updateCount(notiPkNum); //조회수 증가
+        //noticeService.updateCount(notiPkNum); //조회수 증가 -> 나중에 react에서 form에 +1하고 넘겨주기
         return noticeService.getOneNotice(notiPkNum);
     }
+
+    //조회수 증가
 
     //공지 게시글 수정
     @PutMapping("update/{notiPkNum}")
@@ -39,8 +43,11 @@ public class NoticeController {
 
     //공지 게시글 추가
     @PostMapping("/insert")
-    public void addNotice(@RequestBody NoticeForm form){
-        System.out.println("addForm :"+ form);
+    public void addNotice(@RequestBody NoticeForm form, @PathVariable int comp_pk_num){
+        form.setNoti_fk_comp_num(comp_pk_num);//경로에 있는 회사 정보 저장
+        form.setNoti_regdate(LocalDate.now());//생성날짜에 현재 날짜 넣기
+
+        System.out.println("addForm :"+ form.getNoti_regdate());
         noticeService.addNotice(form);
     }
 

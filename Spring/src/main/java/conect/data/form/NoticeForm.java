@@ -27,7 +27,7 @@ public class NoticeForm {
         entity.setNotiTitle(form.getNoti_title());
         entity.setNotiContent(form.getNoti_content());
         entity.setNotiRegdate(form.getNoti_regdate()); //등록날짜
-        entity.setNotiModdate(LocalDate.now());//수정 날짜 현재 날짜로 입력
+        entity.setNotiModdate(form.getNoti_moddate()); //수정날짜
         entity.setNotiDeleted(form.getNoti_deleted());
         entity.setNotiImport(form.getNoti_import());
         entity.setNotiView(form.getNoti_view());

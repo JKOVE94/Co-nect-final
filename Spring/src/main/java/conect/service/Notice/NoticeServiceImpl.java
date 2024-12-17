@@ -9,6 +9,8 @@ import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,10 +31,13 @@ public class NoticeServiceImpl implements NoticeService{
 
 
     //조회수 증가
+
     @Override
     public void updateCount(int notiNum) {
         notiRepository.updateCount(notiNum);
     }
+
+
     //공지 리스트 출력
     @Override
     public List<NoticeDto> getNoticeAll(int projNum) {
@@ -71,8 +76,8 @@ public class NoticeServiceImpl implements NoticeService{
         entity.setNotiContent(form.getNoti_content()); // 사용자 입력 내용 반영
         System.out.println(entity.getNotiRegdate());
         System.out.println(entity.getProjectEntity().getProjTitle());
-        // 등록일을 현재 날짜로 갱신
-        //entity.setNotiRegdate(LocalDate.now());
+        // 수정일을 현재 날짜로 갱신
+        entity.setNotiModdate(LocalDate.now());
         // 프로젝트 정보와 작성자 정보는 기존 데이터 유지
         //entity.setProjectEntity(entity.getProjectEntity());
         //entity.setUserEntity(entity.getUserEntity());
@@ -81,6 +86,7 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     //공지 임시 삭제
+    @Transactional
     @Override
     public void delNotice(int notiNum) {
         notiRepository.delOneNotice(notiNum); //notiNum 기준으로 임시 삭제
