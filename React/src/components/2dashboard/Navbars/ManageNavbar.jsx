@@ -8,30 +8,79 @@ const CommonNavbar = () => {
     <>
       <Side>
         <Menu>
-          <NavItem>
-            <NavLink to="/manage/user/info" tag={NavLinkRRD}>
-              <i className="fa fa-users text-primary text-sm opacity-10" />
-              모든 사용자 정보
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to="/manage/user/add" tag={NavLinkRRD}>
-              <i className="fa fa-users  text-sm opacity-10" />
-              사용자 등록
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to="/manage/user/unlock" tag={NavLinkRRD}>
-              <i className="fa fa-unlock text-info text-sm opacity-10" />
-              사용자 잠금 해제
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to="/main" tag={NavLinkRRD}>
-              <i className="fa fa-home text-info text-sm opacity-10" />
-              대시보드로 돌아가기
-            </NavLink>
-          </NavItem>
+          <SubMenu
+            label="회사 관리"
+            icon={
+              <i
+                className="fa fa-building text-sm opacity-10"
+                style={{ color: "#1E88E5" }}
+              />
+            }
+            style={{ color: "black", opacity: "0.6" }}
+          >
+            <NavItem>
+              <NavLink
+                to="/manage/company/info"
+                tag={NavLinkRRD}
+                style={{ color: "black", opacity: "0.5" }}
+              >
+                <i className="bi bi-info-circle-fill text-sm opacity-10" />
+                회사 정보
+              </NavLink>
+            </NavItem>
+          </SubMenu>
+          <SubMenu
+            label="사원 관리"
+            icon={
+              <i
+                className="fa fa-users text-sm opacity-10"
+                style={{ color: "#7E57C2" }}
+              />
+            }
+            style={{ color: "black", opacity: "0.6" }}
+          >
+            <NavItem>
+              <NavLink
+                to="/manage/user/info"
+                tag={NavLinkRRD}
+                style={{ color: "black", opacity: "0.5" }}
+              >
+                <i className="fa fa-user text-sm opacity-10" />
+                전체 사원 정보
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                to="/manage/user/unlock"
+                tag={NavLinkRRD}
+                style={{ color: "black", opacity: "0.5" }}
+              >
+                <i className="fa fa-unlock text-sm opacity-10" />
+                사용자 잠금 해제
+              </NavLink>
+            </NavItem>
+          </SubMenu>
+          <SubMenu
+            label="프로젝트 관리"
+            icon={
+              <i
+                className="bi bi-kanban text-sm opacity-10"
+                style={{ color: "#26A69A" }}
+              />
+            }
+            style={{ color: "black", opacity: "0.6" }}
+          >
+            <NavItem>
+              <NavLink
+                to="/manage/department/info"
+                tag={NavLinkRRD}
+                style={{ color: "black", opacity: "0.6" }}
+              >
+                <i className="bi bi-list-ul text-sm opacity-10" />
+                전체 프로젝트 정보
+              </NavLink>
+            </NavItem>
+          </SubMenu>
         </Menu>
       </Side>
     </>

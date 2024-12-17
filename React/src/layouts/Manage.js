@@ -32,6 +32,7 @@ import UserHome from "components/3manage/user/UserHome";
 import UserInfo from "components/3manage/user/UserInfo";
 import UserAdd from "components/3manage/user/UserAdd";
 import UserUnlock from "components/3manage/user/UserUnlock";
+import CompanyHome from "components/3manage/company/CompanyHome";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -66,6 +67,7 @@ const Dashboard = (props) => {
         <Header />
         <Container fluid style={{overflow:"scroll", marginTop:"1em"}}>
           <Routes>
+            <Route path="company/*" element={<CompanyHome />}/>          
             <Route path="user/*" element={<UserHome />}/>          
        </Routes>
         </Container>

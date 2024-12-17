@@ -26,7 +26,7 @@ class Ganttchart extends Component {
                     start_date: task.task_startdate,
                     deadline : task.task_deadline,
                     duration: task.task_duration,
-                    progress: task.task_progress,
+                    progress: task.task_progress/100,
                     member: task.task_user_name,
                     color: task.task_tagcol,
                     parent: task.task_fk_task_num || parentId

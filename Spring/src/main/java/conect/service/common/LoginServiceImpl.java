@@ -1,11 +1,9 @@
 package conect.service.common;
 
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.UserDto;
 import conect.data.entity.UserEntity;
 import conect.data.form.LoginForm;
 import conect.data.repository.CompanyRepository;
-import conect.data.repository.DepartmentRepository;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +19,6 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
-
     /*
     로그인 상태를 숫자로 정의
     1 : 로그인 성공
@@ -33,7 +28,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public UserDto getUserInfo(int user_pk_num) {
-        return UserDto.fromEntity(userRepository.findById(user_pk_num).get());
+//        return UserDto.fromEntity(userRepository.findById(user_pk_num).get());
+        return null;
     }
 
     @Override
@@ -73,12 +69,5 @@ public class LoginServiceImpl implements LoginService {
         }catch(Exception e){
             return 2; //정보 불일치 - 해당 user_pk_num 없음 (Exception)
         }
-    }
-
-    @Override
-    public List<DepartmentDto> getDeparts() {
-        return departmentRepository.findAll().stream()
-                .map(DepartmentDto::fromEntity)
-                .collect(Collectors.toList());
     }
 }

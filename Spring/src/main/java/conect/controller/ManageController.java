@@ -1,7 +1,10 @@
 package conect.controller;
 
+import conect.data.dto.CompanyDto;
 import conect.data.dto.UserDto;
+import conect.data.form.CompanyForm;
 import conect.data.form.UserForm;
+import conect.service.manage.user.ManageCompService;
 import conect.service.manage.user.ManageUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +14,14 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/manage")
+@RequestMapping("{comp_pk_num}/manage")
 public class ManageController {
 
     @Autowired
     private ManageUserService manageUserService;
+
+    @Autowired
+    private ManageCompService manageCompService;
 
     //----------유저관리 (/manage/user)----------
     //유저 전체 정보 얻기
@@ -42,7 +48,10 @@ public class ManageController {
 
     //잠긴 계정 정보 수정
     @PutMapping("/user/locked")
-    public boolean getLockedAll(@RequestBody List<UserForm> forms){ return manageUserService.unlockUser(forms); }
+    public boolean getLockedAll(@RequestBody Integer[] checkedNumber){
+        manageUserService.unlockUser(checkedNumber);
+        return true;
+    }
 
     /* 반환 코드 정리
     1. 성공
@@ -75,4 +84,14 @@ public class ManageController {
     //사원 정보 수정
     @PutMapping("/user/{user_pk_num}")
     public boolean updateUser(@ModelAttribute UserForm form){ return manageUserService.updateUser(form); }
+
+    @GetMapping("/comp")
+    public CompanyDto getCompInfo(@PathVariable("compNum") int compNum){
+        return manageCompService.getCompanyInfo(compNum);
+    }
+    @PutMapping("/comp")
+    public void updateCompInfo(@PathVariable("compNum") String compNum, @RequestBody CompanyForm form){
+        manageCompService.updateCompanyInfo(form, Integer.parseInt(compNum));
+
+    }
 }

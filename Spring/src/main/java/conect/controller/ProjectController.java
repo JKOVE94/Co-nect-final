@@ -1,7 +1,5 @@
 package conect.controller;
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.ProjectDto;
-import conect.data.entity.DepartmentEntity;
 import conect.data.form.ProjectForm;
 import conect.service.board.proj.ProjService;
 import conect.service.board.proj.ProjServiceImpl;
@@ -16,16 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/proj")
+@RequestMapping("{comp_pk_num}/proj")
 public class ProjectController {
 	@Autowired
 	private ProjServiceImpl projServiceImpl;
@@ -83,12 +78,7 @@ public class ProjectController {
 		System.out.println("projPkNum : "+projPkNum);
 		return projServiceImpl.getProjById(projPkNum);
 	}
-	
-	// 모든 부서 목록 반환 (셀렉트 박스용)
-    @GetMapping("/departments")
-    public List<DepartmentDto> getAllDepartments() {
-        return projServiceImpl.getAllDepartments();
-    }
+
 
 	// 프로젝트 생성
 	@PostMapping("/projadd")
@@ -115,7 +105,7 @@ public class ProjectController {
 	}
 	
     //프로젝트 게시판
-	@GetMapping("/{compNum}")
+	@GetMapping("/")
 	public List<ProjectDto> getAllProj(@PathVariable("compNum")int compNum){
 		return projServiceImpl.getAllProjInfo(compNum);
 	}

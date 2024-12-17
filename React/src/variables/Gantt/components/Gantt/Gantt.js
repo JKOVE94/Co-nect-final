@@ -103,7 +103,7 @@ componentDidMount() {
    gantt.templates.task_text = (start, end, task) => {
     const member = task.member || "Unknown"; // task 객체에 member 속성이 있는지 확인
     const progress = task.progress || 0; // task 객체에 progress 속성이 있는지 확인
-    return `${task.text} - ${member} (${progress}%)`;
+    return `${task.text} - ${member} (${progress * 100}%)`;
 };
     gantt.plugins({ 
         tooltip: true 
