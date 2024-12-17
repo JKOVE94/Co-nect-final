@@ -1,9 +1,8 @@
 import React from "react";
-import Headers from "components/2dashboard/Headers/Header";
+import ProjHeaders from "../Headers/ProjHeaders";
 import { useParams } from "react-router-dom";
-
+import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 import ToogleSwitch from "variables/TreeTable_Gantt/ToogleSwitch";
-import GanttHome from "variables/Gantt/GanttHome";
 
 const ProjDetail = () => {
   const { projPkNum } = useParams();
@@ -11,8 +10,8 @@ const ProjDetail = () => {
   // console.log("PROJ :" + projPkNumInt);
   return (
     <>
-      <Headers />
-      <GanttHome projPkNum={projPkNumInt} />
+      <ProjHeaders />
+      <TreeAndGantt projPkNum={projPkNumInt} />
     </>
   );
 };

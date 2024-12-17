@@ -17,6 +17,12 @@ const ResourceSlice = createSlice({
   },
 });
 
+
 //Action, Reducer 내보내기
-export const { SET_DPARTINFO, CLEAR_DPARTINFO } = ResourceSlice.actions; //slice라는 의미처럼 Action를 각각 쪼개서 보내준다.
+export const {
+  SET_DPARTINFO,
+  CLEAR_DPARTINFO,
+  GET_DPARTINFO,
+  GET_ALLDPARTINFO,
+} = ResourceSlice.actions; //slice라는 의미처럼 Action를 각각 쪼개서 보내준다.
 export default ResourceSlice.reducer; //리듀서를 내보낸다.

@@ -7,8 +7,6 @@ const UserUnlock = () => {
   const [userInfos, setUserInfos] = useState([]);
   const [userLocked, setUserLocked] = useState([]);
   const [type, setType] = useState("");
-  const [checkedNumber, setCheckedNumber] = useState([]);
-  const [AllNumber, setAllNumber] = useState([]);
 
   useEffect(() => {
     axios
@@ -17,7 +15,7 @@ const UserUnlock = () => {
         setUserInfos(res.data);
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
       });
   }, []);
 
@@ -39,7 +37,7 @@ const UserUnlock = () => {
 
   const handlePermit = async () => {
     await axios
-      .put("/manage/user/locked", checkedNumber)
+      .put("/manage/user/locked", userLocked)
       .then((res) => {
         if (res.data === true) {
           setType("unlocked"); //토스트 타입
@@ -65,44 +63,13 @@ const UserUnlock = () => {
     }, 3000);
   };
 
-  const toggleAllCheckbox = () => {
-    return (e) => {
-      if (e.target.checked) {
-        setCheckedNumber(AllNumber);
-      } else {
-        setCheckedNumber([]);
-      }
-    };
-  };
-
-  const toggleCheck = (e) => {
-    setCheckedNumber((prevCheckedNumber) => {
-      if (prevCheckedNumber.includes(parseInt(e.target.name))) {
-        return prevCheckedNumber.filter(
-          (num) => num !== parseInt(e.target.name)
-        );
-      } else {
-        return [...prevCheckedNumber, parseInt(e.target.name)];
-      }
-    });
-  };
-
-  useEffect(() => {
-    setAllNumber(userInfos.map((user) => user.user_pk_num));
-  }, [userInfos]);
-  // console.log(AllNumber);
-
-  useEffect(() => {
-    // console.log(checkedNumber);
-  }, [checkedNumber]);
-
   return (
     <Container fluid style={{ marginTop: "2em" }}>
       <Row>
         <Col>
           <Card>
             <CardHeader>
-              <h2>잠긴 사원 관리</h2>
+              <h2>잠긴 계정 관리</h2>
               <button
                 className="btn btn-primary"
                 style={{
@@ -112,7 +79,7 @@ const UserUnlock = () => {
                 }}
                 onClick={handlePermit}
               >
-                잠금해제
+                수정
               </button>
             </CardHeader>
             <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
@@ -123,30 +90,14 @@ const UserUnlock = () => {
                 >
                   <thead>
                     <tr>
-                      <th style={{ textAlign: "center" }}>
-                        <input
-                          type="checkbox"
-                          onClick={toggleAllCheckbox()}
-                        ></input>
-                      </th>
                       <th style={{ textAlign: "center" }}>사번</th>
                       <th style={{ textAlign: "center" }}>이름</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     {userInfos.map((user) => (
                       <tr key={user.user_pk_num}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            id={user.user_pk_num}
-                            name={user.user_pk_num}
-                            checked={checkedNumber.includes(user.user_pk_num)}
-                            onChange={(e) => {
-                              toggleCheck(e);
-                            }}
-                          ></input>
-                        </td>
                         <td style={{ textAlign: "center" }}>
                           {user.user_pk_num}
                           <input
@@ -164,6 +115,19 @@ const UserUnlock = () => {
                             name="user_name"
                             value={user.user_name}
                           />
+                        </td>
+                        <td>
+                          <select
+                            className="form-control-sm"
+                            id={`user_locked_${user.user_pk_num}`}
+                            name="user_locked"
+                            defaultValue={user.user_locked}
+                            data-user-pk-num={user.user_pk_num}
+                            onChange={handleChange}
+                          >
+                            <option value="0">해제</option>
+                            <option value="1">잠김</option>
+                          </select>
                         </td>
                       </tr>
                     ))}

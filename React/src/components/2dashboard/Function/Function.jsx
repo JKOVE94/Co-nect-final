@@ -35,7 +35,7 @@ const Function = () => {
           starttime: data.proj_startdate,
           endtime: data.proj_enddate,
           groupId: 0,
-          color: data.proj_tagcol,
+          color: data.proj_tagcol || "#b0e0e6",
           editable: false,
         }));
 
@@ -66,8 +66,8 @@ const Function = () => {
       <Container fluid className={style.calendar}>
         <Row className="mx-0 align-items-start justify-content-center">
           <Col md={8} className="px-0">
-            <Card className="mx-auto">
-              <CardBody
+            <Card className="mx-auto" >
+              <CardBody 
                 className="p-10"
                 style={{ maxHeight: "45em", overflowY: "auto" }}
               >
@@ -79,7 +79,7 @@ const Function = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col md={4} style={{ marginTop: "2rem" }}>
+          <Col md={4} >
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
                 <MySchedule events={events} />
