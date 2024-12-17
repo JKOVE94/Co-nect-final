@@ -15,7 +15,7 @@ public class ProjectmemberForm {
 
     public static ProjectmemberEntity toEntity(ProjectmemberForm form) {
         ProjectmemberEntity entity = new ProjectmemberEntity();
-        entity.setProjMemPkNum(form.getProjmem_pk_num());
+        entity.setProjmemPkNum(form.getProjmem_pk_num());
         return entity;
     }
 }

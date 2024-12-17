@@ -151,8 +151,21 @@ public class FileServiceImpl implements FileService {
 			updatePost.setFileSize(fileForm.getFile_size());
 			updatePost.setFileType(fileForm.getFile_type());
 			
-			return FileDto.fromEntity(fileRepository.save(updatePost));
-		}
+			 // FileEntity를 저장하여 업데이트된 내용을 반영
+	        FileEntity updatedFileEntity = fileRepository.save(updatePost);
+
+	        // WikiEntity 관련 정보를 FileDto에 설정
+	        FileDto fileDto = FileDto.fromEntity(updatedFileEntity);
+	        
+	        // WikiEntity가 존재하는 경우, 추가적인 정보를 FileDto에 설정
+	        if (updatedFileEntity.getWikiEntity() != null) {
+	            fileDto.setWiki_regdate(updatedFileEntity.getWikiEntity().getWikiRegdate());
+	            fileDto.setWiki_view(updatedFileEntity.getWikiEntity().getWikiView());
+	        }
+	        
+	        // 업데이트된 FileDto 반환
+	        return fileDto;		
+	        }
 		return null;
 	}
 
@@ -173,8 +186,21 @@ public class FileServiceImpl implements FileService {
 	    // Repository를 통해 데이터를 조회
     	Page<FileEntity> postPage = Page.empty();
     	
+    	 // null 또는 빈 값에 대한 기본 처리
+        if (searchType == null || searchType.isEmpty()) {
+            searchType = "default";
+        }
+        if (searchText == null) {
+            searchText = "";
+        }
     	
-    		postPage = fileRepository.findAll(pageable);
+    	
+    	if (searchType != null && searchType.equalsIgnoreCase("file_name")) {
+    	    postPage = fileRepository.findByFileNameContains(searchText, pageable);
+    	} else {
+    	    postPage = fileRepository.findAll(pageable); // 기본 조회
+    	}
+
     	
 	    // PostEntity -> postDto 변환
 	    return postPage.map(FileDto::fromEntity);

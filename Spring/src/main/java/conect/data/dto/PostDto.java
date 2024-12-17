@@ -26,7 +26,6 @@ public class PostDto {
     private int post_fk_user_num; //게시글 작성자 사번 [FK, INT]
     private String user_name;
     private List<Map<Integer,String>> target_names;
-    private int post_temp; // 게시글 임시저장 상태
     
     public static PostDto fromEntity(PostEntity entity) {
         PostDto dto = new PostDto();
@@ -40,9 +39,7 @@ public class PostDto {
         dto.setPost_tag(entity.getPostTag());
         dto.setPost_depth(entity.getPostDepth());
         dto.setPost_view(entity.getPostView());
-        dto.setPost_temp(entity.getPostTemp());
         dto.setUser_name(entity.getUserEntity().getUserName());
-        
         
         // UserEntity에서 user_name을 가져와 설정
         if (entity.getUserEntity() != null) {

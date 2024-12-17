@@ -23,7 +23,7 @@ public class ReplyForm {
     public static ReplyEntity toEntity(ReplyForm form) {
         ReplyEntity entity = new ReplyEntity();
         entity.setReplyPkNum(form.getReply_pk_num());
-        entity.setReplyCont(form.getReply_content());
+        entity.setReplyContent(form.getReply_content());
         entity.setReplyParent(form.getReply_parent());
         entity.setReplyRegdate(form.getReply_regdate());
         entity.setReplyDepth(form.getReply_depth());

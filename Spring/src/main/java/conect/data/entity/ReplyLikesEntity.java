@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "replyLikes")
+@Table(name = "replylike")
 public class ReplyLikesEntity {
     @Id
     private int replylikePkNum; //댓글 좋아요 번호 [PK, INT]

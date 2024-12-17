@@ -137,7 +137,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         try {
             for (int userno : usernos) {
                 UserEntity entity = userRepository.findById(userno).get();
-                entity.setUserLocked(0);
+                entity.setUserLocked(false);
                 userRepository.save(entity);
             }
             return true;

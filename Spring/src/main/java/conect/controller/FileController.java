@@ -35,7 +35,6 @@ public class FileController {
 	@Autowired
 	private FileService fileService;
 
-
 	// 모든 게시글 조회 (페이징, 검색, 정렬 포함)
 	@GetMapping("/")
 	public ResponseEntity<Map<String, Object>> getAllPosts(

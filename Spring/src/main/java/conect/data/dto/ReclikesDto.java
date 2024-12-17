@@ -15,7 +15,7 @@ public class ReclikesDto {
 
     public static ReclikesDto fromEntity(ReclikesEntity reclikesEntity) {
         ReclikesDto reclikesDto = new ReclikesDto();
-        reclikesDto.setReclike_pk_num(reclikesEntity.getReclikesPkNum());
+        reclikesDto.setReclike_pk_num(reclikesEntity.getReclikePkNum());
 
         // 사용자 엔티티 및 추천 엔티티의 PK 값을 가져오는 방법에 따라 수정 필요
         if (reclikesEntity.getUserEntity() != null) {

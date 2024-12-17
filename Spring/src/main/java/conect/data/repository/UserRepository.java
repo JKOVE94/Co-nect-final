@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
-    @Query("SELECT u FROM UserEntity u WHERE u.userLocked=1")
+    @Query("SELECT u FROM UserEntity u WHERE u.userLocked=true")
     List<UserEntity> findLockedUser();
 
     @Query("SELECT u FROM UserEntity u WHERE u.companyEntity.compPkNum = ?1")

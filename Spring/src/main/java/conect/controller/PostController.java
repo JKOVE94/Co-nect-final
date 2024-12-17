@@ -20,13 +20,11 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("{comp_pk_num}/board")
+@RequestMapping("/board")
 public class PostController {
 
 	@Autowired
 	private PostService postService;
-	// @Autowired
-	// private TempService tempService;
 
 	// 게시글 생성
 	@PostMapping("/free")
@@ -131,24 +129,3 @@ public class PostController {
 		}
 	}
 }
-
-//-----------------------------------------------------------------------------------------------
-//     // 임시 저장된 게시글 생성
-//     @PostMapping("/temporary")
-//     public TemporaryDto saveTemporary(@RequestBody PostForm postForm) {
-//         return TemporaryDto.fromEntity(tempService.saveTemporary(postForm));
-//     }
-
-//     // 임시 저장된 게시글 목록 조회
-//     @GetMapping("/temporary")
-//     public List<TemporaryDto> getAllTemporary() {
-//         return tempService.getAllTemporary();
-//     }
-
-//     // 임시 저장된 게시글 삭제
-//     @DeleteMapping("/temporary/{postPkNum}")
-//     public void deleteTemporary(@PathVariable("postPkNum") int postPkNum) {
-//     	System.out.println("숫자 확인 :"+postPkNum);
-//     	tempService.deleteTemporary(postPkNum);
-//     }
-// }

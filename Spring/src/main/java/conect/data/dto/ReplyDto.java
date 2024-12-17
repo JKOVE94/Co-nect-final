@@ -22,7 +22,7 @@ public class ReplyDto {
     public static ReplyDto fromEntity(ReplyEntity replyEntity) {
         ReplyDto replyDto = new ReplyDto();
         replyDto.setReply_pk_num(replyEntity.getReplyPkNum());
-        replyDto.setReply_content(replyEntity.getReplyCont());
+        replyDto.setReply_content(replyEntity.getReplyContent());
         replyDto.setReply_parent(replyEntity.getReplyParent());
         replyDto.setReply_regdate(replyEntity.getReplyRegdate());
         replyDto.setReply_depth(replyEntity.getReplyDepth());

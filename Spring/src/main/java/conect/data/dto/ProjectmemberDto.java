@@ -15,7 +15,7 @@ public class ProjectmemberDto {
 
     public static ProjectmemberDto fromEntity(ProjectmemberEntity projectmemberEntity) {
         ProjectmemberDto projectmemberDto = new ProjectmemberDto();
-        projectmemberDto.setProjmem_pk_num(projectmemberEntity.getProjMemPkNum());
+        projectmemberDto.setProjmem_pk_num(projectmemberEntity.getProjmemPkNum());
 
         // 사용자 엔티티 및 프로젝트 엔티티의 PK 값을 가져오는 방법에 따라 수정 필요
         if (projectmemberEntity.getUserEntity() != null) {
