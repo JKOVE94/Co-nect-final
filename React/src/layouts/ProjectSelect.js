@@ -6,8 +6,8 @@ import { CardBody, CardTitle, Row, Col, Card } from "reactstrap";
 import leftArrow from "../assets/img/icons/common/leftArrow.png";
 import rightArrow from "../assets/img/icons/common/rightArrow.png";
 import { useSelector } from "react-redux";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import axios from "./api"; // 커스텀 axios 인스턴스 사용
+import { Link, useNavigate } from "react-router-dom";
 
 const ProjectSelect = () => {
   const settings = {
@@ -37,6 +37,7 @@ const ProjectSelect = () => {
   const [error, setError] = useState(null);
 
   const user_pk_num = useSelector((state) => state.userData.user_pk_num);
+  const navigate = useNavigate();
 
   const fetchData = useCallback(() => {
     if (!user_pk_num) {
@@ -47,19 +48,31 @@ const ProjectSelect = () => {
 
     setLoading(true);
     setError(null);
+
+    // JWT 토큰을 포함하여 요청
+    const token = localStorage.getItem("token");
+
     axios
-      .get(`/proj/ProjSel/${user_pk_num}`)
+      .get(`/proj/ProjSel/${user_pk_num}`, {
+        headers: { Authorization: `Bearer ${token}` }, // 헤더에 토큰 추가
+      })
       .then((res) => {
         setData(res.data);
       })
       .catch((error) => {
-        setError("데이터를 불러오는데 실패했습니다.");
-        console.error("데이터 로딩 실패:", error);
+        if (error.response && error.response.status === 403) {
+          // 403 Forbidden 오류 처리
+          console.error("접근이 거부되었습니다. 로그인 상태를 확인하세요.");
+          navigate("/login"); // 로그인 페이지로 리디렉션
+        } else {
+          setError("데이터를 불러오는데 실패했습니다.");
+          console.error("데이터 로딩 실패:", error);
+        }
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [user_pk_num]);
+  }, [user_pk_num, navigate]);
 
   useEffect(() => {
     fetchData();
@@ -103,19 +116,17 @@ const ProjectSelect = () => {
                           className="text-uppercase text-muted mb-0"
                         ></CardTitle>
                         <span className="h3 font-weight-bold mb-0">
-                          {proj.proj_name}
+                          {proj.proj_title}
                         </span>
                       </Col>
                     </Row>
                     <hr
-                      className=""
                       style={{
                         backgroundColor: "#43A09F",
                         opacity: "0.5",
                         width: "100%",
                       }}
                     />
-
                     <div className="project-details">
                       <div className="detail-box mb-4">
                         <h4 className="font-weight-bold text-primary mb-3">
@@ -130,10 +141,9 @@ const ProjectSelect = () => {
                             borderRadius: "5px",
                           }}
                         >
-                          {proj.proj_desc}
+                          {proj.proj_content}
                         </p>
                       </div>
-
                       <div className="detail-box mb-3 pt-3">
                         <div className="d-flex align-items-center mb-2">
                           <i className="fas fa-calendar-alt text-success mr-2"></i>
@@ -145,7 +155,6 @@ const ProjectSelect = () => {
                           {formatDate(proj.proj_startdate)}
                         </p>
                       </div>
-
                       <div className="detail-box mb-4 pt-3">
                         <div className="d-flex align-items-center mb-2">
                           <i className="fas fa-calendar-alt text-danger mr-2"></i>
@@ -154,22 +163,6 @@ const ProjectSelect = () => {
                           </span>
                         </div>
                         <p className="ml-4">{formatDate(proj.proj_enddate)}</p>
-                      </div>
-
-                      <div className="detail-box pt-4">
-                        <h5 className="font-weight-bold mb-2">
-                          진행도: {proj.proj_progress}%
-                        </h5>
-                        <div className="progress" style={{ height: "20px" }}>
-                          <div
-                            className="progress-bar bg-success"
-                            role="progressbar"
-                            style={{ width: `${proj.proj_progress}%` }}
-                            aria-valuenow={proj.proj_progress}
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          ></div>
-                        </div>
                       </div>
                     </div>
                   </CardBody>

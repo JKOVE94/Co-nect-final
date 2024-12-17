@@ -18,14 +18,15 @@ public class JwtUtil {
     }
 
     // JWT 토큰 생성
-    public String generateToken(String username) {
+    public String generateToken(String userPkNum) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userPkNum)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key)
                 .compact();
     }
+
 
     // JWT 토큰 검증
     public boolean validateToken(String token) {

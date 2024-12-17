@@ -1,6 +1,6 @@
 package conect.service.board.proj;
 
-import conect.data.dto.DepartmentDto;
+
 import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
 import conect.data.form.ProjectForm;
@@ -22,8 +22,8 @@ public interface ProjService {
 	List<ProjectDto> getScheduleAll(int usernum);
 	
 	// 검색
-	Set<String> getStatusAll(int compNum);
-	List<ProjectDto> getSearchData(String status, String title);
+	//Set<String> getStatusAll(int compNum);
+//	List<ProjectDto> getSearchData(String status, String title);
 
 	List<ProjectDto> getListAll();
 
@@ -37,7 +37,7 @@ public interface ProjService {
 	//public Page<ProjectDto> getList(int page, int pageSize);
 
 	// 모든 부서목록 반환
-	List<DepartmentDto> getAllDepartments();
+	
 
 	// 프로젝트 생성
 	int addProject(ProjectForm form);

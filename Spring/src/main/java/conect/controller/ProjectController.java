@@ -1,7 +1,5 @@
 package conect.controller;
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.ProjectDto;
-import conect.data.entity.DepartmentEntity;
 import conect.data.form.ProjectForm;
 import conect.service.board.proj.ProjService;
 import conect.service.board.proj.ProjServiceImpl;
@@ -90,11 +88,6 @@ public class ProjectController {
 		return projServiceImpl.getProjById(projPkNum);
 	}
 	
-	// 모든 부서 목록 반환 (셀렉트 박스용)
-    @GetMapping("/departments")
-    public List<DepartmentDto> getAllDepartments() {
-        return projServiceImpl.getAllDepartments();
-    }
 
 	// 프로젝트 생성
 	@PostMapping("/projadd")
@@ -136,17 +129,6 @@ public class ProjectController {
 
 
 
-	//검색 - status list 반환
-	@GetMapping("/status/{compNum}")
-	public Set<String> getStatusList(@PathVariable("compNum")int compNum){
-		return projServiceImpl.getStatusAll(compNum);
-	}
 	
-	//검색데이터 반환
-	@GetMapping("/search")
-	public List<ProjectDto> getSearchData(@RequestParam("status")String status,
-										@RequestParam("searchText")String searchText){	
-		return projServiceImpl.getSearchData(status, searchText);
-	}
 
 }

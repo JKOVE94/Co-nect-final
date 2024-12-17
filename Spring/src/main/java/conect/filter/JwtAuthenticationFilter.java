@@ -1,8 +1,12 @@
 package conect.filter;
 
 import conect.data.util.JwtUtil;
+import conect.security.UserSecurityService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
@@ -12,24 +16,46 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtUtil jwtUtil;
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    private final JwtUtil jwtUtil;
+    private final UserSecurityService userSecurityService;
+
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserSecurityService userSecurityService) {
         this.jwtUtil = jwtUtil;
+        this.userSecurityService = userSecurityService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            if (jwtUtil.validateToken(token)) {
-                String username = jwtUtil.getUsernameFromToken(token);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, null);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                logger.debug("JWT Token found in request");
+                
+                if (jwtUtil.validateToken(token)) {
+                    String username = jwtUtil.getUsernameFromToken(token);
+                    logger.debug("Valid JWT token for user: {}", username);
+                    
+                    UserDetails userDetails = userSecurityService.loadUserByUsername(username);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    logger.debug("Authentication set for user: {}", username);
+                } else {
+                    logger.warn("Invalid JWT token");
+                    SecurityContextHolder.clearContext();
+                }
+            } else {
+                logger.debug("No JWT token found in request");
+                SecurityContextHolder.clearContext();
             }
+        } catch (Exception e) {
+            logger.error("Cannot set user authentication", e);
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

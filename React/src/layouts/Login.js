@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "assets/landing/css/login.css";
 import ConectTextLogo from "assets/img/logo/ConectTextLogo";
-import axios from "axios";
+import axios from "./api"; // 커스텀 axios 인스턴스 사용
 import { useNavigate } from "react-router-dom";
 import LoginToast from "variables/Toast/LoginToast";
 import { useDispatch } from "react-redux";
 import { LOGIN } from "../Redux/Reducer/userDataReducer";
-import { SET_DPARTINFO } from "../Redux/Reducer/departDataReducer";
 import LoginModal from "variables/Modal/LoginModal";
 
 const Login = (props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isFirst, setIsFirst] = useState(true);
   const [isSignIn, setIsSignIn] = useState(null);
   const [loginInfo, setLoginInfo] = useState({
@@ -20,7 +20,6 @@ const Login = (props) => {
   });
   const [errType, setErrType] = useState(0);
   const [data, setData] = useState({});
-  const navigate = useNavigate();
   const [isReversed, setIsReversed] = useState(false);
 
   const [showA, setShowA] = useState(false);
@@ -39,19 +38,12 @@ const Login = (props) => {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      validateToken(token);
-    }
-  }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLoginInfo({
-      ...loginInfo,
+    setLoginInfo((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const toggleShowA = () => {
@@ -64,43 +56,37 @@ const Login = (props) => {
   const handleShowM = () => setShowM(true);
   const handleCloseM = () => setShowM(false);
 
-  const validateToken = async (token) => {
-    try {
-      const res = await axios.post("/validate-token", { token });
-      if (res.data.isValid) {
-        navigate(`/ProjSel/${res.data.user_pk_num}`);
-      } else {
-        localStorage.removeItem("token");
-      }
-    } catch (error) {
-      console.error("토큰 검증 실패:", error);
-      localStorage.removeItem("token");
-    }
-  };
-
   const login = async (e) => {
     e.preventDefault();
     try {
-      let res = await axios.post("/login", loginInfo);
+      const res = await axios.post("/login", loginInfo);
       const responseData = res.data;
-      await setData(responseData);
-      if (res.data.status === 1) {
+      setData(responseData);
+      if (responseData.status === 1) {
         localStorage.setItem("token", responseData.token);
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${responseData.token}`;
-        dispatch(LOGIN(responseData));
-        let dpartsInfo = await axios.get("/login/departs");
-        dispatch(SET_DPARTINFO(dpartsInfo.data));
+
+        dispatch(
+          LOGIN({
+            user_pk_num: responseData.user_pk_num,
+            user_name: responseData.user_name,
+            user_mail: responseData.user_mail,
+            user_pic: responseData.user_pic,
+            user_fk_comp_num: responseData.user_fk_comp_num,
+          })
+        );
+
         setIsReversed(true);
         setTimeout(() => {
           navigate(`/ProjSel/${loginInfo.user_pk_num}`);
         }, 1000);
-      } else if (res.data.status === 2) {
-        setErrType(res.data.status);
+      } else if (responseData.status === 2) {
+        setErrType(responseData.status);
         toggleShowA();
-      } else if (res.data.status === 3) {
-        setErrType(res.data.status);
+      } else if (responseData.status === 3) {
+        setErrType(responseData.status);
         handleShowM();
       }
     } catch (error) {

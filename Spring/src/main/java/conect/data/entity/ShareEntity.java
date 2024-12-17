@@ -1,7 +1,5 @@
 package conect.data.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,12 +9,13 @@ import lombok.Setter;
 @Entity
 @Table(name = "share")
 public class ShareEntity {
-   @Id
-   private int shareUser; // 일정 공유된 pk num
-   
-   @ManyToOne
-   @JoinColumn(name="share_fk_todo_num")
-   @JsonIgnore
-   private TodoEntity todo;
-}
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int sharePkNum; //공유 번호 [PK, INT]
+    private int shareUser; //공유한 유저 번호 [INT]
+
+    @ManyToOne
+    @JoinColumn(name="share_fk_todo_num")
+    private TodoEntity todoEntity;
+}

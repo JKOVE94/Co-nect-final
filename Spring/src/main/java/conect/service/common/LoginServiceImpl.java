@@ -1,12 +1,10 @@
 package conect.service.common;
 
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.LoginDto;
 import conect.data.dto.UserDto;
 import conect.data.entity.UserEntity;
 import conect.data.form.LoginForm;
 import conect.data.repository.CompanyRepository;
-import conect.data.repository.DepartmentRepository;
 import conect.data.repository.UserRepository;
 import conect.data.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +22,7 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
+   
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -61,10 +58,8 @@ public class LoginServiceImpl implements LoginService {
                             loginDto.setUser_name(user.getUserName());
                             loginDto.setUser_mail(user.getUserMail());
                             loginDto.setUser_pic(user.getUserPic());
-                            loginDto.setUser_pictype(user.getUserPictype());
-                            loginDto.setUser_rank(user.getUserRank());
-                            loginDto.setUser_fk_dpart_num(user.getDepartmentEntity().getDpartPkNum());
-                            loginDto.setUser_fk_acc_authornum(user.getAccountEntity().getAccPkAuthornum());
+                            loginDto.setUser_pictype(user.getUserPic());
+                            loginDto.setUser_fk_acc_authornum(user.getUserAuthor());
                             loginDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
                         } else {
                             handleFailedLogin(user);
@@ -96,12 +91,6 @@ public class LoginServiceImpl implements LoginService {
         userRepository.save(user);
     }
 
-    @Override
-    public List<DepartmentDto> getDeparts() {
-        return departmentRepository.findAll().stream()
-                .map(DepartmentDto::fromEntity)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public String generateToken(UserDto userDto) {
