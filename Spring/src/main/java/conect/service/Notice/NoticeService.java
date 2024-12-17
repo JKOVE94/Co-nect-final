@@ -2,12 +2,10 @@ package conect.service.Notice;
 
 import conect.data.dto.NoticeDto;
 import conect.data.form.NoticeForm;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
-@Service
+
 public interface NoticeService {
     //전체 조회
     List<NoticeDto> getNoticeAll(int projNum);
