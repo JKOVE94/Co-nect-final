@@ -28,8 +28,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public UserDto getUserInfo(int user_pk_num) {
-//        return UserDto.fromEntity(userRepository.findById(user_pk_num).get());
-        return null;
+        return UserDto.fromEntity(userRepository.findById(user_pk_num).get());
     }
 
     @Override

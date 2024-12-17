@@ -90,7 +90,7 @@ export default class Gantt extends Component {
 
 componentDidMount() {
     gantt.config.columns = [
-    {name:"text",       label:"작업명",  width:"*", tree:true },
+    {name:"text",       label:"업무명",  width:"*", tree:true },
     {name:"start_date", label:"시작일", align:"center" },
     {name:"duration",   label:"기한 (일)", align:"center" },
     {name:"member",   label:"담당자", align:"center" },
@@ -119,18 +119,6 @@ gantt.templates.tooltip_text = function(start,end,task){
 };
 
 
-       gantt.attachEvent("onAfterTaskUpdate", (id, item) => {
-                this.props.setUpdatedData({"gantt":item});
-            });
-
-        gantt.attachEvent("onAfterTaskAdd", (id, item) => {
-            if (this.props.onTaskAdd) {
-                this.props.onTaskAdd(item);
-            }
-        });
-          gantt.attachEvent("onAfterTaskDelete", (id) => {
-                this.props.setDeleteTarget(id);
-        });
 }
 
    render() {

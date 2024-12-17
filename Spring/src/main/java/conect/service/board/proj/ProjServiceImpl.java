@@ -74,11 +74,16 @@ public class ProjServiceImpl implements ProjService {
 		return prepository.findAll().stream().map(ProjectDto::fromEntity).toList();
 	}
 
+	@Override
 	public ProjectDto getProjById(int projPkNum) {
-		return prepository.findByIdWithUser(projPkNum)
-				.map(ProjectDto::fromEntity)
-				.orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
+		return null;
 	}
+
+//	public ProjectDto getProjById(int projPkNum) {
+//		return prepository.findByIdWithUser(projPkNum)
+//				.map(ProjectDto::fromEntity)
+//				.orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
+//	}
 
 
 
@@ -152,9 +157,9 @@ public class ProjServiceImpl implements ProjService {
 		result.put("tasks", taskRepository.getTaskByTaskFkUserNum(userPkNum).stream()
 				.map(TaskDto::fromEntity)
 				.collect(Collectors.toList()));
-		result.put("projects", prepository.getProjByTaskFkUserNum(userPkNum).stream()
-				.map(ProjectDto::fromEntity)
-				.collect(Collectors.toList()));
+//		result.put("projects", prepository.getProjByTaskFkUserNum(userPkNum).stream()
+//				.map(ProjectDto::fromEntity)
+//				.collect(Collectors.toList()));
 		result.put("posts", postRepository.getPostByTaskFkUserNum(userPkNum).stream()
 				.map(PostDto::fromEntity)
 				.collect(Collectors.toList()));
@@ -164,8 +169,9 @@ public class ProjServiceImpl implements ProjService {
 	@Override
 	public List<ProjectDto> getAllProjInfo(int compNum) {
 		// TODO 프로젝트 목록 가져오기
-		return prepository.findByProjCompNum(compNum)
-				.stream().map(ProjectDto::fromEntity).toList();
+//		return prepository.findByProjCompNum(compNum)
+//				.stream().map(ProjectDto::fromEntity).toList();
+		return null;
 	}
 
 }

@@ -22,7 +22,7 @@ public class TodoServiceImpl implements TodoService {
     
     @Override
     public List<TodoDto> getTodoAll(int usernum) {
-    	return todoRepository.findByUser_UserPkNum(usernum)
+    	return todoRepository.findByUserEntity_UserPkNum(usernum)
         			.stream().map(TodoDto::fromEntity).toList();
     }
     

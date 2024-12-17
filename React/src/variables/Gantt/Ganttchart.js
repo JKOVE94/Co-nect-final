@@ -8,7 +8,6 @@ class Ganttchart extends Component {
         currentZoom: 'Days',
         messages: [],
     };
-
     handleZoomChange = (zoom) => {
         this.setState({
             currentZoom: zoom
@@ -17,7 +16,6 @@ class Ganttchart extends Component {
 
     convertToGanttData = (taskdatas) => {
         const tasks = [];
-
         const addTasks = (taskList, parentId = 0) => {
             taskList.forEach(task => {
                 tasks.push({
@@ -31,26 +29,19 @@ class Ganttchart extends Component {
                     color: task.task_tagcol,
                     parent: task.task_fk_task_num || parentId
                 });
-                
                 if (task.children && task.children.length > 0) {
                     addTasks(task.children, task.task_pk_num);
                 }
             });
         };
-
         addTasks(taskdatas);
 
         return { data: tasks, links: [] };
     }
 
-
     componentDidMount() {
         gantt.i18n.setLocale("kr");
         gantt.config.date_format = "%Y-%m-%d %H:%i";
-        gantt.config.lightbox.sections = [
-            {name:"description", height:38, map_to:"text", type:"textarea", focus:true},
-            {name:"time",type:"time", map_to:"auto", time_format:["%Y","%m","%d","%H:%i"]}
-        ]
         gantt.plugins({ 
             marker: true 
         });
@@ -80,7 +71,7 @@ class Ganttchart extends Component {
     }
 
     render() {
-        const { currentZoom, messages } = this.state;
+        const { currentZoom } = this.state;
         const { taskdatas } = this.props;
         const ganttData = this.convertToGanttData(taskdatas);
         
@@ -100,8 +91,6 @@ class Ganttchart extends Component {
                         zoom={this.state.currentZoom}
                         onTaskUpdate={this.handleTaskUpdate}
                         onTaskAdd={this.handleTaskAdd}
-                        setDeleteTarget={this.props.setDeleteTarget}
-                        setUpdatedData={this.props.setUpdatedData}
                     />
                 </div>
                 {/* <MessageArea messages={messages} /> */}

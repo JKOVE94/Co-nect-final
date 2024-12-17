@@ -32,11 +32,11 @@ public class LoginController {
             UserDto dto = loginService.getUserInfo(form.getUser_pk_num());
             userInfoDto.setStatus(1); //로그인 상태 담기
             userInfoDto.setUser_pk_num(form.getUser_pk_num()); //사원 번호 담기
-            userInfoDto.setUser_fk_dpart_num(form.getComp_pk_num()); //회사 번호 담기
+            userInfoDto.setUser_fk_comp_num(form.getComp_pk_num()); //회사 번호 담기
             userInfoDto.setUser_name(dto.getUser_name()); //사원 이름 담기
             userInfoDto.setUser_mail(dto.getUser_mail()); //사원 메일 담기
             userInfoDto.setUser_pic(dto.getUser_pic()); //사원 사진 담기
-
+            userInfoDto.setUser_author(dto.getUser_author()); //사원 권한 담기
             return userInfoDto;
         }
         else if(isLogin==2){

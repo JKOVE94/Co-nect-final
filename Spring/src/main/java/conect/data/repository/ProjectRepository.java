@@ -22,18 +22,18 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Integer>
 			+ " FROM project WHERE proj_members REGEXP :pattern", nativeQuery = true)
 	List<ProjectEntity> findByProjMembersContaining(@Param("pattern") String pattern);
 
-	@Query("SELECT p FROM ProjectEntity p JOIN FETCH p.userEntity WHERE p.projPkNum = :projPkNum")
-	Optional<ProjectEntity> findByIdWithUser(@Param("projPkNum") int projPkNum);
-
-	@Query("SELECT p FROM ProjectEntity p WHERE p.userEntity.userPkNum = ?1")
-	List<ProjectEntity> getProjByTaskFkUserNum(int task_fk_user_num);
-
-	// // 페이징, 정렬 (Sort 포함되어 컨트롤러나 서비스에 전달)
-	// Page<ProjectEntity> findAlltwo(Pageable pageable);
-
-	// 프로젝트 목록 회사 num 기준으로 조회
-	@Query("SELECT p, p.userEntity.userName, p.userEntity.userMail FROM ProjectEntity p WHERE p.companyEntity.compPkNum = ?1")
-	List<ProjectEntity> findByProjCompNum(int compNum);
+//	@Query("SELECT p FROM ProjectEntity p JOIN FETCH p.projectmemberEntities WHERE p.projPkNum = :projPkNum")
+//	Optional<ProjectEntity> findByIdWithUser(@Param("projPkNum") int projPkNum);
+//
+//	@Query("SELECT p FROM ProjectEntity p WHERE p.userEntity.userPkNum = ?1")
+//	List<ProjectEntity> getProjByTaskFkUserNum(int task_fk_user_num);
+//
+//	// // 페이징, 정렬 (Sort 포함되어 컨트롤러나 서비스에 전달)
+//	// Page<ProjectEntity> findAlltwo(Pageable pageable);
+//
+//	// 프로젝트 목록 회사 num 기준으로 조회
+//	@Query("SELECT p, p.userEntity.userName, p.userEntity.userMail FROM ProjectEntity p WHERE p.companyEntity.compPkNum = ?1")
+//	List<ProjectEntity> findByProjCompNum(int compNum);
 
 	//프로젝트 목록 status에 따라 조회
 	@Query("SELECT p FROM ProjectEntity p WHERE p.companyEntity.compPkNum = ?1 AND p.projStatus = ?2")

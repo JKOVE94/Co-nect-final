@@ -71,6 +71,7 @@ class Ganttchart extends Component {
         }
     }
 
+<<<<<<< Updated upstream
     handleTaskUpdate = (id, task) => {
         const updatedTasks = this.props.taskdatas.map(t => 
         t.task_pk_num === id ? {
@@ -87,6 +88,8 @@ class Ganttchart extends Component {
     this.props.setTaskdatas(updatedTasks);
     }
 
+=======
+>>>>>>> Stashed changes
     handleTaskAdd = (task) => {
     const newTask = {
         task_pk_num: task.id,
@@ -117,10 +120,13 @@ class Ganttchart extends Component {
     componentDidMount() {
         gantt.i18n.setLocale("kr");
         gantt.config.date_format = "%Y-%m-%d %H:%i";
+<<<<<<< Updated upstream
         gantt.config.lightbox.sections = [
             {name:"description", height:38, map_to:"text", type:"textarea", focus:true},
             {name:"time",type:"time", map_to:"auto", time_format:["%Y","%m","%d","%H:%i"]}
         ]
+=======
+>>>>>>> Stashed changes
         gantt.plugins({ 
             marker: true 
         });
@@ -162,8 +168,11 @@ class Ganttchart extends Component {
                         zoom={this.state.currentZoom}
                         onTaskUpdate={this.handleTaskUpdate}
                         onTaskAdd={this.handleTaskAdd}
+<<<<<<< Updated upstream
                         setDeleteTarget={this.props.setDeleteTarget}
                         setUpdatedData={this.props.setUpdatedData}
+=======
+>>>>>>> Stashed changes
                     />
                 </div>
                 {/* <MessageArea messages={messages} /> */}

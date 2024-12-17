@@ -68,6 +68,7 @@ public class ManageController {
         if(file.getContentType().contains("image") == false){
             return 2;
         }
+        file.getOriginalFilename();
         if(file.getSize() > MaxFileSize){
             return 3;
         }
@@ -85,12 +86,13 @@ public class ManageController {
     @PutMapping("/user/{user_pk_num}")
     public boolean updateUser(@ModelAttribute UserForm form){ return manageUserService.updateUser(form); }
 
+    //------------- 회사 관리 (/manage/comp) -------------
     @GetMapping("/comp")
-    public CompanyDto getCompInfo(@PathVariable("compNum") int compNum){
+    public CompanyDto getCompInfo(@PathVariable("comp_pk_num") int compNum){
         return manageCompService.getCompanyInfo(compNum);
     }
     @PutMapping("/comp")
-    public void updateCompInfo(@PathVariable("compNum") String compNum, @RequestBody CompanyForm form){
+    public void updateCompInfo(@PathVariable("comp_pk_num") String compNum, @RequestBody CompanyForm form){
         manageCompService.updateCompanyInfo(form, Integer.parseInt(compNum));
 
     }

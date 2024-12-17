@@ -41,9 +41,5 @@ public class PostEntity {
 
 	@OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JsonBackReference
-	private List<ReplyEntity> replyEntities;
-
-	@OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	@JsonBackReference
 	private List<FavoritesEntity> favoritesEntities;
 }

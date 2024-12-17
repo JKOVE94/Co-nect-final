@@ -76,7 +76,8 @@ public class ProjectController {
 	@GetMapping("/projread/{projPkNum}")
 	public ProjectDto getProjById(@PathVariable("projPkNum")int projPkNum){
 		System.out.println("projPkNum : "+projPkNum);
-		return projServiceImpl.getProjById(projPkNum);
+//		return projServiceImpl.getProjById(projPkNum);
+		return null;
 	}
 
 
