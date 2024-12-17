@@ -44,7 +44,7 @@ public class NoticeServiceImpl implements NoticeService{
     //공지 하나 출력
     @Override
     public Optional<NoticeDto> getOneNotice(int notiNum) {
-        return notiRepository.getoneNotice(notiNum)
+        return notiRepository.getOneNotice(notiNum)
                 .map(NoticeDto::fromEntity);
     }
 
