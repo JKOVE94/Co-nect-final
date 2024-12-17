@@ -35,8 +35,8 @@ const WikiList = () => {
         console.log(res.data);
         if (res.data && res.data.wikis) {
           const allWikis = res.data.wikis || [];
-          const noticeWikis = allWikis.filter((wiki) => wiki.isnotice); // 공지사항 필터링
-          const regularWikis = allWikis.filter((wiki) => !wiki.isnotice); // 일반 게시글
+          const noticeWikis = allWikis.filter((wiki) => wiki.wiki_isnotice); // 공지사항 필터링
+          const regularWikis = allWikis.filter((wiki) => !wiki.wiki_isnotice); // 일반 게시글
 
           setWikis([...noticeWikis, ...regularWikis]); // 공지사항을 상단에 배치
           setCurrentPage(res.data.currentPage); // 현재 페이지 설정
@@ -181,7 +181,22 @@ const WikiList = () => {
                 <th>번호</th>
                 <th>제목</th>
                 <th>작성자</th>
-                <th>등록일</th>
+                <th>
+                  등록일{" "}
+                  <button
+                    onClick={() => handleSortChange("wikiRegdate")}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "10px",
+                      padding: "0",
+                    }}
+                  >
+                    {sortDirection === "ASC" ? "▲" : "▼"}{" "}
+                    {/* 과거순일 경우 ▲, 최신순일 경우 ▼ */}
+                  </button>
+                </th>
                 <th>조회수</th>
               </tr>
             </thead>
@@ -189,7 +204,18 @@ const WikiList = () => {
               {wikis.length > 0 ? (
                 // 공지글을 먼저 배치하도록 wikis 배열을 정렬
                 wikis
-                  .sort((a, b) => b.wiki_isnotice - a.wiki_isnotice) // wiki_isnotice가 true인 공지글이 위로 오도록 정렬
+                .sort((a, b) => {
+                  // 먼저 공지글 정렬
+                  if (a.wiki_isnotice !== b.wiki_isnotice) {
+                    return b.wiki_isnotice - a.wiki_isnotice;
+                  }
+                  // 날짜 정렬 (최신순, 과거순)
+                  if (sortDirection === "ASC") {
+                    return new Date(a.wiki_regdate) - new Date(b.wiki_regdate); // 과거순
+                  } else {
+                    return new Date(b.wiki_pk_num) - new Date(a.wiki_pk_num); // 최신순
+                  }
+                })
                   .map((wiki, index) => (
                     <tr
                       key={wiki.wiki_pk_num || `wiki-${index}`}

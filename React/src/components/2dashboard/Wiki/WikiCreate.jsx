@@ -28,7 +28,7 @@ const WikiCreate = () => {
     wiki_regdate: "", // 등록일
     wiki_isnotice: false, // 공지
     wiki_content: "", // 내용
-    wiki_boardtype: false
+    wiki_boardtype: true
   });
 
   useEffect(() => {
