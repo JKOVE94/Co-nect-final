@@ -1,8 +1,10 @@
 package conect.service.board.wiki;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.ProjectDto;
 import conect.data.dto.WikiDto;
@@ -10,9 +12,7 @@ import conect.data.form.WikiForm;
 
 public interface WikiService {
 
-	// 검색
-	//Set<String> getStatusAll(int compNum);
-	//List<ProjectDto> getSearchData(String status, String title);
+	void saveFile(MultipartFile file, int wikiPkNum) throws IOException;
 
 	// 전체 목록 불러오기
 	List<WikiDto> getListAll();

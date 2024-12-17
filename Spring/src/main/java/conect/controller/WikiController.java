@@ -1,5 +1,6 @@
 package conect.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,13 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.WikiDto;
 import conect.data.form.WikiForm;
@@ -29,7 +33,7 @@ public class WikiController {
 
 	// 모든 게시글 조회 (페이징, 검색, 정렬 포함)
 	@GetMapping("/wikilist")
-	public ResponseEntity<Map<String, Object>> getAllWikis(@RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지																													// 페이지																												// 번호
+	public ResponseEntity<Map<String, Object>> getAllWikis(@RequestParam(name = "page", defaultValue = "0") int page, // 현재
 			@RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
 			@RequestParam(name = "sortField", defaultValue = "postRegdate") String sortField, // 정렬 필드
 			@RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
@@ -84,22 +88,31 @@ public class WikiController {
 	 * ResponseEntity.ok(wikis); } catch (Exception e) { e.printStackTrace(); return
 	 * ResponseEntity.status(500).build(); } }
 	 */
+
 	@GetMapping("/wikidetail/{wikiPkNum}")
 	public WikiDto getWikiById(@PathVariable("wikiPkNum") int wikiPkNum) {
 		System.out.println("wikiPkNum : " + wikiPkNum);
 		return wikiServiceImpl.getWikiById(wikiPkNum);
 	}
 
-	// 문서 생성
 	@PostMapping("/wikiadd")
-	public ResponseEntity<?> addWiki(@RequestBody WikiForm form) {
-		try {
-			int wikiPkNum = wikiServiceImpl.addWiki(form);
-			return ResponseEntity.ok(wikiPkNum);
-		} catch (Exception e) {
-			e.printStackTrace(); // 로그로 에러 확인
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문서 생성 실패: " + e.getMessage());
-		}
+	public ResponseEntity<?> addWiki(
+	        @RequestPart("form") WikiForm form, 
+	        @RequestPart(value = "file", required = false) MultipartFile file) {
+	    try {
+	        // 문서 등록 서비스 호출
+	        int wikiPkNum = wikiServiceImpl.addWiki(form);
+
+	        // 파일이 존재하면 파일 업로드 처리
+	        if (file != null && !file.isEmpty()) {
+	            wikiServiceImpl.saveFile(file, wikiPkNum);
+	        }
+
+	        return ResponseEntity.ok(wikiPkNum); // 저장된 문서의 Primary Key 반환
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 에러 로그
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문서 생성 실패: " + e.getMessage());
+	    }
 	}
 
 	// 문서 수정

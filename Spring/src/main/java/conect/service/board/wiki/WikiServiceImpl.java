@@ -2,10 +2,12 @@ package conect.service.board.wiki;
 
 import conect.data.dto.ProjectDto;
 import conect.data.dto.WikiDto;
+import conect.data.entity.FileEntity;
 import conect.data.entity.ProjectEntity;
 import conect.data.entity.UserEntity;
 import conect.data.entity.WikiEntity;
 import conect.data.form.WikiForm;
+import conect.data.repository.FileRepository;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.UserRepository;
 import conect.data.repository.WikiRepository;
@@ -18,10 +20,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
+import com.google.api.client.util.Value;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +46,58 @@ public class WikiServiceImpl implements WikiService {
 
 	@Autowired
 	private ProjectRepository projRepository;
+	
+	@Autowired
+	private FileRepository fileRepository;
+	
+	//GCP Storage 세팅
+    @Value("${spring.cloud.gcp.storage.credentials.location}")
+    private String keyFileName;
 
+    @Value("${spring.cloud.gcp.storage.bucket}")
+    private String bucketName;
+
+    @Override
+    public void saveFile(MultipartFile file, int wikiPkNum) throws IOException {
+        // 1. 파일 검증 로직: 타입 및 사이즈 확인
+        long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB 제한
+        
+        // 타입 확인 (이미지 파일만 허용)
+        if (file == null || !file.getContentType().startsWith("image/")) {
+            throw new IllegalArgumentException("이미지 파일만 업로드할 수 있습니다.");
+        }
+        
+        // 사이즈 확인
+        if (file.getSize() > MAX_FILE_SIZE) {
+            throw new IllegalArgumentException("파일 크기는 5MB를 초과할 수 없습니다.");
+        }
+
+        // 2. 파일 저장 경로 설정 (로컬 경로)
+        String uploadDir = "C:/uploads/";
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        String filePath = uploadDir + fileName;
+
+        // 3. 로컬 디렉토리에 파일 저장
+        File destination = new File(filePath);
+        destination.getParentFile().mkdirs(); // 디렉토리 없으면 생성
+        file.transferTo(destination);
+
+        // 4. 파일 메타데이터 저장 (DB에 FileEntity 저장)
+        FileEntity fileEntity = new FileEntity();
+        fileEntity.setFileName(file.getOriginalFilename()); // 원본 파일명
+        fileEntity.setFilePath(filePath); // 저장된 경로
+        fileEntity.setFileSize((int) file.getSize()); // 파일 크기
+        fileEntity.setFileType(file.getContentType()); // 파일 타입
+
+        // 5. WikiEntity와 연결
+        WikiEntity wikiEntity = wrepository.findById(wikiPkNum)
+                .orElseThrow(() -> new RuntimeException("해당 Wiki 문서가 존재하지 않습니다."));
+        fileEntity.setWikiEntity(wikiEntity);
+
+        // 6. 파일 정보 저장
+        fileRepository.save(fileEntity);
+    }
+    
 	// 전체자료 읽기
 	@Override
 	public List<WikiDto> getListAll() {
