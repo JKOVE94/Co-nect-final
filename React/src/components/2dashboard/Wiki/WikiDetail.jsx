@@ -96,18 +96,18 @@ const WikiDetail = () => {
                     <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {/* wiki_is_notice가 1일 경우 제목 앞에 🔔 표시 */}
-                      {wiki.wiki_is_notice === 1 && (
+                      {wiki.wiki_isnotice === true && (
                         <span role="img" aria-label="bell">
-                          🔔
+                          🔔&nbsp;
                         </span>
                       )}
                       <span
                         style={{
                           fontWeight:
-                            wiki.wiki_is_notice === 1 ? "bold" : "normal", // 공지일 경우 글자를 굵게
+                            wiki.wiki_isnotice === true ? "bold" : "normal", // 공지일 경우 글자를 굵게
                         }}
                       >
-                        {wiki.wiki_name} {/* 게시글 제목 */}
+                        {wiki.wiki_title} {/* 게시글 제목 */}
                       </span>
                     </td>
                   </tr>
@@ -136,7 +136,7 @@ const WikiDetail = () => {
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {wiki.wiki_desc} {/* 게시글 내용 */}
+                      {wiki.wiki_content} {/* 게시글 내용 */}
                     </td>
                   </tr>
                 </tbody>

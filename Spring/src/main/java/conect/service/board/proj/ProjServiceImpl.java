@@ -1,16 +1,13 @@
 package conect.service.board.proj;
 
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.PostDto;
 import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
 import conect.data.entity.CompanyEntity;
-import conect.data.entity.DepartmentEntity;
 import conect.data.entity.ProjectEntity;
 import conect.data.entity.UserEntity;
 import conect.data.form.ProjectForm;
 import conect.data.repository.CompanyRepository;
-import conect.data.repository.DepartmentRepository;
 import conect.data.repository.PostRepository;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.TaskRepository;
@@ -43,9 +40,6 @@ public class ProjServiceImpl implements ProjService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private DepartmentRepository deptRepository;
-
-	@Autowired
 	private CompanyRepository compRepository;
 
 	@Autowired
@@ -55,8 +49,8 @@ public class ProjServiceImpl implements ProjService {
 	private PostRepository postRepository;
 
 	@Override
-	public List<ProjectDto> getAllProjects() {
-		List<ProjectEntity> entities = prepository.findAll();
+	public List<ProjectDto> getAllProjects(int compPkNum) {
+		List<ProjectEntity> entities = prepository.findByCompanyEntity_CompPkNum(compPkNum);
 		return entities.stream().map(ProjectDto::fromEntity).collect(Collectors.toList());
 	}
 
@@ -80,44 +74,30 @@ public class ProjServiceImpl implements ProjService {
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
 
-	public List<ProjectDto> getListAll() {
-		return prepository.findAll().stream().map(ProjectDto::fromEntity).toList();
-	}
-
-	public ProjectDto getProjById(int projPkNum) {
-		return prepository.findByIdWithUser(projPkNum)
+	public List<ProjectDto> getListAll(int compPkNum) {
+		return prepository.findByCompanyEntity_CompPkNum(compPkNum)
+				.stream()
 				.map(ProjectDto::fromEntity)
-				.orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
+				.toList();
 	}
 
-	// 모든 부서를 DTO로 반환 (셀렉트 박스용)
-	public List<DepartmentDto> getAllDepartments() {
-		return deptRepository.findAll().stream()
-				.map(DepartmentDto::fromEntity) // DepartmentEntity를 DepartmentDto로 변환
-				.collect(Collectors.toList());
+	// 상세보기
+	public ProjectDto getProjById(int compPkNum, int projPkNum) {
+		return prepository.findByProjPkNumAndCompanyEntity_CompPkNum(projPkNum, compPkNum)
+	            .map(ProjectDto::fromEntity)
+				.orElseThrow(() -> new EntityNotFoundException("프로젝트를 찾을 수 없습니다. ID: " + projPkNum));
 	}
 
 	// 프로젝트 생성 메서드
 	@Transactional
-	public int addProject(ProjectForm form) {
-		// DTO (ProjectForm) -> Entity (ProjectEntity)
-		ProjectEntity entity = ProjectForm.toEntity(form);
-
-		// proj_created가 null인 경우 현재 날짜로 설정
-		if (entity.getProjCreated() == null) {
-			entity.setProjCreated(new Date());
-		}
-
-		// 부서, 담당자, 회사 설정
-		DepartmentEntity deptEntity = deptRepository.findById(form.getProj_fk_dpart_num())
-				.orElseThrow(() -> new RuntimeException("부서가 존재하지 않습니다."));
-		UserEntity userEntity = userRepository.findById(form.getProj_fk_user_num())
-				.orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
-		CompanyEntity compEntity = compRepository.findById(form.getProj_fk_comp_num())
+	public int addProject(int compPkNum, ProjectForm form) {
+		//회사 설정
+		CompanyEntity compEntity = compRepository.findById(compPkNum)
 				.orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
 
-		entity.setDepartmentEntity(deptEntity);
-		entity.setUserEntity(userEntity);
+		// DTO (ProjectForm) -> Entity (ProjectEntity)
+		ProjectEntity entity = ProjectForm.toEntity(form);
+		
 		entity.setCompanyEntity(compEntity);
 
 		// Entity 저장 후, 저장된 엔티티 반환
@@ -127,34 +107,26 @@ public class ProjServiceImpl implements ProjService {
 		return savedEntity.getProjPkNum();
 	}
 
-	public void editProject(int projPkNum, ProjectForm form) {
+	// 수정 메서드
+	public void editProject(int projPkNum,int comPkNum, ProjectForm form) {
 		// 프로젝트 번호로 기존 프로젝트 조회
 		ProjectEntity entity = prepository.findById(form.getProj_pk_num())
 				.orElseThrow(() -> new RuntimeException("프로젝트가 존재하지 않습니다."));
 
 		// 기존 proj_created 값은 그대로 유지하고, 나머지 필드를 수정
 		ProjectEntity updatedEntity = ProjectForm.toEntity(form);
-		updatedEntity.setProjCreated(entity.getProjCreated()); // 기존 생성일을 유지
 
-		entity.setProjName(updatedEntity.getProjName());
-		entity.setProjMembers(updatedEntity.getProjMembers());
+		entity.setProjTitle(updatedEntity.getProjTitle());
+		entity.setProjContent(updatedEntity.getProjContent());
 		entity.setProjStartdate(updatedEntity.getProjStartdate());
 		entity.setProjEnddate(updatedEntity.getProjEnddate());
-		entity.setProjImport(updatedEntity.getProjImport());
 		entity.setProjStatus(updatedEntity.getProjStatus());
-		entity.setProjDesc(updatedEntity.getProjDesc());
-		entity.setProjUpdated(new Date()); // 프로젝트 수정 날짜 설정
+		entity.setProjUpdated(updatedEntity.getProjUpdated()); // 프로젝트 수정 날짜 설정
 
 		// 부서, 담당자, 회사 설정
-		DepartmentEntity deptEntity = deptRepository.findById(form.getProj_fk_dpart_num())
-				.orElseThrow(() -> new RuntimeException("부서가 존재하지 않습니다."));
-		UserEntity userEntity = userRepository.findById(form.getProj_fk_user_num())
-				.orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
-		CompanyEntity compEntity = compRepository.findById(form.getProj_fk_comp_num())
+		CompanyEntity compEntity = compRepository.findById(comPkNum)
 				.orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
 
-		entity.setDepartmentEntity(deptEntity);
-		entity.setUserEntity(userEntity);
 		entity.setCompanyEntity(compEntity);
 
 		prepository.save(entity); // 수정된 Entity 저장
@@ -173,7 +145,7 @@ public class ProjServiceImpl implements ProjService {
 				.map(TaskDto::fromEntity)
 				.collect(Collectors.toList());
 	}
-
+/*
 	@Override
 	public Map<String, Object> getUserRelatedData(int userPkNum) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -210,13 +182,14 @@ public class ProjServiceImpl implements ProjService {
 		}
 		return statusList;
 	}
-	
+
 	//검색
 	@Override
-	public List<ProjectDto> getSearchData(String status, String title) {
+	public List<ProjectDto> getSearchData(int compNum, String status, String title) {
 		
-		return prepository.findByProjStatusContainsAndProjNameContains(status, title)
+		return prepository.findByProjStatusContainsAndProjTitleContains(compNum, status, title)
 				.stream().map(ProjectDto::fromEntity).toList();
 	}
+	*/
 
 }

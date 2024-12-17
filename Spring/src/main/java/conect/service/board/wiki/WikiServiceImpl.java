@@ -1,5 +1,6 @@
 package conect.service.board.wiki;
 
+import conect.data.dto.ProjectDto;
 import conect.data.dto.WikiDto;
 import conect.data.entity.ProjectEntity;
 import conect.data.entity.UserEntity;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,8 +55,8 @@ public class WikiServiceImpl implements WikiService {
 		// Repository를 통해 데이터를 조회
 		Page<WikiEntity> wikiPage = Page.empty();
 
-		if (searchType.equalsIgnoreCase("wiki_name")) {
-			wikiPage = wrepository.findByWikiNameContains(searchText, pageable);
+		if (searchType.equalsIgnoreCase("wiki_title")) {
+			wikiPage = wrepository.findByWikiTitleContains(searchText, pageable);
 		} else if (searchType.equalsIgnoreCase("user_name")) {
 			wikiPage = wrepository.findByUserEntity_UserNameContains(searchText, pageable);
 		} else {
@@ -97,13 +100,12 @@ public class WikiServiceImpl implements WikiService {
 		WikiEntity entity = wrepository.findById(form.getWiki_pk_num())
 				.orElseThrow(() -> new RuntimeException("문서가 존재하지 않습니다."));
 
-		// 기존 proj_created 값은 그대로 유지하고, 나머지 필드를 수정
 		WikiEntity updatedEntity = WikiForm.toEntity(form);
 		updatedEntity.setWikiRegdate(entity.getWikiRegdate()); // 기존 작성일 유지
 
-		entity.setWikiName(updatedEntity.getWikiName());
-		entity.setWikiDesc(updatedEntity.getWikiDesc());
-		entity.setWikiIsNotice(updatedEntity.isWikiIsNotice());
+		entity.setWikiTitle(updatedEntity.getWikiTitle());
+		entity.setWikiContent(updatedEntity.getWikiContent());
+		entity.setWikiIsnotice(updatedEntity.isWikiIsnotice());
 
 		// 프로젝트, 작성자 설정
 		ProjectEntity projEntity = projRepository.findById(form.getWiki_fk_proj_num())
@@ -128,22 +130,4 @@ public class WikiServiceImpl implements WikiService {
 		}
 	}
 
-	/*
-	 * //검색용 status list 출력
-	 * 
-	 * @Override public Set<String> getStatusAll(int compNum) { List<ProjectDto>
-	 * list =
-	 * prepository.findByProjCompNum(compNum).stream().map(ProjectDto::fromEntity).
-	 * toList(); Set<String> statusList = new HashSet<String>(); for(ProjectDto dto
-	 * : list) { String status = dto.getProj_status(); if(!status.isEmpty()) {
-	 * statusList.add(status); } } return statusList; }
-	 * 
-	 * //검색
-	 * 
-	 * @Override public List<ProjectDto> getSearchData(String status, String title)
-	 * {
-	 * 
-	 * return prepository.findByProjStatusContainsAndProjNameContains(status, title)
-	 * .stream().map(ProjectDto::fromEntity).toList(); }
-	 */
 }

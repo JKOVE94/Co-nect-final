@@ -11,12 +11,12 @@ public interface TodoService {
 	List<TodoDto> getTodoAll(int usernum);
 	
 	//Todo 등록
-	void addTodoData(TodoForm bean);
+	//void addTodoData(TodoForm bean);
 	
 	//Todo 삭제
 	boolean dropTodoData(int id);
 	
 	//Todo 수정
-	boolean editTodoData(TodoForm bean);
+	//boolean editTodoData(TodoForm bean);
 	
 }

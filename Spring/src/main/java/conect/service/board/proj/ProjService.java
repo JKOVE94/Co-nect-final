@@ -1,6 +1,5 @@
 package conect.service.board.proj;
 
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
 import conect.data.form.ProjectForm;
@@ -8,10 +7,6 @@ import conect.data.form.ProjectForm;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.springframework.data.domain.Page;
-
-
 
 public interface ProjService {
 	List<TaskDto> getAllTask(int task_fk_proj_num);
@@ -22,29 +17,27 @@ public interface ProjService {
 	List<ProjectDto> getScheduleAll(int usernum);
 	
 	// 검색
-	Set<String> getStatusAll(int compNum);
-	List<ProjectDto> getSearchData(String status, String title);
+	//Set<String> getStatusAll(int compNum);
+	//List<ProjectDto> getSearchData(String status, String title);
 
-	List<ProjectDto> getListAll();
+	List<ProjectDto> getListAll(int compPkNum);
 
-	ProjectDto getProjById(int projPkNum);
+	// 상세보기
+	ProjectDto getProjById(int compPkNum, int projPkNum);
 	
-	List<ProjectDto> getAllProjects();
+	List<ProjectDto> getAllProjects(int compPkNum);
 	
 	// 페이징
 	//public Page<ProjectDto> getList(int page, int pageSize);
 
-	// 모든 부서목록 반환
-	List<DepartmentDto> getAllDepartments();
-
 	// 프로젝트 생성
-	int addProject(ProjectForm form);
+	int addProject(int compPkNum, ProjectForm form);
 
 	// 프로젝트 수정
-	void editProject(int projPkNum, ProjectForm form);
+	void editProject(int projPkNum,int comPkNum, ProjectForm form);
 
-	Map<String, Object> getUserRelatedData(int userPkNum);
+	//Map<String, Object> getUserRelatedData(int userPkNum);
 
 	// 회사코드 관련 프로젝트 읽어오기
-	List<ProjectDto> getAllProjInfo(int compNum);
+	//List<ProjectDto> getAllProjInfo(int compNum);
 }

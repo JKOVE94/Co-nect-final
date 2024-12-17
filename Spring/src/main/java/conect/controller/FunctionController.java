@@ -51,7 +51,7 @@ public class FunctionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
         }
     }
-    
+    /*
     //개인 일정 등록
     @PostMapping("/schedule")
     public ResponseEntity<Object> addTodo(@RequestBody TodoForm bean){
@@ -65,7 +65,7 @@ public class FunctionController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
 	    }
     }
-    
+    */
     //개인 일정 삭제
     @DeleteMapping("/schedule/{id}")
     public ResponseEntity<Object> dropTodo(@PathVariable("id")int id){
@@ -83,7 +83,7 @@ public class FunctionController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
 	    }
     }
-    
+    /*
     //개인 일정 수정
     @PutMapping("/schedule/{id}")
     public ResponseEntity<Object> editTodo(@PathVariable("id")int id, @RequestBody TodoForm bean){
@@ -99,5 +99,5 @@ public class FunctionController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
 	    }
     }  
-
+*/
 }

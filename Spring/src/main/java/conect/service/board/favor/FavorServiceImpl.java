@@ -36,7 +36,7 @@ public class FavorServiceImpl implements FavorService {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
-    
+    /*
     //즐겨찾기 목록 - 프로젝트
 	@Override
 	public Page<Object> getFavoriteProj(int usernum, int page, int size) {
@@ -53,7 +53,7 @@ public class FavorServiceImpl implements FavorService {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); 
         
         List<Map<String, Object>> list = new ArrayList<>();
-        
+        /*
 		for(FavoritesDto dto:favorList) {
 			//조회된 즐겨찾기 목록에서 proj num이 null이 아닌 경우 proj 정보를 가져오기
 			if (dto.getFavor_fk_proj_num() != null) {
@@ -67,7 +67,9 @@ public class FavorServiceImpl implements FavorService {
 	            });
 			}
 		}
+		
 		return new PageImpl(list, pageable, favorList.getTotalElements());
+		
   	}
   	
   	//즐겨찾기 목록 - 자유게시글
@@ -102,7 +104,7 @@ public class FavorServiceImpl implements FavorService {
 		}
 		return new PageImpl(list, pageable, favorList.getTotalElements());
   	}
-  	
+  	*/
   	//즐겨찾기에 등록된 글인지 확인 (Read용)
   	@Override
   	public Optional<FavoritesDto> checkFavorite(String type, int usernum, int num) {

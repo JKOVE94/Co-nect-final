@@ -22,12 +22,13 @@ const WikiCreate = () => {
 
   // 프로젝트 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
-    wiki_name: "", // 제목
+    wiki_title: "", // 제목
     wiki_fk_proj_num: 1, //프로젝트 번호
     wiki_fk_user_num: writer.user_pk_num, // 작성자 번호
     wiki_regdate: "", // 등록일
-    wiki_is_notice: false, // 공지
-    wiki_desc: "", // 내용
+    wiki_isnotice: false, // 공지
+    wiki_content: "", // 내용
+    wiki_boardtype: false
   });
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const WikiCreate = () => {
   const handleCheckboxChange = () => {
     setFormData((prevData) => ({
       ...prevData,
-      wiki_is_notice: !prevData.wiki_is_notice,
+      wiki_isnotice: !prevData.wiki_isnotice,
     }));
   };
 
@@ -94,7 +95,7 @@ const WikiCreate = () => {
         <form onSubmit={handleSubmit}>
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="wiki_name"
+              for="wiki_title"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
@@ -103,9 +104,9 @@ const WikiCreate = () => {
             <Col sm={10}>
               <Input
                 type="text"
-                name="wiki_name"
-                id="wiki_name"
-                value={formData.wiki_name}
+                name="wiki_title"
+                id="wiki_title"
+                value={formData.wiki_title}
                 onChange={handleInputChange}
                 required
               />
@@ -133,7 +134,7 @@ const WikiCreate = () => {
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="wiki_desc"
+              for="wiki_content"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
@@ -142,9 +143,9 @@ const WikiCreate = () => {
             <Col sm={10}>
               <Input
                 type="textarea"
-                name="wiki_desc"
-                id="wiki_desc"
-                value={formData.wiki_desc}
+                name="wiki_content"
+                id="wiki_content"
+                value={formData.wiki_content}
                 onChange={handleInputChange}
                 required
                 placeholder="입력하세요"
@@ -153,71 +154,94 @@ const WikiCreate = () => {
           </FormGroup>
 
           {/* 중요 여부와 버튼들 */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "10px" }}>
-  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-    <Label
-      check
-      style={{
-        fontSize: "14px",
-        fontWeight: "bold",
-      }}
-    >
-      중요 여부
-    </Label>
-    <Checkbox
-      name="wiki_is_notice"
-      checked={formData.wiki_is_notice}
-      onChange={handleCheckboxChange}
-    />
-  </div>
-  
-  {/* 파일 선택 버튼 */}
-  <Button
-    style={{
-      backgroundColor: "#696969", // 밝은 회색 배경
-      color: "white", // 흰 글자
-      padding: "5px 10px", // 작게 조정된 내부 여백
-      fontSize: "14px", // 작은 글자 크기
-      borderRadius: "5px", // 둥근 모서리
-      width: "auto", // 글자 크기에 맞춰 버튼 크기 자동 설정
-    }}
-  >
-    파일 선택
-  </Button>
-  <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
-  (한 번에 하나의 파일만 업로드할 수 있습니다.<br />
-  여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
-</p>
-  {/* 버튼들 */}
-  <Row form style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-  <Col sm={1.5} className="text-center" style={{ display: "flex", justifyContent: "flex-end" }}>
-      <Button
-        style={{
-          backgroundColor: "#007bff",
-          borderColor: "#007bff",
-          color: "white",
-        }}
-        block
-        type="submit"
-      >
-        등록
-      </Button>
-    </Col>
-    <Col sm={1.5} className="text-center" style={{ display: "flex", justifyContent: "flex-end" }}>
-      <Button
-        style={{
-          backgroundColor: "#696969",
-          borderColor: "#696969",
-          color: "white",
-        }}
-        block
-        onClick={handleList}
-      >
-        목록
-      </Button>
-    </Col>
-  </Row>
-</div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: "10px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Label
+                check
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                }}
+              >
+                중요 여부
+              </Label>
+              <Checkbox
+                name="wiki_isnotice"
+                checked={formData.wiki_isnotice}
+                onChange={handleCheckboxChange}
+              />
+            </div>
+
+            {/* 파일 선택 버튼 */}
+            <Button
+              style={{
+                backgroundColor: "#696969", // 밝은 회색 배경
+                color: "white", // 흰 글자
+                padding: "5px 10px", // 작게 조정된 내부 여백
+                fontSize: "14px", // 작은 글자 크기
+                borderRadius: "5px", // 둥근 모서리
+                width: "auto", // 글자 크기에 맞춰 버튼 크기 자동 설정
+              }}
+            >
+              파일 선택
+            </Button>
+            <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+              (한 번에 하나의 파일만 업로드할 수 있습니다.
+              <br />
+              여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
+            </p>
+            {/* 버튼들 */}
+            <Row
+              form
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
+              }}
+            >
+              <Col
+                sm={1.5}
+                className="text-center"
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                <Button
+                  style={{
+                    backgroundColor: "#007bff",
+                    borderColor: "#007bff",
+                    color: "white",
+                  }}
+                  block
+                  type="submit"
+                >
+                  등록
+                </Button>
+              </Col>
+              <Col
+                sm={1.5}
+                className="text-center"
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                <Button
+                  style={{
+                    backgroundColor: "#696969",
+                    borderColor: "#696969",
+                    color: "white",
+                  }}
+                  block
+                  onClick={handleList}
+                >
+                  목록
+                </Button>
+              </Col>
+            </Row>
+          </div>
         </form>
       </CardBody>
     </Card>

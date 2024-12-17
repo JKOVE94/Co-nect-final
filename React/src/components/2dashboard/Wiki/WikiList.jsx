@@ -35,8 +35,8 @@ const WikiList = () => {
         console.log(res.data);
         if (res.data && res.data.wikis) {
           const allWikis = res.data.wikis || [];
-          const noticeWikis = allWikis.filter((wiki) => wiki.is_notice); // 공지사항 필터링
-          const regularWikis = allWikis.filter((wiki) => !wiki.is_notice); // 일반 게시글
+          const noticeWikis = allWikis.filter((wiki) => wiki.isnotice); // 공지사항 필터링
+          const regularWikis = allWikis.filter((wiki) => !wiki.isnotice); // 일반 게시글
 
           setWikis([...noticeWikis, ...regularWikis]); // 공지사항을 상단에 배치
           setCurrentPage(res.data.currentPage); // 현재 페이지 설정
@@ -128,7 +128,7 @@ const WikiList = () => {
               }}
             >
               <option value="">분류</option>
-              <option value="wiki_name">제목</option>
+              <option value="wiki_title">제목</option>
               <option value="user_name">작성자</option>
             </select>
             &nbsp;&nbsp;&nbsp;
@@ -187,29 +187,36 @@ const WikiList = () => {
             </thead>
             <tbody>
               {wikis.length > 0 ? (
-                wikis.map((wiki, index) => (
-                  <tr
-                    key={wiki.wiki_pk_num || `wiki-${index}`}
-                    style={{
-                      fontWeight: wiki.is_notice === 1 ? "bold" : "normal",
-                    }} // is_notice가 1일 때 강조
-                  >
-                    <td>{wiki.wiki_pk_num}</td>
-                    <td>
-                      {wiki.is_notice === 1 && ( // 공지사항일 때만 표시
-                        <span role="img" aria-label="bell">
-                          🔔
-                        </span>
-                      )}
-                      <Link to={`/main/wiki/wikidetail/${wiki.wiki_pk_num}`}>
-                        {wiki.wiki_name}
-                      </Link>
-                    </td>
-                    <td>{wiki.user_name}</td>
-                    <td>{formatDate(wiki.wiki_regdate)}</td>
-                    <td>{wiki.wiki_view}</td>
-                  </tr>
-                ))
+                // 공지글을 먼저 배치하도록 wikis 배열을 정렬
+                wikis
+                  .sort((a, b) => b.wiki_isnotice - a.wiki_isnotice) // wiki_isnotice가 true인 공지글이 위로 오도록 정렬
+                  .map((wiki, index) => (
+                    <tr
+                      key={wiki.wiki_pk_num || `wiki-${index}`}
+                      style={{
+                        fontWeight:
+                          wiki.wiki_isnotice === true ? "bold" : "normal",
+                        backgroundColor: wiki.wiki_isnotice
+                          ? "#f0f0f0"
+                          : "transparent",
+                      }}
+                    >
+                      <td>{wiki.wiki_pk_num}</td>
+                      <td>
+                        {wiki.wiki_isnotice === true && ( // 공지사항일 때만 표시
+                          <span role="img" aria-label="bell">
+                            🔔 &nbsp;
+                          </span>
+                        )}
+                        <Link to={`/main/wiki/wikidetail/${wiki.wiki_pk_num}`}>
+                          {wiki.wiki_title}
+                        </Link>
+                      </td>
+                      <td>{wiki.user_name}</td>
+                      <td>{formatDate(wiki.wiki_regdate)}</td>
+                      <td>{wiki.wiki_view}</td>
+                    </tr>
+                  ))
               ) : (
                 <tr>
                   <td colSpan="5">게시글이 없습니다.</td>
@@ -219,12 +226,12 @@ const WikiList = () => {
           </table>
           <br />
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate(`/main/wiki/wikiadd`)}
-          >
-            문서 등록
-          </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate(`/main/wiki/wikiadd`)}
+            >
+              문서 등록
+            </button>
           </div>
           <div
             style={{

@@ -36,6 +36,7 @@ public class FavoriteController {
 	@Autowired
 	private FavorService favorService;
 
+	/*
 	// 유저가 즐겨찾기 등록한 자유게시글 목록
 	@GetMapping("/post/{usernum}")
 	public ResponseEntity<Object> getAllFavoritePost(@PathVariable("usernum") int usernum,
@@ -70,7 +71,7 @@ public class FavoriteController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
 		}
 	}
-
+*/
 	// 즐겨찾기에 등록되어있는지 확인
 	// type : 자유게시글(post)/프로젝트(proj), usernum : 유저번호, pknum : 글 번호
 	@GetMapping("/{type}/{usernum}/{pknum}")

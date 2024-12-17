@@ -11,11 +11,7 @@ import conect.data.dto.ProjectDto;
 
 public interface FavorService {
 	
-	//즐겨찾기 조회 - 프로젝트
-	Page<Object> getFavoriteProj(int usernum, int page, int size);
-	
-	//즐겨찾기 조회 - 자유게시글
-	Page<Object> getFavoritePost(int usernum, int page, int size);
+
 	
 	//즐겨찾기 등록 조회
 	Optional<FavoritesDto> checkFavorite(String type, int usernum, int num);

@@ -22,17 +22,17 @@ public class TodoServiceImpl implements TodoService {
     
     @Override
     public List<TodoDto> getTodoAll(int usernum) {
-    	return todoRepository.findByUser_UserPkNum(usernum)
+    	return todoRepository.findByUserEntity_UserPkNum(usernum)
         			.stream().map(TodoDto::fromEntity).toList();
     }
-    
+    /*
     @Override
     public void addTodoData(TodoForm bean) {
 		TodoEntity entity = TodoForm.toEntity(bean);
 		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
 		todoRepository.save(entity);
     }
-    
+    */
     @Override
     public boolean dropTodoData(int id) {
     	try {
@@ -43,7 +43,7 @@ public class TodoServiceImpl implements TodoService {
     		return false;
     	}
     }
-    
+    /*
     @Override
     public boolean editTodoData(TodoForm bean) {
     	try {
@@ -56,5 +56,6 @@ public class TodoServiceImpl implements TodoService {
     		return false;
     	}
     }
+    */
 
 }

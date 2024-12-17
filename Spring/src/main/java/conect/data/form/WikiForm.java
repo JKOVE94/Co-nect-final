@@ -1,32 +1,34 @@
 package conect.data.form;
 
-import java.util.Date;
-
 import conect.data.entity.WikiEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+import java.time.LocalDate;
+import java.util.Date;
+
 @Setter
+@Getter
 public class WikiForm {
-	private int wiki_pk_num; // 위키문서 번호
-	private String wiki_name; // 문서 이름
-	private String wiki_desc; // 문서 작성 내용
-	private boolean wiki_is_notice; // 공지 여부
-	private Date wiki_regdate; // 작성일
-	private int wiki_view; // 조회수
-	private int wiki_fk_proj_num; // 프로젝트 번호
-	private int wiki_fk_user_num; // 문서 작성자
-	
-	public static WikiEntity toEntity(WikiForm form) {
-        // fk관련된 데이터는 service단에서 findById로 찾아야 함
-		WikiEntity entity = new WikiEntity();
+    private int wiki_pk_num; // 위키 고유번호
+    private String wiki_title; // 위키 제목
+    private String wiki_content; // 위키 내용
+    private boolean wiki_isnotice; // 공지사항 여부
+    private Date wiki_regdate; // 작성일
+    private int wiki_view; // 조회수
+    private boolean wiki_boardtype; // 게시판 종류
+    private int wiki_fk_user_num; // 사용자 고유번호
+    private int wiki_fk_proj_num; // 프로젝트 고유번호
+
+    public static WikiEntity toEntity(WikiForm form) {
+        WikiEntity entity = new WikiEntity();
         entity.setWikiPkNum(form.getWiki_pk_num());
-        entity.setWikiName(form.getWiki_name());
-        entity.setWikiDesc(form.getWiki_desc());
-        entity.setWikiIsNotice(form.isWiki_is_notice());
+        entity.setWikiTitle(form.getWiki_title());
+        entity.setWikiContent(form.getWiki_content());
+        entity.setWikiIsnotice(form.wiki_isnotice);
         entity.setWikiRegdate(form.getWiki_regdate());
         entity.setWikiView(form.getWiki_view());
+        entity.setWikiBoardtype(form.wiki_boardtype);
         return entity;
     }
 }

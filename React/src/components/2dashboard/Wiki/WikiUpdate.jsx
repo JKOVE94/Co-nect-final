@@ -19,12 +19,12 @@ const WikiUpdate = () => {
   const { wikiPkNum } = useParams(); // URL에서 projPkNum 가져오기
 
   const [formData, setFormData] = useState({
-    wiki_name: "", // 프로젝트명
+    wiki_title: "", // 문서 제목
     wiki_fk_proj_num: "", //프로젝트 번호
     wiki_fk_user_num: "", // 작성자 번호
     wiki_regdate: "", // 등록일
-    wiki_is_notice: false, // 공지
-    wiki_desc: "", // 내용
+    wiki_isnotice: false, // 공지
+    wiki_content: "", // 내용
     user_name: "", // 작성자 이름
   });
 
@@ -66,7 +66,7 @@ const WikiUpdate = () => {
   const handleCheckboxChange = () => {
     setFormData((prevData) => ({
       ...prevData,
-      wiki_is_notice: !prevData.wiki_is_notice,
+      wiki_isnotice: !prevData.wiki_isnotice,
     }));
   };
 
@@ -103,7 +103,7 @@ const WikiUpdate = () => {
         <form onSubmit={handleSubmit}>
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="wiki_name"
+              for="wiki_title"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
@@ -112,9 +112,9 @@ const WikiUpdate = () => {
             <Col sm={10}>
               <Input
                 type="text"
-                name="wiki_name"
-                id="wiki_name"
-                value={formData.wiki_name}
+                name="wiki_title"
+                id="wiki_title"
+                value={formData.wiki_title}
                 onChange={handleEditChange}
                 required
               />
@@ -141,7 +141,7 @@ const WikiUpdate = () => {
 
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="wiki_desc"
+              for="wiki_content"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
@@ -150,9 +150,9 @@ const WikiUpdate = () => {
             <Col sm={10}>
               <Input
                 type="textarea"
-                name="wiki_desc"
-                id="wiki_desc"
-                value={formData.wiki_desc}
+                name="wiki_content"
+                id="wiki_content"
+                value={formData.wiki_content}
                 onChange={handleEditChange}
                 required
                 placeholder="입력하세요"
@@ -180,8 +180,8 @@ const WikiUpdate = () => {
                 중요 여부
               </Label>
               <Checkbox
-                name="wiki_is_notice"
-                checked={formData.wiki_is_notice}
+                name="wiki_isnotice"
+                checked={formData.wiki_isnotice}
                 onChange={handleCheckboxChange}
               />
             </div>
