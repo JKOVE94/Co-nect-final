@@ -3,37 +3,41 @@ package conect.data.dto;
 import conect.data.entity.NoticeEntity;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDate;
 
 @Getter
 @Setter
 public class NoticeDto {
-    private int noti_pk_num; // 공지사항 번호
-    private String noti_title; // 공지사항 제목
-    private String noti_content; // 공지사항 내용
-    private LocalDate noti_regdate; // 공지사항 작성일
-    private LocalDate noti_moddate; // 공지사항 수정일
-    private int noti_deleted; // 공지사항 삭제 여부
-    private int noti_import; // 공지사항 중요 여부
-    private int noti_view; // 공지사항 조회수
-    private int noti_fk_user_num; // 사용자 엔티티 번호
+    private int noti_pk_num;
+    private String noti_title;
+    private  String noti_content;
+    private int noti_fk_user_num;
+    private int noti_fk_proj_num;
+    private LocalDate noti_regdate;
+    private LocalDate noti_modedate;
+    private int noti_deleted;
+    private int noti_import;
+    private int noti_view;
+    private int noti_fk_comp_num;
+    private String userName;//작성자 명
+    private String projName; //프로젝트 명
 
-    public static NoticeDto fromEntity(NoticeEntity noticeEntity) {
-        NoticeDto noticeDto = new NoticeDto();
-        noticeDto.setNoti_pk_num(noticeEntity.getNotiPkNum());
-        noticeDto.setNoti_title(noticeEntity.getNotiTitle());
-        noticeDto.setNoti_content(noticeEntity.getNotiContent());
-        noticeDto.setNoti_regdate(noticeEntity.getNotiRegdate());
-        noticeDto.setNoti_moddate(noticeEntity.getNotiModdate());
-        noticeDto.setNoti_deleted(noticeEntity.getNotiDeleted());
-        noticeDto.setNoti_import(noticeEntity.getNotiImport());
-        noticeDto.setNoti_view(noticeEntity.getNotiView());
-
-        if (noticeEntity.getUserEntity() != null) {
-            noticeDto.setNoti_fk_user_num(noticeEntity.getUserEntity().getUserPkNum());
-        }
-
-        return noticeDto;
+    //fromEntity
+    public  static NoticeDto fromEntity(NoticeEntity entity){
+        NoticeDto dto = new NoticeDto();
+        dto.setNoti_pk_num(entity.getNotiPkNum());
+        dto.setNoti_title(entity.getNotiTitle());
+        dto.setNoti_content(entity.getNotiContent());
+        dto.setNoti_fk_user_num(entity.getUserEntity().getUserPkNum());
+        dto.setNoti_fk_proj_num(entity.getProjectEntity().getProjPkNum());
+        dto.setNoti_regdate(entity.getNotiRegdate());
+        dto.setNoti_modedate(entity.getNotiModdate());
+        dto.setNoti_deleted(entity.getNotiDeleted());
+        dto.setNoti_import(entity.getNotiImport());
+        dto.setNoti_view(entity.getNotiView());
+        dto.setNoti_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
+        dto.setUserName(entity.getUserEntity().getUserName());
+        dto.setProjName(entity.getProjectEntity().getProjTitle());
+        return dto;
     }
 }

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Table(name="notice")
 public class NoticeEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int notiPkNum; //공지사항 고유번호 [PK, INT]
     private String notiTitle; //공지사항 제목 [VARCHAR]
     private String notiContent; //공지사항 내용 [VARCHAR]
