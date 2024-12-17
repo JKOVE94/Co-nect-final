@@ -88,9 +88,9 @@ export default function Tasktable({ projectNum }) {
         <Col lg={13} style={{ width: "100%", height: "100%" }}>
           <Card style={{ width: "100%" }}>
             <CardHeader className="border-0">
-              <h className="mb-0" style={{ fontWeight: "bold" }}>
+              <h3 className="mb-0" style={{ fontWeight: "bold" }}>
                 업무 테이블
-              </h>
+              </h3>
               <Button
                 color="outline-primary"
                 size="sm"
@@ -105,7 +105,8 @@ export default function Tasktable({ projectNum }) {
                 <tr style={{ color: "gray", textAlign: "center" }}>
                   <th style={{ fontSize: "1rem" }}>태스크</th>
                   <th style={{ fontSize: "1rem" }}>상태</th>
-                  <th style={{ fontSize: "1rem" }}>기한</th>
+                  <th style={{ fontSize: "1rem" }}>시작일</th>
+                  <th style={{ fontSize: "1rem" }}>마감일</th>
                   <th style={{ fontSize: "1rem" }}>우선순위</th>
                   <th style={{ fontSize: "1rem" }}>진행도</th>
                 </tr>
@@ -113,7 +114,7 @@ export default function Tasktable({ projectNum }) {
               <tbody>
                 {tasks.length === 0 ? (
                   <tr>
-                    <td colSpan="5">업무 데이터가 없습니다.</td>
+                    <td colSpan="6">업무 데이터가 없습니다.</td>
                   </tr>
                 ) : (
                   tasks.map((task) => (
@@ -122,6 +123,9 @@ export default function Tasktable({ projectNum }) {
                         {task.task_title}
                       </td>
                       <td style={{ fontSize: "1rem" }}>{task.task_status}</td>
+                      <td style={{ fontSize: "1rem" }}>
+                        {dateForm(task.task_startdate)}
+                      </td>
                       <td style={{ fontSize: "1rem" }}>
                         {dateForm(task.task_deadline)}
                       </td>

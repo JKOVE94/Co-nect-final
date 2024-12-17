@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, Route, Routes, useNavigate } from "react-router-dom";
 import Navbar from "components/2dashboard/Navbars/Navbar.js";
 import Sidebar from "components/2dashboard/Sidebar/Sidebar.js";
@@ -23,55 +23,105 @@ const Dashboard = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userData);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-    } else {
-      validateToken(token);
-    }
-  }, [navigate]);
-
-  const validateToken = async (token) => {
-    try {
-      const response = await axios.post(
-        "/validate-token",
-        { token },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (!response.data.isValid) {
-        handleLogout();
-      }
-    } catch (error) {
-      console.error("Token validation error:", error);
-      handleLogout();
-    }
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    delete axios.defaults.headers.common["Authorization"];
     dispatch(LOGOUT());
     navigate("/login");
   };
 
+  const setAuthToken = (token) => {
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+    }
+  };
+
+  // Axios 인스턴스에 Authorization 헤더 추가
+  const token = localStorage.getItem("token");
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  const verifyToken = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+
+    try {
+      const response = await axios.post("/validate-token", { token });
+      return response.data.isValid;
+    } catch (error) {
+      console.error("토큰 검증 실패:", error);
+      return false;
+    }
+  };
+
+  const refreshToken = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.post("/refresh-token", { token });
+      const newToken = response.data.token;
+      localStorage.setItem("token", newToken);
+      setAuthToken(newToken);
+      return true;
+    } catch (error) {
+      console.error("토큰 갱신 실패:", error);
+      return false;
+    }
+  };
+
   useEffect(() => {
-    if (user.user_pk_num === 0) {
+    const checkAuthStatus = async () => {
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
+      setAuthToken(token);
+
+      const isValid = await verifyToken();
+      if (!isValid) {
+        const refreshed = await refreshToken();
+        if (!refreshed) {
+          handleLogout();
+        }
+      }
+      setIsLoading(false);
+    };
+
+    checkAuthStatus();
+
+    const tokenRefreshInterval = setInterval(refreshToken, 15 * 60 * 1000);
+
+    return () => clearInterval(tokenRefreshInterval);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && user.user_pk_num === 0) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, [user, navigate, isLoading]);
 
   useEffect(() => {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    if (mainContent.current) {
-      mainContent.current.scrollTop = 0;
-    }
-  }, [location]);
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (
+          error.response &&
+          (error.response.status === 401 || error.response.status === 403)
+        ) {
+          handleLogout();
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
 
   const isProjReadPath = location.pathname.includes("/projdetail");
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <>

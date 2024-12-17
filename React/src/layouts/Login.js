@@ -24,6 +24,7 @@ const Login = (props) => {
 
   const [showA, setShowA] = useState(false);
   const [showM, setShowM] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggle = () => {
     setIsSignIn((prev) => !prev);
@@ -38,6 +39,19 @@ const Login = (props) => {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (showA) {
+      const timer = setTimeout(() => {
+        setShowA(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showA]);
+
+  useEffect(() => {
+    console.log("showA 상태 변경:", showA);
+  }, [showA]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginInfo((prev) => ({
@@ -48,20 +62,36 @@ const Login = (props) => {
 
   const toggleShowA = () => {
     setShowA(true);
-    setTimeout(() => {
-      setShowA(false);
-    }, 3000);
   };
 
   const handleShowM = () => setShowM(true);
   const handleCloseM = () => setShowM(false);
 
+  const validateInputs = () => {
+    if (
+      !loginInfo.comp_pk_num ||
+      !loginInfo.user_pk_num ||
+      !loginInfo.user_pw
+    ) {
+      setErrType(5); // 새로운 에러 타입: 입력 누락
+      toggleShowA();
+      return false;
+    }
+    return true;
+  };
+
   const login = async (e) => {
     e.preventDefault();
+    if (!validateInputs()) return;
+
+    setIsLoading(true);
+    console.log("로그인 시도:", loginInfo);
+
     try {
       const res = await axios.post("/login", loginInfo);
       const responseData = res.data;
       setData(responseData);
+
       if (responseData.status === 1) {
         localStorage.setItem("token", responseData.token);
         axios.defaults.headers.common[
@@ -93,8 +123,12 @@ const Login = (props) => {
       console.error("로그인 실패:", error);
       setErrType(4);
       toggleShowA();
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  console.log("에러 타입:", errType);
 
   return (
     <>
@@ -154,10 +188,10 @@ const Login = (props) => {
                       onChange={(e) => handleChange(e)}
                       required
                     />
-                    <button type="submit" className="button">
-                      로그인
-                    </button>
                   </div>
+                  <button type="submit" className="button" disabled={isLoading}>
+                    {isLoading ? "로그인 중..." : "로그인"}
+                  </button>
                   <p>
                     <b onClick={() => toggle()} className="pointer">
                       비밀번호를 잊으셨나요?
@@ -183,12 +217,14 @@ const Login = (props) => {
           </div>
         </div>
       </div>
-      <LoginToast
-        showA={showA}
-        toggleShowA={toggleShowA}
-        type={errType}
-        data={data}
-      />
+      {showA && (
+        <LoginToast
+          showA={showA}
+          toggleShowA={toggleShowA}
+          type={errType}
+          data={data}
+        />
+      )}
       <LoginModal
         handleCloseM={handleCloseM}
         handleShowM={handleShowM}

@@ -16,7 +16,6 @@ import {
   Container,
   Row,
   Table,
-  CarouselItem,
 } from "reactstrap";
 import moment from "moment";
 
@@ -42,6 +41,11 @@ const MyToDoList = () => {
 
     setLoading(true);
     setError(null);
+
+    // Axios 인스턴스에 Authorization 헤더 추가
+    const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
     axios
       .get(`/proj/user/${user_pk_num}`)
       .then((res) => {
@@ -67,8 +71,8 @@ const MyToDoList = () => {
       })
       .map((todo) => ({
         ...todo,
-        start: todo.todo_starttime || "00:00",
-        end: todo.todo_endtime || "23:59",
+        start: todo.todo_starttime ? todo.todo_starttime.slice(0, 5) : "00:00",
+        end: todo.todo_endtime ? todo.todo_endtime.slice(0, 5) : "23:59",
       }));
     setTodoList(dbList);
   }, []);
@@ -76,6 +80,9 @@ const MyToDoList = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>에러: {error}</div>;
 
   return (
     <>

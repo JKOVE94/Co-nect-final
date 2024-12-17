@@ -2,6 +2,7 @@ package conect.controller;
 
 import conect.data.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/validate-token")
-    public ResponseEntity<?> validateToken(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> verifyToken(@RequestBody Map<String, String> request) {
         String token = request.get("token");
         
         try {
@@ -33,5 +34,16 @@ public class AuthController {
         }
         
         return ResponseEntity.ok(Map.of("isValid", false));
+    }
+    
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        if (jwtUtil.validateToken(token)) {
+            String username = jwtUtil.getUsernameFromToken(token);
+            String newToken = jwtUtil.generateToken(username);
+            return ResponseEntity.ok(Map.of("token", newToken));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
