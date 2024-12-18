@@ -7,6 +7,8 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Getter
 @Setter
 public class WikiDto {
@@ -14,12 +16,13 @@ public class WikiDto {
     private String wiki_title; // 위키 제목
     private String wiki_content; // 위키 내용
     private boolean wiki_isnotice; // 공지사항 여부
-    private Date wiki_regdate; // 작성일
+    private LocalDate wiki_regdate; // 작성일
     private int wiki_view; // 조회수
     private boolean wiki_boardtype; // 게시판 종류
     private int wiki_fk_user_num; // 사용자 고유번호
     private int wiki_fk_proj_num; // 프로젝트 고유번호
     private String user_name;
+    private String fileName; // 파일명 추가
 
     // Getters and Setters
 
@@ -35,6 +38,14 @@ public class WikiDto {
         wikiDto.setWiki_fk_user_num(wiki.getUserEntity().getUserPkNum());
         wikiDto.setWiki_fk_proj_num(wiki.getProjectEntity().getProjPkNum());
         wikiDto.setUser_name(wiki.getUserEntity().getUserName());
+        
+        // 파일이 존재하면 파일 이름을 설정, 없으면 null
+        if (wiki.getFileEntity() != null) {
+        	wikiDto.setFileName(wiki.getFileEntity().getFileName());
+        } else {
+        	wikiDto.setFileName(null); // 파일이 없을 경우
+        }
+        
         return wikiDto;
     }
 }

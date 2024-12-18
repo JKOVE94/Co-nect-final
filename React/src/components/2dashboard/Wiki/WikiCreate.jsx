@@ -36,7 +36,7 @@ const WikiCreate = () => {
     wiki_regdate: "", // 등록일
     wiki_isnotice: false, // 공지
     wiki_content: "", // 내용
-    wiki_boardtype: true
+    wiki_boardtype: true,
   });
 
   useEffect(() => {
@@ -51,11 +51,20 @@ const WikiCreate = () => {
 
   // 입력값이 변경될 때마다 상태 업데이트
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+    if (name === "fileInput") {
+      setFileName(files[0].name);
+      console.log(fileName);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
   };
 
   // 공지 여부 체크박스 상태 업데이트
@@ -66,18 +75,11 @@ const WikiCreate = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setFileName(selectedFile.name); // 파일 이름 설정
-    }
-  };
-
   const handleFileClick = () => {
-    if (fileName) {  // fileName을 체크하여 파일이 이미 등록되었는지 확인
+    if (fileName) {
+      // fileName을 체크하여 파일이 이미 등록되었는지 확인
       // 파일이 이미 등록된 경우 모달 띄우기
-      setModalMessage("파일이 이미 선택되었습니다. 파일을 새로 선택하려면 삭제해주세요.");
+      setModalMessage(`등록된 파일이 있습니다. 한 개의 파일만 선택해주세요.`);
       setShowModal(true);
     } else {
       document.getElementById("fileInput").click(); // 파일 입력창 열기
@@ -91,36 +93,33 @@ const WikiCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // FormData 객체 생성
-    const form = new FormData();
-  
-    // 문서 내용을 FormData에 추가
-    Object.keys(formData).forEach((key) => {
-      form.append(key, formData[key]);
-    });
-  
-    // 파일이 선택된 경우에만 FormData에 파일 추가
-    if (file) {
-      form.append("file", file);
+    const data = new FormData();
+    for (const key in formData) {
+      if (key === "fileInput") {
+        data.append(key, formData[key]); // 파일은 그대로 추가
+      } else {
+        data.append(key, formData[key] !== null ? String(formData[key]) : ""); // 나머지는 문자열로 변환하여 추가
+      }
     }
 
-     // 로그로 데이터를 확인
-  console.log("전송할 데이터:", formData);
-  console.log("전송할 파일:", file);
-  
+    // 로그로 데이터를 확인
+    console.log("전송할 데이터:", data);
+    console.log("전송할 파일:", file);
+
     try {
       // 문서와 선택적 파일 데이터를 함께 서버에 전송
-      const response = await axios.post("/wiki/wikiadd", form, {
+      const response = await axios.post("/wiki/wikiadd", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-  
+
       // 서버로부터 반환된 wikiPkNum으로 상세 페이지 이동
       const wikiPkNum = response.data.wikiPkNum; // 서버 응답에서 문서 ID 추출
       alert("문서 등록 성공");
-  
+
       // 상세 페이지로 이동
       navigate(`/main/wiki/wikidetail/${wikiPkNum}`, {
         state: { actionType: "create" },
@@ -250,13 +249,15 @@ const WikiCreate = () => {
               <input
                 type="file"
                 id="fileInput"
+                name="fileInput"
                 style={{ display: "none" }} // 화면에는 보이지 않도록 숨김
-                onChange={handleFileChange} // 파일이 선택되면 파일 상태 업데이트
-                accept="image/*" // 이미지 파일만 선택 가능
+                onChange={handleInputChange} // 파일이 선택되면 파일 상태 업데이트
               />
             </div>
             {fileName && (
-              <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+              <p
+                style={{ fontSize: "12px", color: "#888", textAlign: "right" }}
+              >
                 선택된 파일 : {fileName}
                 <span
                   style={{
@@ -271,10 +272,13 @@ const WikiCreate = () => {
               </p>
             )}
             {!fileName && (
-              <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+              <p
+                style={{ fontSize: "12px", color: "#888", textAlign: "right" }}
+              >
                 (한 번에 하나의 파일만 업로드할 수 있습니다.
                 <br />
-                여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
+                여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서
+                등록해주세요.)
               </p>
             )}
             {/* 버튼들 */}
@@ -291,10 +295,7 @@ const WikiCreate = () => {
                 className="text-center"
                 style={{ display: "flex", justifyContent: "flex-end" }}
               >
-                <Button
-                  color="primary"
-                  type="submit"
-                >
+                <Button color="primary" type="submit">
                   등록
                 </Button>
               </Col>
@@ -321,17 +322,23 @@ const WikiCreate = () => {
       </CardBody>
 
       {/* 파일 관련 모달 */}
-      <Modal isOpen={showModal} toggle={() => setShowModal(false)}>
-  <ModalHeader toggle={() => setShowModal(false)}>
-    알림
-  </ModalHeader>
-  <ModalBody>{modalMessage}</ModalBody>
-  <ModalFooter>
-    <Button color="primary" onClick={() => setShowModal(false)}>
-      닫기
-    </Button>
-  </ModalFooter>
-</Modal>
+      <Modal
+        isOpen={showModal}
+        toggle={() => setShowModal(false)}
+        style={{
+          maxWidth: "500px", // Modal의 최대 너비 설정
+          margin: "auto", // 자동으로 중앙 정렬
+          top: "35%", // Modal을 화면 중앙에서 적당히 아래로 위치
+        }}
+      >
+        <ModalBody style={{ textAlign: "center" }}>{modalMessage}</ModalBody>
+
+        <ModalFooter style={{ justifyContent: "center" }}>
+          <Button color="primary" onClick={() => setShowModal(false)}>
+            닫기
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Card>
   );
 };

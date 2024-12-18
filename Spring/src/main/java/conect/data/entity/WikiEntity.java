@@ -21,7 +21,7 @@ public class WikiEntity {
     private String wikiTitle; //위키 제목 [VARCHAR]
     private String wikiContent; //위키 내용 [TEXT]
     private boolean wikiIsnotice; //공지사항 여부 [INT] (0, 1)
-    private Date wikiRegdate; //작성일 [DATE]
+    private LocalDate wikiRegdate; //작성일 [DATE]
     private int wikiView; //조회수 [INT]
     private boolean wikiBoardtype; //게시판 종류 [INT] (1, 2)
 

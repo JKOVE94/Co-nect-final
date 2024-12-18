@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import WikiToast from "variables/Toast/WikiToast";
+import { Button } from "react-bootstrap";
 
 const WikiDetail = () => {
   // 현재 URL의 state를 확인하기 위해 useLocation 사용
@@ -15,6 +16,16 @@ const WikiDetail = () => {
   const [wiki, setWiki] = useState({}); // 게시글 데이터 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
+  const [fileName, setFileName] = useState(""); // 파일 이름 상태
+
+  // 토스트 알림 상태 및 토글 함수
+  const [showA, setShowA] = useState(false);
+  const toggleShowA = () => {
+    setShowA(true); // 토스트 표시
+    setTimeout(() => {
+      setShowA(false); // 3초 후 토스트 숨기기
+    }, 3000);
+  };
 
   // 화면 로드 시 실행되는 useEffect
   useEffect(() => {
@@ -33,23 +44,36 @@ const WikiDetail = () => {
       try {
         const response = await axios.get(`/wiki/wikidetail/${wikiPkNum}`);
         setWiki(response.data); // 성공 시 게시글 데이터 저장
+        console.log(response.data); // wiki 객체 구조 확인
       } catch (err) {
         setError(err.message); // 에러 발생 시 에러 메시지 설정
       } finally {
         setLoading(false); // 로딩 상태 해제
       }
     };
-
     fetchWiki(); // 게시글 데이터 요청 함수 호출
   }, [wikiPkNum, location.state]);
 
-  // 토스트 알림 상태 및 토글 함수
-  const [showA, setShowA] = useState(false);
-  const toggleShowA = () => {
-    setShowA(true); // 토스트 표시
-    setTimeout(() => {
-      setShowA(false); // 3초 후 토스트 숨기기
-    }, 3000);
+   // 파일 다운로드 처리
+   const handleDownload = async (fileFkWikiNum, fileName) => {
+    try {
+      // 백엔드에서 파일 다운로드 API 요청
+      const response = await axios.get(`/wiki/download/${fileFkWikiNum}`, {
+        responseType: 'blob', // 파일을 Blob 형태로 받기
+      });
+  
+      // Blob 데이터로부터 URL을 만들고 다운로드 링크를 자동으로 생성
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName); // 다운로드할 파일 이름 설정
+      document.body.appendChild(link);
+      link.click(); // 링크 클릭하여 다운로드 시작
+      document.body.removeChild(link); // 링크 제거
+    } catch (error) {
+      console.error('파일 다운로드 실패', error);
+      alert('파일 다운로드에 실패했습니다.');
+    }
   };
 
   // 게시글 삭제 처리 함수
@@ -128,11 +152,25 @@ const WikiDetail = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}> 파일</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {wiki.wiki_fk_file_num} {/* 파일명 / 번호로 파일명 불러오자요*/}
-                    </td>
-                  </tr>
+  <td style={{ width: "10%", textAlign: "left" }}>파일</td>
+  <td style={{ width: "90%", textAlign: "left" }}>
+    {wiki.file && wiki.file.file_fk_wiki_num && (
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          handleDownload(
+            wiki.file.file_fk_wiki_num,  // 파일 ID
+            fileName         // 파일 이름
+          );
+        }}
+        className="btn btn-primary"
+      >
+        {fileName} {/* 파일 이름을 버튼에 표시 */}
+      </a>
+    )}
+  </td>
+</tr>
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
@@ -147,23 +185,23 @@ const WikiDetail = () => {
             <br />
 
             {/* 버튼 섹션 */}
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>  
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate(`/main/wiki/wikiedit/${wikiPkNum}`)}
-            >
-              수정 {/* 수정 버튼 */}
-            </button>
-            <button className="btn btn-primary" onClick={handleDelete}>
-              삭제 {/* 삭제 버튼 */}
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate("/main/wiki/wikilist")}
-            >
-              목록 {/* 목록으로 돌아가기 버튼 */}
-            </button>
-          </div>  
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate(`/main/wiki/wikiedit/${wikiPkNum}`)}
+              >
+                수정 {/* 수정 버튼 */}
+              </button>
+              <button className="btn btn-primary" onClick={handleDelete}>
+                삭제 {/* 삭제 버튼 */}
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/main/wiki/wikilist")}
+              >
+                목록 {/* 목록으로 돌아가기 버튼 */}
+              </button>
+            </div>
           </div>
           <br />
         </CardBody>

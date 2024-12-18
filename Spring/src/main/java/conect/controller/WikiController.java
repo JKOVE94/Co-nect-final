@@ -1,12 +1,26 @@
 package conect.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +36,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.WikiDto;
+import conect.data.entity.FileEntity;
+import conect.data.entity.WikiEntity;
 import conect.data.form.WikiForm;
+import conect.data.repository.FileRepository;
+import conect.data.repository.WikiRepository;
 import conect.service.board.wiki.WikiServiceImpl;
 
 @RestController
@@ -30,6 +48,12 @@ import conect.service.board.wiki.WikiServiceImpl;
 public class WikiController {
 	@Autowired
 	private WikiServiceImpl wikiServiceImpl;
+	
+	@Autowired
+	private WikiRepository wikiRepository;
+	
+	@Autowired
+	private FileRepository fileRepository;
 
 	// 모든 게시글 조회 (페이징, 검색, 정렬 포함)
 	@GetMapping("/wikilist")
@@ -89,42 +113,88 @@ public class WikiController {
 	 * ResponseEntity.status(500).build(); } }
 	 */
 
+	// 상세보기
 	@GetMapping("/wikidetail/{wikiPkNum}")
 	public WikiDto getWikiById(@PathVariable("wikiPkNum") int wikiPkNum) {
 		System.out.println("wikiPkNum : " + wikiPkNum);
 		return wikiServiceImpl.getWikiById(wikiPkNum);
 	}
-
-	@PostMapping("/wikiadd")
-	public ResponseEntity<?> addWiki(
-	        @RequestPart("form") WikiForm form, 
-	        @RequestPart(value = "file", required = false) MultipartFile file) {
+	
+	@Value("${spring.cloud.gcp.storage.bucket}")
+    private String bucketName;
+	
+	//파일 다운로드
+	@GetMapping("/download/{fileFkWikiNum}")
+	public ResponseEntity<Resource> downloadFile(@PathVariable int fileFkWikiNum) {
 	    try {
-	        // 문서 등록 서비스 호출
-	        int wikiPkNum = wikiServiceImpl.addWiki(form);
-
-	        // 파일이 존재하면 파일 업로드 처리
-	        if (file != null && !file.isEmpty()) {
-	            wikiServiceImpl.saveFile(file, wikiPkNum);
+	    	 // WikiEntity를 통해 FileEntity 조회
+	        WikiEntity wikiEntity = wikiRepository.findById(fileFkWikiNum).orElse(null);
+	        
+	        if (wikiEntity == null || wikiEntity.getFileEntity() == null) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 파일 없을 경우 404 반환
 	        }
 
-	        return ResponseEntity.ok(wikiPkNum); // 저장된 문서의 Primary Key 반환
-	    } catch (Exception e) {
-	        e.printStackTrace(); // 에러 로그
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문서 생성 실패: " + e.getMessage());
+	        // 파일 이름과 경로를 조회
+	        String fileName = wikiEntity.getFileEntity().getFileName();
+	        String fileUrl = "https://storage.googleapis.com/" + bucketName + "/file/" + fileName;
+	        
+	        // 파일 다운로드 처리
+	        URL url = new URL(fileUrl);
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setRequestMethod("GET");
+
+	        InputStream inputStream = connection.getInputStream();
+	        Resource resource = new InputStreamResource(inputStream);
+
+	        // 파일 응답 반환
+	        return ResponseEntity.ok()
+	                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+	                .body(resource);
+
+	    } catch (IOException e) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 오류 발생 시 404 반환
 	    }
+	}
+
+	// 문서 생성
+	@PostMapping("/wikiadd")
+	public ResponseEntity<?> addWiki(@ModelAttribute WikiForm form) {
+		try {
+			// 문서 등록 서비스 호출
+			int wikiPkNum = wikiServiceImpl.addWiki(form);
+
+			// 파일이 존재하면 파일 업로드 처리
+			String fileUrl = null;
+			if (form.getFileInput() != null && !form.getFileInput().isEmpty()) {
+				fileUrl = wikiServiceImpl.saveFile(form);
+			}
+
+			return ResponseEntity.ok(wikiPkNum); // 저장된 문서의 pk 반환
+		} catch (Exception e) {
+			e.printStackTrace(); // 에러 로그
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문서 생성 실패: " + e.getMessage());
+		}
 	}
 
 	// 문서 수정
 	@PutMapping("/wikiedit/{wikiPkNum}")
-	public ResponseEntity<?> editWiki(@PathVariable("wikiPkNum") int wikiPkNum, @RequestBody WikiForm form) {
-		try {
-			wikiServiceImpl.editWiki(wikiPkNum, form);
-			return ResponseEntity.ok("문서 수정 성공!"); // 성공 시 메시지 반환
-		} catch (Exception e) {
-			e.printStackTrace(); // 로그로 에러 확인
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문서 수정 실패: " + e.getMessage());
-		}
+	public ResponseEntity<?> editWiki(@PathVariable("wikiPkNum") int wikiPkNum, @ModelAttribute WikiForm form) {
+	    try {
+	        // 파일이 있을 경우 파일 처리
+	        if (form.getFileInput() != null && !form.getFileInput().isEmpty()) {
+	            // 파일이 존재하면 기존 파일을 새로 덮어씌우거나 새로운 파일을 저장
+	            wikiServiceImpl.saveFile(form);
+	        }
+	        
+	        // 문서 수정 서비스 호출
+	        wikiServiceImpl.editWiki(wikiPkNum, form);
+	        
+	        return ResponseEntity.ok("문서 수정 성공!"); // 성공 시 응답
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문서 수정 실패: " + e.getMessage());
+	    }
 	}
 
 	// 문서 삭제

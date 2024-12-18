@@ -12,7 +12,7 @@ import conect.data.form.WikiForm;
 
 public interface WikiService {
 
-	void saveFile(MultipartFile file, int wikiPkNum) throws IOException;
+	String saveFile(WikiForm form) throws IOException;
 
 	// 전체 목록 불러오기
 	List<WikiDto> getListAll();
@@ -23,7 +23,7 @@ public interface WikiService {
 	WikiDto getWikiById(int wikiPkNum);
 	
 	// 문서 생성
-	int addWiki(WikiForm form);
+	int addWiki(WikiForm form)  throws Exception ;
 
 	// 문서 수정
 	void editWiki(int wikiPkNum, WikiForm form);

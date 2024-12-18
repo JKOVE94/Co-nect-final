@@ -2,6 +2,7 @@ package conect.data.repository;
 
 import conect.data.entity.WikiEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -22,4 +23,7 @@ public interface WikiRepository extends JpaRepository<WikiEntity,Integer> {
 
     // 작성자 이름(userName)에 검색어가 포함된 게시글을 페이징 처리하여 검색
     Page<WikiEntity> findByUserEntity_UserNameContains(String searchText, Pageable pageable);
+
+    @Query("SELECT w FROM WikiEntity w LEFT JOIN FETCH w.fileEntity WHERE w.wikiPkNum = :wikiPkNum")
+    Optional<WikiEntity> findByIdWithFile(@Param("wikiPkNum") int wikiPkNum);
 }
