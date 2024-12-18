@@ -6,7 +6,7 @@ import { CardBody, CardTitle, Row, Col, Card } from "reactstrap";
 import leftArrow from "../assets/img/icons/common/leftArrow.png";
 import rightArrow from "../assets/img/icons/common/rightArrow.png";
 import { useSelector } from "react-redux";
-import axios from "./api"; // 커스텀 axios 인스턴스 사용
+import axiosInstance from "../api/axiosInstance"; // 커스텀 axios 인스턴스 사용
 import { Link, useNavigate } from "react-router-dom";
 
 const ProjectSelect = () => {
@@ -49,21 +49,15 @@ const ProjectSelect = () => {
     setLoading(true);
     setError(null);
 
-    // JWT 토큰을 포함하여 요청
-    const token = localStorage.getItem("token");
-
-    axios
-      .get(`/proj/ProjSel/${user_pk_num}`, {
-        headers: { Authorization: `Bearer ${token}` }, // 헤더에 토큰 추가
-      })
+    axiosInstance
+      .get(`/proj/ProjSel/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
       })
       .catch((error) => {
         if (error.response && error.response.status === 403) {
-          // 403 Forbidden 오류 처리
           console.error("접근이 거부되었습니다. 로그인 상태를 확인하세요.");
-          navigate("/login"); // 로그인 페이지로 리디렉션
+          navigate("/"); // 로그인 페이지로 리디렉션
         } else {
           setError("데이터를 불러오는데 실패했습니다.");
           console.error("데이터 로딩 실패:", error);
@@ -82,6 +76,9 @@ const ProjectSelect = () => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("ko-KR", options);
   };
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>에러: {error}</div>;
 
   return (
     <div

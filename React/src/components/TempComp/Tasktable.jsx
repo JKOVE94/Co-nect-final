@@ -2,6 +2,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
+import axiosInstance from "../../api/axiosInstance";
 
 import {
   Button,
@@ -19,7 +20,7 @@ export default function Tasktable({ projectNum }) {
   const userNum = useSelector((state) => state.userData?.user_pk_num);
   const navigate = useNavigate();
 
-  console.log(userNum, projectNum);
+  console.log(projectNum, userNum);
 
   const showList = useCallback(() => {
     if (!projectNum || !userNum) {
@@ -27,14 +28,12 @@ export default function Tasktable({ projectNum }) {
       return;
     }
 
-    axios
+    axiosInstance
       .get(`/board/task/proj/${projectNum}/user/${userNum}`)
       .then((res) => {
         console.log(res.data);
         const sortData = res.data
-          .sort(
-            (a, b) => new Date(b.task_startdate) - new Date(a.task_startdate)
-          )
+          .sort((a, b) => new Date(b.taskStartdate) - new Date(a.taskStartdate))
           .slice(0, 4);
         setTasks(sortData);
       })
@@ -118,18 +117,18 @@ export default function Tasktable({ projectNum }) {
                   </tr>
                 ) : (
                   tasks.map((task) => (
-                    <tr key={task.task_pk_num}>
+                    <tr key={task.taskPkNum}>
                       <td style={{ fontWeight: "bold", fontSize: "1rem" }}>
-                        {task.task_title}
+                        {task.taskTitle}
                       </td>
-                      <td style={{ fontSize: "1rem" }}>{task.task_status}</td>
+                      <td style={{ fontSize: "1rem" }}>{task.taskStatus}</td>
                       <td style={{ fontSize: "1rem" }}>
-                        {dateForm(task.task_startdate)}
+                        {dateForm(task.taskStartdate)}
                       </td>
                       <td style={{ fontSize: "1rem" }}>
-                        {dateForm(task.task_deadline)}
+                        {dateForm(task.taskDeadline)}
                       </td>
-                      <td style={{ fontSize: "1rem" }}>{task.task_priority}</td>
+                      <td style={{ fontSize: "1rem" }}>{task.taskPriority}</td>
                       <td
                         style={{
                           display: "flex",
@@ -139,7 +138,7 @@ export default function Tasktable({ projectNum }) {
                         }}
                       >
                         <Progress
-                          value={task.task_progress}
+                          value={task.taskProgress}
                           max={100}
                           style={{ height: "8px" }}
                         />
@@ -151,7 +150,7 @@ export default function Tasktable({ projectNum }) {
                             textAlign: "center",
                           }}
                         >
-                          {`진행률: ${task.task_progress || 0}%`}
+                          {`진행률: ${task.taskProgress || 0}%`}
                         </div>
                       </td>
                     </tr>

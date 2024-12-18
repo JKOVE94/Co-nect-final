@@ -7,13 +7,15 @@ import java.util.Collection;
 
 public class UserSecurityDetails implements UserDetails {
     private final String compPkNum;
-    private final String userPkNum;
+    private final String userId;
+    private final int userPkNum;
     private final String password;
     private final boolean isAccountNonLocked;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserSecurityDetails(String compPkNum, String userPkNum, String password, boolean isAccountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+    public UserSecurityDetails(String compPkNum, String userId, int userPkNum, String password, boolean isAccountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         this.compPkNum = compPkNum;
+        this.userId = userId;
         this.userPkNum = userPkNum;
         this.password = password;
         this.isAccountNonLocked = isAccountNonLocked;
@@ -32,14 +34,18 @@ public class UserSecurityDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userPkNum; // 사용자번호를 username으로 사용
+        return userId;
     }
 
     public String getCompPkNum() {
         return compPkNum;
     }
 
-    public String getUserPkNum() {
+    public String getUserId() {
+        return userId;
+    }
+
+    public int getUserPkNum() {
         return userPkNum;
     }
 

@@ -26,7 +26,7 @@ public class LoginController {
         
         switch (loginDto.getStatus()) {
             case 1: // 로그인 성공
-                String token = jwtUtil.generateToken(String.valueOf(loginDto.getUser_pk_num()));
+                String token = jwtUtil.generateToken(loginDto.getUser_id());
                 loginDto.setToken(token);
                 return ResponseEntity.ok(loginDto);
             case 2: // 정보 불일치

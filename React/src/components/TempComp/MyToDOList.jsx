@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Card, Carousel } from "react-bootstrap";
@@ -18,6 +17,7 @@ import {
   Table,
 } from "reactstrap";
 import moment from "moment";
+import axiosInstance from "../../api/axiosInstance"; // axiosInstance 직접 import
 
 const MyToDoList = () => {
   const [data, setData] = useState({
@@ -42,11 +42,7 @@ const MyToDoList = () => {
     setLoading(true);
     setError(null);
 
-    // Axios 인스턴스에 Authorization 헤더 추가
-    const token = localStorage.getItem("token");
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-    axios
+    axiosInstance
       .get(`/proj/user/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
@@ -81,8 +77,25 @@ const MyToDoList = () => {
     fetchData();
   }, [fetchData]);
 
-  if (loading) return <div>로딩 중...</div>;
-  if (error) return <div>에러: {error}</div>;
+  const formatDate = (dateString) => {
+    if (!dateString) return "날짜 정보 없음"; // 날짜가 없는 경우 처리
+    return moment(dateString).format("YYYY-MM-DD");
+  };
+
+  if (loading)
+    return (
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <h3>데이터를 불러오는 중입니다...</h3>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <h3 style={{ color: "red" }}>{error}</h3>
+        <button onClick={fetchData}>다시 시도</button>
+      </div>
+    );
 
   return (
     <>

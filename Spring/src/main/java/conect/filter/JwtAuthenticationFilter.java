@@ -34,28 +34,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String authHeader = request.getHeader("Authorization");
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
-                logger.debug("JWT Token found in request");
-                
+
                 if (jwtUtil.validateToken(token)) {
-                    String username = jwtUtil.getUsernameFromToken(token);
-                    logger.debug("Valid JWT token for user: {}", username);
-                    
-                    UserDetails userDetails = userSecurityService.loadUserByUsername(username);
+                    String userId = jwtUtil.getUserIdFromToken(token);
+
+                    UserDetails userDetails = userSecurityService.loadUserByUsername(userId);
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.debug("Authentication set for user: {}", username);
+
+                    logger.debug("Authentication set for user: {}", userId);
                 } else {
-                    logger.warn("Invalid JWT token");
-                    SecurityContextHolder.clearContext();
+                    logger.warn("Invalid or expired JWT token");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Invalid or expired JWT token");
+                    return;
                 }
             } else {
                 logger.debug("No JWT token found in request");
-                SecurityContextHolder.clearContext();
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication", e);
-            SecurityContextHolder.clearContext();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("Internal server error while processing authentication");
+            return;
         }
 
         filterChain.doFilter(request, response);

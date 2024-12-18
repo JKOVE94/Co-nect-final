@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 public class LoginDto {
     private int user_pk_num; //사번
+    private String user_id; //사용자 ID
     private String user_name; //이름
     private String user_mail; //메일
     private String user_pic; //사진

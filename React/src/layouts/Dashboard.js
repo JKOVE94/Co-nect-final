@@ -13,7 +13,7 @@ import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
 import ErrPage from "components/2dashboard/ErrPage";
 import Function from "components/2dashboard/Function/Function";
 import FreeHome from "components/2dashboard/Free/FreeHome";
-import axios from "./api"; // Axios 인스턴스 사용
+import axiosInstance from "../api/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT } from "../Redux/Reducer/userDataReducer";
 
@@ -26,30 +26,17 @@ const Dashboard = (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    delete axios.defaults.headers.common["Authorization"];
+    sessionStorage.removeItem("token");
     dispatch(LOGOUT());
     navigate("/login");
   };
 
-  const setAuthToken = (token) => {
-    if (token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    } else {
-      delete axios.defaults.headers.common["Authorization"];
-    }
-  };
-
-  // Axios 인스턴스에 Authorization 헤더 추가
-  const token = localStorage.getItem("token");
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
   const verifyToken = async () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token) return false;
 
     try {
-      const response = await axios.post("/validate-token", { token });
+      const response = await axiosInstance.post("/validate-token", { token });
       return response.data.isValid;
     } catch (error) {
       console.error("토큰 검증 실패:", error);
@@ -58,12 +45,11 @@ const Dashboard = (props) => {
   };
 
   const refreshToken = async () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     try {
-      const response = await axios.post("/refresh-token", { token });
+      const response = await axiosInstance.post("/refresh-token", { token });
       const newToken = response.data.token;
-      localStorage.setItem("token", newToken);
-      setAuthToken(newToken);
+      sessionStorage.setItem("token", newToken);
       return true;
     } catch (error) {
       console.error("토큰 갱신 실패:", error);
@@ -74,14 +60,18 @@ const Dashboard = (props) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       setIsLoading(true);
-      const token = localStorage.getItem("token");
-      setAuthToken(token);
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        handleLogout();
+        return;
+      }
 
       const isValid = await verifyToken();
       if (!isValid) {
         const refreshed = await refreshToken();
         if (!refreshed) {
           handleLogout();
+          return;
         }
       }
       setIsLoading(false);
@@ -96,26 +86,9 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     if (!isLoading && user.user_pk_num === 0) {
-      navigate("/login");
+      navigate("/");
     }
   }, [user, navigate, isLoading]);
-
-  useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (
-          error.response &&
-          (error.response.status === 401 || error.response.status === 403)
-        ) {
-          handleLogout();
-        }
-        return Promise.reject(error);
-      }
-    );
-
-    return () => axios.interceptors.response.eject(interceptor);
-  }, []);
 
   const isProjReadPath = location.pathname.includes("/projdetail");
 

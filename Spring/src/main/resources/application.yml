@@ -33,6 +33,10 @@ spring:
         project-id: favorable-order-443405-t7
         bucket: co-nect
 
+jwt:
+  secret: dGhpc2lzYXZlcnlzZWN1cmVzZWNyZXRrZXl0aGlzaXNhdmVyeXNlY3VyZXNlY3JldGtleQ== # Base64로 인코딩된 키
+  expiration-time: 3600000  # 1시간 (밀리초 단위)
+
 springdoc:
   swagger-ui:
     enabled: true

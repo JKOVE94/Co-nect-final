@@ -3,21 +3,22 @@ package conect.data.repository;
 import conect.data.entity.TaskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<TaskEntity, Integer> {
 
-    @Query("SELECT t FROM TaskEntity t WHERE t.projectEntity.projPkNum = ?1")
-    List<TaskEntity> getTaskByTaskFkProjNum(int task_fk_proj_num);
+    @Query("SELECT t FROM TaskEntity t WHERE t.projectEntity.projPkNum = :task_fk_proj_num")
+    List<TaskEntity> getTaskByTaskFkProjNum(@Param("task_fk_proj_num") int task_fk_proj_num);
 
-    @Query("SELECT t FROM TaskEntity t WHERE t.userEntity.userPkNum = ?1")
-    List<TaskEntity> getTaskByTaskFkUserNum(int task_fk_user_num);
+    @Query("SELECT t FROM TaskEntity t WHERE t.userEntity.userPkNum = :task_fk_user_num")
+    List<TaskEntity> getTaskByTaskFkUserNum(@Param("task_fk_user_num") int task_fk_user_num);
 
-    @Query("SELECT t.taskPkNum FROM TaskEntity t WHERE t.taskFkTaskNum = ?1")
-    List<Integer> findChildTask(int task_pk_num);
+    @Query("SELECT t.taskPkNum FROM TaskEntity t WHERE t.taskGroup = :task_pk_num")
+    List<Integer> findChildTask(@Param("task_pk_num") int task_pk_num);
     
-    @Query("SELECT t FROM TaskEntity t WHERE t.projectEntity.projPkNum = ?1 AND t.userEntity.userPkNum = ?2")
-    List<TaskEntity> getTaskByProjectNumAndUserNum(int projectNum, int userNum);
+    @Query("SELECT t FROM TaskEntity t WHERE t.projectEntity.projPkNum = :projectNum AND t.userEntity.userPkNum = :userNum")
+    List<TaskEntity> getTaskByProjectNumAndUserNum(@Param("projectNum") int projectNum, @Param("userNum") int userNum);
 
 }

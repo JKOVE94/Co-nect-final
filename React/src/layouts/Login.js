@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "assets/landing/css/login.css";
 import ConectTextLogo from "assets/img/logo/ConectTextLogo";
-import axios from "./api"; // 커스텀 axios 인스턴스 사용
+
 import { useNavigate } from "react-router-dom";
 import LoginToast from "variables/Toast/LoginToast";
 import { useDispatch } from "react-redux";
 import { LOGIN } from "../Redux/Reducer/userDataReducer";
 import LoginModal from "variables/Modal/LoginModal";
+import axios from "axios";
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -15,8 +16,9 @@ const Login = (props) => {
   const [isSignIn, setIsSignIn] = useState(null);
   const [loginInfo, setLoginInfo] = useState({
     comp_pk_num: "",
-    user_pk_num: "",
+    user_id: "",
     user_pw: "",
+    user_pk_num: "",
   });
   const [errType, setErrType] = useState(0);
   const [data, setData] = useState({});
@@ -48,10 +50,6 @@ const Login = (props) => {
     }
   }, [showA]);
 
-  useEffect(() => {
-    console.log("showA 상태 변경:", showA);
-  }, [showA]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginInfo((prev) => ({
@@ -68,12 +66,8 @@ const Login = (props) => {
   const handleCloseM = () => setShowM(false);
 
   const validateInputs = () => {
-    if (
-      !loginInfo.comp_pk_num ||
-      !loginInfo.user_pk_num ||
-      !loginInfo.user_pw
-    ) {
-      setErrType(5); // 새로운 에러 타입: 입력 누락
+    if (!loginInfo.comp_pk_num || !loginInfo.user_id || !loginInfo.user_pw) {
+      setErrType(5);
       toggleShowA();
       return false;
     }
@@ -85,22 +79,19 @@ const Login = (props) => {
     if (!validateInputs()) return;
 
     setIsLoading(true);
-    console.log("로그인 시도:", loginInfo);
 
     try {
-      const res = await axios.post("/login", loginInfo);
+      const res = await axios.post("/login", loginInfo); // axiosInstance 대신 axios 사용
       const responseData = res.data;
       setData(responseData);
 
       if (responseData.status === 1) {
-        localStorage.setItem("token", responseData.token);
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${responseData.token}`;
+        sessionStorage.setItem("token", responseData.token);
 
         dispatch(
           LOGIN({
             user_pk_num: responseData.user_pk_num,
+            user_id: responseData.user_id,
             user_name: responseData.user_name,
             user_mail: responseData.user_mail,
             user_pic: responseData.user_pic,
@@ -110,7 +101,7 @@ const Login = (props) => {
 
         setIsReversed(true);
         setTimeout(() => {
-          navigate(`/ProjSel/${loginInfo.user_pk_num}`);
+          navigate(`/ProjSel/${responseData.user_pk_num}`);
         }, 1000);
       } else if (responseData.status === 2) {
         setErrType(responseData.status);
@@ -127,8 +118,6 @@ const Login = (props) => {
       setIsLoading(false);
     }
   };
-
-  console.log("에러 타입:", errType);
 
   return (
     <>
@@ -170,10 +159,10 @@ const Login = (props) => {
                   <div className="input-group">
                     <i className="bx bxs-user"></i>
                     <input
-                      type="number"
-                      placeholder="사번"
-                      name="user_pk_num"
-                      value={loginInfo.user_pk_num}
+                      type="text"
+                      placeholder="아이디"
+                      name="user_id"
+                      value={loginInfo.user_id}
                       onChange={(e) => handleChange(e)}
                       required
                     />

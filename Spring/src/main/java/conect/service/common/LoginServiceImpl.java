@@ -10,9 +10,7 @@ import conect.data.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -22,19 +20,17 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private CompanyRepository companyRepository;
 
-   
-
     @Autowired
     private JwtUtil jwtUtil;
 
     @Override
-    public UserDto getUserInfo(int user_pk_num) {
-        return UserDto.fromEntity(userRepository.findById(user_pk_num).orElseThrow());
+    public UserDto getUserInfo(String userId) {
+        return UserDto.fromEntity(userRepository.findByUserId(userId).orElseThrow());
     }
 
     @Override
-    public int getTryNum(int user_pk_num) {
-        return userRepository.findById(user_pk_num).orElseThrow().getUserTrynum();
+    public int getTryNum(String userId) {
+        return userRepository.findByUserId(userId).orElseThrow().getUserTrynum();
     }
 
     @Override
@@ -42,7 +38,7 @@ public class LoginServiceImpl implements LoginService {
         LoginDto loginDto = new LoginDto();
         try {
             if (companyRepository.findById(form.getComp_pk_num()).isPresent()) {
-                Optional<UserEntity> userOptional = userRepository.findById(form.getUser_pk_num());
+                Optional<UserEntity> userOptional = userRepository.findByUserId(form.getUser_id());
                 if (userOptional.isPresent()) {
                     UserEntity user = userOptional.get();
                     if (user.getUserLocked() != 1) {
@@ -50,11 +46,12 @@ public class LoginServiceImpl implements LoginService {
                             user.setUserTrynum(0);
                             userRepository.save(user);
                             
-                            String token = jwtUtil.generateToken(String.valueOf(user.getUserPkNum()));
+                            String token = jwtUtil.generateToken(user.getUserId());
                             
                             loginDto.setStatus(1);
                             loginDto.setToken(token);
                             loginDto.setUser_pk_num(user.getUserPkNum());
+                            loginDto.setUser_id(user.getUserId());
                             loginDto.setUser_name(user.getUserName());
                             loginDto.setUser_mail(user.getUserMail());
                             loginDto.setUser_pic(user.getUserPic());
@@ -91,10 +88,9 @@ public class LoginServiceImpl implements LoginService {
         userRepository.save(user);
     }
 
-
     @Override
     public String generateToken(UserDto userDto) {
-        return jwtUtil.generateToken(String.valueOf(userDto.getUser_pk_num()));
+        return jwtUtil.generateToken(userDto.getUser_id());
     }
 
     @Override
@@ -104,7 +100,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public UserDto getUserFromToken(String token) {
-        String userPkNum = jwtUtil.getUsernameFromToken(token);
-        return getUserInfo(Integer.parseInt(userPkNum));
+        String userId = jwtUtil.getUserIdFromToken(token);
+        return getUserInfo(userId);
     }
 }

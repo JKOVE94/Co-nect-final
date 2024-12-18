@@ -1,32 +1,22 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import MyToDoList from "./TempComp/MyToDOList";
 
-const { default: MyToDoList } = require("./TempComp/MyToDOList");
-const { default: Projtable } = require("./TempComp/ProjTable");
+import Tasktable from "./TempComp/Tasktable";
 
 const MainComponent = () => {
-  const num = useSelector((state) => state.userData.user_pk_num);
-  //toast
-  const [toastType, setToastType] = useState("");
-  const [toastIsOpen, setToastIsOpen] = useState(false);
-  //calendar event(일정)
-  const [events, setEvents] = useState([{}]);
+  const user_pk_num = useSelector((state) => state.userData.user_pk_num);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const projectNum = searchParams.get("proj");
-  const userNum = searchParams.get("user");
 
-  const handleToast = (text, open) => {
-    setToastType(text);
-    setToastIsOpen(open);
-  };
+  console.log(projectNum);
 
   return (
     <>
-      <Projtable projectNum={projectNum} />
-
-      <MyToDoList />
+      <Tasktable projectNum={projectNum} />
+      <MyToDoList user_pk_num={user_pk_num} />
     </>
   );
 };

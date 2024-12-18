@@ -18,20 +18,19 @@ public class UserSecurityService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userPkNum) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findById(Integer.parseInt(userPkNum))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userPkNum));
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
 
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getUserAuthor());
 
         return new UserSecurityDetails(
-                String.valueOf(user.getUserPkNum()),
+                String.valueOf(user.getCompanyEntity().getCompPkNum()),
                 user.getUserId(),
+                user.getUserPkNum(),
                 user.getUserPw(),
                 user.getUserLocked() != 1,
                 Collections.singletonList(authority)
         );
     }
 }
-
-
