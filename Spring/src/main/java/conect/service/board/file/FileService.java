@@ -14,6 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface FileService {
+	// 파일 저장 메소드
+	public String saveFile(FileForm form, MultipartFile file) throws IOException;
+	
 	// 삽입
 	FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException;
 
@@ -30,8 +33,6 @@ public interface FileService {
 	void deletePost(int filePkNum);
 
 	// 페이징
-	public Page<FileDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
+	// public Page<FileDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
 
-	// 파일 저장 메소드
-	public String saveFile(FileForm form, MultipartFile file) throws IOException; 
 }

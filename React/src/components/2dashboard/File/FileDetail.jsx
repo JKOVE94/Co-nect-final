@@ -85,12 +85,7 @@ const FileDetail = () => {
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.file_post_name}&nbsp;
-                      <FavorCheck 
-                        type="post"
-                        pknum={post.file_pk_num}
-                        favorList={favorList}
-                      />
+                      {post.wiki_title}&nbsp;                     
                     </td>
                   </tr>
                   <tr>
@@ -102,7 +97,7 @@ const FileDetail = () => {
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.file_content}
+                      {post.wiki_content}
                     </td>
                   </tr>
                 </tbody>
@@ -113,7 +108,7 @@ const FileDetail = () => {
             <br />
               <button
                 className="btn btn-primary"
-                onClick={() => navigate(`/main/free/update/${filePkNumInt}`)}
+                onClick={() => navigate(`/main/file/update/${filePkNumInt}`)}
               >
                 수정
               </button>
@@ -122,7 +117,7 @@ const FileDetail = () => {
               </button>
               <button
                 className="btn btn-primary"
-                onClick={() => navigate("/main/free")}
+                onClick={() => navigate("/main/file")}
               >
                 목록
               </button>

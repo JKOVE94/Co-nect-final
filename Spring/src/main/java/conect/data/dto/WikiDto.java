@@ -12,10 +12,10 @@ public class WikiDto {
     private int wiki_pk_num; // 위키 고유번호
     private String wiki_title; // 위키 제목
     private String wiki_content; // 위키 내용
-    private int wiki_isnotice; // 공지사항 여부
+    private Boolean wiki_isnotice; // 공지사항 여부
     private LocalDate wiki_regdate; // 작성일
     private int wiki_view; // 조회수
-    private int wiki_boardtype; // 게시판 종류
+    private Boolean wiki_boardtype; // 게시판 종류
     private int wiki_fk_user_num; // 사용자 고유번호
     private int wiki_fk_proj_num; // 프로젝트 고유번호
 

@@ -10,16 +10,17 @@ const FileCreate = () => {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
+    wiki_title: "", // 제목을 추가
+    wiki_content: "",
+    wiki_fk_user_num: writer.userNum || 1,  // 유저 번호, Redux에서 가져온 유저 정보로 설정
+    wiki_regdate: new Date().toISOString(),  // 현재 시간
+    wiki_view: 0,
+    wiki_boardtype: 2,
     file_name: "",
-    file_fk_wiki_num: 0,
+    file_fk_wiki_num: null,  // file_fk_wiki_num은 null로 설정 가능
     file_path: "",
     file_size: 0,
     file_type: "",
-    wiki_fk_user_num: 0,
-    wiki_content:"",
-    wiki_regdate:"",
-    wiki_view:0,
-    wiki_boardtype:2,
     file: null,
   });
 
@@ -38,7 +39,6 @@ const FileCreate = () => {
       file_name: file.name, // 파일 이름 자동 설정
       file_size: file.size, // 파일 크기 자동 설정
       file_type: file.type, // 파일 타입 자동 설정
-      // file_path: URL.createObjectURL(file), // 파일 경로 생성 (브라우저 내에서 임시 경로)
     });
   };
 
@@ -50,7 +50,9 @@ const FileCreate = () => {
       ...formData,
       wiki_fk_user_num: formData.wiki_fk_user_num || "1",  // 값이 없으면 "1"로 설정
       wiki_regdate: new Date().toISOString(),  // 현재 시간 추가
-      wiki_boardtype:formData.wiki_boardtype
+      wiki_boardtype: formData.wiki_boardtype,
+      file_fk_wiki_num: formData.file_fk_wiki_num || null, // file_fk_wiki_num이 null일 수 있음
+
     };
 
     console.log('Form data before submitting:', formToSubmit);
@@ -58,21 +60,22 @@ const FileCreate = () => {
     const form = new FormData();
     form.append('file', formData.file);
     form.append('file_name', formData.file_name);
-    form.append('file_fk_wiki_num', formData.file_fk_wiki_num);
+    form.append('file_fk_wiki_num', formData.file_fk_wiki_num); // file_fk_wiki_num은 null로 설정될 수 있음
     form.append('wiki_fk_user_num', formToSubmit.wiki_fk_user_num);
     form.append('wiki_content', formToSubmit.wiki_content);
     form.append('wiki_regdate', formToSubmit.wiki_regdate);
     form.append('wiki_boardtype', formToSubmit.wiki_boardtype);
     
     axios
-      .post("/file/", form)  // 업로드 URL은 "/file/upload"으로 설정
+      .post("/file/", form)  // 업로드 URL은 "/file/"으로 설정
       .then((response) => {
         if (response.data && response.data.fileUrl) {
           setFormData((prevData) => ({
             ...prevData,
             file_path: response.data.fileUrl, // GCS에서 반환된 파일 URL
+            file_fk_wiki_num: response.data.filePkNum || null, // 서버에서 반환된 filePkNum을 file_fk_wiki_num에 설정, 없으면 null
           }));
-          navigate(`/main/file/detail/${response.data.id}`); // 파일 저장 후 상세 페이지로 이동
+          navigate(`/main/file/detail/${response.data.filePkNum || ''}`); // 파일 저장 후 상세 페이지로 이동
         }
       })
       .catch((error) => {
@@ -139,8 +142,6 @@ const FileCreate = () => {
                 readOnly
               />
             </div>
-
-
 
             <div className="form-group">
               <label htmlFor="file_type">파일 타입:</label>
