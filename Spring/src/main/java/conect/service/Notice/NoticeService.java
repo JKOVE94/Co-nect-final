@@ -7,8 +7,8 @@ import java.util.Optional;
 
 
 public interface NoticeService {
-    //전체 조회
-    List<NoticeDto> getNoticeAll(int projNum);
+    //전체 조회 + 검색기능
+    List<NoticeDto> getNoticeAll(int projNum, String searchType, String searchText);
     //부분 조회
     Optional<NoticeDto> getOneNotice(int notiNum);
     //공지글 추가

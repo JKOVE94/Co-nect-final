@@ -2,176 +2,125 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
-import WikiToast from "variables/Toast/WikiToast";
+import NotiToast from "variables/Toast/NotiToast";
 
-const WikiDetail = () => {
-  // 현재 URL의 state를 확인하기 위해 useLocation 사용
+const NotiDetail = () => {
   const location = useLocation();
-
-  // 상태 값 정의 (type: 게시글 상태 관리, post: 게시글 데이터 저장)
-  const [type, setType] = useState(0); // 0: 기본값, "create": 등록, "update": 수정
-  const { wikiPkNum } = useParams();
+  const { notiPkNum } = useParams();
   const navigate = useNavigate();
-  const [wiki, setWiki] = useState({}); // 게시글 데이터 상태
-  const [loading, setLoading] = useState(true); // 로딩 상태
-  const [error, setError] = useState(null); // 에러 상태
+  const compPkNum =1;//임시 테스트 회사 번호
 
-  // 화면 로드 시 실행되는 useEffect
+  const [type, setType] = useState(0);
+  const [noti, setNoti] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+
   useEffect(() => {
-    // URL state에서 actionType 확인 (등록/수정 여부)
     const actionType = location.state?.actionType;
     if (actionType === "create") {
-      setType("create"); // 등록 상태
-      toggleShowA(); // 토스트 표시
+      setType("create");
+      toggleToast();
     } else if (actionType === "update") {
-      setType("update"); // 수정 상태
-      toggleShowA(); // 토스트 표시
+      setType("update");
+      toggleToast();
     }
 
-    // 게시글 데이터 fetch 함수 정의
-    const fetchWiki = async () => {
+    const fetchNoti = async () => {
       try {
-        const response = await axios.get(`/wiki/wikidetail/${wikiPkNum}`);
-        setWiki(response.data); // 성공 시 게시글 데이터 저장
+        const response = await axios.get(`/main/${compPkNum}/notice/${notiPkNum}`);
+        setNoti(response.data);
       } catch (err) {
-        setError(err.message); // 에러 발생 시 에러 메시지 설정
+        setError(err.message);
       } finally {
-        setLoading(false); // 로딩 상태 해제
+        setLoading(false);
       }
     };
 
-    fetchWiki(); // 게시글 데이터 요청 함수 호출
-  }, [wikiPkNum, location.state]);
+    fetchNoti();
+  }, [notiPkNum, location.state]);
 
-  // 토스트 알림 상태 및 토글 함수
-  const [showA, setShowA] = useState(false);
-  const toggleShowA = () => {
-    setShowA(true); // 토스트 표시
+  const toggleToast = () => {
+    setShowToast(true);
     setTimeout(() => {
-      setShowA(false); // 3초 후 토스트 숨기기
+      setShowToast(false);
     }, 3000);
   };
 
-  // 게시글 삭제 처리 함수
   const handleDelete = async () => {
     try {
-      await axios.delete(`/wiki/wikidelete/${wikiPkNum}`); // 게시글 삭제 요청
-      navigate("/main/wiki/wikilist", { state: { success: true } }); // 삭제 후 목록 페이지로 이동
+      await axios.delete(`/main/${compPkNum}/notice/delete/${notiPkNum}`);
+      navigate("/main/noti/notilist", { state: { success: true } });
     } catch (err) {
-      setError("삭제 실패: " + err.message); // 삭제 실패 시 에러 메시지 설정
+      setError("삭제 실패: " + err.message);
     }
   };
 
-  // 로딩 중일 때 표시
   if (loading) return <div>Loading...</div>;
-  // 에러 발생 시 표시
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <Container fluid style={{ Height: "40em", marginTop: "2em" }}>
-      <Card style={{ Height: "40em", overflowY: "auto", zIndex: 100 }}>
+    <Container fluid style={{ marginTop: "2em" }}>
+      <Card style={{ height: "40em", overflowY: "auto" }}>
         <CardHeader>
-          <h2>문서 상세보기</h2> {/* 카드 제목 */}
+          <h2>공지게시판 상세보기</h2>
         </CardHeader>
-        <CardBody
-          style={{
-            maxHeight: "40em",
-            overflowY: "auto",
-            fontSize: "1.2rem",
-            marginTop: "1em",
-          }}
-        >
-          <div>
-            {/* 게시글 정보 표시 */}
-            {wiki ? (
-              <table
-                className="table"
-                style={{
-                  fontSize: "1.2rem",
-                  border: "1px solid lightgray",
-                }}
-              >
-                <tbody>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {/* wiki_is_notice가 1일 경우 제목 앞에 🔔 표시 */}
-                      {wiki.wiki_isnotice === true && (
-                        <span role="img" aria-label="bell">
-                          🔔&nbsp;
-                        </span>
-                      )}
-                      <span
-                        style={{
-                          fontWeight:
-                            wiki.wiki_isnotice === true ? "bold" : "normal", // 공지일 경우 글자를 굵게
-                        }}
-                      >
-                        {wiki.wiki_title} {/* 게시글 제목 */}
+        <CardBody style={{ fontSize: "1.2rem", marginTop: "1em" }}>
+          {noti ? (
+            <table className="table" style={{ border: "1px solid lightgray" }}>
+              <tbody>
+                <tr>
+                  <td style={{ width: "10%" }}>제목</td>
+                  <td>
+                    {noti.noti_isnotice && (
+                      <span role="img" aria-label="bell">
+                        🔔&nbsp;
                       </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>
-                      작 성 자
-                    </td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {wiki.user_name} {/* 작성자 */}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>
-                      등 록 일
-                    </td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {new Date(wiki.wiki_regdate).toISOString().split("T")[0]}{" "}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}> 파일</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {wiki.wiki_fk_file_num} {/* 파일명 / 번호로 파일명 불러오자요*/}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {wiki.wiki_content} {/* 게시글 내용 */}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            ) : (
-              <div>게시글을 찾을 수 없습니다.</div>
-            )}
-            <br />
-
-            {/* 버튼 섹션 */}
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>  
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate(`/main/wiki/wikiedit/${wikiPkNum}`)}
-            >
-              수정 {/* 수정 버튼 */}
+                    )}
+                    <strong>{noti.noti_title}</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>프로젝트 명</td>
+                  <td>{noti.projName}</td>
+                </tr>
+                <tr>
+                  <td>작성자</td>
+                  <td>{noti.userName}</td>
+                </tr>
+                <tr>
+                  <td>등록일</td>
+                  <td>{noti.noti_regdate}</td>
+                </tr>
+                <tr>
+                  <td>수정일</td>
+                  <td>{noti.noti_modedate}</td>
+                </tr>
+                <tr>
+                  <td>내용</td>
+                  <td>{noti.noti_content}</td>
+                </tr>
+              </tbody>
+            </table>
+          ) : (
+            <div>게시글을 찾을 수 없습니다.</div>
+          )}
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px" }}>
+            <button className="btn btn-primary" onClick={() => navigate(`/noti/edit/${notiPkNum}`)}>
+              수정
             </button>
-            <button className="btn btn-primary" onClick={handleDelete}>
-              삭제 {/* 삭제 버튼 */}
+            <button className="btn btn-danger" onClick={handleDelete}>
+              삭제
             </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate("/main/wiki/wikilist")}
-            >
-              목록 {/* 목록으로 돌아가기 버튼 */}
+            <button className="btn btn-secondary" onClick={() => navigate("/main/noti/notilist")}> 
+              목록
             </button>
-          </div>  
           </div>
-          <br />
         </CardBody>
       </Card>
-      {/* 토스트 컴포넌트 */}
-      <WikiToast type={type} showA={showA} toggleShowA={toggleShowA} />
+      <NotiToast type={type} show={showToast} />
     </Container>
   );
 };
 
-export default WikiDetail;
+export default NotiDetail;

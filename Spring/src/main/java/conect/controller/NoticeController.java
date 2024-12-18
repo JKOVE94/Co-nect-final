@@ -4,7 +4,6 @@ import conect.data.form.NoticeForm;
 import conect.service.Notice.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +16,14 @@ public class NoticeController {
 
     //프로젝트 관련 공지 게시글 전체 보기
     @GetMapping("list/{projNum}")
-    public List<NoticeDto> getNotiByNotiProjNum(@PathVariable("projNum") int noti_fk_proj_num){
+    public List<NoticeDto> getNotiByNotiProjNum(@PathVariable("projNum") int noti_fk_proj_num,
+                                                @RequestParam(required = false) String searchType,  // 검색 분류
+                                                @RequestParam(required = false) String searchText  // 검색 텍스트
+                                                 ){
         System.out.println("notifknum :" + noti_fk_proj_num);
-        return noticeService.getNoticeAll(noti_fk_proj_num);
+        System.out.println("searchType :" +searchType);
+        System.out.println("searchText :" +searchText);
+        return noticeService.getNoticeAll(noti_fk_proj_num, searchType, searchText);
     }
 
     //공지 게시글 하나 보기

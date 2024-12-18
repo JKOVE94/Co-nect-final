@@ -38,13 +38,38 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
 
-    //공지 리스트 출력
+    //공지 리스트 출력 + 검색기능
     @Override
-    public List<NoticeDto> getNoticeAll(int projNum) {
-        return notiRepository.allNoticeList(projNum)
-                .stream()
-                .map(NoticeDto::fromEntity)
-                .collect(Collectors.toList());
+    public List<NoticeDto> getNoticeAll(int projNum, String searchType, String searchText) {
+        // 검색 텍스트가 있을 경우 searchNotices_(title, username) 메서드를 호출
+        if (searchText != null && !searchText.isEmpty()) {
+            //분류 작성자로 선택햇을 경우
+            if (searchType.equals("작성자")) {
+                return notiRepository.searchNoticeUserName(projNum, searchText)  // 제목으로 검색된 공지 리스트 반환
+                        .stream()
+                        .map(NoticeDto::fromEntity)
+                        .collect(Collectors.toList());
+            }
+            else if(searchType.equals("제목")) { //그 외 경우
+                return notiRepository.searchNoticeTitle(projNum, searchText)  // 제목으로 검색된 공지 리스트 반환
+                        .stream()
+                        .map(NoticeDto::fromEntity)
+                        .collect(Collectors.toList());
+            }else {
+                // 잘못된 검색 타입일 경우 그냥 전체 리스트 출력
+                return notiRepository.allNoticeList(projNum)  // 프로젝트 번호에 해당하는 공지 리스트 반환
+                        .stream()
+                        .map(NoticeDto::fromEntity)  // NoticeEntity를 NoticeDto로 변환
+                        .collect(Collectors.toList());
+            }
+
+        } else {
+            // 검색 텍스트가 없을 경우, 모든 공지사항을 반환
+            return notiRepository.allNoticeList(projNum)  // 프로젝트 번호에 해당하는 공지 리스트 반환
+                    .stream()
+                    .map(NoticeDto::fromEntity)  // NoticeEntity를 NoticeDto로 변환
+                    .collect(Collectors.toList());
+        }
     }
     //공지 하나 출력
     @Override
