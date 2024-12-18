@@ -16,6 +16,15 @@ export default class Gantt extends Component {
         gantt.ext.zoom.init({
             levels: [
                 {
+                    name: "Hours",
+                    scale_height: 60,
+                    min_column_width: 30,
+                    scales: [
+                        { unit: "day", step: 1, format: (date) => (date.getMonth() + 1) + "월 " + date.getDate() + "일" },
+                        { unit: "hour", step: 1, format: "%H" }
+                    ]
+                },
+                {
                     name: "Days",
                     scale_height: 60,
                     min_column_width: 70,
@@ -90,35 +99,28 @@ export default class Gantt extends Component {
 
 componentDidMount() {
     gantt.config.columns = [
-    {name:"text",       label:"업무명",  width:"*", tree:true },
+    {name:"text",       label:"작업명",  width:"*", tree:true },
     {name:"start_date", label:"시작일", align:"center" },
     {name:"duration",   label:"기한 (일)", align:"center" },
-    {name:"member",   label:"담당자", align:"center" },
 ];
     gantt.config.date_format = "%Y-%m-%d %H:%i"; 
     const { tasks } = this.props;
     gantt.init(this.ganttContainer);
     this.initGanttDataProcessor();
     gantt.parse(tasks);
-   gantt.templates.task_text = (start, end, task) => {
-    const member = task.member || "Unknown"; // task 객체에 member 속성이 있는지 확인
-    const progress = task.progress || 0; // task 객체에 progress 속성이 있는지 확인
-    return `${task.text} - ${member} (${progress * 100}%)`;
-};
-    gantt.plugins({ 
-        tooltip: true 
-    }); 
 
-    gantt.config.drag_links = false;
-    gantt.config.drag_mode = false;
-    gantt.config.show_progress = true;
-gantt.templates.tooltip_text = function(start,end,task){
-    return "<b>업무명:</b> "+task.text+"<br/><b>시작일:</b> " + 
-    gantt.templates.tooltip_date_format(start)+ 
-    "<br/><b>마감일:</b> "+gantt.templates.tooltip_date_format(end);
-};
+       gantt.attachEvent("onAfterTaskUpdate", (id, item) => {
+                this.props.setUpdatedData({"gantt":item});
+            });
 
-
+        gantt.attachEvent("onAfterTaskAdd", (id, item) => {
+            if (this.props.onTaskAdd) {
+                this.props.onTaskAdd(item);
+            }
+        });
+          gantt.attachEvent("onAfterTaskDelete", (id) => {
+                this.props.setDeleteTarget(id);
+        });
 }
 
    render() {

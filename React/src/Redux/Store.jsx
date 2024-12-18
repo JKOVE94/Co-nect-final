@@ -13,12 +13,10 @@ import storage from "redux-persist/lib/storage/session";
 import { combineReducers } from "redux";
 import userDataReducer from "./Reducer/userDataReducer";
 import departDataReducer from "./Reducer/departDataReducer";
-import projectDataReducer from "./Reducer/projectDataReducer";
 
 const rootReducer = combineReducers({
   userData: userDataReducer,
   departData: departDataReducer,
-  projectData: projectDataReducer,
 });
 
 const persistConfig = {

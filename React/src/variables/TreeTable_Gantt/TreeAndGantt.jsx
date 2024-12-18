@@ -160,7 +160,22 @@ const TreeAndGantt = (props) => {
         <CardBody>
           <Routes>
             <Route
-              path={`/`}
+              path="/tree"
+              element={
+                <TreeTable
+                  taskdatas={taskdatas}
+                  setTaskdatas={setTaskdatas}
+                  handleUpdate={handleUpdate}
+                  handleDelete={handleDelete}
+                  handleShowM={handleShowM}
+                  setType={setType}
+                  setDeleteTarget={setDeleteTarget}
+                  setUpdatedData={setUpdatedData}
+                />
+              }
+            />
+            <Route
+              path={`/gantt`}
               element={
                 <Ganttchart
                   taskdatas={taskdatas}
