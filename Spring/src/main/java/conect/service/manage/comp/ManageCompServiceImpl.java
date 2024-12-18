@@ -1,4 +1,4 @@
-package conect.service.manage.user;
+package conect.service.manage.comp;
 
 import conect.data.dto.CompanyDto;
 import conect.data.entity.CompanyEntity;
@@ -25,7 +25,7 @@ public class ManageCompServiceImpl implements ManageCompService{
     public CompanyDto getCompanyInfo(int compno) {
         CompanyDto dto = CompanyDto.fromEntity(companyRepository.findById(compno).get());
         dto.setComp_totalEmp(userRepository.findUserByCompany(compno).size());
-//        dto.setComp_totalProject(projectRepository.findByProjCompNum(compno).size());
+        dto.setComp_totalProject(projectRepository.findByProjCompNum(compno).size());
         dto.setComp_completeProject(projectRepository.findByProjCompNumAndProjStatus(compno, "종료").size());
         return dto;
     }

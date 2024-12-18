@@ -43,6 +43,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     public String saveImage(UserForm form) throws IOException {
         InputStream keyFile = null;
         String imgUrl ="";
+        System.out.println("keyFileName : "+keyFileName);
         try{
             keyFile = ResourceUtils.getURL(keyFileName).openStream();
 
@@ -72,6 +73,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         return imgUrl;
     }
     @Override
+    @Transactional
     public boolean deleteImage(int user_pk_num) {
         UserEntity user = userRepository.findById(user_pk_num).get();
         String projectId = "favorable-order-443405-t7";
@@ -109,35 +111,39 @@ public class ManageUserServiceImpl implements ManageUserService {
 
 
     @Override
-    public List<UserDto> getUserAll() {
+    public List<UserDto> getUserAll(int comp_pk_num) {
         //모든 직원의 정보를 가져오는 메소드
         return userRepository.findAll().stream()
+                .filter(user -> user.getCompanyEntity().getCompPkNum() == comp_pk_num)
                 .map(UserDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserDto getUserOne(int userno) {
+    public UserDto getUserOne(int userno, int comp_pk_num) {
         //한명의 직원의 정보를 가져오는 메소드
-        return UserDto.fromEntity(userRepository.findById(userno).get());
+//        System.out.println("userno : " + userno);
+//        System.out.println("comp_pk_num" + comp_pk_num);
+        return UserDto.fromEntity(userRepository.findUserByUserPkNumAndCompPkNum(userno, comp_pk_num));
     }
 
     @Override
-    public List<UserDto> getLockedUserAll() {
+    public List<UserDto> getLockedUserAll(int comp_pk_num) {
         //잠긴 계정의 정보를 가져오는 메소드
         return userRepository.findLockedUser().stream()
+                .filter(user -> user.getCompanyEntity().getCompPkNum() == comp_pk_num)
                 .map(UserDto :: fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Modifying
     @Override
-    public boolean unlockUser(Integer[] usernos) {
+    public boolean unlockUser(int comp_pk_num, Integer[] usernos) {
         //잠긴 계정을 풀어주는 메소드
         try {
             for (int userno : usernos) {
-                UserEntity entity = userRepository.findById(userno).get();
-                entity.setUserLocked(0);
+                UserEntity entity = userRepository.findUserByUserPkNumAndCompPkNum(userno, comp_pk_num);
+                entity.setUserLocked(false);
                 userRepository.save(entity);
             }
             return true;
@@ -148,6 +154,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     @Override
+    @Transactional
     public boolean updateUser(UserForm form) {
         String imgUrl = null;
         try {
@@ -156,7 +163,6 @@ public class ManageUserServiceImpl implements ManageUserService {
                 imgUrl = saveImage(form);
                 entity.setUserPic(imgUrl); //이미지 경로 저장 (Google Cloude Storage)
             }
-
             entity.setCompanyEntity(companyRepository.findById(form.getUser_fk_comp_num()).get());
             userRepository.save(entity);
             return true;
@@ -167,15 +173,30 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     @Override
-    public boolean deleteUser(int user_pk_num) {
+    public boolean deleteUser(int comp_pk_num, int user_pk_num) {
         //유저를 삭제하는 메소드
         try {
-//            deleteImage(user_pk_num);
-            userRepository.deleteById(user_pk_num);
+            UserEntity user = userRepository.findUserByUserPkNumAndCompPkNum(user_pk_num, comp_pk_num);
+            userRepository.deleteById(user.getUserPkNum());
 
         }catch (Exception e){
             System.out.println("deleteUser err : "+e);
         }
         return false;
+    }
+
+    @Override
+    public boolean resetPassword(int comp_pk_num, int userno) {
+        try{
+            UserEntity entity = userRepository.findUserByUserPkNumAndCompPkNum(userno, comp_pk_num);
+            entity.setUserPw("1234");
+            entity.setUserIstemppw(true);
+            userRepository.save(entity);
+            return true;
+        }
+        catch(Exception e){
+            System.out.println("resetPassword err : "+e);
+            return false;
+        }
     }
 }

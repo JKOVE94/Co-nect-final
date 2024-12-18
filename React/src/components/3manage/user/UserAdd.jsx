@@ -2,18 +2,36 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import "assets/css/3manage/useradd.css";
 import ManageUserAddModal from "../../../variables/Modal/ManageUserAddModal";
 
-const UserAdd = () => {
+const ErrorBoundary = ({ children }) => {
+  const [hasError, setHasError] = useState(false);
+
+  const getDerivedStateFromError = (error) => {
+    setHasError(true);
+  };
+
+  const componentDidCatch = (error, errorInfo) => {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+  };
+
+  if (hasError) {
+    return <h1>Something went wrong.</h1>;
+  }
+
+  return children;
+};
+
+const UserAdd = (props) => {
   const comp_num = useSelector((state) => state.userData.user_fk_comp_num);
   const [formData, setFormData] = useState({
-    user_fk_comp_num: comp_num,
-    user_rank: "사원",
-    user_fk_dpart_num: "1",
-    user_fk_acc_authornum: "1",
+    user_fk_comp_num: props.compNum,
+    user_author: "1",
     user_locked: "0",
     user_trynum: "0",
+    user_istemppw: "1",
   });
   const departData = useSelector((state) => state.departData);
   const formRef = useRef(null);
@@ -22,6 +40,8 @@ const UserAdd = () => {
   const handleShowM = () => setShowM(true); // 모달을 여는 함수
   const [type, setType] = useState(""); // 모달 타입을 결정하는 state
   const [datas, setDatas] = useState({}); // 모달에 전달할 데이터를 저장하는 state
+
+  const nav = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -56,7 +76,7 @@ const UserAdd = () => {
     }
 
     try {
-      const response = await axios.post("/manage/user", data, {
+      const response = await axios.post(`/${props.compNum}/manage/user`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -64,8 +84,7 @@ const UserAdd = () => {
 
       switch (response.data) {
         case 1: // 성공
-          setType("addSuccess");
-          handleShowM();
+          nav("/manage/user/info");
           break;
         case 2: // 실패 - 이미지 파일이 아님
           setType("addFail2");
@@ -146,6 +165,17 @@ const UserAdd = () => {
                   required
                 />
                 <br />
+                <label htmlFor="user_id">아이디</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="user_id"
+                  name="user_id"
+                  value={formData.user_id}
+                  onChange={handleChange}
+                  required
+                />
+                <br />
                 <label htmlFor="user_pw">임시비밀번호</label>
                 <input
                   className="form-control"
@@ -168,61 +198,12 @@ const UserAdd = () => {
                   required
                 />
                 <br />
-                <label htmlFor="user_regdate">입사일</label>
-                <input
-                  className="form-control"
-                  type="date"
-                  id="user_regdate"
-                  name="user_regdate"
-                  value={formData.user_regdate}
-                  onChange={handleChange}
-                  required
-                />
-                <br />
-                <label htmlFor="user_rank">직급</label>
+                <label htmlFor="user_author">계정 권한</label>
                 <select
                   className="form-control"
-                  name="user_rank"
-                  id="user_rank"
-                  value={formData.user_rank}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="사원">사원</option>
-                  <option value="대리">대리</option>
-                  <option value="과장">과장</option>
-                  <option value="차장">차장</option>
-                  <option value="부장">부장</option>
-                  <option value="이사">이사</option>
-                  <option value="전무">전무</option>
-                  <option value="사장">사장</option>
-                </select>
-                <br />
-                <label htmlFor="user_fk_dpart_num">소속 부서</label>
-                <select
-                  className="form-control"
-                  id="user_fk_dpart_num"
-                  name="user_fk_dpart_num"
-                  value={formData.user_fk_dpart_num}
-                  onChange={handleChange}
-                  required
-                >
-                  {departData.map((depart) => (
-                    <option
-                      key={depart.dpart_pk_num}
-                      value={depart.dpart_pk_num}
-                    >
-                      {depart.dpart_name}
-                    </option>
-                  ))}
-                </select>
-                <br />
-                <label htmlFor="user_fk_acc_authornum">계정 권한</label>
-                <select
-                  className="form-control"
-                  id="user_fk_acc_authornum"
-                  name="user_fk_acc_authornum"
-                  value={formData.user_fk_acc_authornum}
+                  id="user_author"
+                  name="user_author"
+                  value={formData.user_author}
                   onChange={handleChange}
                   required
                 >

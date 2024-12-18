@@ -33,6 +33,7 @@ import UserInfo from "components/3manage/user/UserInfo";
 import UserAdd from "components/3manage/user/UserAdd";
 import UserUnlock from "components/3manage/user/UserUnlock";
 import CompanyHome from "components/3manage/company/CompanyHome";
+import ProjHome from "components/3manage/project/ProjHome";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -69,6 +70,7 @@ const Dashboard = (props) => {
           <Routes>
             <Route path="company/*" element={<CompanyHome />}/>          
             <Route path="user/*" element={<UserHome />}/>          
+            <Route path="proj/*" element={<ProjHome />}/>          
        </Routes>
         </Container>
       </div>

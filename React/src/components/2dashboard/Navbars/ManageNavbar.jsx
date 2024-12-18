@@ -72,7 +72,7 @@ const CommonNavbar = () => {
           >
             <NavItem>
               <NavLink
-                to="/manage/department/info"
+                to="/manage/proj/"
                 tag={NavLinkRRD}
                 style={{ color: "black", opacity: "0.6" }}
               >

@@ -18,7 +18,7 @@ const CompanyEdit = (props) => {
   };
 
   const fetchUpdate = async (compinfo) => {
-    await axios.put(`/manage/comp/${props.compNum}`, compinfo);
+    await axios.put(`/${props.compNum}/manage/comp`, compinfo);
   };
 
   return (

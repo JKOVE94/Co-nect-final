@@ -15,7 +15,7 @@ public class ReclikesForm {
 
     public static ReclikesEntity fromEntity(ReclikesForm form) {
         ReclikesEntity entity = new ReclikesEntity();
-        entity.setReclikesPkNum(form.getReclike_pk_num());
+        entity.setReclikePkNum(form.getReclike_pk_num());
         return entity;
     }
 }

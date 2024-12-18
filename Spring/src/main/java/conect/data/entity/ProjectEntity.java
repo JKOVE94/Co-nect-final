@@ -37,10 +37,6 @@ public class ProjectEntity {
 
     @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
     @JsonBackReference
-    private List<FavoritesEntity> favoritesEntities;
-
-    @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
-    @JsonBackReference
     private List<RecommendationEntity> recommendationEntities;
 
     @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)

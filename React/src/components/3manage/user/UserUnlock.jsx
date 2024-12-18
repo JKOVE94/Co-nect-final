@@ -3,7 +3,7 @@ import axios from "axios";
 import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 import ManageUserToast from "variables/Toast/ManageUserToast";
 
-const UserUnlock = () => {
+const UserUnlock = (props) => {
   const [userInfos, setUserInfos] = useState([]);
   const [userLocked, setUserLocked] = useState([]);
   const [type, setType] = useState("");
@@ -12,7 +12,7 @@ const UserUnlock = () => {
 
   useEffect(() => {
     axios
-      .get("/manage/user/locked")
+      .get(`/${props.compNum}/manage/user/locked`)
       .then((res) => {
         setUserInfos(res.data);
       })
@@ -39,12 +39,12 @@ const UserUnlock = () => {
 
   const handlePermit = async () => {
     await axios
-      .put("/manage/user/locked", checkedNumber)
+      .put(`/${props.compNum}/manage/user/locked`, checkedNumber)
       .then((res) => {
         if (res.data === true) {
           setType("unlocked"); //토스트 타입
           toggleShowA(); //토스트 보이고 자동으로 사라지는 함수
-          axios.get("/manage/user/locked").then((res) => {
+          axios.get(`/${props.compNum}/manage/user/locked`).then((res) => {
             setUserInfos(res.data);
           });
         } else {
@@ -176,7 +176,17 @@ const UserUnlock = () => {
           </Card>
         </Col>
       </Row>
-      <ManageUserToast type={type} showA={showA} toggleShowA={toggleShowA} />
+      <ManageUserToast
+        type={type}
+        showA={showA}
+        toggleShowA={toggleShowA}
+        style={{
+          position: "absolute",
+          top: "20px !important",
+          right: "20px !important",
+          zIndex: 200000000,
+        }}
+      />
     </Container>
   );
 };

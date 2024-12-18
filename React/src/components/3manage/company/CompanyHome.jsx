@@ -19,7 +19,7 @@ const CompanyHome = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${compNum}/manage/comp`);
+      const response = await axios.get(`/${compNum}/manage/comp`);
       console.log(response.data);
       setCompinfo(response.data);
     } catch (error) {

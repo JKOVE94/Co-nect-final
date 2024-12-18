@@ -58,6 +58,42 @@ const ManageUserToast = (props) => {
             </Toast.Body>
           </>
         );
+      case "resetComplete":
+        return (
+          <>
+            <Toast.Header>
+              <img
+                src="holder.js/20x20?text=%20"
+                className="rounded me-2"
+                alt=""
+              />
+              <strong className="me-auto" style={{ fontSize: "1rem" }}>
+                비밀번호 초기화 성공
+              </strong>
+            </Toast.Header>
+            <Toast.Body style={{ fontSize: "1rem" }}>
+              비밀번호 초기화가 성공적으로 이루어졌습니다.
+            </Toast.Body>
+          </>
+        );
+      case "resetError":
+        return (
+          <>
+            <Toast.Header>
+              <img
+                src="holder.js/20x20?text=%20"
+                className="rounded me-2"
+                alt=""
+              />
+              <strong className="me-auto" style={{ fontSize: "1rem" }}>
+                비밀번호 초기화 실패
+              </strong>
+            </Toast.Header>
+            <Toast.Body style={{ fontSize: "1rem" }}>
+              비밀번호 초기화가 실패했습니다. 다시 시도해주세요.
+            </Toast.Body>
+          </>
+        );
     }
   };
 

@@ -17,17 +17,19 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   </i>
 ));
 
-const UserDropdown = () => {
+const UserDropdown = (props) => {
   return (
     <Dropdown>
       <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components" />
 
       <Dropdown.Menu>
-        <Dropdown.Item>
-          <Link>수정</Link>
+        <Dropdown.Item as={Link} to={`/manage/user/edit/${props.pkNum}`}>
+          수정
         </Dropdown.Item>
-        <Dropdown.Item href="#/action-2">삭제</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">비밀번호 초기화</Dropdown.Item>
+        <Dropdown.Item onClick={() => props.handleDelete()}>삭제</Dropdown.Item>
+        <Dropdown.Item onClick={() => props.handleReset(props.pkNum)}>
+          비밀번호 초기화
+        </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

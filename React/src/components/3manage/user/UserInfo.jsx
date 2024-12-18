@@ -8,14 +8,24 @@ import { GET_DPARTINFO } from "../../../Redux/Reducer/departDataReducer";
 import "assets/css/3manage/userinfo.css";
 import ManageUserModal from "variables/Modal/ManageUserModal";
 import UserDropdown from "variables/Dropdown/UserDropdown";
+import ManageUserToast from "variables/Toast/ManageUserToast";
 
-const UserInfo = () => {
+const UserInfo = (props) => {
   const [users, setUsers] = useState([]);
   const [showM, setShowM] = useState(false); //모달 상태와 관련된 state
   const handleCloseM = () => setShowM(false); //모달을 닫는 함수
   const handleShowM = () => setShowM(true); //모달을 열어주는 함수
   const [type, setType] = useState(""); //모달 타입을 결정하는 state
   const [datas, setDatas] = useState({}); //모달에 전달할 데이터를 저장하는 state
+  const [toasttype, setToasttype] = useState(""); //토스트 타입을 결정하는 state
+  const [showA, setShowA] = useState(true);
+  const toggleShowA = () => {
+    setShowA(true);
+    setTimeout(() => {
+      setShowA(false);
+    }, 3000);
+  };
+
   const [departData, setDepartData] = useState([]);
 
   const departDataOrigin = useSelector((state) => state.departData);
@@ -33,17 +43,9 @@ const UserInfo = () => {
     }
   }, [departDataOrigin]);
 
-  const handleFetch = () => [
-    axios.get("/manage/user").then((data) => {
-      setUsers(data.data);
-    }),
-  ];
-
-  const updateUser = (id) => {
-    setType("update");
-    handleShowM();
-    setDatas({ user_pk_num: id });
-    handleFetch();
+  const handleFetch = async () => {
+    const response = await axios.get(`/${props.compNum}/manage/user`);
+    setUsers(response.data);
   };
 
   const deleteUser = (id) => {
@@ -53,70 +55,104 @@ const UserInfo = () => {
     handleFetch();
   };
 
-  const getDepartmentName = (dpart_pk_num) => {
-    return departData.filter((dpart) => dpart.dpart_pk_num === dpart_pk_num)[0]
-      .dpart_name;
+  const resetPW = (id) => {
+    setType("reset");
+    handleShowM();
+    setDatas({ user_pk_num: id });
+    handleFetch();
   };
 
   const moveToAddUser = () => {
-    nav("/manage/user/add");
+    nav(`/manage/user/add/`);
+  };
+
+  const handleResetPermit = async (id) => {
+    const response = await axios.put(
+      `/${props.compNum}/manage/user/reset/${id}`
+    );
+    await handleFetch(); //부모 컴포넌트에서 데이터를 다시 불러오도록 하는 함수
+
+    if (response.data) {
+      setToasttype("resetComplete");
+      toggleShowA();
+    } else {
+      setToasttype("resetError");
+      toggleShowA();
+    }
+    handleCloseM(); //모달을 닫아줍니다.
   };
 
   return (
-    <Container fluid style={{ marginTop: "2em" }}>
-      <Row>
-        <Col>
-          <Card>
-            <CardHeader>
-              <h2>전체 사원 정보</h2>
-              <button
-                className="btn btn-primary"
-                onClick={() => moveToAddUser()}
-              >
-                사원 추가
-              </button>
-            </CardHeader>
-            <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
-              <table className="table" style={{ fontSize: "1.2rem" }}>
-                <thead>
-                  <tr>
-                    <th>사번</th>
-                    <th>이름</th>
-                    <th>직급</th>
-                    <th>부서</th>
-                    <th>입사일</th>
-                    <th style={{ width: "0.1em" }}></th>
-                    <th style={{ width: "0.1em" }}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
-                    <tr key={user.user_pk_num}>
-                      <td>{user.user_pk_num}</td>
-                      <td>{user.user_name}</td>
-                      <td>{user.user_rank}</td>
-                      <td>{getDepartmentName(user.user_fk_dpart_num)}</td>
-                      <td>{user.user_regdate.slice(0, 10)}</td>
-                      <td colSpan={2}>
-                        <UserDropdown pkNum={user.user_pk_num}></UserDropdown>
-                      </td>
+    <>
+      <Container fluid style={{ marginTop: "2em" }}>
+        <Row>
+          <Col>
+            <Card>
+              <CardHeader>
+                <h2>전체 사원 정보</h2>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => moveToAddUser()}
+                >
+                  사원 추가
+                </button>
+              </CardHeader>
+              <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
+                <table className="table" style={{ fontSize: "1.2rem" }}>
+                  <thead>
+                    <tr>
+                      <th>사번</th>
+                      <th>이름</th>
+                      <th>아이디</th>
+                      <th>이메일</th>
+                      <th>계정권한</th>
+                      <th style={{ width: "0.1em" }}></th>
+                      <th style={{ width: "0.1em" }}></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-      <ManageUserModal
-        handleCloseM={handleCloseM}
-        handleShowM={handleShowM}
-        showM={showM}
-        type={type}
-        datas={datas}
-        handleFetch={handleFetch}
-      />
-    </Container>
+                  </thead>
+                  <tbody>
+                    {users.map((user) => (
+                      <tr key={user.user_pk_num}>
+                        <td>{user.user_pk_num}</td>
+                        <td>{user.user_name}</td>
+                        <td>{user.user_id}</td>
+                        <td>{user.user_mail}</td>
+                        <td>
+                          {user.user_author === 1
+                            ? "사원"
+                            : user.user_author === 2
+                            ? "프로젝트 관리자"
+                            : user.user_author === 3
+                            ? "총 관리자"
+                            : "사용 제한"}
+                        </td>
+                        <td colSpan={2}>
+                          <UserDropdown
+                            pkNum={user.user_pk_num}
+                            handleDelete={() => deleteUser(user.user_pk_num)}
+                            handleReset={() => resetPW(user.user_pk_num)}
+                          ></UserDropdown>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+        <ManageUserModal
+          handleCloseM={handleCloseM}
+          handleShowM={handleShowM}
+          showM={showM}
+          type={type}
+          datas={datas}
+          handleFetch={handleFetch}
+          compNum={props.compNum}
+          handleResetPermit={handleResetPermit}
+        />
+      </Container>
+    </>
   );
 };
 

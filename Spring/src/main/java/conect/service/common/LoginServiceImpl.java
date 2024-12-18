@@ -42,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
             //DB에 해당 정보가 있는가?
             if (companyRepository.findById(form.getComp_pk_num()).get() != null) {
                 //로그인 시도 횟수가 5회 미만인가?
-                if (userRepository.findById(form.getUser_pk_num()).get().getUserLocked() != 1) {
+                if (userRepository.findById(form.getUser_pk_num()).get().isUserLocked() != true) {
                     UserEntity user = userRepository.findById(form.getUser_pk_num()).get();
                     //유저가 입력한 pw와 DB의 pw가 일치하는가?
                     if (user.getUserPw().equals(form.getUser_pw())) {
@@ -55,7 +55,7 @@ public class LoginServiceImpl implements LoginService {
                         System.out.println("전 : "+user.getUserTrynum());
                         user.setUserTrynum(user.getUserTrynum() + 1); //로그인 시도횟수 증가
                         if(user.getUserTrynum()==6){
-                            user.setUserLocked(1); //계정 잠금
+                            user.setUserLocked(true); //계정 잠금
                             user.setUserTrynum(0); //계정 잠금 이후 tryNum 초기화 => 관리자의 로직에서는 Locked만 조절하면 됨
                         }
                         userRepository.save(user);
