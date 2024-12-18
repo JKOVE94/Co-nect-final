@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Setter
 @Getter
@@ -27,4 +28,7 @@ public class RecommendationEntity {
     @ManyToOne
     @JoinColumn(name = "rec_fk_proj_num")
     private ProjectEntity projectEntity;
+    
+    @OneToMany(mappedBy = "recommendationEntity")
+    List<ReclikesEntity> reclikesEntities;
 }

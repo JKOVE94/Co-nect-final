@@ -16,6 +16,7 @@ public class RecommendationDto {
     private int rec_view; // 건의 조회수
     private int rec_fk_user_num; // 사용자 엔티티 번호
     private int rec_fk_proj_num; // 프로젝트 엔티티 번호
+    private Integer rec_likes;
 
     // Getters와 Setters
 
@@ -34,7 +35,7 @@ public class RecommendationDto {
         if (recommendationEntity.getProjectEntity() != null) {
             recommendationDto.setRec_fk_proj_num(recommendationEntity.getProjectEntity().getProjPkNum()); // 예시: 프로젝트 엔티티의 PK 값으로 수정
         }
-
+        recommendationDto.setRec_likes(recommendationEntity.getReclikesEntities().size());
         return recommendationDto;
     }
 
