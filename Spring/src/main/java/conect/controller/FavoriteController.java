@@ -30,10 +30,6 @@ import java.util.Map;
 public class FavoriteController {
 
 	@Autowired
-	private PostService postService;
-	@Autowired
-	private ProjService projService;
-	@Autowired
 	private FavorService favorService;
 
 	// 유저가 즐겨찾기 등록한 자유게시글 목록

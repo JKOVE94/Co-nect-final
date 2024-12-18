@@ -4,7 +4,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import moment from "moment";
 import CalEventShowModal from "../../../variables/Modal/CalEventShowModal";
 import CalEventAddModal from "../../../variables/Modal/CalEventAddModal";
-import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -35,7 +34,6 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
   };
 
   const handleEventClick = (info) => {
-    console.log(info);
     setModalContent({
       //modal에 표시될 내용
       title: info.event.title, //제목

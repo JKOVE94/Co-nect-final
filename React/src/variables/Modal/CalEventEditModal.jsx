@@ -14,6 +14,9 @@ const CalEventEditModal = ({
   handleToast
 }) => {
   const num = useSelector((state) => state.userData.user_pk_num);
+  const compNum = JSON.parse(
+    sessionStorage.getItem("persist:userInfo")
+  ).user_fk_comp_num;
   const [data, setData] = useState({});
   const [read, setRead] = useState(); //수정 가능 여부
   const [users, setUsers] = useState([]);
@@ -51,7 +54,7 @@ const CalEventEditModal = ({
 
   const handleUpdate = () => {
     axios
-      .put("/function/schedule/" + info.id, data)
+      .put(`/${compNum}/function/schedule/` + info.id, data)
       .then((res) => {
         if (res.data) {
           handleToast("update", true);
@@ -64,14 +67,14 @@ const CalEventEditModal = ({
 
   const handleDelete = () => {
     axios
-      .delete("/function/schedule/" + info.id)
+      .delete(`/${compNum}/function/schedule/` + info.id)
       .then((res) => {
         if (res.data) {
           handleToast("del", true);
           getEvent();
         }
       })
-      .catch((err) => navigator(`/error`));
+      .catch((err) => console.log(err));
     onClose();
   };
   

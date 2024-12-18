@@ -17,5 +17,4 @@ public interface FavoritesRepository extends JpaRepository<FavoritesEntity,Integ
 	Page<FavoritesEntity> findByUserEntity_UserPkNumAndPostEntityIsNotNullOrderByPostEntity_PostPkNumAsc(int userNum, Pageable pageable);
 	
 	Page<FavoritesEntity> findByUserEntity_UserPkNumAndProjectEntityIsNotNullOrderByProjectEntity_ProjPkNumAsc(int userNum, Pageable pageable);
-	
 }

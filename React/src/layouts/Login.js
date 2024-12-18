@@ -94,8 +94,6 @@ const Login = (props) => {
       if (res.data.status === 1) {
         //로그인 성공
         dispatch(LOGIN(responseData));
-        let dpartsInfo = await axios.get("/login/departs");
-        dispatch(SET_DPARTINFO(dpartsInfo.data));
         navigate("/main");
       } else if (res.data.status === 2) {
         //로그인 실패(정보 불일치)

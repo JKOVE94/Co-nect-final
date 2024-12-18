@@ -1,51 +1,30 @@
 package conect.data.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
+import java.time.LocalDate;
+
 @Setter
+@Getter
 @Entity
-@Table(name="recommendation")
+@Table(name = "recommendation")
 public class RecommendationEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int recPkNum; //고유번호
-	
-	private String recTitle; //제목
-	private String recContent; //내용
-	private LocalDateTime recRegdate; //작성일자
-	private int recView;
-	
-	@ManyToOne
-	@JoinColumn(name = "rec_fk_user_num")
-	@JsonIgnore
-	private UserEntity userEntity; //작성자
-	
-	@ManyToOne
-	@JoinColumn(name = "rec_fk_proj_num")
-	@JsonIgnore
-	private ProjectEntity projectEntity; //관련 프로젝트
-	
-	@OneToMany(mappedBy = "recommendation", orphanRemoval = true)
-    @JsonBackReference
-	private List<ReclikesEntity> reclikes;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int recPkNum; //건의 번호 [PK, INT]
+    private String recContent; //건의 내용 [TEXT]
+    private String recTitle; //건의 제목 [VARCHAR]
+    private LocalDate recRegdate; //건의 등록일 [DATETIME]
+    private int recView; //건의 조회수 [INT]
 
+    @ManyToOne
+    @JoinColumn(name = "rec_fk_user_num")
+    private UserEntity userEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "rec_fk_proj_num")
+    private ProjectEntity projectEntity;
 }

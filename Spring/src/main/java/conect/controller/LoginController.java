@@ -1,6 +1,5 @@
 package conect.controller;
 
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.LoginDto;
 import conect.data.dto.UserDto;
 import conect.data.form.LoginForm;
@@ -33,13 +32,11 @@ public class LoginController {
             UserDto dto = loginService.getUserInfo(form.getUser_pk_num());
             userInfoDto.setStatus(1); //로그인 상태 담기
             userInfoDto.setUser_pk_num(form.getUser_pk_num()); //사원 번호 담기
-            userInfoDto.setUser_fk_dpart_num(form.getComp_pk_num()); //회사 번호 담기
+            userInfoDto.setUser_fk_comp_num(form.getComp_pk_num()); //회사 번호 담기
             userInfoDto.setUser_name(dto.getUser_name()); //사원 이름 담기
             userInfoDto.setUser_mail(dto.getUser_mail()); //사원 메일 담기
             userInfoDto.setUser_pic(dto.getUser_pic()); //사원 사진 담기
-            userInfoDto.setUser_rank(dto.getUser_rank()); //사원 직급 담기
-            userInfoDto.setUser_fk_acc_authornum(dto.getUser_fk_acc_authornum()); //사원 권한 담기
-            userInfoDto.setUser_fk_comp_num(dto.getUser_fk_comp_num()); //사원 회사 번호 담기
+            userInfoDto.setUser_author(dto.getUser_author()); //사원 권한 담기
             return userInfoDto;
         }
         else if(isLogin==2){
@@ -54,9 +51,5 @@ public class LoginController {
             userInfoDto.setUser_trynum(loginService.getTryNum(form.getUser_pk_num())); //로그인 시도횟수 담기
             return userInfoDto;
         }
-    }
-    @GetMapping("/login/departs")
-    public List<DepartmentDto> getDeparts(){
-        return loginService.getDeparts();
     }
 }

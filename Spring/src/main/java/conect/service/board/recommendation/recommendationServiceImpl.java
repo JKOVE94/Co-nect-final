@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import conect.data.dto.RecommendationDto;
-import conect.data.repository.RecommendationRepository;
+import conect.data.repository.RecommandationRepository;
 
 @Service
 public class recommendationServiceImpl implements recommendationService {
 
 	@Autowired
-	private RecommendationRepository recRepository;
+	private RecommandationRepository recRepository;
 	
 	@Override
 	public List<RecommendationDto> getRecAll(int num) {	

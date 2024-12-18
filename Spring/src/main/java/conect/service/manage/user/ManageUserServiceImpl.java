@@ -9,9 +9,7 @@ import com.google.cloud.storage.*;
 import conect.data.dto.UserDto;
 import conect.data.entity.UserEntity;
 import conect.data.form.UserForm;
-import conect.data.repository.AccountRepository;
 import conect.data.repository.CompanyRepository;
-import conect.data.repository.DepartmentRepository;
 import conect.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +28,6 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private DepartmentRepository departmentRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -105,11 +97,8 @@ public class ManageUserServiceImpl implements ManageUserService {
         try {
             imgUrl = saveImage(form);
             UserEntity entity = UserForm.toEntity(form);
-            entity.setDepartmentEntity(departmentRepository.findById(form.getUser_fk_dpart_num()).get());
-            entity.setAccountEntity(accountRepository.findById(form.getUser_fk_acc_authornum()).get());
             entity.setCompanyEntity(companyRepository.findById(form.getUser_fk_comp_num()).get());
             entity.setUserPic(imgUrl); //이미지 경로 저장 (Google Cloude Storage)
-            entity.setUserPictype(form.getUser_picfile().getContentType()); //이미지 타입 저장
             userRepository.save(entity);
             return true;
         } catch (Exception e) {
@@ -168,10 +157,7 @@ public class ManageUserServiceImpl implements ManageUserService {
             if(form.getUser_picfile() != null){
                 imgUrl = saveImage(form);
                 entity.setUserPic(imgUrl); //이미지 경로 저장 (Google Cloude Storage)
-                entity.setUserPictype(form.getUser_picfile().getContentType()); //이미지 타입 저장
             }
-            entity.setDepartmentEntity(departmentRepository.findById(form.getUser_fk_dpart_num()).get());
-            entity.setAccountEntity(accountRepository.findById(form.getUser_fk_acc_authornum()).get());
             entity.setCompanyEntity(companyRepository.findById(form.getUser_fk_comp_num()).get());
             userRepository.save(entity);
             return true;

@@ -39,8 +39,7 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
       .then((res) => {
         const userData = res.data.map((data) => ({
           id: data.user_pk_num,
-          jik: data.user_rank,
-          buser: data.dpartName,
+          email: data.user_mail,
           display: data.user_name,
         }));
         setUsers(userData);
@@ -98,10 +97,9 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
             >
               <div>
                 {suggestion.display}
-                <small>({suggestion.id})</small>
               </div>
               <div>
-                {suggestion.buser}/{suggestion.jik}
+                <small>{suggestion.email}</small>
               </div>
             </div>
           )}

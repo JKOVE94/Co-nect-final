@@ -14,6 +14,9 @@ import ScheduleCategory from "./ScheduleCategory";
 const Function = () => {
   
   const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
+  const compNum = JSON.parse(
+    sessionStorage.getItem("persist:userInfo")
+  ).user_fk_comp_num;
     
   //toast
   const [toastType, setToastType] = useState("");
@@ -30,21 +33,21 @@ const Function = () => {
   const handleGetEvent = async () => {
     //캘린더에 표시될 이벤트 불러오기
     axios
-      .get("/function/schedule/" + num)
+      .get(`/${compNum}/function/schedule/${num}`)
       .then((res) => {
         let todoEvent = res.data.map((data) => ({
           id: data.todo_pk_num, //일정 pk num
           title: data.todo_title, //일정 제목
           start: data.todo_starttime? // 일정 시작
             moment(data.todo_startdate + ' ' + data.todo_starttime, 'YYYY-MM-DD HH:mm:ss').toISOString():
-            moment(data.todo_startdate).startOf('day').toISOString(), 
+            moment(data.todo_startdate).endOf('day').toISOString(), 
           end : data.todo_endtime? // 일정 종료
             moment(data.todo_enddate + ' ' + data.todo_endtime, 'YYYY-MM-DD HH:mm:ss').toISOString():
             moment(data.todo_enddate).endOf('day').toISOString(), 
           content: data.todo_content, //일정 내용
           category : data.todo_category, //일정 카테고리
           sharer: data.todo_fk_user_num, //일정 작성자
-          shared: data.shareList, //일정 참여자 목록
+          shared: data.share_user, //일정 참여자 목록
           all:data.todo_starttime===null ? true:false,
           backgroundColor : data.todo_category === "회의" ? "#53A0EC" : 
             data.todo_category === "출장" ? "#FFCC66" :

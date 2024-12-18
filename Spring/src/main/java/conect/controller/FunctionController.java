@@ -23,7 +23,7 @@ import conect.service.board.proj.ProjServiceImpl;
 import conect.service.function.todo.TodoServiceImpl;
 
 @RestController
-@RequestMapping("/function")
+@RequestMapping("{comp_pk_num}/function")
 public class FunctionController {
 	
 	@Autowired
@@ -31,7 +31,7 @@ public class FunctionController {
 	
 	//유저의 개인 일정 리스트
     @GetMapping("/schedule/{usernum}")
-    public ResponseEntity<Object> getDataAll(@PathVariable("usernum")int usernum){
+    public ResponseEntity<Object> getDataAll(@PathVariable("comp_pk_num")int compnum, @PathVariable("usernum")int usernum){
     	try {
         	List<TodoDto> todoList = todoServiceImpl.getTodoAll(usernum);
         	
@@ -45,7 +45,7 @@ public class FunctionController {
     
     //개인 일정 등록
     @PostMapping("/schedule")
-    public ResponseEntity<Object> addTodo(@RequestBody TodoForm bean){
+    public ResponseEntity<Object> addTodo(@PathVariable("comp_pk_num")int compnum, @RequestBody TodoForm bean){
     	try {
     		todoServiceImpl.addTodoData(bean);
         	return ResponseEntity.ok(true); //등록 성공
@@ -59,7 +59,7 @@ public class FunctionController {
     
     //개인 일정 삭제
     @DeleteMapping("/schedule/{id}")
-    public ResponseEntity<Object> dropTodo(@PathVariable("id")int id){
+    public ResponseEntity<Object> dropTodo(@PathVariable("comp_pk_num")int compnum, @PathVariable("id")int id){
     	try {
     		if (todoServiceImpl.dropTodoData(id)) {
     			return ResponseEntity.ok(true); //삭제 성공
@@ -77,7 +77,7 @@ public class FunctionController {
     
     //개인 일정 수정
     @PutMapping("/schedule/{id}")
-    public ResponseEntity<Object> editTodo(@PathVariable("id")int id, @RequestBody TodoForm bean){
+    public ResponseEntity<Object> editTodo(@PathVariable("comp_pk_num")int compnum, @PathVariable("id")int id, @RequestBody TodoForm bean){
     	try {
     		bean.setTodo_pk_num(id);
     		if(todoServiceImpl.editTodoData(bean)) {

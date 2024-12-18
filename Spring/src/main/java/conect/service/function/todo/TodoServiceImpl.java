@@ -31,7 +31,7 @@ public class TodoServiceImpl implements TodoService {
     public List<TodoDto> getTodoAll(int usernum) {
     	
     	//로그인한 사원의 개인일정목록
-    	List<TodoEntity> todoList = todoRepository.findByUser_UserPkNum(usernum);
+    	List<TodoEntity> todoList = todoRepository.findByUserEntity_UserPkNum(usernum);
     	
     	//공유된 일정목록
     	List<ShareEntity> shareList = shareRepository.findByShareUser(usernum);
@@ -39,7 +39,7 @@ public class TodoServiceImpl implements TodoService {
     	//로그인한 사원에게 공유된 일정인 경우 todoList에 추가
     	for(ShareEntity share:shareList) {
     		if (share.getShareUser() == usernum) {
-    			todoList.add(share.getTodo());
+    			todoList.add(share.getTodoEntity());
     		}
     	}
     	
@@ -50,24 +50,26 @@ public class TodoServiceImpl implements TodoService {
     public void addTodoData(TodoForm bean) {
     	
 		TodoEntity entity = TodoForm.toEntity(bean);
-		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
+		entity.setUserEntity(userRepository.findById(bean.getTodo_fk_user_num()).get());
 		TodoEntity todo = todoRepository.save(entity);
 		
 		if(bean.getShare_user() != null) {
 			for(int num:bean.getShare_user()) {
 				ShareEntity share = new ShareEntity();
-				share.setTodo(todo);
+				share.setTodoEntity(todo);
 				share.setShareUser(num);
 				shareRepository.save(share);
 			}
 		}
-    }
+	}
+    
     
     @Override
+    @Transactional
     public boolean dropTodoData(int id) {
     	try {
+    		shareRepository.deleteByTodoEntity_TodoPkNum(id);
     		todoRepository.deleteById(id);
-    		
     		return true;
     	} catch(Exception e) {
     		//예외처리
@@ -80,19 +82,20 @@ public class TodoServiceImpl implements TodoService {
     public boolean editTodoData(TodoForm bean) {
     	try {
     		TodoEntity entity = TodoForm.toEntity(bean);
-    		entity.setUser(userRepository.findById(bean.getTodo_fk_user_num()).get());
+    		entity.setUserEntity(userRepository.findById(bean.getTodo_fk_user_num()).get());
     		TodoEntity todo = todoRepository.save(entity);
     		
     		if(bean.getShare_user() != null) {
-    			shareRepository.deleteByTodo_TodoPkNum(bean.getTodo_pk_num());
 
                 for (int num : bean.getShare_user()) {
-                    ShareEntity share = new ShareEntity();
-                    share.setTodo(todo);
-                    share.setShareUser(num);
-
                     // 중복된 ShareEntity가 없다면 추가
-                    shareRepository.save(share);
+                	if (shareRepository.findByShareUserAndTodoEntity_TodoPkNum(num, todo.getTodoPkNum()) == null) {
+                		ShareEntity share = new ShareEntity();
+                        share.setTodoEntity(todo);
+                        share.setShareUser(num);
+                        shareRepository.save(share);
+                	};
+                    
                 }
     		}
     		return true;
