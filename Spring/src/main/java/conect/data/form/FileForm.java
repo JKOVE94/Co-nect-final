@@ -12,7 +12,7 @@ public class FileForm {
 	private String file_path; // 파일 경로
 	private int file_size; // 파일 크기
 	private String file_type; // 파일 타입
-	private int wiki_pk_num; // 문서 고유 넘버
+	// private int wiki_pk_num; // 문서 고유 넘버
 
 	public static FileEntity toEntity(FileForm form) {
 		FileEntity entity = new FileEntity();

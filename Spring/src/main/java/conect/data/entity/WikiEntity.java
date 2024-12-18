@@ -22,7 +22,7 @@ public class WikiEntity {
     private int wikiView; //조회수 [INT]
     private int wikiBoardtype; //게시판 종류 [INT] (1, 2)
 
-    @OneToOne(mappedBy = "wikiEntity")
+    @OneToOne(mappedBy = "wikiEntity", fetch = FetchType.LAZY)
     private FileEntity fileEntity;
 
     @ManyToOne

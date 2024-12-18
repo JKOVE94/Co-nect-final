@@ -57,13 +57,17 @@ public class PostServiceImpl implements PostService {
 		postEntity.setPostView(postForm.getPost_view());
 		postEntity.setUserEntity(userRepository.findById(postForm.getPost_fk_user_num()).get());
 		postEntity.setCompanyEntity(companyRepository.findById(postForm.getPost_fk_comp_num()).get());
+		
 		return frepository.save(postEntity);
 	}
 
 	// 전체 조회
 	@Override
 	public List<PostDto> getPostAll() {
-		return frepository.findAll().stream().map(PostDto::fromEntity).collect(Collectors.toList());
+		return frepository.findAll()
+				.stream()
+				.map(PostDto::fromEntity)
+				.collect(Collectors.toList());
 	}
 
 	// 부분 조회, 조회수(Cookie)

@@ -91,28 +91,23 @@ public class FileServiceImpl implements FileService {
 	}
 	
 	// 게시글 생성 시 파일 저장 및 WikiEntity와 연결
-	public FileEntity insertPost(MultipartFile file, FileForm fileForm) {
-	    try {
-	        // WikiEntity 조회 (wiki_pk_num을 사용하여 WikiEntity 객체를 조회)
-	        WikiEntity wikiEntity = wikiRepository.findById(fileForm.getWiki_pk_num())
-	                .orElseThrow(() -> new RuntimeException("Wiki가 존재하지 않습니다"));
+	public FileEntity insertPost(MultipartFile file, FileForm fileForm) {  
+        // FileEntity 객체 생성
+        FileEntity fileEntity = new FileEntity();
+        
+        fileEntity.setFileName(file.getOriginalFilename());
+        fileEntity.setFilePath(fileForm.getFile_path());
+        fileEntity.setFileType(file.getContentType());
+        fileEntity.setFileSize((int) file.getSize());
+        
+        // WikiEntity 객체를 설정
+        fileEntity.setWikiEntity(wikiRepository.findById(fileForm.getFile_pk_num()).get());
 
-	        // FileEntity 객체 생성
-	        FileEntity fileEntity = new FileEntity();
-	        fileEntity.setFileName(file.getOriginalFilename());
-	        fileEntity.setFilePath(fileForm.getFile_path());
-	        fileEntity.setFileType(file.getContentType());
-	        fileEntity.setFileSize((int) file.getSize());
-	        fileEntity.setWikiEntity(wikiEntity); // WikiEntity 객체를 설정
+        // 파일 저장
+        fileRepository.save(fileEntity);
 
-	        // 파일 저장
-	        fileRepository.save(fileEntity);
+        return fileEntity;
 
-	        return fileEntity;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        throw new RuntimeException("파일 저장 중 오류 발생");
-	    }
 	}
 
 
@@ -120,7 +115,10 @@ public class FileServiceImpl implements FileService {
 	// 전체 조회
 	@Override
 	public List<FileDto> getPostAll() {
-		return fileRepository.findAll().stream().map(FileDto::fromEntity).collect(Collectors.toList());
+		return fileRepository.findAll()
+				.stream()
+				.map(FileDto::fromEntity)
+				.collect(Collectors.toList());
 	}
 
 	// 부분 조회
@@ -135,6 +133,7 @@ public class FileServiceImpl implements FileService {
         if (fileEntity.getWikiEntity() != null) {
             WikiEntity wikiEntity = fileEntity.getWikiEntity(); // WikiEntity 가져오기
             fileDto.setWiki_regdate(wikiEntity.getWikiRegdate()); // 예시: Wiki의 regdate
+            fileDto.setWiki_view(fileEntity.getWikiEntity().getWikiView());
         }
 
         return fileDto; // WikiEntity의 추가 정보 포함된 FileDto 반환
@@ -170,39 +169,60 @@ public class FileServiceImpl implements FileService {
 	}
 
 	// 삭제
-	@Override
-	public void deletePost(int filePkNum) {
-		fileRepository.deleteById(filePkNum);
-	}
+    @Override
+    public void deletePost(int filePkNum) {
+        // 먼저 파일 정보 가져오기
+        FileEntity fileEntity = fileRepository.findById(filePkNum).orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다"));
+
+        // Google Cloud Storage에서 파일 삭제
+        deleteFileFromGCS(fileEntity.getFilePath());
+
+        // 데이터베이스에서 파일 삭제
+        fileRepository.deleteById(filePkNum);
+    }
+
+    // Google Cloud Storage에서 파일 삭제
+    private void deleteFileFromGCS(String filePath) {
+        try {
+            Storage storage = StorageOptions.newBuilder()
+                    .setCredentials(GoogleCredentials.fromStream(ResourceUtils.getURL(keyFileName).openStream()))
+                    .build()
+                    .getService();
+            Blob blob = storage.get(bucketName, filePath);
+            if (blob != null) {
+                blob.delete(); // Google Cloud Storage에서 파일 삭제
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Google Cloud Storage에서 파일 삭제 실패: " + e.getMessage());
+        }
+    }
+
 
 	// 페이징, 정렬, 검색
+	@Override
 	public Page<FileDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText) {
 	    // 정렬 정보 생성
-	    Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
+	    Sort sort = Sort.by(Sort.Direction.fromString(sortDirection.toUpperCase()), sortField);
 
 	    // Pageable 객체 생성 (페이지와 정렬 정보 포함)
 	    Pageable pageable = PageRequest.of(page, pageSize, sort);
-	    
-	    // Repository를 통해 데이터를 조회
-    	Page<FileEntity> postPage = Page.empty();
-    	
-    	 // null 또는 빈 값에 대한 기본 처리
-        if (searchType == null || searchType.isEmpty()) {
-            searchType = "default";
-        }
-        if (searchText == null) {
-            searchText = "";
-        }
-    	
-    	
-    	if (searchType != null && searchType.equalsIgnoreCase("file_name")) {
-    	    postPage = fileRepository.findByFileNameContains(searchText, pageable);
-    	} else {
-    	    postPage = fileRepository.findAll(pageable); // 기본 조회
-    	}
 
-    	
-	    // PostEntity -> postDto 변환
+	    // Repository를 통해 데이터를 조회
+	    Page<FileEntity> postPage;
+
+	    try {
+	        if ("file_name".equalsIgnoreCase(searchType)) {
+	            // 파일 이름으로 검색
+	            postPage = fileRepository.findByFileNameContains(searchText, pageable);
+	        } else {
+	            // 기본 조회
+	            postPage = fileRepository.findAllWithWikiRegdate(pageable);
+	        }
+	    } catch (Exception e) {
+	        throw new RuntimeException("데이터 조회 중 오류 발생: " + e.getMessage());
+	    }
+
+	    // FileEntity -> FileDto 변환
 	    return postPage.map(FileDto::fromEntity);
 	}
 }

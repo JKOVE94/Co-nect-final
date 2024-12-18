@@ -15,6 +15,12 @@ const FileCreate = () => {
     file_path: "",
     file_size: 0,
     file_type: "",
+    wiki_fk_user_num: 0,
+    wiki_content:"",
+    wiki_regdate:"",
+    wiki_view:0,
+    wiki_boardtype:2,
+    file: null,
   });
 
   const handleChange = (e) => {
@@ -24,34 +30,55 @@ const FileCreate = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; // 사용자가 선택한 파일
+    setFormData({
+      ...formData,
+      file, // 상태에 파일 추가
+      file_name: file.name, // 파일 이름 자동 설정
+      file_size: file.size, // 파일 크기 자동 설정
+      file_type: file.type, // 파일 타입 자동 설정
+      // file_path: URL.createObjectURL(file), // 파일 경로 생성 (브라우저 내에서 임시 경로)
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // 기본값 처리
     const formToSubmit = {
       ...formData,
-      post_fk_user_num: formData.post_fk_user_num || "1",  // 값이 없으면 "1"로 설정
-      regdate: new Date().toISOString(),  // 현재 시간 추가
+      wiki_fk_user_num: formData.wiki_fk_user_num || "1",  // 값이 없으면 "1"로 설정
+      wiki_regdate: new Date().toISOString(),  // 현재 시간 추가
+      wiki_boardtype:formData.wiki_boardtype
     };
 
     console.log('Form data before submitting:', formToSubmit);
+
+    const form = new FormData();
+    form.append('file', formData.file);
+    form.append('file_name', formData.file_name);
+    form.append('file_fk_wiki_num', formData.file_fk_wiki_num);
+    form.append('wiki_fk_user_num', formToSubmit.wiki_fk_user_num);
+    form.append('wiki_content', formToSubmit.wiki_content);
+    form.append('wiki_regdate', formToSubmit.wiki_regdate);
+    form.append('wiki_boardtype', formToSubmit.wiki_boardtype);
     
     axios
-      .post("/file/", formToSubmit)
+      .post("/file/", form)  // 업로드 URL은 "/file/upload"으로 설정
       .then((response) => {
-        if (response.data !== 0) {
-          navigate(`/main/file/detail/${response.data}`);
+        if (response.data && response.data.fileUrl) {
+          setFormData((prevData) => ({
+            ...prevData,
+            file_path: response.data.fileUrl, // GCS에서 반환된 파일 URL
+          }));
+          navigate(`/main/file/detail/${response.data.id}`); // 파일 저장 후 상세 페이지로 이동
         }
       })
       .catch((error) => {
-        console.error("게시글 저장 중 오류:", error);
+        console.error("파일 업로드 중 오류:", error);
         alert("저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status);
       });
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]; // 사용자가 선택한 파일
-    setFormData({ ...formData, file }); // 상태에 파일 추가
   };
 
   const handleBackToList = () => {
@@ -65,40 +92,41 @@ const FileCreate = () => {
           <h2>새 파일 등록</h2>
         </CardHeader>
         <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="form-group">
-              <label htmlFor="file_post_name">제목:</label>
+              <label htmlFor="wiki_title">제목:</label>
               <input
                 type="text"
                 className="form-control"
-                id="file_post_name"
-                name="file_post_name"
-                value={formData.file_post_name}
+                id="wiki_title"
+                name="wiki_title"
+                value={formData.wiki_title}
                 onChange={handleChange}
                 required
               />
             </div>
+            
             <div className="form-group">
-              <label htmlFor="file">파일 첨부:</label>
-              <input
-                type="file"
-                className="form-control"
-                id="file"
-                name="file"
-                onChange={handleFileChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="file_content">내용:</label>
+              <label htmlFor="wiki_content">내용:</label>
               <textarea
                 className="form-control"
-                id="file_content"
-                name="file_content"
-                value={formData.file_content}
+                id="wiki_content"
+                name="wiki_content"
+                value={formData.wiki_content}
                 onChange={handleChange}
                 required
               ></textarea>
+            </div>
+            <div className="form-group">
+              <label htmlFor="file_path">파일 첨부:</label>
+              <input
+                type="file"
+                className="form-control"
+                id="file_path"
+                name="file_path"
+                onChange={handleFileChange}
+                required
+              />
             </div>
             <div className="form-group">
               <label htmlFor="file_size">파일 크기:</label>
@@ -111,6 +139,9 @@ const FileCreate = () => {
                 readOnly
               />
             </div>
+
+
+
             <div className="form-group">
               <label htmlFor="file_type">파일 타입:</label>
               <input

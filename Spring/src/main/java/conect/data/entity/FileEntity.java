@@ -1,5 +1,9 @@
 package conect.data.entity;
 
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,5 +23,15 @@ public class FileEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_fk_wiki_num")
+    @JsonBackReference    
     private WikiEntity wikiEntity;
+    
+ // wikiRegdate를 연관 엔티티에서 가져오기 위한 @Transient 필드
+    @Transient
+    private String wikiRegdate;
+
+    // 연관 엔티티에서 regdate 값을 가져오는 getter
+    public LocalDate getWikiRegdate() {
+        return wikiEntity != null ? wikiEntity.getWikiRegdate() : null;
+    }
 }

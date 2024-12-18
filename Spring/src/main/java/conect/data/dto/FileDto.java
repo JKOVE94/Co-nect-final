@@ -1,7 +1,6 @@
 package conect.data.dto;
 
 import java.time.LocalDate;
-
 import conect.data.entity.FileEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,20 +17,20 @@ public class FileDto {
 	private LocalDate wiki_regdate; // 등록일
 	private int wiki_view; // 조회수
 
-	public static FileDto fromEntity(FileEntity fileEntity) {
-		FileDto fileDto = new FileDto();
-		fileDto.setFile_pk_num(fileEntity.getFilePkNum());
-		fileDto.setFile_name(fileEntity.getFileName());
-		fileDto.setFile_path(fileEntity.getFilePath());
-		fileDto.setFile_size(fileEntity.getFileSize());
-		fileDto.setFile_type(fileEntity.getFileType());
+	public static FileDto fromEntity(FileEntity entity) {
+		FileDto dto = new FileDto();
+		dto.setFile_pk_num(entity.getFilePkNum());
+		dto.setFile_name(entity.getFileName());
+		dto.setFile_path(entity.getFilePath());
+		dto.setFile_size(entity.getFileSize());
+		dto.setFile_type(entity.getFileType());
 
 		// 위키 엔티티의 PK 값을 가져오는 방법에 따라 수정 필요
-		if (fileEntity.getWikiEntity() != null) {
-			fileDto.setWiki_fk_num(fileEntity.getWikiEntity().getWikiPkNum()); // 예시: 위키 엔티티의 PK 값으로 수정
-			fileDto.setWiki_regdate(fileEntity.getWikiEntity().getWikiRegdate());
-			fileDto.setWiki_view(fileEntity.getWikiEntity().getWikiView());
+		if (entity.getWikiEntity() != null) {
+			dto.setWiki_fk_num(entity.getWikiEntity().getWikiPkNum()); // 예시: 위키 엔티티의 PK 값으로 수정
+			dto.setWiki_regdate(entity.getWikiEntity().getWikiRegdate());
+			dto.setWiki_view(entity.getWikiEntity().getWikiView());
 		}
-		return fileDto;
+		return dto;
 	}
 }

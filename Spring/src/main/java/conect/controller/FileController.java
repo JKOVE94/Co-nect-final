@@ -81,8 +81,10 @@ public class FileController {
 			return new ResponseEntity<>(response, HttpStatus.OK); // 성공 시 200 응답 반환
 		} catch (Exception e) {
 			e.printStackTrace(); // 오류 로그 출력
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 오류 시 500 응답 반환
-		}
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+				    "message", "서버 오류 발생",
+				    "details", e.getMessage()
+				));		}
 	}
 
 	// 특정 게시글 조회
@@ -108,9 +110,6 @@ public class FileController {
 	    try {
 	        // 파일 검증 로직
 	        long maxFileSize = 10 * 1024 * 1024; // 10MB
-	        if (!file.getContentType().contains("image")) {
-	            return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE); // 파일 타입 오류
-	        }
 	        if (file.getSize() > maxFileSize) {
 	            return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE); // 파일 크기 초과
 	        }
