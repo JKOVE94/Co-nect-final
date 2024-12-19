@@ -23,7 +23,6 @@ const WikiCreate = () => {
   const navigate = useNavigate();
   const { wikiPkNum } = useParams(); // URL에서 wikiPkNum 가져오기
   const writer = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
-  const [file, setFile] = useState(null); // 파일 상태 추가
   const [fileName, setFileName] = useState(""); // 파일 이름 상태
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
   const [modalMessage, setModalMessage] = useState(""); // 모달 메시지 상태 추가
@@ -87,7 +86,11 @@ const WikiCreate = () => {
   };
 
   const handleFileRemove = () => {
-    setFile(null);
+    setFormData((prevData) => ({
+      ...prevData,
+      fileInput: null,
+    })
+    );
     setFileName("");
   };
 
@@ -105,8 +108,8 @@ const WikiCreate = () => {
     }
 
     // 로그로 데이터를 확인
-    console.log("전송할 데이터:", data);
-    console.log("전송할 파일:", file);
+    console.log("전송할 데이터:", formData);
+    console.log("전송할 파일:", formData.fileInput);
 
     try {
       // 문서와 선택적 파일 데이터를 함께 서버에 전송
@@ -115,9 +118,8 @@ const WikiCreate = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-
       // 서버로부터 반환된 wikiPkNum으로 상세 페이지 이동
-      const wikiPkNum = response.data.wikiPkNum; // 서버 응답에서 문서 ID 추출
+      const wikiPkNum = response.data; // 서버 응답에서 문서 ID 추출
       alert("문서 등록 성공");
 
       // 상세 페이지로 이동

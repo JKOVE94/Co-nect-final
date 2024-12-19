@@ -16,7 +16,6 @@ const WikiDetail = () => {
   const [wiki, setWiki] = useState({}); // 게시글 데이터 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
-  const [fileName, setFileName] = useState(""); // 파일 이름 상태
 
   // 토스트 알림 상태 및 토글 함수
   const [showA, setShowA] = useState(false);
@@ -152,25 +151,13 @@ const WikiDetail = () => {
                     </td>
                   </tr>
                   <tr>
-  <td style={{ width: "10%", textAlign: "left" }}>파일</td>
-  <td style={{ width: "90%", textAlign: "left" }}>
-    {wiki.file && wiki.file.file_fk_wiki_num && (
-      <a
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          handleDownload(
-            wiki.file.file_fk_wiki_num,  // 파일 ID
-            fileName         // 파일 이름
-          );
-        }}
-        className="btn btn-primary"
-      >
-        {fileName} {/* 파일 이름을 버튼에 표시 */}
-      </a>
-    )}
-  </td>
-</tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>
+                      파 일
+                    </td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {wiki.file_name} {/* 작성자 */}
+                    </td>
+                  </tr>
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
                     <td style={{ width: "90%", textAlign: "left" }}>

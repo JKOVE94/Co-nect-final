@@ -22,7 +22,7 @@ public class WikiDto {
     private int wiki_fk_user_num; // 사용자 고유번호
     private int wiki_fk_proj_num; // 프로젝트 고유번호
     private String user_name;
-    private String fileName; // 파일명 추가
+    private String file_name; // 파일명 추가
 
     // Getters and Setters
 
@@ -41,9 +41,9 @@ public class WikiDto {
         
         // 파일이 존재하면 파일 이름을 설정, 없으면 null
         if (wiki.getFileEntity() != null) {
-        	wikiDto.setFileName(wiki.getFileEntity().getFileName());
+        	wikiDto.setFile_name(wiki.getFileEntity().getFileName());
         } else {
-        	wikiDto.setFileName(null); // 파일이 없을 경우
+        	wikiDto.setFile_name(null); // 파일이 없을 경우
         }
         
         return wikiDto;
