@@ -135,24 +135,26 @@ public class ManageUserServiceImpl implements ManageUserService {
                 .collect(Collectors.toList());
     }
 
+
+    
     @Modifying
     @Override
     public boolean unlockUser(List<UserForm> forms) {
-        //잠긴 계정을 풀어주는 메소드
         try {
             forms.forEach(e -> {
-                System.out.println("unlockUser : "+e.getUser_pk_num());
-                UserEntity user =  userRepository.findById(e.getUser_pk_num()).get();
+                System.out.println("unlockUser : " + e.getUser_pk_num());
+                UserEntity user = userRepository.findById(e.getUser_pk_num()).orElseThrow(() -> 
+                    new RuntimeException("User not found with id: " + e.getUser_pk_num()));
                 user.setUserLocked(e.getUser_locked());
                 userRepository.save(user);
             });
-
             return true;
-        }catch (Exception e){
-            System.out.println("unlockUser err :"+e);
+        } catch (Exception e) {
+            System.out.println("unlockUser err :" + e);
             return false;
         }
     }
+
 
     @Override
     public boolean updateUser(UserForm form) {

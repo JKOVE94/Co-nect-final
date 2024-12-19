@@ -41,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
                 Optional<UserEntity> userOptional = userRepository.findByUserId(form.getUser_id());
                 if (userOptional.isPresent()) {
                     UserEntity user = userOptional.get();
-                    if (user.getUserLocked() != 1) {
+                    if (!user.getUserLocked()) {
                         if (user.getUserPw().equals(form.getUser_pw())) {
                             user.setUserTrynum(0);
                             userRepository.save(user);
@@ -82,7 +82,7 @@ public class LoginServiceImpl implements LoginService {
     private void handleFailedLogin(UserEntity user) {
         user.setUserTrynum(user.getUserTrynum() + 1);
         if(user.getUserTrynum() == 6) {
-            user.setUserLocked(1);
+            user.setUserLocked(true);
             user.setUserTrynum(0);
         }
         userRepository.save(user);

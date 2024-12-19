@@ -27,7 +27,7 @@ public class ReplyEntity {
     private RecommendationEntity recommendationEntity;
 
     @ManyToOne
-    @JoinColumn(name="reply_fk_user_renum")
+    @JoinColumn(name="reply_fk_user_num")
     @JsonIgnore
     private UserEntity userEntity;
     
