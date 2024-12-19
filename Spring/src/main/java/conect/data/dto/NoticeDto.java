@@ -4,6 +4,7 @@ import conect.data.entity.NoticeEntity;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +22,14 @@ public class NoticeDto {
     private int noti_fk_comp_num;
     private String userName;//작성자 명
     private String projName; //프로젝트 명
+
+    // 페이징 관련 필드 추가
+    private List<NoticeDto> content;
+    private int totalPages;
+    private long totalElements;
+    private int number;
+    private boolean first;
+    private boolean last;
 
     //fromEntity
     public  static NoticeDto fromEntity(NoticeEntity entity){

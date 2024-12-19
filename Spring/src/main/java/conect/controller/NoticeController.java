@@ -3,9 +3,13 @@ import conect.data.dto.NoticeDto;
 import conect.data.form.NoticeForm;
 import conect.service.Notice.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -14,16 +18,29 @@ public class NoticeController {
     @Autowired
     private NoticeService noticeService;
 
-    //프로젝트 관련 공지 게시글 전체 보기
+    //프로젝트 관련 공지 게시글 전체 보기 + 검색기능
     @GetMapping("list/{projNum}")
-    public List<NoticeDto> getNotiByNotiProjNum(@PathVariable("projNum") int noti_fk_proj_num,
-                                                @RequestParam(required = false) String searchType,  // 검색 분류
-                                                @RequestParam(required = false) String searchText  // 검색 텍스트
-                                                 ){
-        System.out.println("notifknum :" + noti_fk_proj_num);
-        System.out.println("searchType :" +searchType);
-        System.out.println("searchText :" +searchText);
-        return noticeService.getNoticeAll(noti_fk_proj_num, searchType, searchText);
+    public ResponseEntity<Map<String, Object>> getNotiByNotiProjNum(
+            @PathVariable("projNum") int noti_fk_proj_num,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "7") int size,
+            @RequestParam(defaultValue = "notiRegdate") String sortField,
+            @RequestParam(defaultValue = "DESC") String sortDirection,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchText
+    ) {
+        Page<NoticeDto> noticePage = noticeService.getNoticeAll(
+                noti_fk_proj_num, page, size, sortField, sortDirection, searchType, searchText
+        );
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", noticePage.getContent());
+        response.put("totalPages", noticePage.getTotalPages());
+        response.put("totalElements", noticePage.getTotalElements());
+        response.put("number", noticePage.getNumber());
+        response.put("size", noticePage.getSize());
+
+        return ResponseEntity.ok(response);
     }
 
     //공지 게시글 하나 보기

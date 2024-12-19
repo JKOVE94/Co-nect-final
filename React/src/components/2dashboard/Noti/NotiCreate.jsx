@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import {
   Input,
   Button,
@@ -15,31 +15,20 @@ import {
 } from "reactstrap";
 import { Checkbox } from "rsuite";
 
-const WikiCreate = () => {
+const NoticeCreate = () => {
   const navigate = useNavigate();
-  const { wikiPkNum } = useParams(); // URL에서 wikiPkNum 가져오기
+  const projNum = 6; // 테스트 projNum
+  const compPkNum = 1; // 테스트 compNum
   const writer = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
 
-  // 프로젝트 입력 폼 상태 초기화
+  // Notice 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
-    wiki_title: "", // 제목
-    wiki_fk_proj_num: 1, //프로젝트 번호
-    wiki_fk_user_num: writer.user_pk_num, // 작성자 번호
-    wiki_regdate: "", // 등록일
-    wiki_isnotice: false, // 공지
-    wiki_content: "", // 내용
-    wiki_boardtype: true
+    noti_title: "", // 제목
+    noti_content: "", // 내용
+    noti_fk_proj_num: projNum, // 프로젝트 번호
+    noti_fk_user_num: writer.user_pk_num, // 작성자 번호
+    noti_import: 0 // 중요도 체크 (기본값 0)
   });
-
-  useEffect(() => {
-    // 오늘 날짜를 자동으로 설정
-    const today = new Date();
-    const formattedDate = today.toISOString().split("T")[0]; // YYYY-MM-DD 형식으로 변환
-    setFormData((prevData) => ({
-      ...prevData,
-      wiki_regdate: formattedDate, // 등록일에 오늘 날짜 설정
-    }));
-  }, []);
 
   // 입력값이 변경될 때마다 상태 업데이트
   const handleInputChange = (e) => {
@@ -50,36 +39,33 @@ const WikiCreate = () => {
     }));
   };
 
-  // 공지 여부 체크박스 상태 업데이트
+  // 중요도 체크박스 상태 업데이트
   const handleCheckboxChange = () => {
     setFormData((prevData) => ({
       ...prevData,
-      wiki_isnotice: !prevData.wiki_isnotice,
+      noti_import: prevData.noti_import === 0 ? 1 : 0,
     }));
   };
 
-  // 폼 제출 시 실행 (현재는 실제 API 호출 없이 콘솔 로그로만 처리)
+  // 폼 제출 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // 폼 데이터 출력
-
-    // API 호출
+    console.log("전송할 데이터:", formData);
+  
     try {
-      const response = await axios.post("/wiki/wikiadd", formData);
-      const wikiPkNum = response.data;
-
-      navigate(`/main/wiki/wikidetail/${wikiPkNum}`, {
-        state: { actionType: "create" },
-      });
+      await axios.post(`/main/${compPkNum}/notice/insert`, formData);
+      // 등록 성공 시 리스트 페이지로 리다이렉트
+      alert("공지사항이 등록되었습니다.");
+      navigate("/main/noti/notilist");
     } catch (error) {
-      console.error("문서 생성 실패:", error);
-      alert("문서 생성에 실패했습니다.");
+      console.error("공지사항 등록 실패:", error);
+      alert("공지사항 등록에 실패했습니다.");
     }
   };
 
-  // 목록 버튼 클릭 시 목록으로 이동
+  // 목록으로 이동
   const handleList = () => {
-    navigate("/main/wiki/wikilist"); // 목록 페이지로 이동
+    navigate("/main/noti/notilist");
   };
 
   return (
@@ -88,14 +74,14 @@ const WikiCreate = () => {
       style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
     >
       <CardHeader className="border-1">
-        <h2 className="mb-0">새 글</h2>
+        <h2 className="mb-0">공지사항 등록</h2>
       </CardHeader>
 
       <CardBody style={{ maxHeight: "calc(100vh - 310px)", overflowY: "auto" }}>
         <form onSubmit={handleSubmit}>
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="wiki_title"
+              for="noti_title"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
@@ -104,37 +90,19 @@ const WikiCreate = () => {
             <Col sm={10}>
               <Input
                 type="text"
-                name="wiki_title"
-                id="wiki_title"
-                value={formData.wiki_title}
+                name="noti_title"
+                id="noti_title"
+                value={formData.noti_title}
                 onChange={handleInputChange}
                 required
+                placeholder="제목을 입력하세요"
               />
             </Col>
           </FormGroup>
 
-          <Input
-            type="hidden"
-            name="wiki_fk_user_num"
-            id="wiki_fk_user_num"
-            value={writer.user_name}
-            onChange={handleInputChange}
-            required
-            disabled
-          />
-
-          <Input
-            type="hidden"
-            name="wiki_regdate"
-            id="wiki_regdate"
-            value={formData.wiki_regdate}
-            onChange={handleInputChange}
-            required
-          />
-
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
             <Label
-              for="wiki_content"
+              for="noti_content"
               sm={2}
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
@@ -143,109 +111,63 @@ const WikiCreate = () => {
             <Col sm={10}>
               <Input
                 type="textarea"
-                name="wiki_content"
-                id="wiki_content"
-                value={formData.wiki_content}
+                name="noti_content"
+                id="noti_content"
+                value={formData.noti_content}
                 onChange={handleInputChange}
                 required
-                placeholder="입력하세요"
+                placeholder="내용을 입력하세요"
+                style={{ height: "300px" }}
               />
             </Col>
           </FormGroup>
 
-          {/* 중요 여부와 버튼들 */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-              gap: "10px",
-            }}
-          >
+          {/* 중요도 체크박스 */}
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "20px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Label
-                check
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                중요 여부
+              <Label check style={{ fontSize: "14px", fontWeight: "bold" }}>
+                중요 공지
               </Label>
               <Checkbox
-                name="wiki_isnotice"
-                checked={formData.wiki_isnotice}
+                checked={formData.noti_import === 1}
                 onChange={handleCheckboxChange}
               />
             </div>
-
-            {/* 파일 선택 버튼 */}
-            <Button
-              style={{
-                backgroundColor: "#696969", // 밝은 회색 배경
-                color: "white", // 흰 글자
-                padding: "5px 10px", // 작게 조정된 내부 여백
-                fontSize: "14px", // 작은 글자 크기
-                borderRadius: "5px", // 둥근 모서리
-                width: "auto", // 글자 크기에 맞춰 버튼 크기 자동 설정
-              }}
-            >
-              파일 선택
-            </Button>
-            <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
-              (한 번에 하나의 파일만 업로드할 수 있습니다.
-              <br />
-              여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
-            </p>
-            {/* 버튼들 */}
-            <Row
-              form
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                width: "100%",
-              }}
-            >
-              <Col
-                sm={1.5}
-                className="text-center"
-                style={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <Button
-                  style={{
-                    backgroundColor: "#007bff",
-                    borderColor: "#007bff",
-                    color: "white",
-                  }}
-                  block
-                  type="submit"
-                >
-                  등록
-                </Button>
-              </Col>
-              <Col
-                sm={1.5}
-                className="text-center"
-                style={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <Button
-                  style={{
-                    backgroundColor: "#696969",
-                    borderColor: "#696969",
-                    color: "white",
-                  }}
-                  block
-                  onClick={handleList}
-                >
-                  목록
-                </Button>
-              </Col>
-            </Row>
           </div>
+
+          {/* 버튼 영역 */}
+          <Row form style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Col sm={1.5} style={{ marginRight: "10px" }}>
+              <Button
+                color="primary"
+                type="submit"
+                style={{
+                  width: "100%",
+                  backgroundColor: "#007bff",
+                  borderColor: "#007bff",
+                }}
+              >
+                등록
+              </Button>
+            </Col>
+            <Col sm={1.5}>
+              <Button
+                color="secondary"
+                onClick={handleList}
+                style={{
+                  width: "100%",
+                  backgroundColor: "#6c757d",
+                  borderColor: "#6c757d",
+                }}
+              >
+                목록
+              </Button>
+            </Col>
+          </Row>
         </form>
       </CardBody>
     </Card>
   );
 };
 
-export default WikiCreate;
+export default NoticeCreate;

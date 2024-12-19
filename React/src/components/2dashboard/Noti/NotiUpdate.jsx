@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import { Checkbox } from "rsuite";
 
-const WikiUpdate = () => {
+const NotiUpdate = () => {
   const navigate = useNavigate();
   const { wikiPkNum } = useParams(); // URL에서 projPkNum 가져오기
 
@@ -240,4 +240,4 @@ const WikiUpdate = () => {
   );
 };
 
-export default WikiUpdate;
+export default NotiUpdate;

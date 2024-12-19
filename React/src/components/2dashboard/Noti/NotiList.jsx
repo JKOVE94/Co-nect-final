@@ -10,6 +10,8 @@ const NotiList = () => {
   const [notices, setNotices] = useState([]); // 공지 목록
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const [pageBlock, setPageBlock] = useState(0); // 페이지 블록 번호 (페이지 그룹)
+  const [totalBlocks, setTotalBlocks] = useState(0); // 전체 페이지 블록 수
   const [sortField, setSortField] = useState("notiRegdate"); // 정렬 필드 (기본값: 등록일)
   const [sortDirection, setSortDirection] = useState("DESC"); // 정렬 방향 (기본값: 내림차순)
   const [searchType, setSearchType] = useState(""); // 검색 분류 (제목, 작성자)
@@ -18,19 +20,16 @@ const NotiList = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 navigate 훅
   const projNum = 6; // 테스트 projNum
   const compPkNum = 1; // 테스트 compNum
+  const pagesPerBlock = 5; // 한 블록당 페이지 수
 
   // 게시글 데이터를 가져오는 함수
-  const fetchNotices = (
-    page,
-    sortField,
-    sortDirection,
-    searchType,
-    searchText
-  ) => {
+  const fetchNotices = (page, sortField, sortDirection, searchType, searchText) => {
+    const validPage = page >= 0 ? page : 0; // 유효하지 않은 값 방지
     axios
       .get(`/main/${compPkNum}/notice/list/${projNum}`, {
         params: {
-          page: page,
+          page: validPage,
+          size: 7, // 한 페이지에 표시할 공지 게시글 수
           sortField: sortField,
           sortDirection: sortDirection,
           searchType: searchType,
@@ -38,22 +37,58 @@ const NotiList = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
-        setNotices(res.data); // 받아온 데이터로 상태 업데이트
+        console.log("서버 응답:", res.data);
+        setNotices(res.data.content);
+        setTotalPages(res.data.totalPages);
+        setCurrentPage(res.data.number);
+        setTotalBlocks(Math.ceil(res.data.totalPages / pagesPerBlock));
       })
       .catch((error) => {
-        console.error("Axios 요청 중 오류 발생:", error); // 에러 처리
+        console.error("Axios 요청 중 오류 발생:", error);
       });
   };
 
   // 컴포넌트가 마운트될 때 게시글을 가져옴
   useEffect(() => {
-    fetchNotices(0, sortField, sortDirection, searchType, searchText); // 첫 번째 페이지 데이터를 가져옴
-  }, [sortField, sortDirection, searchType, searchText]); // 정렬 필드나 방향, 검색 조건이 변경될 때마다 게시글을 다시 가져옴
+    fetchNotices(currentPage, sortField, sortDirection, searchType, searchText);
+  }, [currentPage, sortField, sortDirection, searchType, searchText]); // 정렬 필드나 방향, 검색 조건이 변경될 때마다 게시글을 다시 가져옴
 
+  // 검색 처리 함수
   const handleSearch = () => {
     setCurrentPage(0); // 검색 시 첫 페이지로 초기화
+    setPageBlock(0); // 검색 시 첫 블록으로 초기화
     fetchNotices(0, sortField, sortDirection, searchType, searchText); // 검색에 맞는 게시글을 가져옴
+  };
+
+  // 현재 블록의 페이지 번호 배열 생성
+  const getPageNumbers = () => {
+    const startPage = Math.floor(currentPage / pagesPerBlock) * pagesPerBlock; // 현재 블록의 시작 페이지 계산
+    const endPage = Math.min(startPage + pagesPerBlock, totalPages); // 현재 블록의 마지막 페이지 계산
+    return Array.from({length: endPage - startPage}, (_, i) => startPage + i);
+  };
+
+// 이전 페이지로 이동
+const handlePrevPage = () => {
+  if (currentPage > 0) {
+    const prevPage = currentPage - 1;
+    setCurrentPage(prevPage);
+    fetchNotices(prevPage, sortField, sortDirection, searchType, searchText);
+  }
+};
+
+// 다음 페이지로 이동
+const handleNextPage = () => {
+  if (currentPage < totalPages - 1) {
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    fetchNotices(nextPage, sortField, sortDirection, searchType, searchText);
+  }
+};
+
+  // 페이지 이동 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    fetchNotices(pageNumber, sortField, sortDirection, searchType, searchText);
   };
 
   return (
@@ -75,8 +110,8 @@ const NotiList = () => {
               }}
             >
               <option value="">분류</option>
-              <option value="noti_title">제목</option>
-              <option value="user_name">작성자</option>
+              <option value="title">제목</option>
+              <option value="name">작성자</option>
             </select>
             &nbsp;&nbsp;&nbsp;
             <input
@@ -98,23 +133,23 @@ const NotiList = () => {
               onClick={handleSearch}
               style={{
                 padding: "0.35em 0.8em",
-                backgroundColor: "#f8f9fa", // 기본 배경색 회색
-                color: "#007bff", // 기본 글자 색상 파란색
-                border: "1px solid #007bff", // 기본 테두리 색상 파란색
+                backgroundColor: "#f8f9fa",
+                color: "#007bff",
+                border: "1px solid #007bff",
                 borderRadius: "5px",
                 cursor: "pointer",
                 transition:
                   "background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease",
               }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "#007bff"; // 마우스 오버 시 배경색을 파란색으로 변경
-                e.target.style.color = "white"; // 마우스 오버 시 글자 색을 흰색으로 변경
-                e.target.style.borderColor = "#007bff"; // 마우스 오버 시 테두리 색상 유지
+                e.target.style.backgroundColor = "#007bff";
+                e.target.style.color = "white";
+                e.target.style.borderColor = "#007bff";
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "#f8f9fa"; // 마우스 아웃 시 배경색을 회색으로 복귀
-                e.target.style.color = "#007bff"; // 마우스 아웃 시 글자 색을 파란색으로 복귀
-                e.target.style.borderColor = "#007bff"; // 마우스 아웃 시 테두리 색상 유지
+                e.target.style.backgroundColor = "#f8f9fa";
+                e.target.style.color = "#007bff";
+                e.target.style.borderColor = "#007bff";
               }}
             >
               검색
@@ -138,7 +173,17 @@ const NotiList = () => {
                   <tr key={notice.noti_pk_num || `notice-${index}`}>
                     <td>{notice.noti_pk_num}</td>
                     <td>
-                      <Link to={`/main/noti/notidetail/${notice.noti_pk_num}`}>
+                      {notice.noti_import === 1 && (
+                        <span style={{ marginRight: "0.5em" }}>
+                          <i className="bi bi-pin-angle-fill" style={{ color: "red" }}></i>
+                        </span>
+                      )}
+                      <Link
+                        to={`/main/noti/notidetail/${notice.noti_pk_num}`}
+                        style={{
+                          fontWeight: notice.noti_import === 1 ? "bold" : "normal",
+                        }}
+                      >
                         {notice.noti_title}
                       </Link>
                     </td>
@@ -156,7 +201,7 @@ const NotiList = () => {
           </table>
         </CardBody>
       </Card>
-      {/* 공지사항 등록 버튼 */}
+      
       <Button
         color="primary"
         style={{
@@ -169,6 +214,41 @@ const NotiList = () => {
       >
         공지 등록
       </Button>
+
+      {/* 페이지네이션 */}
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "1em" }}>
+        <button
+          className="btn btn-link"
+          onClick={handlePrevPage}
+          disabled={currentPage === 0}  // 첫 페이지일 때만 비활성화
+        >
+          &laquo; 이전
+        </button>
+        
+        {getPageNumbers().map((pageNumber) => (
+          <button
+            key={pageNumber}
+            className={`btn btn-link ${currentPage === pageNumber ? "active" : ""}`}
+            onClick={() => handlePageChange(pageNumber)}
+            style={{
+              margin: "0 0.5em",
+              padding: "0.5em 1em",
+              fontWeight: currentPage === pageNumber ? "bold" : "normal",
+              textDecoration: "none",
+            }}
+          >
+            {pageNumber + 1}
+          </button>
+        ))}
+        
+        <button
+          className="btn btn-link"
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages - 1}// 마지막 페이지일때만 비활성화
+        >
+          다음 &raquo;
+        </button>
+      </div>
     </Container>
   );
 };

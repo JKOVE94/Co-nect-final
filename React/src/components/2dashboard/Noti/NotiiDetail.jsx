@@ -106,7 +106,7 @@ const NotiDetail = () => {
             <div>게시글을 찾을 수 없습니다.</div>
           )}
           <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px" }}>
-            <button className="btn btn-primary" onClick={() => navigate(`/noti/edit/${notiPkNum}`)}>
+            <button className="btn btn-primary" onClick={() => navigate(`/main/noti/edit/${notiPkNum}`)}>
               수정
             </button>
             <button className="btn btn-danger" onClick={handleDelete}>

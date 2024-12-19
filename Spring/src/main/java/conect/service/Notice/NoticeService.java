@@ -2,13 +2,17 @@ package conect.service.Notice;
 
 import conect.data.dto.NoticeDto;
 import conect.data.form.NoticeForm;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 import java.util.Optional;
 
 
 public interface NoticeService {
     //전체 조회 + 검색기능
-    List<NoticeDto> getNoticeAll(int projNum, String searchType, String searchText);
+    Page<NoticeDto> getNoticeAll(int projNum, int page, int size,
+                                 String sortField, String sortDirection,
+                                 String searchType, String searchText);
     //부분 조회
     Optional<NoticeDto> getOneNotice(int notiNum);
     //공지글 추가
