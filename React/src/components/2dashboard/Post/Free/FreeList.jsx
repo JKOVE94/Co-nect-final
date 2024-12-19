@@ -1,11 +1,10 @@
-import axios from "axios";
+import axiosInstance from "../../../../api/axiosInstance";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const FreeList = () => {
- 
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -17,8 +16,10 @@ const FreeList = () => {
   const navigate = useNavigate();
 
   const fetchPosts = (page, block, sortField, sortDirection) => {
-    axios
-      .get(`/board/free?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}`)
+    axiosInstance
+      .get(
+        `/board/free?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}`
+      )
       .then((res) => {
         setPosts(res.data.posts);
         setCurrentPage(res.data.currentPage);
@@ -46,12 +47,22 @@ const FreeList = () => {
   const handlePageBlockChange = (direction) => {
     const newPageBlock = pageBlock + direction;
     setPageBlock(newPageBlock);
-    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock, sortField, sortDirection);
+    fetchPosts(
+      newPageBlock * pagesPerBlock,
+      newPageBlock,
+      sortField,
+      sortDirection
+    );
   };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock), sortField, sortDirection);
+    fetchPosts(
+      pageNumber,
+      Math.floor(pageNumber / pagesPerBlock),
+      sortField,
+      sortDirection
+    );
   };
 
   const formatDate = (date) => {
@@ -60,7 +71,8 @@ const FreeList = () => {
 
   const handleSortChange = (field) => {
     // 정렬 필드 변경 시 방향을 토글 (기본: DESC)
-    const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
+    const newDirection =
+      sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
     setSortField(field);
     setSortDirection(newDirection);
   };
@@ -75,13 +87,17 @@ const FreeList = () => {
               className="btn btn-secondary"
               onClick={() => handleSortChange("postRegdate")}
             >
-              최신순 {sortField === "postRegdate" && (sortDirection === "DESC" ? "▼" : "▲")}
+              최신순{" "}
+              {sortField === "postRegdate" &&
+                (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
             <button
               className="btn btn-secondary"
               onClick={() => handleSortChange("postView")}
             >
-              조회수순 {sortField === "postView" && (sortDirection === "DESC" ? "▼" : "▲")}
+              조회수순{" "}
+              {sortField === "postView" &&
+                (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
           </div>
         </CardHeader>
