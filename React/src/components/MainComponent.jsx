@@ -11,8 +11,6 @@ const MainComponent = () => {
   const searchParams = new URLSearchParams(location.search);
   const projectNum = searchParams.get("proj");
 
-  console.log(projectNum);
-
   return (
     <>
       <Tasktable projectNum={projectNum} />

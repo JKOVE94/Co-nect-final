@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
@@ -20,8 +19,6 @@ export default function Tasktable({ projectNum }) {
   const userNum = useSelector((state) => state.userData?.user_pk_num);
   const navigate = useNavigate();
 
-  console.log(projectNum, userNum);
-
   const showList = useCallback(() => {
     if (!projectNum || !userNum) {
       console.log("프로젝트 번호 또는 사용자 번호가 유효하지 않습니다.");
@@ -31,7 +28,6 @@ export default function Tasktable({ projectNum }) {
     axiosInstance
       .get(`/board/task/proj/${projectNum}/user/${userNum}`)
       .then((res) => {
-        console.log(res.data);
         const sortData = res.data
           .sort((a, b) => new Date(b.taskStartdate) - new Date(a.taskStartdate))
           .slice(0, 4);

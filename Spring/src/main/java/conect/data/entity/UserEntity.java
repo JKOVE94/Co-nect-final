@@ -60,4 +60,8 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity",orphanRemoval = true)
     @JsonBackReference
     private List<ReplyLikesEntity> replyLikesEntities;
+    
+    @OneToMany(mappedBy = "userEntity",orphanRemoval = true)
+    @JsonBackReference
+    private List<ProjectEntity> projectEntities;
 }
