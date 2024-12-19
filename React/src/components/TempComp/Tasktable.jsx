@@ -45,11 +45,7 @@ export default function Tasktable({ projectNum }) {
   }, [projectNum, userNum, showList]);
 
   const gotoTaskLists = () => {
-    if (projectNum && userNum) {
-      navigate(`/board/task/proj/${projectNum}/user/${userNum}`);
-    } else {
-      console.log("프로젝트 번호 또는 사용자 번호가 유효하지 않습니다.");
-    }
+    navigate(`/main/task/${projectNum}`);
   };
 
   // 기한 날짜 yyyy-mm-dd 양식 설정

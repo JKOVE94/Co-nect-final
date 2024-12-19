@@ -5,10 +5,14 @@ import conect.service.board.proj.ProjServiceImpl;
 
 import conect.service.board.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/board")
@@ -47,6 +51,50 @@ public class TaskController {
     public void deleteTask(@PathVariable int task_pk_num) {
         taskService.deleteTask(task_pk_num);
     }
+    
+    
+    @GetMapping("/tasklist/proj/{projectNum}")
+    public ResponseEntity<Map<String, Object>> getTasksByProject(
+        @PathVariable("projectNum") int projectNum,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock,
+        @RequestParam(name = "sortField", defaultValue = "taskCreated") String sortField,
+        @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection,
+        @RequestParam(name = "searchText", defaultValue = "") String searchText
+    ) {
+        try {
+            int pageSize = 10;
+            int blockSize = 5;
+
+            // 프로젝트 번호를 포함하여 서비스 메서드 호출
+            Page<TaskDto> taskPage = taskService.getListByProject(projectNum, page, pageSize, sortField, sortDirection, searchText);
+
+            int totalPages = taskPage.getTotalPages();
+            int totalBlocks = (int) Math.ceil((double) totalPages / blockSize);
+            int blockStart = pageBlock * blockSize;
+            int blockEnd = Math.min(blockStart + blockSize, totalPages);
+            boolean hasPreviousBlock = pageBlock > 0;
+            boolean hasNextBlock = pageBlock < totalBlocks - 1;
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("tasks", taskPage.getContent());
+            response.put("currentPage", taskPage.getNumber());
+            response.put("totalItems", taskPage.getTotalElements());
+            response.put("totalPages", totalPages);
+            response.put("currentBlock", pageBlock);
+            response.put("totalBlocks", totalBlocks);
+            response.put("blockStart", blockStart);
+            response.put("blockEnd", blockEnd - 1);
+            response.put("hasPreviousBlock", hasPreviousBlock);
+            response.put("hasNextBlock", hasNextBlock);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 

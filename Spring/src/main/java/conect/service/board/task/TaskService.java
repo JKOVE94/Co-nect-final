@@ -5,6 +5,8 @@ import conect.data.form.TaskForm;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 public interface TaskService {
     List<TaskDto> getAllTask(int task_fk_proj_num);
     List <TaskDto> getAllTaskWithUser(int user_pk_num);
@@ -12,4 +14,6 @@ public interface TaskService {
     void insertTask(TaskForm form);
     void updateTask(TaskForm form);
     void deleteTask(int task_pk_num);
+ // 페이징 
+    public Page<TaskDto> getListByProject(int projectNum, int page, int pageSize, String sortField, String sortDirection, String searchText);
 }

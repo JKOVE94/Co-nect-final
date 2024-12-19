@@ -1,6 +1,9 @@
 package conect.data.repository;
 
 import conect.data.entity.TaskEntity;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,5 +23,12 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Integer> {
     
     @Query("SELECT t FROM TaskEntity t WHERE t.projectEntity.projPkNum = :projectNum AND t.userEntity.userPkNum = :userNum")
     List<TaskEntity> getTaskByProjectNumAndUserNum(@Param("projectNum") int projectNum, @Param("userNum") int userNum);
+    
+    @Query("SELECT t FROM TaskEntity t WHERE t.projectEntity.projPkNum = :projPkNum AND (LOWER(t.taskTitle) LIKE LOWER(CONCAT('%', :searchText, '%')) OR LOWER(t.taskContent) LIKE LOWER(CONCAT('%', :searchText, '%')))")
+    Page<TaskEntity> findByProjectEntity_ProjPkNumAndTitleOrContent(@Param("projPkNum") int projPkNum, @Param("searchText") String searchText, Pageable pageable);
+    
+    Page<TaskEntity> findByProjectEntity_ProjPkNum(int projPkNum, Pageable pageable);
+    
+
 
 }

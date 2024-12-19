@@ -1,12 +1,18 @@
 package conect.service.board.task;
 
+import conect.data.dto.PostDto;
 import conect.data.dto.TaskDto;
+import conect.data.entity.PostEntity;
 import conect.data.entity.TaskEntity;
 import conect.data.form.TaskForm;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.TaskRepository;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -82,4 +88,24 @@ public class TaskServiceImpl implements TaskService {
         }
         else taskRepository.deleteById(task_pk_num);
     }
+    
+ // 페이징, 정렬, 검색
+    @Override
+    public Page<TaskDto> getListByProject(int projPkNum, int page, int pageSize, String sortField, String sortDirection, String searchText) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+        
+        Page<TaskEntity> taskPage;
+        
+        if (searchText != null && !searchText.isEmpty()) {
+            taskPage = taskRepository.findByProjectEntity_ProjPkNumAndTitleOrContent(projPkNum, searchText, pageable);
+        } else {
+            taskPage = taskRepository.findByProjectEntity_ProjPkNum(projPkNum, pageable);
+        }
+
+        return taskPage.map(TaskDto::fromEntity);
+    }
+
+
+
 }

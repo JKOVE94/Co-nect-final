@@ -16,6 +16,7 @@ import FreeHome from "components/2dashboard/Free/FreeHome";
 import axiosInstance from "../api/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT } from "../Redux/Reducer/userDataReducer";
+import TaskList from "components/2dashboard/Task/TaskList";
 
 const Dashboard = (props) => {
   const mainContent = useRef(null);
@@ -114,7 +115,7 @@ const Dashboard = (props) => {
           <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
           <Route path="/proj/*" element={<ProjectHome />} />
-          <Route path="/free/*" element={<FreeHome />} />
+          <Route path="/task/:projectNum" element={<TaskList />} />
           <Route path="/projfavorite" element={<ProjFavorite />} />
           <Route path="/freefavorite" element={<FreeFavorite />} />
           <Route path="/function" element={<Function />} />
