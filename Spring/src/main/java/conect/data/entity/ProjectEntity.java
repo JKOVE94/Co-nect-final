@@ -46,5 +46,10 @@ public class ProjectEntity {
     @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
     @JsonBackReference
     private List<ProjectmemberEntity> projectmemberEntities;
+    
+    @ManyToOne
+    @JoinColumn(name = "proj_fk_user_num")
+    @JsonBackReference
+    private UserEntity userEntity;
 
 }

@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Reclike from "./Reclike";
 import { useSelector } from "react-redux";
 import RecModal from "variables/Modal/RecModal";
+import RecReplyList from "./RecReply/RecReplyList";
 
 const RecDetail = () => {
   const [type, setType] = useState("");
@@ -77,7 +78,7 @@ const RecDetail = () => {
                 <></>
               )}
             </CardTitle>
-            <CardBody style={{ Height: "40em", overflowY: "auto" }}>
+            <CardBody className="card-body-scrollable">
               <FormGroup>
                 <Form.Label>제목</Form.Label>
                 <Form.Control
@@ -119,6 +120,7 @@ const RecDetail = () => {
                 목록보기
               </button>
             </CardBody>
+            <RecReplyList recPkNum={recPkNum} />
           </Card>
         </Col>
       </Row>

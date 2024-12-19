@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -18,7 +19,7 @@ public class RecommendationEntity {
     private int recPkNum; //건의 번호 [PK, INT]
     private String recContent; //건의 내용 [TEXT]
     private String recTitle; //건의 제목 [VARCHAR]
-    private LocalDate recRegdate; //건의 등록일 [DATETIME]
+    private LocalDateTime recRegdate; //건의 등록일 [DATETIME]
     private int recView; //건의 조회수 [INT]
 
     @ManyToOne

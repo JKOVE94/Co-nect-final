@@ -21,19 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import conect.data.dto.ReclikesDto;
 import conect.data.dto.RecommendationDto;
+import conect.data.dto.ReplyDto;
 import conect.data.form.RecommendationForm;
+import conect.data.form.ReplyForm;
 import conect.service.board.recommendation.recommendationServiceImpl;
 
 @RestController
-@RequestMapping("/{compno}")
+@RequestMapping("/{compno}/rec")
 public class RecommendationController {
 	
 	@Autowired
 	private recommendationServiceImpl recService;
-	@Autowired
-	private recommendationServiceImpl reclikesService;
 	
-	@GetMapping("/rec/{proj}")
+	@GetMapping("/{proj}")
 	public ResponseEntity<Object> getRecList(@PathVariable(name="compno")int compno, @PathVariable(name="proj")int projnum){
 		try {
 			
@@ -44,7 +44,7 @@ public class RecommendationController {
 		}
 	}
 	
-	@GetMapping("/rec/{proj}/{rec}")
+	@GetMapping("/{proj}/{rec}")
 	public ResponseEntity<Object> getRecList(@PathVariable(name="compno")int compno, @PathVariable(name="proj")int projnum,
 			@PathVariable("rec")int recnum){
 		try {
@@ -56,7 +56,7 @@ public class RecommendationController {
 		}
 	}
 	
-	@PostMapping("/rec")
+	@PostMapping("/")
 	public ResponseEntity<Object> addRec(@PathVariable(name="compno")int compno, @RequestBody RecommendationForm bean){
 		try {
 			recService.addRecData(bean);
@@ -66,7 +66,7 @@ public class RecommendationController {
 		}
 	}
 	
-	@PutMapping("/rec/{rec}")
+	@PutMapping("/{rec}")
 	public ResponseEntity<Object> updateRec(@PathVariable(name="compno")int compno, @PathVariable("rec")int recnum, @RequestBody RecommendationForm bean){
 		try {
 			RecommendationDto dto = recService.updateRecData(recnum, bean);
@@ -76,7 +76,7 @@ public class RecommendationController {
 		}
 	}
 	
-	@DeleteMapping("/rec/{rec}")
+	@DeleteMapping("/{rec}")
 	public ResponseEntity<Object> deleteRec(@PathVariable(name="compno")int compno, @PathVariable("rec")int recnum){
 		try {
 			recService.delRecData(recnum);
@@ -86,23 +86,23 @@ public class RecommendationController {
 		}
 	}
 	
-	@GetMapping("/rec/like/{user}/{rec}")
+	@GetMapping("/like/{user}/{rec}")
 	public ResponseEntity<Object> checkRecLike(@PathVariable(name="compno")int compno, @PathVariable(name="user")int usernum,
 			@PathVariable("rec")int recnum){
 		try {
 			
-			boolean check = reclikesService.checkReclike(usernum, recnum);
+			boolean check = recService.checkReclike(usernum, recnum);
 			return ResponseEntity.ok(check);
 		} catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
 		}
 	}
 	
-	@PostMapping("/rec/like/{user}/{rec}")
+	@PostMapping("/like/{user}/{rec}")
 	public ResponseEntity<Object> addRecLike(@PathVariable(name="compno")int compno, @PathVariable(name="user")int usernum,
 			@PathVariable("rec")int recnum){
 		try {
-			reclikesService.addReclike(usernum, recnum);
+			recService.addReclike(usernum, recnum);
 			
 			return ResponseEntity.ok(true);
 		} catch(Exception e) {
@@ -110,15 +110,82 @@ public class RecommendationController {
 		}
 	} 
 	
-	@DeleteMapping("/rec/like/{user}/{rec}")
+	@DeleteMapping("/like/{user}/{rec}")
 	public ResponseEntity<Object> delRecLike(@PathVariable(name="compno")int compno, @PathVariable(name="user")int usernum,
 			@PathVariable("rec")int recnum){
 		try {
-			reclikesService.delReclike(usernum, recnum);
+			recService.delReclike(usernum, recnum);
 			
 			return ResponseEntity.ok(true);
 		} catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
 		}
 	} 
+	
+	@PostMapping("/reply")
+	public ResponseEntity<Object> addRecReply(@RequestBody ReplyForm bean){
+		try {
+			recService.addRecReply(bean);
+			return ResponseEntity.ok(true);
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/reply/{recPkNum}")
+	public ResponseEntity<Object> getRecReplyAll(@PathVariable("recPkNum") int recPkNum){
+		try {
+			List<ReplyDto> list = recService.getReplyAll(recPkNum);
+			return ResponseEntity.ok(list);
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/replyLike/{user}/{reply}")
+	public ResponseEntity<Object> checkReplyLike(@PathVariable(name="compno")int compno, @PathVariable(name="user")int usernum,
+			@PathVariable("reply")int replynum){
+		try {
+			
+			boolean check = recService.checkReplylike(usernum, replynum);
+			return ResponseEntity.ok(check);
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
+		}
+	}
+	
+	@PostMapping("/replyLike/{user}/{reply}")
+	public ResponseEntity<Object> addReplyLike(@PathVariable(name="compno")int compno, @PathVariable(name="user")int usernum,
+			@PathVariable("reply")int replynum){
+		try {
+			recService.addReplylike(usernum, replynum);
+			
+			return ResponseEntity.ok(true);
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
+		}
+	} 
+	
+	@DeleteMapping("/replyLike/{user}/{reply}")
+	public ResponseEntity<Object> delReplyLike(@PathVariable(name="compno")int compno, @PathVariable(name="user")int usernum,
+			@PathVariable("reply")int replynum){
+		try {
+			recService.delReplylike(usernum, replynum);
+			
+			return ResponseEntity.ok(true);
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
+		}
+	} 
+	
+	@DeleteMapping("/reply/{replyPkNum}")
+	public ResponseEntity<Object> delReplyData(@PathVariable(name="compno")int compno, @PathVariable(name="replyPkNum")int replyPkNum){
+		try {
+			recService.delReplyData(replyPkNum);
+			return ResponseEntity.ok(true);
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
+		}
+	} 
+	
 }

@@ -5,8 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Col, Form, Modal } from "react-bootstrap";
 import style from '../../assets/css/2dashboard/calendar.module.css'
 import ReactMention from "variables/mention/ReactMention";
-import { Input } from "reactstrap";
-import { Select } from "@mui/material";
 
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버

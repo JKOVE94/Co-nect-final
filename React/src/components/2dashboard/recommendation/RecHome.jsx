@@ -8,7 +8,7 @@ import RecModal from "variables/Modal/RecModal";
 
 const RecHome = () => {
   return(
-    <Container fluid style={{ Height: "40em", marginTop: "1em" }}>
+    <Container fluid style={{ height: "40em", marginTop: "1em", overflowY:"auto" }}>
       <Routes>
         <Route path="/" element={<RecList />} />
         <Route path="/create" element={<RecCreate />} />

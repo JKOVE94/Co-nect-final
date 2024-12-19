@@ -1,19 +1,29 @@
 package conect.service.board.recommendation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.protobuf.Value;
+
 import conect.data.dto.ReclikesDto;
 import conect.data.dto.RecommendationDto;
+import conect.data.dto.ReplyDto;
 import conect.data.entity.ReclikesEntity;
 import conect.data.entity.RecommendationEntity;
+import conect.data.entity.ReplyEntity;
+import conect.data.entity.ReplyLikesEntity;
 import conect.data.form.RecommendationForm;
+import conect.data.form.ReplyForm;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.ReclikesRepository;
-import conect.data.repository.RecommandationRepository;
+import conect.data.repository.RecommendationRepository;
+import conect.data.repository.ReplyLikesRepository;
+import conect.data.repository.ReplyRepository;
 import conect.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -21,13 +31,17 @@ import jakarta.transaction.Transactional;
 public class recommendationServiceImpl implements recommendationService {
 
 	@Autowired
-	private RecommandationRepository recRepository;
+	private RecommendationRepository recRepository;
 	@Autowired
 	private ReclikesRepository reclikesRepository;
 	@Autowired
 	private ProjectRepository projRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ReplyRepository replyRepository;
+	@Autowired
+	private ReplyLikesRepository replyLikesRepository;
 	
 	@Override
 	public List<RecommendationDto> getRecAll(int num) {	
@@ -47,7 +61,7 @@ public class recommendationServiceImpl implements recommendationService {
 			RecommendationEntity entity = RecommendationForm.toEntity(bean);
 			entity.setProjectEntity(projRepository.findById(bean.getRec_fk_proj_num()).get());
 			entity.setUserEntity(userRepository.findById(bean.getRec_fk_user_num()).get());
-			entity.setRecRegdate(LocalDate.now());
+			entity.setRecRegdate(LocalDateTime.now());
 			recRepository.save(entity);
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
@@ -71,7 +85,7 @@ public class recommendationServiceImpl implements recommendationService {
 			RecommendationEntity entity = RecommendationForm.toEntity(bean);
 			entity.setProjectEntity(projRepository.findById(bean.getRec_fk_proj_num()).get());
 			entity.setUserEntity(userRepository.findById(bean.getRec_fk_user_num()).get());
-			entity.setRecRegdate(LocalDate.now());
+			entity.setRecRegdate(LocalDateTime.now());
 			
 			RecommendationEntity result = recRepository.save(entity);
 			return RecommendationDto.fromEntity(result);
@@ -114,4 +128,72 @@ public class recommendationServiceImpl implements recommendationService {
 		ReclikesEntity entity = reclikesRepository.findByUserEntity_UserPkNumAndRecommendationEntity_RecPkNum(usernum, recnum);
 		reclikesRepository.deleteById(entity.getReclikePkNum());
 	}
+	
+	@Override
+	public void addRecReply(ReplyForm bean) {
+		try {
+			ReplyEntity entity = ReplyForm.toEntity(bean);
+			entity.setReplyRegdate(LocalDateTime.now());
+			entity.setRecommendationEntity(recRepository.findById(bean.getReply_fk_rec_num()).get());
+			entity.setUserEntity(userRepository.findById(bean.getReply_fk_user_num()).get());
+			
+			
+			replyRepository.findTopByOrderByReplyParentDesc().ifPresentOrElse(reply->{
+				entity.setReplyParent(reply.getReplyParent() + 1);
+			}, ()->{
+				entity.setReplyParent(1);
+			});
+				
+			
+			replyRepository.save(entity);
+		
+		} catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}	
+		
+	}
+	
+	@Override
+	public List<ReplyDto> getReplyAll(int num) {
+		
+		return replyRepository.findByRecommendationEntity_RecPkNum(num)
+				.stream().map(ReplyDto::fromEntity).toList();
+	}
+	
+	@Override
+	public void addReplylike(int usernum, int replynum) {
+		ReplyLikesEntity entity = new ReplyLikesEntity();
+		entity.setUserEntity(userRepository.findById(usernum).get());
+		entity.setReplyEntity(replyRepository.findById(replynum).get());
+		replyLikesRepository.save(entity);
+		
+	}
+	
+	@Override
+	public boolean checkReplylike(int usernum, int replynum) {
+		if (replyLikesRepository
+				.findByUserEntity_UserPkNumAndReplyEntity_ReplyPkNum(usernum, replynum) != null) {
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void delReplylike(int usernum, int replynum) {
+		ReplyLikesEntity entity = replyLikesRepository.findByUserEntity_UserPkNumAndReplyEntity_ReplyPkNum(usernum, replynum);
+		replyLikesRepository.deleteById(entity.getReplylikePkNum());
+		
+	}
+	
+	@Override
+	@Transactional
+	public void delReplyData(int replyPkNum) {
+		try {
+			replyLikesRepository.deleteByReplyEntity_ReplyPkNum(replyPkNum);
+			replyRepository.deleteById(replyPkNum);
+		} catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}	
+	}
+	
 }

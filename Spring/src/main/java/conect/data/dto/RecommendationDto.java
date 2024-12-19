@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -12,7 +13,7 @@ public class RecommendationDto {
     private int rec_pk_num; // 건의 번호
     private String rec_content; // 건의 내용
     private String rec_title; // 건의 제목
-    private LocalDate rec_regdate; // 건의 등록일
+    private LocalDateTime rec_regdate; // 건의 등록일
     private int rec_view; // 건의 조회수
     private int rec_fk_user_num; // 사용자 엔티티 번호
     private int rec_fk_proj_num; // 프로젝트 엔티티 번호
