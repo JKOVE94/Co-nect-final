@@ -16,6 +16,7 @@ import Reclike from "./Reclike";
 import { useSelector } from "react-redux";
 import RecModal from "variables/Modal/RecModal";
 import RecReplyList from "./RecReply/RecReplyList";
+import moment from "moment";
 
 const RecDetail = () => {
   const [type, setType] = useState("");
@@ -91,7 +92,7 @@ const RecDetail = () => {
                 <Form.Label>작성일</Form.Label>
                 <Form.Control
                   id="rec_title"
-                  value={data.rec_regdate}
+                  value={moment(data.rec_regdate).format("YYYY-MM-DD HH:mm")}
                   disabled={true}
                 />
               </FormGroup>

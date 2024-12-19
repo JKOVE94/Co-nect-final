@@ -13,7 +13,7 @@ const RecReplylike = ({replyPkNum, getData}) => {
 
   useEffect(() => {
     handleCheck();
-  }, []);
+  }, [replyPkNum]);
 
   const handleCheck = () => {
     axios.get(`/${compNum}/rec/replyLike/${num}/${replyPkNum}`)

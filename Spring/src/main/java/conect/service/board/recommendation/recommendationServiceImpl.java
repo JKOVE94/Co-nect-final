@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.grammars.hql.HqlParser.IsNullPredicateContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,7 +86,6 @@ public class recommendationServiceImpl implements recommendationService {
 			RecommendationEntity entity = RecommendationForm.toEntity(bean);
 			entity.setProjectEntity(projRepository.findById(bean.getRec_fk_proj_num()).get());
 			entity.setUserEntity(userRepository.findById(bean.getRec_fk_user_num()).get());
-			entity.setRecRegdate(LocalDateTime.now());
 			
 			RecommendationEntity result = recRepository.save(entity);
 			return RecommendationDto.fromEntity(result);
@@ -130,21 +130,27 @@ public class recommendationServiceImpl implements recommendationService {
 	}
 	
 	@Override
+	@Transactional
 	public void addRecReply(ReplyForm bean) {
 		try {
 			ReplyEntity entity = ReplyForm.toEntity(bean);
 			entity.setReplyRegdate(LocalDateTime.now());
 			entity.setRecommendationEntity(recRepository.findById(bean.getReply_fk_rec_num()).get());
 			entity.setUserEntity(userRepository.findById(bean.getReply_fk_user_num()).get());
-			
-			
-			replyRepository.findTopByOrderByReplyParentDesc().ifPresentOrElse(reply->{
-				entity.setReplyParent(reply.getReplyParent() + 1);
-			}, ()->{
-				entity.setReplyParent(1);
-			});
-				
-			
+			Integer parentNum = bean.getReply_parent();
+
+			if (parentNum > 0) {
+			    entity.setReplyParent(parentNum);
+			} else {
+			    replyRepository.findTopByOrderByReplyParentDesc().ifPresentOrElse(
+			        reply -> {
+			            entity.setReplyParent(reply.getReplyParent() + 1);
+			        },
+			        () -> {
+			            entity.setReplyParent(1);
+			        }
+			    );
+			}
 			replyRepository.save(entity);
 		
 		} catch(Exception e) {
@@ -156,7 +162,7 @@ public class recommendationServiceImpl implements recommendationService {
 	@Override
 	public List<ReplyDto> getReplyAll(int num) {
 		
-		return replyRepository.findByRecommendationEntity_RecPkNum(num)
+		return replyRepository.findByRecommendationEntity_RecPkNumOrderByReplyParentAscReplyRegdateAsc(num)
 				.stream().map(ReplyDto::fromEntity).toList();
 	}
 	
@@ -196,4 +202,12 @@ public class recommendationServiceImpl implements recommendationService {
 		}	
 	}
 	
+	@Override
+	public ReplyDto updateReplyData(ReplyForm bean) {
+		ReplyEntity entity = ReplyForm.toEntity(bean);
+		entity.setUserEntity(userRepository.findById(bean.getReply_fk_user_num()).get());
+		entity.setRecommendationEntity(recRepository.findById(bean.getReply_fk_rec_num()).get());
+		ReplyDto dto = ReplyDto.fromEntity(replyRepository.save(entity));
+		return dto;
+	}
 }

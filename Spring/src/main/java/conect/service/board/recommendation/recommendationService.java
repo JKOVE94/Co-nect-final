@@ -25,4 +25,5 @@ public interface recommendationService {
 	void addRecReply(ReplyForm bean);
 	List<ReplyDto> getReplyAll(int num);
 	void delReplyData(int replyPkNum);
+	ReplyDto updateReplyData(ReplyForm bean);
 }

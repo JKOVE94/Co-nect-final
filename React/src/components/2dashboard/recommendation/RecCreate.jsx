@@ -33,7 +33,7 @@ const RecCreate = () => {
   };
   const handleClick = () => {
     axios
-      .post(`/${compNum}/rec`, data)
+      .post(`/${compNum}/rec/`, data)
       .then((res) => {
         if (res.data) {
           navigate(`/main/rec/${projPkNum}`);

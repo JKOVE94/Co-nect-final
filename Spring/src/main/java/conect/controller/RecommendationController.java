@@ -188,4 +188,14 @@ public class RecommendationController {
 		}
 	} 
 	
+	@PutMapping("/reply")
+	public ResponseEntity<Object> updateReplyData(@PathVariable(name="compno")int compno, @RequestBody ReplyForm bean){
+		try {
+			ReplyDto dto =  recService.updateReplyData(bean);
+			return ResponseEntity.ok(dto);
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
+		}
+	} 
+	
 }
