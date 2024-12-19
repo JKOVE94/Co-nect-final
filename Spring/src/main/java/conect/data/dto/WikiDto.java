@@ -18,6 +18,7 @@ public class WikiDto {
     private Boolean wiki_boardtype; // 게시판 종류
     private int wiki_fk_user_num; // 사용자 고유번호
     private int wiki_fk_proj_num; // 프로젝트 고유번호
+    private String user_name;
 
     // Getters and Setters
 
@@ -32,6 +33,7 @@ public class WikiDto {
         wikiDto.setWiki_boardtype(wiki.getWikiBoardtype());
         wikiDto.setWiki_fk_user_num(wiki.getUserEntity().getUserPkNum());
         wikiDto.setWiki_fk_proj_num(wiki.getProjectEntity().getProjPkNum());
+        wikiDto.setUser_name(wiki.getUserEntity().getUserName());
         return wikiDto;
     }
 }

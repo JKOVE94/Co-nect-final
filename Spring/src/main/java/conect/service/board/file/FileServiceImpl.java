@@ -9,6 +9,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
@@ -21,7 +25,9 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 
 import conect.data.dto.FileDto;
+import conect.data.dto.PostDto;
 import conect.data.entity.FileEntity;
+import conect.data.entity.PostEntity;
 import conect.data.entity.WikiEntity;
 import conect.data.form.FileForm;
 import conect.data.repository.FileRepository;
@@ -73,14 +79,20 @@ public class FileServiceImpl implements FileService {
                 keyFile.close();
             }
         }
+        System.out.println(fileUrl);
         return fileUrl;
     }
 
     // 게시글 생성 시 파일 저장 및 WikiEntity와 연결
-    public FileEntity insertPost(MultipartFile file, FileForm fileForm) {
-        // FileEntity 객체 생성
+    public FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException {
+    	// 파일 업로드 후 URL 받기
+        String fileUrl = saveFile(fileForm, file);  // saveFile 메서드를 호출하여 파일 URL 받기
+//        System.out.println(fileUrl);
+        fileForm.setFile_path(fileUrl);  // 반환된 URL을 file_path에 설정
+    	
+    	// FileEntity 객체 생성
         FileEntity fileEntity = new FileEntity();
-
+        
         fileEntity.setFileName(file.getOriginalFilename());
         fileEntity.setFilePath(fileForm.getFile_path());
         fileEntity.setFileType(file.getContentType());
@@ -124,10 +136,16 @@ public class FileServiceImpl implements FileService {
             WikiEntity wikiEntity = fileEntity.getWikiEntity(); // WikiEntity 가져오기
             fileDto.setWiki_regdate(wikiEntity.getWikiRegdate()); // 예시: Wiki의 regdate
             fileDto.setWiki_view(wikiEntity.getWikiView());
+
+            // UserEntity 정보 추가 조회
+            if (wikiEntity.getUserEntity() != null) {
+                fileDto.setUser_name(wikiEntity.getUserEntity().getUserName());
+            }
         }
 
-        return fileDto; // WikiEntity의 추가 정보 포함된 FileDto 반환
+        return fileDto; // WikiEntity 및 UserEntity의 추가 정보 포함된 FileDto 반환
     }
+
 
 
     // 수정
@@ -186,4 +204,23 @@ public class FileServiceImpl implements FileService {
             throw new RuntimeException("Google Cloud Storage에서 파일 삭제 실패: " + e.getMessage());
         }
     }
+    
+    // 페이징, 검색
+ 	public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText) {
+ 	   
+
+ 	    // Pageable 객체 생성 (페이지와 정렬 정보 포함)
+ 	    Pageable pageable = PageRequest.of(page, pageSize);
+ 	    
+ 	    // Repository를 통해 데이터를 조회
+     	Page<FileEntity> filePage = Page.empty();
+     	
+     	if (searchType.equalsIgnoreCase("file_name")) {
+     		filePage = fileRepository.findByFileNameContains(searchText, pageable);
+     	}  else {
+     		filePage = fileRepository.findAll(pageable);
+     	}
+ 	    // PostEntity -> PostDto 변환
+ 	    return filePage.map(FileDto::fromEntity);
+ 	}
 }

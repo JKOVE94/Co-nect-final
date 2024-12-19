@@ -18,6 +18,8 @@ public class FileDto {
     private WikiDto wiki; // 위키 정보를 담는 DTO
     private LocalDate wiki_regdate; // 등록일
     private int wiki_view; // 조회수
+    private String user_name; // 작성자
+
 
     // Entity -> DTO 변환 메서드
     public static FileDto fromEntity(FileEntity entity) {
@@ -34,12 +36,22 @@ public class FileDto {
             WikiDto wikiDto = new WikiDto();
             wikiDto.setWiki_title(wikiEntity.getWikiTitle());
             wikiDto.setWiki_content(wikiEntity.getWikiContent());
+            wikiDto.setWiki_isnotice(wikiEntity.getWikiIsnotice());
+            wikiDto.setWiki_regdate(wikiEntity.getWikiRegdate());
+            wikiDto.setWiki_view(wikiEntity.getWikiView());
+            wikiDto.setWiki_boardtype(wikiEntity.getWikiBoardtype());
+            wikiDto.setWiki_fk_user_num(wikiEntity.getUserEntity().getUserPkNum());
+            wikiDto.setWiki_fk_proj_num(wikiEntity.getProjectEntity().getProjPkNum());
+            wikiDto.setUser_name(wikiEntity.getUserEntity().getUserName());  // WikiDto에서 user_name을 설정
 
-            dto.setWiki(wikiDto);
-            dto.setFile_fk_wiki_num(wikiEntity.getWikiPkNum());
-            dto.setWiki_regdate(wikiEntity.getWikiRegdate());
-            dto.setWiki_view(wikiEntity.getWikiView());
+            dto.setWiki(wikiDto); // wiki 데이터 전체 가져옴
         }
+
+        // WikiEntity와 UserEntity에서 사용자 이름을 가져오는 중복 처리 방지
+        // 이미 WikiDto에서 user_name을 가져오므로 FileDto에서 따로 설정할 필요 없음
+
         return dto;
     }
+
+
 }

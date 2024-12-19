@@ -21,8 +21,8 @@ public interface FileService {
 	FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException;
 
 	// 전체 조회
-	List<FileDto> getPostAll();
-
+	public List<FileDto> getPostAll();
+	
 	// 부분 조회
 	public FileDto getPostView(Integer filePkNum);
 
@@ -33,6 +33,6 @@ public interface FileService {
 	void deletePost(int filePkNum);
 
 	// 페이징
-	// public Page<FileDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
+	public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText);
 
 }

@@ -1,19 +1,37 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageBlock, setPageBlock] = useState(0);
+  const [totalBlocks, setTotalBlocks] = useState(0);
+  const navigate = useNavigate();
+  
 
   // 파일 데이터를 가져오는 함수
-  const fetchFiles = () => {
+  const fetchFiles = (page, block, sortField, sortDirection, searchType, searchText) => {
     axios
-      .get("/file/") // 파일 목록 API 호출
+      .get("/file", { // 파일 목록 API 호출
+        params:{
+          page:page,
+          pageBlock:block,
+          sortField:sortField,
+          sortDirection:sortDirection,
+          searchType:searchType,
+          searchText:searchText
+        }
+      }) 
       .then((res) => {
         if (Array.isArray(res.data.files)) {
           setFiles(res.data.files);
+          setCurrentPage(res.data.currentPage);
+          setTotalPages(res.data.totalPages);
+          setTotalBlocks(res.data.totalBlocks);
         } else {
           console.error("파일 목록이 배열이 아닙니다.");
         }      })
@@ -22,8 +40,28 @@ const FileList = () => {
       });
   };
 
+  const pagesPerBlock = 5;
+  const startPageOfBlock = pageBlock * pagesPerBlock;
+  const endPageOfBlock = Math.min(startPageOfBlock + pagesPerBlock, totalPages);
+
+  const pageButtons = Array.from(
+    { length: endPageOfBlock - startPageOfBlock },
+    (_, index) => startPageOfBlock + index
+  );
+
+  const handlePageBlockChange = (direction) => {
+    const newPageBlock = pageBlock + direction;
+    setPageBlock(newPageBlock);
+    fetchFiles(newPageBlock * pagesPerBlock, newPageBlock);
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    fetchFiles(pageNumber, Math.floor(pageNumber / pagesPerBlock));
+  };
+
   useEffect(() => {
-    fetchFiles(); // 컴포넌트 마운트 시 파일 목록을 불러옵니다.
+    fetchFiles(0, 0); // 컴포넌트 마운트 시 파일 목록을 불러옵니다.
   }, []);
 
   const formatDate = (date) => {
@@ -41,7 +79,7 @@ const FileList = () => {
             <thead>
               <tr>
                 <th>번호</th>
-                <th>제목</th>
+                <th>파일제목</th>
                 <th>작성자</th>
                 <th>작성일</th>
                 <th>조회수</th>
@@ -57,7 +95,7 @@ const FileList = () => {
                         {file.file_name}
                       </Link>
                     </td>
-                    <td>{file.user_name}</td>
+                    <td>{file.wiki.user_name}</td>
                     <td>{formatDate(file.wiki_regdate)}</td>
                     <td>{file.wiki_view}</td>
                   </tr>
@@ -71,10 +109,49 @@ const FileList = () => {
           </table>
           <button
             className="btn btn-primary"
-            onClick={() => window.location.href = '/main/file/create'} // 글쓰기 버튼 클릭 시 글 작성 페이지로 이동
+            onClick={() => navigate('/main/file/create')} // 글쓰기 버튼 클릭 시 글 작성 페이지로 이동
           >
             글쓰기
           </button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <button
+              className={`btn btn-link ${pageBlock === 0 ? "disabled" : ""}`}
+              onClick={() => pageBlock > 0 && handlePageBlockChange(-1)}
+              disabled={pageBlock === 0}
+            >
+              &laquo; 이전
+            </button>
+
+            {pageButtons.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                className={`btn btn-link ${
+                  currentPage === pageNumber ? "active" : ""
+                }`}
+                onClick={() => handlePageChange(pageNumber)}
+              >
+                {pageNumber + 1}
+              </button>
+            ))}
+
+            <button
+              className={`btn btn-link ${
+                pageBlock + 1 >= totalBlocks ? "disabled" : ""
+              }`}
+              onClick={() =>
+                pageBlock + 1 < totalBlocks && handlePageBlockChange(1)
+              }
+              disabled={pageBlock + 1 >= totalBlocks}
+            >
+              다음 &raquo;
+            </button>
+          </div>
         </CardBody>
       </Card>
     </Container>

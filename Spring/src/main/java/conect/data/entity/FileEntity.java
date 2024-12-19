@@ -21,8 +21,8 @@ public class FileEntity {
     private int fileSize; //파일 크기 [INT]
     private String fileType; //파일 타입 [VARCHAR]
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_fk_wiki_num")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "file_fk_wiki_num", referencedColumnName = "wikiPkNum")
     @JsonBackReference    
     private WikiEntity wikiEntity;
 }

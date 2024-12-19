@@ -3,7 +3,6 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 
-
 const FileUpdate = () => {
     const { filePkNum } = useParams(); // URL에서 'filePkNum'을 추출하고 숫자로 변환
     const navigate = useNavigate();
@@ -13,9 +12,9 @@ const FileUpdate = () => {
         file_size: "",
         file_type: "",  
         wiki_title: "",
-        wiki_content:"",
-        wiki_regdate:"",
-        wiki_view:""
+        wiki_content: "",
+        wiki_regdate: "",
+        wiki_view: ""
     });
 
     useEffect(() => {
@@ -23,6 +22,7 @@ const FileUpdate = () => {
         const fetchPost = async () => {
             try {
                 const response = await axios.get(`/file/${filePkNum}`);
+                console.log('Fetched file data:', response.data);  // 데이터 확인
                 setFile(response.data);
             } catch (error) {
                 console.error("Error fetching file:", error);
@@ -58,41 +58,52 @@ const FileUpdate = () => {
 
     return (
         <Container fluid style={{Height: "40em", marginTop: "2em" }}>
-           
-              <Card style={{ Height: "40em", overflowY: "auto" }}>
-              <CardHeader>
-            <h2>게시글 수정</h2>
-            </CardHeader>
-            <CardBody style={{ maxHeight: "40em", overflowY: "auto",fontSize: "1.2rem",  marginTop: "1em"}}>
-            <form onSubmit={handleSubmit}>
-          <div className="form-group">
-                    <label htmlFor="wiki_title">제목:</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="wiki_title"
-                        name="wiki_title"
-                        value={file.wiki_title}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="wiki_content">내용:</label>
-                    <textarea
-                        className="form-control"
-                        id="wiki_content"
-                        name="wiki_content"
-                        value={file.wiki_content}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <button type="button"className="btn btn-secondary"onClick={handleSubmit}>수정</button>
-                <button type="button"className="btn btn-secondary"onClick={handleDitail}>취소</button>
-            </form>
-            </CardBody>
-        </Card>
+            <Card style={{ Height: "40em", overflowY: "auto" }}>
+                <CardHeader>
+                    <h2>게시글 수정</h2>
+                </CardHeader>
+                <CardBody style={{ maxHeight: "40em", overflowY: "auto", fontSize: "1.2rem", marginTop: "1em" }}>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="wiki_title">제목:</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="wiki_title"
+                                name="wiki_title"
+                                value={file.wiki_title}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="wiki_content">내용:</label>
+                            <textarea
+                                className="form-control"
+                                id="wiki_content"
+                                name="wiki_content"
+                                value={file.wiki_content}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="file_path">파일:</label>
+                            <input
+                                type="file"
+                                className="form-control"
+                                id="file_path"
+                                name="file_path"
+                                // value={file.file_path}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary">수정</button>
+                        <button type="button" className="btn btn-secondary" onClick={handleDitail}>취소</button>
+                    </form>
+                </CardBody>
+            </Card>
         </Container>
     );
 };

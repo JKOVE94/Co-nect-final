@@ -61,7 +61,7 @@ const FileDetail = () => {
     <Container fluid style={{ Height: "40em", marginTop: "2em" }}>
       <Card style={{ Height: "40em", overflowY: "auto" }}>
         <CardHeader>
-          <h2>자유게시판</h2>
+          <h2>파일 게시판</h2>
         </CardHeader>
         <CardBody
           style={{
@@ -85,7 +85,7 @@ const FileDetail = () => {
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.wiki_title}&nbsp;                     
+                      {post.wiki.wiki_title}&nbsp;                     
                     </td>
                   </tr>
                   <tr>
@@ -95,9 +95,21 @@ const FileDetail = () => {
                     </td>
                   </tr>
                   <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>파일크기</td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {post.file_size}
+                    </td>
+                  </tr>
+                  <tr>
                     <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.wiki_content}
+                      {post.wiki.wiki_content}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}> 작성자</td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {post.user_name}
                     </td>
                   </tr>
                 </tbody>
@@ -123,7 +135,6 @@ const FileDetail = () => {
               </button>
           </div>
           <br />
-          <div>댓글 공간</div>
         </CardBody>
       </Card>
     </Container>

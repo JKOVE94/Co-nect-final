@@ -29,7 +29,7 @@ public class WikiEntity {
     private FileEntity fileEntity;
 
     @ManyToOne
-    @JoinColumn(name = "wiki_fk_user_num")
+    @JoinColumn(name = "wiki_fk_user_num", referencedColumnName = "userPkNum")
     private UserEntity userEntity;
 
     @ManyToOne
