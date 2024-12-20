@@ -92,15 +92,19 @@ public class NoticeServiceImpl implements NoticeService{
         NoticeEntity entity = notiRepository.findById(notiNum).orElseThrow();
         entity.setNotiTitle(form.getNoti_title()); //사용자 입력 제목 반영
         entity.setNotiContent(form.getNoti_content()); // 사용자 입력 내용 반영
-        System.out.println(entity.getNotiRegdate());
-        System.out.println(entity.getProjectEntity().getProjTitle());
-        // 수정일을 현재 날짜로 갱신
-        entity.setNotiModdate(LocalDate.now());
-        // 프로젝트 정보와 작성자 정보는 기존 데이터 유지
+        entity.setNotiImport(form.getNoti_import());// 사용자 입력 중요도 반영
+        entity.setNotiModdate(LocalDate.now());// 수정일을 현재 날짜로 갱신
+        //입력 값 확인용
+        System.out.println("(공지수정)로그인 된 사용자 ID :"+entity.getUserEntity().getUserId());
+        System.out.println("(공지수정)로그인 된 사용자 Name :"+entity.getUserEntity().getUserName());
+        System.out.println("(공지수정)원등록일:"+entity.getNotiRegdate());
+        System.out.println("(공지수정)수정등록일:"+entity.getNotiModdate());
+        System.out.println("(공지수정)프로젝트 제목:"+entity.getProjectEntity().getProjTitle());
+        System.out.println("(공지수정)사용자 입력 중요도:"+entity.getNotiImport());
+        // 프로젝트 정보, 작성자 정보는 기존 데이터 유지
         //entity.setProjectEntity(entity.getProjectEntity());
-        //entity.setUserEntity(entity.getUserEntity());
-        // 변경 사항을 데이터베이스에 저장
-        notiRepository.save(entity);
+        //entity.setUserEntity(userRepository.findById(form.getNoti_fk_user_num()).orElseThrow()); //작성자 로그인 된 작성자로 변경
+        notiRepository.save(entity);// 변경 사항을 데이터베이스에 저장
     }
 
     //공지 임시 삭제

@@ -3,12 +3,14 @@ import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import NotiToast from "variables/Toast/NotiToast";
+import { useSelector } from "react-redux";
 
 const NotiDetail = () => {
   const location = useLocation();
   const { notiPkNum } = useParams();
   const navigate = useNavigate();
   const compPkNum =1;//임시 테스트 회사 번호
+  const loginUser = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
 
   const [type, setType] = useState(0);
   const [noti, setNoti] = useState({});
@@ -48,6 +50,12 @@ const NotiDetail = () => {
   };
 
   const handleDelete = async () => {
+      // 작성자 검증
+      if (noti.noti_fk_user_num !== loginUser.user_pk_num) {
+      alert("작성자가 불일치합니다.");
+      navigate(`/main/noti/notidetail/${notiPkNum}`);
+      return;
+       }
     try {
       await axios.delete(`/main/${compPkNum}/notice/delete/${notiPkNum}`);
       navigate("/main/noti/notilist", { state: { success: true } });
@@ -106,7 +114,7 @@ const NotiDetail = () => {
             <div>게시글을 찾을 수 없습니다.</div>
           )}
           <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px" }}>
-            <button className="btn btn-primary" onClick={() => navigate(`/main/noti/edit/${notiPkNum}`)}>
+            <button className="btn btn-primary" onClick={() => navigate(`/main/noti/notiedit/${notiPkNum}`)}>
               수정
             </button>
             <button className="btn btn-danger" onClick={handleDelete}>
