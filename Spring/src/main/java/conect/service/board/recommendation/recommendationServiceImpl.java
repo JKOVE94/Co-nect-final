@@ -7,6 +7,13 @@ import java.util.Optional;
 
 import org.hibernate.grammars.hql.HqlParser.IsNullPredicateContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.web.PagedModel;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Service;
 
 import com.google.protobuf.Value;
@@ -45,12 +52,38 @@ public class recommendationServiceImpl implements recommendationService {
 	private ReplyLikesRepository replyLikesRepository;
 	
 	@Override
-	public List<RecommendationDto> getRecAll(int num) {	
+	public Page<RecommendationDto> getRecAll(int num, String sortField, String sortDirection, int page, int size) {
+		
 		try {
-			List<RecommendationDto> list =
-					recRepository.findByProjectEntity_projPkNum(num)
-					.stream().map(RecommendationDto::fromEntity).toList();
+			Page<RecommendationDto> list = Page.empty();
+			Pageable pageable = Pageable.unpaged();
+
+			if(sortField.equalsIgnoreCase("recLikes")) {
+				pageable = PageRequest.of(page, size);
+				
+				if(sortDirection.equalsIgnoreCase("asc")) {
+					list = recRepository.findByProjectEntity_projPkNumOrderByRecLikesAsc(num, pageable)
+							.map(RecommendationDto::fromEntity);
+				} else {
+					list = recRepository.findByProjectEntity_projPkNumOrderByRecLikesDesc(num, pageable)
+							.map(RecommendationDto::fromEntity);
+				}
+				
+			} else {
+				Sort sort = Sort.by(Order.desc(sortField));
+				
+				if(sortDirection.equals("asc")) {
+					sort = Sort.by(Order.asc(sortField));
+					pageable = PageRequest.of(page, size, sort);
+				} else if(sortDirection.equals("desc")){
+					sort = Sort.by(Order.desc(sortField));
+					pageable = PageRequest.of(page, size, sort);
+				}
+					list = recRepository.findByProjectEntity_projPkNum(num, pageable)
+							.map(RecommendationDto::fromEntity);
+			}
 			return list;
+			
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -70,10 +103,14 @@ public class recommendationServiceImpl implements recommendationService {
 	}
 	
 	@Override
+	@Transactional
 	public RecommendationDto getRecData(int projNum, int recNum) {
 		try {
+			recRepository.incrementRecView(recNum);
+			
 			RecommendationDto dto = 
 					RecommendationDto.fromEntity(recRepository.findByProjectEntity_projPkNumAndRecPkNum(projNum, recNum));
+			
 			return dto;
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
@@ -196,7 +233,14 @@ public class recommendationServiceImpl implements recommendationService {
 	public void delReplyData(int replyPkNum) {
 		try {
 			replyLikesRepository.deleteByReplyEntity_ReplyPkNum(replyPkNum);
-			replyRepository.deleteById(replyPkNum);
+			
+			ReplyDto dto = ReplyDto.fromEntity(replyRepository.findById(replyPkNum).get());
+			if(dto.getReply_depth() == 0) {
+				replyRepository.deleteByReplyParent(dto.getReply_parent());
+			} else {
+				replyRepository.deleteById(replyPkNum);
+			}
+			
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	
@@ -211,3 +255,5 @@ public class recommendationServiceImpl implements recommendationService {
 		return dto;
 	}
 }
+
+

@@ -32,4 +32,7 @@ public class RecommendationEntity {
     
     @OneToMany(mappedBy = "recommendationEntity")
     List<ReclikesEntity> reclikesEntities;
+    
+    @OneToMany(mappedBy = "recommendationEntity")
+    List<ReplyEntity> replyEntities;
 }

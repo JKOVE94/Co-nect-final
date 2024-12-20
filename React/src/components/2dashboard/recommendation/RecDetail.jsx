@@ -11,7 +11,7 @@ import {
   FormGroup,
   Row,
 } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Reclike from "./Reclike";
 import { useSelector } from "react-redux";
 import RecModal from "variables/Modal/RecModal";
@@ -22,7 +22,8 @@ const RecDetail = () => {
   const [type, setType] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [data, setData] = useState({});
-  
+  const location = useLocation();
+  const updatedData = location.state?.updatedData;
   const num = useSelector((state) => state.userData.user_pk_num);
   const compNum = JSON.parse(
     //회사번호
@@ -38,12 +39,17 @@ const RecDetail = () => {
   }, []);
 
   const getData = async () => {
-    axios
+    if (updatedData){
+      setData(updatedData);
+    } else {
+      axios
       .get(`/${compNum}/rec/${projPkNum}/${recPkNum}`)
       .then((res) => {
         setData(res.data);
       })
       .catch((err) => console.log(err));
+    }
+    
   };
   
   const handleDelete = () => {

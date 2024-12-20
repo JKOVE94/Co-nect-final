@@ -30,7 +30,9 @@ const RecUpdate = () => {
 
   const handleClick = (e) => {
     axios.put(`/${compNum}/rec/${data.rec_pk_num}`,data)
-    .then(res => navigate(`../detail/${res.data.rec_pk_num}`))
+    .then(res => navigate(`../detail/${res.data.rec_pk_num}`, {
+      state: { updatedData: res.data },
+    }))
     .catch(err => console.log(err))
   }
   

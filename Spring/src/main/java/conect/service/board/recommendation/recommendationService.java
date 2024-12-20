@@ -9,9 +9,12 @@ import conect.data.form.RecommendationForm;
 import conect.data.form.ReplyForm;
 import conect.data.form.TodoForm;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+
 public interface recommendationService {
 
-	List<RecommendationDto> getRecAll(int num);
+	Page<RecommendationDto> getRecAll(int projNum, String sortField, String sortDirection, int page, int size);
 	void addRecData(RecommendationForm bean);
 	RecommendationDto getRecData(int projNum, int recNum);
 	boolean checkReclike(int usernum, int recnum);

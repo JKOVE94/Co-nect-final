@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReplyRepository extends JpaRepository<ReplyEntity,Integer> {
 	
 	Optional<ReplyEntity> findTopByOrderByReplyParentDesc();
+	void deleteByReplyParent(int num);
 	List<ReplyEntity> findByRecommendationEntity_RecPkNum(int num);
 	List<ReplyEntity> findByRecommendationEntity_RecPkNumOrderByReplyParentAscReplyDepthAscReplyRegdateDesc(int recPkNum);
 }

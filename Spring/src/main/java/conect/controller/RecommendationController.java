@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.web.PagedModel;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,20 +38,27 @@ public class RecommendationController {
 	
 	@Autowired
 	private recommendationServiceImpl recService;
+
+	
 	
 	@GetMapping("/{proj}")
-	public ResponseEntity<Object> getRecList(@PathVariable(name="compno")int compno, @PathVariable(name="proj")int projnum){
+	public ResponseEntity<Object> getRecList(@PathVariable(name="compno")int compno, @PathVariable(name="proj")int projnum,
+			@RequestParam(name="sortField", defaultValue = "recRegdate") String sortField,
+            @RequestParam(name="sortDirection",defaultValue = "desc") String sortDirection,
+            @RequestParam(name="page", defaultValue = "0") int page,
+			@RequestParam(name="size", defaultValue = "10") int size){
 		try {
 			
-			List<RecommendationDto> list = recService.getRecAll(projnum);
+			Page<RecommendationDto> list = recService.getRecAll(projnum, sortField, sortDirection, page, size);
+			
 			return ResponseEntity.ok(list);
 		} catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
 	
 	@GetMapping("/{proj}/{rec}")
-	public ResponseEntity<Object> getRecList(@PathVariable(name="compno")int compno, @PathVariable(name="proj")int projnum,
+	public ResponseEntity<Object> getRecDetail(@PathVariable(name="compno")int compno, @PathVariable(name="proj")int projnum,
 			@PathVariable("rec")int recnum){
 		try {
 			
