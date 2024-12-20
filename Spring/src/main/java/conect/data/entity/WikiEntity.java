@@ -38,12 +38,4 @@ public class WikiEntity {
     @JoinColumn(name = "wiki_fk_proj_num")
     @JsonIgnore
     private ProjectEntity projectEntity;
-    
- // 수정 시 wiki_regdate 갱신
-    public void updateWiki(String title, String content, boolean isNotice) {
-        this.wikiTitle = title;
-        this.wikiContent = content;
-        this.wikiIsnotice = isNotice;
-        this.wikiRegdate = LocalDate.now();  // 수정 시 점검할 날짜
-    }
 }

@@ -12,6 +12,7 @@ import conect.data.dto.FileDto;
 import conect.data.entity.FileEntity;
 import conect.data.entity.WikiEntity;
 import conect.data.form.FileForm;
+import conect.data.repository.FileRepository;
 import conect.data.repository.WikiRepository;
 import conect.service.board.file.FileService;
 import conect.service.board.wiki.WikiService;
@@ -30,6 +31,9 @@ public class FileController {
     
     @Autowired
     private WikiService wikiService;
+    
+    @Autowired
+    private FileRepository fileRepository;
     
     @Autowired
     private WikiRepository wikiRepository;
@@ -112,8 +116,12 @@ public class FileController {
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("파일 크기가 10MB를 초과합니다.");
             }
         
+            // int wikiPkNum = wikiService.addWikiEntity(wikiTitle, wikiContent, userNum, projNum, wikiNotice);
+            // WikiEntity 생성
             int wikiPkNum = wikiService.addWikiEntity(wikiTitle, wikiContent, userNum, projNum, wikiNotice);
-
+            WikiEntity wikiEntity = wikiRepository.findById(wikiPkNum)
+                    .orElseThrow(() -> new RuntimeException("WikiEntity를 찾을 수 없습니다."));
+            
             // 여기서부터 오류 발생함
         	// System.out.println("----------------------test------------------------------");
             // FileForm 객체 생성 및 파일 저장 로직
@@ -139,19 +147,28 @@ public class FileController {
         }
     }
     
-    
     // 게시글 수정
     @PutMapping("/{filePkNum}")
-    public ResponseEntity<FileDto> updatePost(
+    @Transactional
+    public ResponseEntity<Object> updatePost(
             @PathVariable("filePkNum") int filePkNum,
-            @RequestBody FileForm fileForm
+            @RequestParam(value = "file", required = false) MultipartFile file, // 파일은 선택적
+            @RequestParam("wiki_title") String wikiTitle,
+            @RequestParam("wiki_content") String wikiContent
     ) {
         try {
-            FileDto updatedPost = fileService.updatePost(filePkNum, fileForm);
-            return updatedPost != null ? ResponseEntity.ok(updatedPost) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            // 서비스 호출로 수정 로직 처리
+            FileDto updatedFile = fileService.updatePost(filePkNum, file, wikiTitle, wikiContent);
+
+            // 반환된 데이터가 null인 경우 (파일 또는 게시글 없음)
+            if (updatedFile == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("수정 대상 게시글이 존재하지 않습니다.");
+            }
+
+            return ResponseEntity.ok(updatedFile); // 수정된 데이터 반환
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수정 중 오류가 발생했습니다.");
         }
     }
 

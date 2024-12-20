@@ -1,142 +1,199 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, CardBody, CardHeader, Container } from "reactstrap";
-import FavorCheck from "../Favorite/FavorCheck";
-import { useSelector } from "react-redux";
-import { Col, Row } from "react-bootstrap";
-
+import { Card, CardBody, CardHeader, Container, Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 const FileDetail = () => {
-  const filePkNumInt = parseInt(useParams().filePkNum, 10); 
+  const filePkNumInt = parseInt(useParams().filePkNum, 10);
   const navigate = useNavigate();
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
 
-  //즐겨찾기
-  const num = useSelector((state) => state.userData.user_pk_num);
-  const [favorList, setFavorList] = useState();
-  const handleFavorite = () => {
-    axios
-      .get(`/favorite/post/${num}/${filePkNumInt}`)
-      .then((res) => {
-        setFavorList(res.data);
-      })
-      .catch((err)=>{
-        setFavorList(false);
-      });
-  };
-  
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/file/${filePkNumInt}`); 
-        setPost(response.data); 
+        const response = await axios.get(`/file/${filePkNumInt}`);
+        setPost(response.data);
       } catch (err) {
-        setError(err.message); 
+        setError(err.message);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
-    
 
     fetchPost();
-    handleFavorite();
-  },[filePkNumInt]);
+  }, [filePkNumInt]);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen); // 모달 열기/닫기
+  };
 
   const handleDelete = async () => {
+    console.log("handleDelete 호출됨"); // 함수 호출 확인
     try {
-      await axios.delete(`/file/${filePkNumInt}`); 
-      navigate("/main/file", { state: { success: true } }); 
+      const response = await axios.delete(`/file/${filePkNumInt}`);
+      console.log("삭제 응답:", response);
+      navigate("/main/file", { state: { success: true } });
     } catch (err) {
-      setError("삭제 실패: " + err.message); 
+      console.error("삭제 실패:", err);
+      setError("삭제 실패: " + err.message);
     }
   };
 
-  if (loading) return <div>Loading...</div>; 
-  if (error) return <div>Error: {error}</div>; 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <Container fluid style={{ Height: "40em", marginTop: "2em" }}>
-      <Card style={{ Height: "40em", overflowY: "auto" }}>
+    <Container fluid style={{ marginTop: "2em" }}>
+      <Card>
         <CardHeader>
-          <h2>파일 게시판</h2>
+          <h2>파일 보기</h2>
         </CardHeader>
-        <CardBody
-          style={{
-            maxHeight: "40em",
-            overflowY: "auto",
-            fontSize: "1.2rem",
-            marginTop: "1em",
-          }}
-        >
-
-          <div>
-            {post ? (
-              <table
-                className="table"
+        <CardBody style={{ fontSize: "1.2rem" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.5em",
+            }}
+          >
+            {/* 제목 */}
+            <div>
+              <h5 style={{ fontWeight: "bold" }}>
+                <i className="fas fa-heading" style={{ marginRight: "0.5em" }}></i>
+                제목
+              </h5>
+              <p
                 style={{
-                  fontSize: "1.2rem",
-                  border: "1px solid lightgray",
+                  margin: "0",
+                  padding: "0.5em 0",
+                  fontSize: "1.5rem", // 강조된 크기
+                  color: "#343a40", // 어두운 색상으로 강조
+                  fontWeight: "bold",
                 }}
               >
-                <tbody>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.wiki.wiki_title}&nbsp;                     
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>파 일</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.file_name}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>파일크기</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.file_size}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.wiki.wiki_content}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}> 작성자</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.user_name}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            ) : (
-              <div>게시글을 찾을 수 없습니다.</div>
-            )}
-            <br />
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate(`/main/file/update/${filePkNumInt}`)}
+                {post.wiki?.wiki_title || "제목 없음"}
+              </p>
+            </div>
+
+            {/* 작성자와 작성일 */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ flex: "1", textAlign: "left" }}>
+                <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
+                  <i className="fas fa-user" style={{ marginRight: "0.5em" }}></i>
+                  작성자
+                </h5>
+                <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
+                  {post.user_name || "작성자 없음"}
+                </p>
+              </div>
+              <div style={{ flex: "1", textAlign: "left" }}>
+                <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
+                  <i className="fas fa-calendar-alt" style={{ marginRight: "0.5em" }}></i>
+                  작성일
+                </h5>
+                <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
+                  {post.wiki?.wiki_regdate || "알 수 없음"}
+                </p>
+              </div>
+            </div>
+
+            {/* 파일 */}
+            <div>
+              <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
+                <i className="fas fa-file" style={{ marginRight: "0.5em" }}></i>
+                파일
+              </h5>
+              {post.file_name ? (
+                <div style={{ display: "flex", alignItems: "center", gap: "1em" }}>
+                  <p style={{ margin: "0", fontSize: "1.1rem" }}>{post.file_name}</p>
+                  <a
+                    href={post.file_path}
+                    download={post.file_name}
+                    className="btn btn-success"
+                    style={{ fontSize: "1rem" }}
+                  >
+                    다운로드
+                  </a>
+                </div>
+              ) : (
+                <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
+                  파일 없음
+                </p>
+              )}
+            </div>
+
+            {/* 내용 */}
+            <div>
+              <h5
+                style={{
+                  fontWeight: "bold",
+                  color: "#343a40",
+                  marginBottom: "0.5em",
+                }}
               >
-                수정
-              </button>
-              <button className="btn btn-primary" onClick={handleDelete}>
-                삭제
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/main/file")}
+                <i className="fas fa-align-left" style={{ marginRight: "0.5em" }}></i>
+                내용
+              </h5>
+              <div
+                style={{
+                  border: "1px solid #dee2e6",
+                  padding: "1em",
+                  borderRadius: "5px",
+                  backgroundColor: "#f8f9fa",
+                  fontSize: "1.3rem",
+                  lineHeight: "1.8",
+                }}
               >
-                목록
-              </button>
+                {post.wiki?.wiki_content || "내용 없음"}
+              </div>
+            </div>
           </div>
-          <br />
+
+          <div style={{ marginTop: "2em", display: "flex", justifyContent: "flex-end", gap: "1em" }}>
+            <Button
+              color="primary"
+              onClick={() => navigate(`/main/file/update/${filePkNumInt}`)}
+            >
+              수정
+            </Button>
+            <Button color="danger" onClick={toggleModal}>
+              삭제
+            </Button>
+            <Button color="secondary" onClick={() => navigate("/main/file")}>
+              목록
+            </Button>
+          </div>
         </CardBody>
       </Card>
+
+      {/* 삭제 확인 모달 */}
+      <Modal isOpen={isModalOpen} toggle={toggleModal}>
+  <ModalHeader toggle={toggleModal}>삭제 확인</ModalHeader>
+  <ModalBody>정말로 이 파일을 삭제하시겠습니까?</ModalBody>
+  <ModalFooter>
+    <Button
+      color="danger"
+      onClick={() => {
+        console.log("삭제 버튼 클릭됨"); // 버튼 클릭 확인
+        handleDelete(); // 삭제 함수 호출
+      }}
+    >
+      삭제
+    </Button>
+    <Button color="secondary" onClick={toggleModal}>
+      취소
+    </Button>
+  </ModalFooter>
+</Modal>
     </Container>
   );
 };

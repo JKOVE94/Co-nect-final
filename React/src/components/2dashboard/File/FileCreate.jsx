@@ -31,7 +31,7 @@ const FileCreate = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const maxFileSize = 10 * 1024 * 1024;
+    const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
     if (file.size > maxFileSize) {
       alert("파일 크기는 10MB를 초과할 수 없습니다.");
       return;
@@ -46,7 +46,7 @@ const FileCreate = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = new FormData();
@@ -56,22 +56,31 @@ const FileCreate = () => {
     data.append("wiki_fk_user_num", formData.wiki_fk_user_num);
     data.append("wiki_fk_proj_num", 1);
     data.append("wiki_isnotice", false);
-    // data.append("wiki_boardtype", formData.wiki_boardtype);
+    //vdata.append("wiki_boardtype", formData.wiki_boardtype);
 
-    axios
-      .post("/file", data)
-      .then((response) => {
+    try {
+      const response = await axios.post("/file", data);
+
+      console.log("서버 응답:", response.data); // 서버 응답 확인
+      if (response.data != null) {
         alert("파일이 성공적으로 업로드되었습니다.");
-        navigate(`/main/file/detail/${response.data.filePkNum || ''}`);
-      })
-      .catch((error) => {
-        console.error("파일 업로드 중 오류:", error);
-        alert("저장 중 오류가 발생했습니다. 오류 코드: " + error.response?.status);
-      });
+        navigate(`/main/file/detail/${response.data}`);
+      } else {
+        throw new Error("저장된 파일 ID가 반환되지 않았습니다.");
+      }
+    } catch (error) {
+      console.error("파일 업로드 중 오류:", error);
+      const status = error.response?.status;
+      alert(
+        `저장 중 오류가 발생했습니다.\n${
+          status ? `오류 코드: ${status}` : "서버에 연결할 수 없습니다."
+        }`
+      );
+    }
   };
 
   const handleBackToList = () => {
-    navigate('/main/file');
+    navigate("/main/file");
   };
 
   return (
@@ -122,22 +131,35 @@ const FileCreate = () => {
                     <img
                       src={URL.createObjectURL(formData.file)}
                       alt="미리보기"
-                      style={{ maxWidth: "100%", height: "auto", marginTop: "1em" }}
+                      style={{
+                        maxWidth: "300px",
+                        height: "auto",
+                        marginTop: "1em",
+                        border: "1px solid #ccc",
+                        borderRadius: "5px",
+                      }}
                     />
                   )}
                 </div>
               )}
             </div>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={!formData.file || !formData.wiki_title || !formData.wiki_content}
-            >
-              게시글 저장
-            </button>
-            <button type="button" className="btn btn-secondary" onClick={handleBackToList}>
-              목록
-            </button>
+            <div style={{ marginTop: "1.5em" }}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={!formData.file || !formData.wiki_title || !formData.wiki_content}
+                style={{ marginRight: "1em" }}
+              >
+                게시글 저장
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleBackToList}
+              >
+                목록
+              </button>
+            </div>
           </form>
         </CardBody>
       </Card>

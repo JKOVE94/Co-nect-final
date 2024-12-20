@@ -28,7 +28,7 @@ public interface FileService {
 	public FileDto getPostView(Integer filePkNum);
 
 	// 수정
-	FileDto updatePost(int filePkNum, FileForm fileForm);
+	public FileDto updatePost(int filePkNum, MultipartFile file, String wikiTitle, String wikiContent);
 
 	// 삭제
 	void deletePost(int filePkNum);

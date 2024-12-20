@@ -99,10 +99,10 @@ public class FileServiceImpl implements FileService {
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
     public FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException {
         try {
-            // 2. 파일 URL 받기
+            // 1. 파일 URL 받기
             String fileUrl = saveFile(fileForm, file);
 
-            // 3. FileEntity 객체 생성
+            // 2. FileEntity 객체 생성
             FileEntity fileEntity = new FileEntity();
             fileEntity.setFileName(file.getOriginalFilename());
             fileEntity.setFilePath(fileUrl);
@@ -110,10 +110,14 @@ public class FileServiceImpl implements FileService {
             fileEntity.setFileSize((int) file.getSize());
             
             // WikiEntity와 연결
+            WikiEntity wikiEntity = fileForm.getWikiEntity();
+            if (wikiEntity != null) {
+                fileEntity.setWikiEntity(wikiEntity);
+            }
 
             // 4. FileEntity 저장
             fileRepository.save(fileEntity);
-            fileRepository.flush();  // 즉시 DB에 반영
+            // fileRepository.flush();  // 즉시 DB에 반영
             return fileEntity; // 반환
 
         } catch (Exception e) {
@@ -137,86 +141,97 @@ public class FileServiceImpl implements FileService {
     // 부분 조회
     @Override
     public FileDto getPostView(Integer filePkNum) {
-        // Optional을 사용하여 파일이 존재하지 않을 경우 예외를 던짐
         FileEntity fileEntity = fileRepository.findById(filePkNum)
                 .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다"));
 
-        // FileEntity -> FileDto 변환
         FileDto fileDto = FileDto.fromEntity(fileEntity);
 
-        // WikiEntity 정보 추가 조회
         if (fileEntity.getWikiEntity() != null) {
-            WikiEntity wikiEntity = fileEntity.getWikiEntity(); // WikiEntity 가져오기
-            fileDto.setWiki_regdate(wikiEntity.getWikiRegdate()); // 예시: Wiki의 regdate
+            WikiEntity wikiEntity = fileEntity.getWikiEntity();
+            fileDto.setWiki_regdate(wikiEntity.getWikiRegdate());
             fileDto.setWiki_view(wikiEntity.getWikiView());
-
-            // UserEntity 정보 추가 조회
             if (wikiEntity.getUserEntity() != null) {
                 fileDto.setUser_name(wikiEntity.getUserEntity().getUserName());
             }
         }
 
-        return fileDto; // WikiEntity 및 UserEntity의 추가 정보 포함된 FileDto 반환
+        return fileDto;
     }
-
-
 
     // 수정
     @Override
-    public FileDto updatePost(int filePkNum, FileForm fileForm) {
-        FileEntity updatePost = fileRepository.findById(filePkNum).orElse(null);
-        if (updatePost != null) {
-            updatePost.setFileName(fileForm.getFile_name());
-            updatePost.setFilePath(fileForm.getFile_path());
-            updatePost.setFileSize(fileForm.getFile_size());
-            updatePost.setFileType(fileForm.getFile_type());
+    @Transactional
+    public FileDto updatePost(int filePkNum, MultipartFile file, String wikiTitle, String wikiContent) {
+        // 수정 대상 파일 조회
+        FileEntity fileEntity = fileRepository.findById(filePkNum)
+                .orElseThrow(() -> new RuntimeException("수정 대상 파일이 존재하지 않습니다."));
 
-            // FileEntity를 저장하여 업데이트된 내용을 반영
-            FileEntity updatedFileEntity = fileRepository.save(updatePost);
-
-            // WikiEntity 관련 정보를 FileDto에 설정
-            FileDto fileDto = FileDto.fromEntity(updatedFileEntity);
-
-            // WikiEntity가 존재하는 경우, 추가적인 정보를 FileDto에 설정
-            if (updatedFileEntity.getWikiEntity() != null) {
-                fileDto.setWiki_regdate(updatedFileEntity.getWikiEntity().getWikiRegdate());
-                fileDto.setWiki_view(updatedFileEntity.getWikiEntity().getWikiView());
+        try {
+            // 파일 수정 처리
+            if (file != null && !file.isEmpty()) {
+                String fileUrl = saveFile(new FileForm(), file);
+                fileEntity.setFileName(file.getOriginalFilename());
+                fileEntity.setFilePath(fileUrl);
+                fileEntity.setFileType(file.getContentType());
+                fileEntity.setFileSize((int) file.getSize());
             }
 
-            // 업데이트된 FileDto 반환
-            return fileDto;
+            // WikiEntity 수정
+            WikiEntity wikiEntity = fileEntity.getWikiEntity();
+            if (wikiEntity != null) {
+                wikiEntity.setWikiTitle(wikiTitle);
+                wikiEntity.setWikiContent(wikiContent);
+                wikiRepository.save(wikiEntity); // 연관된 WikiEntity 저장
+            }
+
+            // FileEntity 저장
+            fileRepository.save(fileEntity);
+
+            // 수정된 데이터를 반환
+            return FileDto.fromEntity(fileEntity);
+
+        } catch (IOException e) {
+            throw new RuntimeException("파일 수정 중 오류가 발생했습니다.", e);
         }
-        return null;
     }
+
 
     // 삭제
     @Override
     public void deletePost(int filePkNum) {
-        // 먼저 파일 정보 가져오기
-        FileEntity fileEntity = fileRepository.findById(filePkNum).orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다"));
+        // 파일 정보 가져오기
+        FileEntity fileEntity = fileRepository.findById(filePkNum)
+                .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다. ID: " + filePkNum));
 
-        // Google Cloud Storage에서 파일 삭제
+        System.out.println("삭제하려는 파일 정보: " + fileEntity);
+
+        // GCS에서 파일 삭제
         deleteFileFromGCS(fileEntity.getFilePath());
 
-        // 데이터베이스에서 파일 삭제
+        // DB에서 파일 삭제
         fileRepository.deleteById(filePkNum);
     }
 
-    // Google Cloud Storage에서 파일 삭제
     private void deleteFileFromGCS(String filePath) {
+        System.out.println("삭제하려는 파일 경로: " + filePath);
         try {
             Storage storage = StorageOptions.newBuilder()
                     .setCredentials(GoogleCredentials.fromStream(ResourceUtils.getURL(keyFileName).openStream()))
                     .build()
                     .getService();
+
             Blob blob = storage.get(bucketName, filePath);
             if (blob != null) {
-                blob.delete(); // Google Cloud Storage에서 파일 삭제
+                blob.delete();
+                System.out.println("파일 삭제 성공: " + filePath);
+            } else {
+                System.out.println("파일이 존재하지 않음: " + filePath);
             }
         } catch (IOException e) {
             throw new RuntimeException("Google Cloud Storage에서 파일 삭제 실패: " + e.getMessage());
         }
     }
+
     
     // 페이징, 검색
  	public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText) {
