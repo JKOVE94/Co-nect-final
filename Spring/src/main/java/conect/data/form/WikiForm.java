@@ -22,7 +22,9 @@ public class WikiForm {
     private int wiki_fk_user_num; // 사용자 고유번호
     private int wiki_fk_proj_num; // 프로젝트 고유번호
     private MultipartFile fileInput;
-
+    private String file_name; // 파일명 추가
+    private String file_path; // 파일 경로
+    
     public static WikiEntity toEntity(WikiForm form) {
         WikiEntity entity = new WikiEntity();
         entity.setWikiPkNum(form.getWiki_pk_num());

@@ -1,26 +1,12 @@
 package conect.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
+
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +14,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.WikiDto;
 import conect.data.entity.FileEntity;
@@ -42,6 +25,7 @@ import conect.data.form.WikiForm;
 import conect.data.repository.FileRepository;
 import conect.data.repository.WikiRepository;
 import conect.service.board.wiki.WikiServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/wiki")
@@ -120,43 +104,13 @@ public class WikiController {
 		return wikiServiceImpl.getWikiById(wikiPkNum);
 	}
 	
-	@Value("${spring.cloud.gcp.storage.bucket}")
-    private String bucketName;
-
+/*
 	//파일 다운로드
 	@GetMapping("/download/{fileFkWikiNum}")
-	public ResponseEntity<Resource> downloadFile(@PathVariable int fileFkWikiNum) {
-	    try {
-	    	 // WikiEntity를 통해 FileEntity 조회
-	        WikiEntity wikiEntity = wikiRepository.findById(fileFkWikiNum).orElse(null);
-	        
-	        if (wikiEntity == null || wikiEntity.getFileEntity() == null) {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 파일 없을 경우 404 반환
-	        }
-
-	        // 파일 이름과 경로를 조회
-	        String fileName = wikiEntity.getFileEntity().getFileName();
-	        String fileUrl = "https://storage.googleapis.com/" + bucketName + "/file/" + fileName;
-	        
-	        // 파일 다운로드 처리
-	        URL url = new URL(fileUrl);
-	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	        connection.setRequestMethod("GET");
-
-	        InputStream inputStream = connection.getInputStream();
-	        Resource resource = new InputStreamResource(inputStream);
-
-	        // 파일 응답 반환
-	        return ResponseEntity.ok()
-	                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-	                .body(resource);
-
-	    } catch (IOException e) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 오류 발생 시 404 반환
-	    }
+	public ResponseEntity<Resource> downloadFile() {
+	    
 	}
-
+*/
 	// 문서 생성
 	@PostMapping("/wikiadd")
 	public ResponseEntity<?> addWiki(@ModelAttribute WikiForm form) {
@@ -181,19 +135,49 @@ public class WikiController {
 	@PutMapping("/wikiedit/{wikiPkNum}")
 	public ResponseEntity<?> editWiki(@PathVariable("wikiPkNum") int wikiPkNum, @ModelAttribute WikiForm form) {
 	    try {
-	        // 파일이 있을 경우 파일 처리
+	        // 위키 엔티티의 FileEntity가 null일 수 있으므로 안전하게 처리
+	        WikiDto wiki = wikiServiceImpl.getWikiById(wikiPkNum);
+	        FileEntity existingFile = wikiServiceImpl.getWikiFileByWikiNum(wikiPkNum);
+        	System.out.println(existingFile + "======existingFile==========================test ------------------------------"); 
+	        // 파일 처리 로직
 	        if (form.getFileInput() != null && !form.getFileInput().isEmpty()) {
-	            // 파일이 존재하면 기존 파일을 새로 덮어씌우거나 새로운 파일을 저장
-	            wikiServiceImpl.saveFile(form);
+
+	            // 새 파일이 업로드된 경우
+	            if (existingFile != null) {
+	                // 기존 파일이 있다면 삭제
+	                wikiServiceImpl.deleteWikiFile(wikiPkNum);
+	            }
+	            // 새 파일 저장
+	            String fileUrl = wikiServiceImpl.saveFile(form);
+	            form.setFile_path(fileUrl);
+	            form.setFile_name(form.getFileInput().getName());
+	        } else {
+	            // 파일 input이 비어있는 경우
+	            if (form.getFile_name() == null || form.getFile_name().isEmpty()) {
+	                // 파일을 삭제하려는 경우
+	                if (existingFile != null) {
+	                    wikiServiceImpl.deleteWikiFile(wikiPkNum);
+	                }
+	                form.setFile_path(null);
+	                form.setFile_name(null);
+	            } else if (existingFile != null) {
+	                // 기존 파일 정보 유지
+	                form.setFile_name(existingFile.getFileName());
+	                form.setFile_path(existingFile.getFilePath());
+	            }
 	        }
-	        
 	        // 문서 수정 서비스 호출
 	        wikiServiceImpl.editWiki(wikiPkNum, form);
-	        
-	        return ResponseEntity.ok("문서 수정 성공!"); // 성공 시 응답
+	        return ResponseEntity.ok()
+	                .body(Map.of(
+	                    "message", "문서 수정 성공!",
+	                    "fileName", form.getFile_name(),
+	                    "filePath", form.getFile_path()
+	                ));
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문서 수정 실패: " + e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("문서 수정 실패: " + e.getMessage());
 	    }
 	}
 

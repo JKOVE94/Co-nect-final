@@ -26,7 +26,9 @@ public interface WikiService {
 	int addWiki(WikiForm form)  throws Exception ;
 
 	// 문서 수정
-	void editWiki(int wikiPkNum, WikiForm form);
+	void editWiki(int wikiPkNum, WikiForm form) throws Exception;
+	
+	void deleteWikiFile(int wikiPkNum);
 	
 	void deleteWiki(int wikiPkNum);
 

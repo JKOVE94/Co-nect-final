@@ -126,6 +126,12 @@ public class WikiServiceImpl implements WikiService {
 	            .map(WikiDto::fromEntity)
 	            .orElseThrow(() -> new EntityNotFoundException("문서를 찾을 수 없습니다. ID: " + wikiPkNum));
 	}
+	
+	 // 위키 번호로 파일 정보 조회
+    public FileEntity getWikiFileByWikiNum(int wikiPkNum) {
+        return fileRepository.findByWikiEntity_WikiPkNum(wikiPkNum)
+                           .orElse(null);
+    }
 
 	// 문서 생성 메서드
 	@Transactional
@@ -167,30 +173,77 @@ public class WikiServiceImpl implements WikiService {
 	}
 
 	// 문서 수정 메서드
-	public void editWiki(int wikiPkNum, WikiForm form) {
-		// 프로젝트 번호로 기존 프로젝트 조회
-		WikiEntity entity = wrepository.findById(form.getWiki_pk_num())
-				.orElseThrow(() -> new RuntimeException("문서가 존재하지 않습니다."));
-
-		WikiEntity updatedEntity = WikiForm.toEntity(form);
-		updatedEntity.setWikiRegdate(entity.getWikiRegdate()); // 기존 작성일 유지
-
-		entity.setWikiTitle(updatedEntity.getWikiTitle());
-		entity.setWikiContent(updatedEntity.getWikiContent());
-		entity.setWikiIsnotice(updatedEntity.isWikiIsnotice());
-
-		// 프로젝트, 작성자 설정
-		ProjectEntity projEntity = projRepository.findById(form.getWiki_fk_proj_num())
-				.orElseThrow(() -> new RuntimeException("프로젝트가 존재하지 않습니다."));
-		UserEntity userEntity = userRepository.findById(form.getWiki_fk_user_num())
-				.orElseThrow(() -> new RuntimeException("작성자가 존재하지 않습니다."));
-
-		entity.setProjectEntity(projEntity);
-		entity.setUserEntity(userEntity);
-
-		wrepository.save(entity); // 수정된 Entity 저장
+	@Transactional
+	public void editWiki(int wikiPkNum, WikiForm form) throws Exception {
+	    // 기존 위키 엔티티 조회
+	    WikiEntity entity = wrepository.findById(wikiPkNum)
+	            .orElseThrow(() -> new RuntimeException("문서가 존재하지 않습니다."));
+	    // 기본 정보 업데이트
+	    entity.setWikiTitle(form.getWiki_title());
+	    entity.setWikiContent(form.getWiki_content());
+	    entity.setWikiIsnotice(form.isWiki_isnotice());
+	    // 프로젝트, 작성자 설정
+	    ProjectEntity projEntity = projRepository.findById(form.getWiki_fk_proj_num())
+	            .orElseThrow(() -> new RuntimeException("프로젝트가 존재하지 않습니다."));
+	    UserEntity userEntity = userRepository.findById(form.getWiki_fk_user_num())
+	            .orElseThrow(() -> new RuntimeException("작성자가 존재하지 않습니다."));
+	    
+	    FileEntity existingFile = fileRepository.findByWikiEntity_WikiPkNum(wikiPkNum).orElse(null);
+	    // 파일 처리
+	    if (form.getFileInput() != null && !form.getFileInput().isEmpty()) {
+	        if (existingFile != null) {
+	            deleteWikiFile(wikiPkNum); // 기존 파일 삭제
+	        }
+	        // 새 파일 저장
+	        String fileUrl = saveFile(form);
+	        FileEntity newFileEntity = new FileEntity();
+	        newFileEntity.setFileName(form.getFileInput().getName());
+	        newFileEntity.setFilePath(fileUrl);
+	        newFileEntity.setFileSize((int) form.getFileInput().getSize());
+	        newFileEntity.setFileType(form.getFileInput().getContentType());
+	        newFileEntity.setWikiEntity(entity);
+	        fileRepository.save(newFileEntity);
+	    }
+	    entity.setProjectEntity(projEntity);
+	    entity.setUserEntity(userEntity);
+	    wrepository.save(entity);
 	}
 
+	// Google Cloud Storage에서 파일 삭제하는 메서드 추가
+	public void deleteFileFromStorage(String fileUrl) {
+	    try {
+	        if (fileUrl != null && fileUrl.contains(bucketName)) {
+	            InputStream keyFile = ResourceUtils.getURL(keyFileName).openStream();
+	            Storage storage = StorageOptions.newBuilder()
+	                    .setCredentials(GoogleCredentials.fromStream(keyFile))
+	                    .build()
+	                    .getService();
+	            // URL에서 파일 경로 추출
+	            String fileName = fileUrl.substring(fileUrl.indexOf(bucketName) + bucketName.length() + 1);
+	            // 파일 삭제
+	            Blob blob = storage.get(bucketName, fileName);
+	            if (blob != null && blob.exists()) {
+	                blob.delete();
+	            }
+	            keyFile.close();
+	        }
+	    } catch (IOException e) {
+	        throw new RuntimeException("파일 삭제 중 오류 발생", e);
+	    }
+	}
+
+	 // 파일 삭제
+    public void deleteWikiFile(int wikiPkNum) {
+    	FileEntity fileEntity = fileRepository.findByWikiEntity_WikiPkNum(wikiPkNum)
+                .orElse(null);
+        if (fileEntity != null) {
+            // Google Cloud Storage에서 파일 삭제
+            deleteFileFromStorage(fileEntity.getFilePath());
+            // DB에서 파일 정보만 삭제
+            fileRepository.delete(fileEntity);
+        }
+    }
+	
 	// 문서 삭제
 	public void deleteWiki(int wikiPkNum) {
 		try {

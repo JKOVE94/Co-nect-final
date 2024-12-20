@@ -53,28 +53,6 @@ const WikiDetail = () => {
     fetchWiki(); // 게시글 데이터 요청 함수 호출
   }, [wikiPkNum, location.state]);
 
-   // 파일 다운로드 처리
-   const handleDownload = async (fileFkWikiNum, fileName) => {
-    try {
-      // 백엔드에서 파일 다운로드 API 요청
-      const response = await axios.get(`/wiki/download/${fileFkWikiNum}`, {
-        responseType: 'blob', // 파일을 Blob 형태로 받기
-      });
-  
-      // Blob 데이터로부터 URL을 만들고 다운로드 링크를 자동으로 생성
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName); // 다운로드할 파일 이름 설정
-      document.body.appendChild(link);
-      link.click(); // 링크 클릭하여 다운로드 시작
-      document.body.removeChild(link); // 링크 제거
-    } catch (error) {
-      console.error('파일 다운로드 실패', error);
-      alert('파일 다운로드에 실패했습니다.');
-    }
-  };
-
   // 게시글 삭제 처리 함수
   const handleDelete = async () => {
     try {
@@ -151,20 +129,20 @@ const WikiDetail = () => {
                     </td>
                   </tr>
                   <tr>
-  <td style={{ width: "10%", textAlign: "left" }}>파 일</td>
-  <td style={{ width: "90%", textAlign: "left" }}>
-    {wiki.file_name ? (
-      <span
-        style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }}
-        onClick={() => handleDownload(wiki.file_fk_wiki_num, wiki.file_name)}
-      >
-        {wiki.file_name}
-      </span>
-    ) : (
-      <span>첨부된 파일이 없습니다.</span>
-    )}
-  </td>
-</tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>파 일</td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {wiki.file_name && wiki.file_path ? (
+                        <span>
+                          <a
+                            href={wiki.file_path}>
+                            {wiki.file_name}
+                          </a> 
+                        </span>
+                      ) : (
+                        <span>첨부된 파일이 없습니다.</span>
+                      )}
+                    </td>
+                  </tr>
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
