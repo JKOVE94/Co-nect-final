@@ -26,6 +26,11 @@ public class TaskController {
         return taskService.getAllTask(task_fk_proj_num);
     }
     
+    @GetMapping("/task/{taskPkNum}")
+    public TaskDto getTaskByNum(@PathVariable("taskPkNum")int taskPkNum){
+    	return taskService.getTaskByNum(taskPkNum);
+    }
+    
     @GetMapping("/task/proj/{projectNum}/user/{userNum}")
     public List<TaskDto> getTaskByProjectAndUser(@PathVariable("projectNum") int projectNum, @PathVariable("userNum") int userNum) {
         return taskService.getAllTaskByProjectAndUser(projectNum, userNum);

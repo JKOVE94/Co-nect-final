@@ -105,6 +105,15 @@ public class TaskServiceImpl implements TaskService {
 
         return taskPage.map(TaskDto::fromEntity);
     }
+    
+    @Override
+    public TaskDto getTaskByNum(int taskPkNum) {
+        return taskRepository.findById(taskPkNum)
+                .map(TaskDto::fromEntity)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskPkNum));
+    }
+
+
 
 
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import axiosInstance from "../../../api/axiosInstance";
 import {
@@ -12,7 +12,6 @@ import {
   Progress,
   Input,
   Button,
-  Row,
   Col,
 } from "reactstrap";
 
@@ -205,6 +204,15 @@ const TaskList = () => {
                   )}
                 </tbody>
               </table>
+              <div className="d-flex justify-content-end">
+                <button
+                  className="btn btn-primary mr-3 mt-3"
+                  onClick={() => Navigate(`/main`)}
+                >
+                  글쓰기
+                </button>
+              </div>
+
               <div
                 style={{
                   display: "flex",
