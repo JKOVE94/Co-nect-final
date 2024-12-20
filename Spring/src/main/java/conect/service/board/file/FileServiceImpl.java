@@ -2,6 +2,8 @@ package conect.service.board.file;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,9 +30,13 @@ import conect.data.dto.FileDto;
 import conect.data.dto.PostDto;
 import conect.data.entity.FileEntity;
 import conect.data.entity.PostEntity;
+import conect.data.entity.ProjectEntity;
+import conect.data.entity.UserEntity;
 import conect.data.entity.WikiEntity;
 import conect.data.form.FileForm;
 import conect.data.repository.FileRepository;
+import conect.data.repository.ProjectRepository;
+import conect.data.repository.UserRepository;
 import conect.data.repository.WikiRepository;
 
 @Service
@@ -41,6 +47,12 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private WikiRepository wikiRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private ProjectRepository projectRepository;
 
     // GCP Storage 세팅
     @Value("${spring.cloud.gcp.storage.credentials.location}")
@@ -82,34 +94,35 @@ public class FileServiceImpl implements FileService {
         System.out.println(fileUrl);
         return fileUrl;
     }
-
-    // 게시글 생성 시 파일 저장 및 WikiEntity와 연결
+    
+    // WikiEntity 저장 (트랜잭션 처리)
+    @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
     public FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException {
-    	// 파일 업로드 후 URL 받기
-        String fileUrl = saveFile(fileForm, file);  // saveFile 메서드를 호출하여 파일 URL 받기
-//        System.out.println(fileUrl);
-        fileForm.setFile_path(fileUrl);  // 반환된 URL을 file_path에 설정
-    	
-    	// FileEntity 객체 생성
-        FileEntity fileEntity = new FileEntity();
-        
-        fileEntity.setFileName(file.getOriginalFilename());
-        fileEntity.setFilePath(fileForm.getFile_path());
-        fileEntity.setFileType(file.getContentType());
-        fileEntity.setFileSize((int) file.getSize());
+        try {
+            // 2. 파일 URL 받기
+            String fileUrl = saveFile(fileForm, file);
 
-        // file_fk_wiki_num이 0 또는 null일 경우 처리
-        if (fileForm.getFile_fk_wiki_num() != null && fileForm.getFile_fk_wiki_num() > 0) {
-            // 유효한 WikiEntity가 있을 경우만 설정
-            fileEntity.setWikiEntity(wikiRepository.findById(fileForm.getFile_fk_wiki_num())
-                .orElseThrow(() -> new RuntimeException("해당 WikiEntity를 찾을 수 없습니다. ID: " + fileForm.getFile_fk_wiki_num())));
+            // 3. FileEntity 객체 생성
+            FileEntity fileEntity = new FileEntity();
+            fileEntity.setFileName(file.getOriginalFilename());
+            fileEntity.setFilePath(fileUrl);
+            fileEntity.setFileType(file.getContentType());
+            fileEntity.setFileSize((int) file.getSize());
+            
+            // WikiEntity와 연결
+
+            // 4. FileEntity 저장
+            fileRepository.save(fileEntity);
+            fileRepository.flush();  // 즉시 DB에 반영
+            return fileEntity; // 반환
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("파일 처리 중 오류 발생", e);  // 예외를 던져서 롤백을 트리거함
         }
-
-        // 파일 저장
-        fileRepository.save(fileEntity);
-
-        return fileEntity;
     }
+
+
 
 
     // 전체 조회

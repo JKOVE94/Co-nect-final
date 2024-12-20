@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import conect.data.dto.FileDto;
 import conect.data.dto.PostDto;
 import conect.data.entity.FileEntity;
+import conect.data.entity.WikiEntity;
 import conect.data.form.FileForm;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +20,7 @@ public interface FileService {
 	
 	// 삽입
 	FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException;
-
+	
 	// 전체 조회
 	public List<FileDto> getPostAll();
 	
@@ -35,4 +36,5 @@ public interface FileService {
 	// 페이징
 	public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText);
 
+         
 }

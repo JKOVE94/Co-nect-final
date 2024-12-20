@@ -96,7 +96,7 @@ const FileList = () => {
                       </Link>
                     </td>
                     <td>{file.wiki.user_name}</td>
-                    <td>{formatDate(file.wiki_regdate)}</td>
+                    <td>{formatDate(file.wiki.wiki_regdate)}</td>
                     <td>{file.wiki_view}</td>
                   </tr>
                 ))
