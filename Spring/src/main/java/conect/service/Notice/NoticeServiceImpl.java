@@ -79,10 +79,13 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     // 조회수 가져오기
+    /*
+    @Override
     public int getViewCount(int notiNum) {
         NoticeEntity notice = notiRepository.findById(notiNum).orElseThrow();
         return notice.getViewUsers().size();
     }
+     */
 
 
     //새 공지 추가

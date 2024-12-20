@@ -21,8 +21,8 @@ public interface NoticeService {
     void upNotice(int notiNum ,NoticeForm form);
     //공지글 삭제
     void delNotice(int notiNum);
-    //페이징
-
     //조회수 증가
     void updateViewCount(int notiNum, int userPkNum);
+    //조회수 가져오기
+    //public int getViewCount(int notiNum);
 }
