@@ -122,7 +122,7 @@ public class WikiController {
 	
 	@Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
-	/*
+
 	//파일 다운로드
 	@GetMapping("/download/{fileFkWikiNum}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable int fileFkWikiNum) {
@@ -156,7 +156,7 @@ public class WikiController {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 오류 발생 시 404 반환
 	    }
 	}
-*/
+
 	// 문서 생성
 	@PostMapping("/wikiadd")
 	public ResponseEntity<?> addWiki(@ModelAttribute WikiForm form) {

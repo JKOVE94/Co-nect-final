@@ -151,13 +151,20 @@ const WikiDetail = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>
-                      파 일
-                    </td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
-                      {wiki.file_name} {/* 작성자 */}
-                    </td>
-                  </tr>
+  <td style={{ width: "10%", textAlign: "left" }}>파 일</td>
+  <td style={{ width: "90%", textAlign: "left" }}>
+    {wiki.file_name ? (
+      <span
+        style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }}
+        onClick={() => handleDownload(wiki.file_fk_wiki_num, wiki.file_name)}
+      >
+        {wiki.file_name}
+      </span>
+    ) : (
+      <span>첨부된 파일이 없습니다.</span>
+    )}
+  </td>
+</tr>
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
