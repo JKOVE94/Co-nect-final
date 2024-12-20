@@ -24,5 +24,5 @@ public interface NoticeService {
     //페이징
 
     //조회수 증가
-    void updateCount(int notiNum);
+    void updateViewCount(int notiNum, int userPkNum);
 }

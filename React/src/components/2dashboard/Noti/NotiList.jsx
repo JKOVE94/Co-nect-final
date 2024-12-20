@@ -189,7 +189,7 @@ const handleNextPage = () => {
                     </td>
                     <td>{notice.userName}</td>
                     <td>{notice.noti_regdate}</td>
-                    <td>{notice.noti_view}</td>
+                    <td>{notice.viewCount}</td>
                   </tr>
                 ))
               ) : (

@@ -1,6 +1,8 @@
 package conect.data.form;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import conect.data.entity.NoticeEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +20,7 @@ public class NoticeForm {
     private LocalDate noti_moddate;
     private int noti_deleted;
     private int noti_import;
-    private int noti_view;
+    private String noti_view;
     private int noti_fk_comp_num;
 
     //toEntity
@@ -30,7 +32,7 @@ public class NoticeForm {
         entity.setNotiModdate(form.getNoti_moddate()); //수정날짜
         entity.setNotiDeleted(form.getNoti_deleted());
         entity.setNotiImport(form.getNoti_import());
-        entity.setNotiView(form.getNoti_view());
+        entity.setNoti_view(form.getNoti_view());
         return entity;
     }
 

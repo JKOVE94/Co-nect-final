@@ -35,22 +35,4 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity,Integer> {
     @Query("UPDATE NoticeEntity n SET n.notiDeleted = 1 WHERE n.notiPkNum = ?1")
     void delOneNotice(int notiNum);
 
-    // notice 제목 검색용
-    //Page<NoticeEntity> findNoticeByNoticeName(String searchName);
-
-    //중요도 체크박스 설정
-    @Modifying
-    @Query("UPDATE NoticeEntity n SET n.notiImport = 1 WHERE n.notiPkNum = ?1")
-    void checkBox(int notiNum);
-
-    //중요도 체크박스 해제
-    @Modifying
-    @Query("UPDATE NoticeEntity n SET n.notiImport = 0 WHERE n.notiPkNum = ?1")
-    void unCheckBox(int notiNum);
-
-    //조회수 1증가
-    @Modifying
-    @Query("UPDATE NoticeEntity n SET n.notiView = n.notiView + 1 WHERE n.notiPkNum = ?1")
-    void updateCount(int notiNum);
-
 }

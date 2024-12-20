@@ -30,12 +30,16 @@ const NotiUpdate = () => {
     noti_import: 0 // 공지 중요도 체크
   });
 
-  //기존 등록된 공지 제목 글 불러오기
-  useEffect(() => {
-    const fetchNotiData = async () => {
-      try {
-        const response = await axios.get(`/main/${compPkNum}/notice/${notiPkNum}`);
-        const notiData = response.data;
+ //기존 등록된 공지 제목 글 불러오기
+useEffect(() => {
+  const fetchNotiData = async () => {
+    try {
+      const response = await axios.get(`/main/${compPkNum}/notice/${notiPkNum}`, {
+        params: {
+          userPkNum: loginUser.user_pk_num  // 조회수 기능을 위한 로그인한 사용자 ID 전달
+        }
+      });
+      const notiData = response.data;
 
       // 작성자 검증
       if (notiData.noti_fk_user_num !== loginUser.user_pk_num) {

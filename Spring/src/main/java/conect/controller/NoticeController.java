@@ -45,8 +45,9 @@ public class NoticeController {
 
     //공지 게시글 하나 보기
     @GetMapping("/{notiNum}")
-    public Optional<NoticeDto> getNoticeOne(@PathVariable("notiNum") int notiPkNum){
+    public Optional<NoticeDto> getNoticeOne(@PathVariable("notiNum") int notiPkNum, @RequestParam int userPkNum){
         System.out.println("notiNum:"+ notiPkNum);
+        noticeService.updateViewCount(notiPkNum, userPkNum);
         //noticeService.updateCount(notiPkNum); //조회수 증가 -> 나중에 react에서 form에 +1하고 넘겨주기
         return noticeService.getOneNotice(notiPkNum);
     }

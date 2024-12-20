@@ -30,7 +30,11 @@ const NotiDetail = () => {
 
     const fetchNoti = async () => {
       try {
-        const response = await axios.get(`/main/${compPkNum}/notice/${notiPkNum}`);
+        const response = await axios.get(`/main/${compPkNum}/notice/${notiPkNum}`, {
+          params: {
+            userPkNum: loginUser.user_pk_num  // 로그인한 사용자 ID를 파라미터로 전달
+          }
+        });
         setNoti(response.data);
       } catch (err) {
         setError(err.message);
@@ -113,6 +117,20 @@ const NotiDetail = () => {
           ) : (
             <div>게시글을 찾을 수 없습니다.</div>
           )}
+          {/* 테이블과 버튼 사이에 조회수 표시 */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'flex-end',  // 오른쪽 정렬
+            marginTop: "10px", 
+            marginBottom: "10px",
+            marginRight:"5px",
+            fontSize: "0.8rem",
+            color: "#666"  // 회색톤의 글자색
+            }}>
+            조회수: {noti.viewCount}
+          </div>
+
+
           <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px" }}>
             <button className="btn btn-primary" onClick={() => navigate(`/main/noti/notiedit/${notiPkNum}`)}>
               수정

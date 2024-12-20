@@ -6,6 +6,10 @@ import lombok.Setter;
 
 import javax.naming.Name;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -21,7 +25,25 @@ public class NoticeEntity {
     private LocalDate notiModdate; //공지사항 수정일 [DATETIME]
     private int notiDeleted; //공지사항 삭제여부 [INT]
     private int notiImport; //공지사항 중요도 [INT]
-    private int notiView; //공지사항 조회수 [INT]
+    private String noti_view;//조회수
+
+    // getter에서 String을 List로 변환
+    public List<Integer> getViewUsers() {
+        if (noti_view == null || noti_view.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(noti_view.split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
+
+    // setter에서 List를 String으로 변환
+    public void setViewUsers(List<Integer> users) {
+        this.noti_view = users.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+    }
+
 
     @ManyToOne
     @JoinColumn(name = "noti_fk_user_num")

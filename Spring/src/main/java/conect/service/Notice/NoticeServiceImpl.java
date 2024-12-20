@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,14 +32,6 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Autowired
     private CompanyRepository companyRepository;
-
-
-    //조회수 증가
-
-    @Override
-    public void updateCount(int notiNum) {
-        notiRepository.updateCount(notiNum);
-    }
 
 
     //공지 리스트 출력 + 검색기능
@@ -70,6 +63,27 @@ public class NoticeServiceImpl implements NoticeService{
         return notiRepository.getOneNotice(notiNum)
                 .map(NoticeDto::fromEntity);
     }
+
+    //조회수 증가
+    @Transactional
+    @Override
+    public void updateViewCount(int notiNum, int userPkNum) {
+        NoticeEntity notice = notiRepository.findById(notiNum).orElseThrow();
+        List<Integer> viewers = notice.getViewUsers();
+
+        if (!viewers.contains(userPkNum)) {
+            viewers.add(userPkNum);
+            notice.setViewUsers(viewers);
+            notiRepository.save(notice);
+        }
+    }
+
+    // 조회수 가져오기
+    public int getViewCount(int notiNum) {
+        NoticeEntity notice = notiRepository.findById(notiNum).orElseThrow();
+        return notice.getViewUsers().size();
+    }
+
 
     //새 공지 추가
     @Transactional
