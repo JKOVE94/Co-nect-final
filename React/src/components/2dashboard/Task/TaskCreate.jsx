@@ -16,7 +16,7 @@ import axiosInstance from "../../../api/axiosInstance";
 
 const TaskCreate = () => {
     const navigate = useNavigate();
-    const { projectNum } = useParams();
+    const { projectNum } = useParams(); // 프로젝트 번호 받아오기
 
     const [users, setUsers] = useState([]);
 
@@ -62,13 +62,15 @@ const TaskCreate = () => {
             }
         } catch (error) {
             console.error('Error creating task:', error);
-            // Handle the error, e.g., show an error message to the user
         }
     };
 
     const handleCancel = () => {
-        navigate(`/main/task/tasklist/${projectNum}`);
+        navigate(-1); // TaskList로 이동
     };
+
+    const progressOptions = ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'];
+
 
     const styles = {
         formLabel: {
@@ -81,7 +83,8 @@ const TaskCreate = () => {
         card: {
             maxWidth: '1000px',
             margin: '0 auto',
-            boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+            overflowY: 'auto'
         },
         header: {
             backgroundColor: '#f8f9fa',
@@ -104,13 +107,14 @@ const TaskCreate = () => {
     };
 
     return (
-        <Container className="py-4">
+        <Container className="py-4" style={{ overflowY: 'auto' }}>
             <Card style={styles.card}>
                 <CardHeader style={styles.header}>
                     <h2 className="mb-0">업무 생성</h2>
                 </CardHeader>
                 <Form onSubmit={handleSubmit} style={styles.form}>
-                    <FormGroup row>
+
+                    <FormGroup row style={{ height: "auto" }}>
                         <Label
                             sm={2}
                             style={styles.formLabel}
@@ -130,11 +134,126 @@ const TaskCreate = () => {
                         </Col>
                     </FormGroup>
 
-                    {/* ... other form inputs (taskContent, taskStatus, taskStartdate, etc.) */}
+                    <FormGroup row style={{ height: "auto" }}>
+                        <Label
+                            sm={2}
+                            style={styles.formLabel}
+                            for="taskContent"
+                        >
+                            내용 :
+                        </Label>
+                        <Col sm={10}>
+                            <Input
+                                id="taskContent"
+                                type="textarea"
+                                name="taskContent"
+                                value={formData.taskContent}
+                                onChange={handleInputChange}
+                                style={styles.textarea}
+                                required
+                            />
+                        </Col>
+                    </FormGroup>
 
-                    <Row>
+                    <Row style={{ height: "auto" }}>
                         <Col sm={6}>
-                            <FormGroup row>
+                            <FormGroup row style={{ height: "auto" }}>
+                                <Label
+                                    sm={4}
+                                    style={styles.formLabel}
+                                    for="taskStatus"
+                                >
+                                    상태 :
+                                </Label>
+                                <Col sm={8}>
+                                    <Input
+                                        id="taskStatus"
+                                        type="select"
+                                        name="taskStatus"
+                                        value={formData.taskStatus}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="예정">예정</option>
+                                        <option value="진행중">진행중</option>
+                                        <option value="완료">완료</option>
+                                    </Input>
+                                </Col>
+                            </FormGroup>
+                        </Col>
+                        <Col sm={6}>
+                            <FormGroup row style={{ height: "auto" }}>
+                                <Label
+                                    sm={4}
+                                    style={styles.formLabel}
+                                    for="taskStartdate"
+                                >
+                                    시작일 :
+                                </Label>
+                                <Col sm={8}>
+                                    <Input
+                                        id="taskStartdate"
+                                        type="date"
+                                        name="taskStartdate"
+                                        value={formData.taskStartdate}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </Col>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+
+                    <Row style={{ height: "auto" }}>
+                        <Col sm={6}>
+                            <FormGroup row style={{ height: "auto" }}>
+                                <Label
+                                    sm={4}
+                                    style={styles.formLabel}
+                                    for="taskPriority"
+                                >
+                                    우선순위 :
+                                </Label>
+                                <Col sm={8}>
+                                    <Input
+                                        id="taskPriority"
+                                        type="select"
+                                        name="taskPriority"
+                                        value={formData.taskPriority}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="낮음">낮음</option>
+                                        <option value="보통">보통</option>
+                                        <option value="높음">높음</option>
+                                    </Input>
+                                </Col>
+                            </FormGroup>
+                        </Col>
+                        <Col sm={6}>
+                            <FormGroup row style={{ height: "auto" }}>
+                                <Label
+                                    sm={4}
+                                    style={styles.formLabel}
+                                    for="taskDeadline"
+                                >
+                                    완료일 :
+                                </Label>
+                                <Col sm={8}>
+                                    <Input
+                                        id="taskDeadline"
+                                        type="date"
+                                        name="taskDeadline"
+                                        value={formData.taskDeadline}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </Col>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+
+                    <Row style={{ height: "auto" }}>
+                        <Col sm={6}>
+                            <FormGroup row style={{ height: "auto" }}>
                                 <Label
                                     sm={4}
                                     style={styles.formLabel}
@@ -164,17 +283,35 @@ const TaskCreate = () => {
                                 </Col>
                             </FormGroup>
                         </Col>
-                        {/* ... other form inputs (taskProgress) */}
+                        <Col sm={6}>
+                            <FormGroup row style={{ height: "auto" }}>
+                                <Label
+                                    sm={4}
+                                    style={styles.formLabel}
+                                    for="taskProgress"
+                                >
+                                    진행도 :
+                                </Label>
+                                <Col sm={8}>
+                                    <Input
+                                        id="taskProgress"
+                                        type="select"
+                                        name="taskProgress"
+                                        value={formData.taskProgress}
+                                        onChange={handleInputChange}
+                                    >
+                                        {progressOptions.map(option => (
+                                            <option key={option} value={option}>
+                                                {option}
+                                            </option>
+                                        ))}
+                                    </Input>
+                                </Col>
+                            </FormGroup>
+                        </Col>
                     </Row>
 
                     <div style={styles.buttonContainer}>
-                        <Button
-                            color="secondary"
-                            onClick={handleCancel}
-                            style={{ minWidth: '100px' }}
-                        >
-                            취소
-                        </Button>
                         <Button
                             color="primary"
                             type="submit"
@@ -182,6 +319,16 @@ const TaskCreate = () => {
                         >
                             저장
                         </Button>
+
+                        <Button
+                            color="secondary"
+                            onClick={handleCancel}
+                            style={{ minWidth: '100px' }}
+                        >
+                            취소
+                        </Button>
+
+
                     </div>
                 </Form>
             </Card>
