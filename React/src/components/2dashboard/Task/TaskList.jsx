@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import { format } from "date-fns";
 import axiosInstance from "../../../api/axiosInstance";
 import {
@@ -25,6 +25,7 @@ import {
 } from "reactstrap";
 
 const TaskList = () => {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -131,9 +132,9 @@ const TaskList = () => {
     fetchTasks(1, 0, sortField, sortDirection);
   };
 
+
   const handleEditTask = (taskId) => {
-    // 토글 수정 페이지 이동
-    console.log("Edit task:", taskId);
+    navigate(`/main/taskedit/`); // projectNum 추가
   };
 
   const handleDeleteClick = (taskId) => {
@@ -159,9 +160,13 @@ const TaskList = () => {
     setSelectedTaskId(null);
   };
 
+  const handleCreateTask = () => {
+    navigate(`/main/taskcreate`);
+  };
+
   return (
-      <Container fluid style={{ Height: "40em", marginTop: "1em" }}>
-        <Card style={{ Height: "40em", overflowY: "auto" }}>
+      <Container fluid style={{Height: "40em", marginTop: "1em"}}>
+        <Card style={{Height: "40em", overflowY: "auto"}}>
           <CardHeader>
             <h2>프로젝트 업무 목록</h2>
             <div className="row h-25">
@@ -188,12 +193,12 @@ const TaskList = () => {
               </Col>
             </div>
           </CardHeader>
-          <CardBody className="p-0" style={{ Height: "40em", overflowY: "auto" }}>
-            {loading && <Spinner color="primary" />}
+          <CardBody className="p-0" style={{Height: "40em", overflowY: "auto"}}>
+            {loading && <Spinner color="primary"/>}
             {error && <Alert color="danger">{error}</Alert>}
             {!loading && !error && (
                 <>
-                  <table className="table" style={{ fontSize: "1.2rem" }}>
+                  <table className="table" style={{fontSize: "1.2rem"}}>
                     <thead className="thead-light">
                     <tr>
                       <th>태스크</th>
@@ -201,7 +206,7 @@ const TaskList = () => {
                       <th>시작일</th>
                       <th>마감일</th>
                       <th>상태</th>
-                      <th style={{ width: "200px" }}>진행도</th>
+                      <th style={{width: "200px"}}>진행도</th>
                       <th></th>
                     </tr>
                     </thead>
@@ -209,7 +214,7 @@ const TaskList = () => {
                     {tasks.length > 0 ? (
                         tasks.map((task) => (
                             <tr key={task.taskPkNum}>
-                              <td style={{ fontWeight: "bold" }}>
+                              <td style={{fontWeight: "bold"}}>
                                 <Link to={`/main/task/detail/${task.taskPkNum}`}>
                                   {task.taskTitle}
                                 </Link>
@@ -229,9 +234,9 @@ const TaskList = () => {
                                 <Progress
                                     value={task.taskProgress}
                                     max={100}
-                                    style={{ height: "8px", width: "100%" }}
+                                    style={{height: "8px", width: "100%"}}
                                 />
-                                <div style={{ fontSize: "0.8rem", color: "#A0A0A0" }}>
+                                <div style={{fontSize: "0.8rem", color: "#A0A0A0"}}>
                                   {`진행률: ${task.taskProgress || 0}%`}
                                 </div>
                               </td>
@@ -246,7 +251,7 @@ const TaskList = () => {
                                   </DropdownToggle>
                                   <DropdownMenu right>
                                     <DropdownItem
-                                        onClick={() => handleEditTask(task.taskPkNum)}
+                                        onClick={() => handleEditTask(task.taskId)}
                                     >
                                       수정
                                     </DropdownItem>
@@ -267,6 +272,10 @@ const TaskList = () => {
                     )}
                     </tbody>
                   </table>
+
+
+
+
                   <div
                       style={{
                         display: "flex",
@@ -312,11 +321,11 @@ const TaskList = () => {
             {/* 삭제 확인 Modal */}
             <Modal isOpen={deleteModal} toggle={handleDeleteCancel}>
               <ModalHeader toggle={handleDeleteCancel}>삭제 확인</ModalHeader>
-              <ModalBody>정말로  삭제하시겠습니까?</ModalBody>
+              <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
               <ModalFooter>
                 <Button color="danger" onClick={handleDeleteConfirm}>
                   삭제
-                </Button>{' '}
+                </Button>{" "}
                 <Button color="secondary" onClick={handleDeleteCancel}>
                   취소
                 </Button>
@@ -324,6 +333,16 @@ const TaskList = () => {
             </Modal>
           </CardBody>
         </Card>
+        <div style={{
+          borderTop: "1px solid #dee2e6",
+          padding: "1rem",
+          display: "flex",
+          justifyContent: "flex-start"
+        }}>
+          <Button color="primary" onClick={handleCreateTask}>
+            등록
+          </Button>
+        </div>
       </Container>
   );
 };
