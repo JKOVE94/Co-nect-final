@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: co-nect
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://svc.sel4.cloudtype.app:32584/acorn_wbs
+    username: root
+    password: conan2jo!
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+  logging:
+    level:
+      org:
+        hibernate:
+          SQL: debug
+          type:
+            descriptor:
+              sql: trace
+
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: classpath:favorable-order-443405-t7-cc0abaa100fb.json
+        project-id: favorable-order-443405-t7
+        bucket: co-nect
+
+jwt:
+  secret: dGhpc2lzYXZlcnlzZWN1cmVzZWNyZXRrZXl0aGlzaXNhdmVyeXNlY3VyZXNlY3JldGtleQ== # Base64로 인코딩된 키
+  expiration-time: 3600000  # 1시간 (밀리초 단위)
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /v3/api-docs

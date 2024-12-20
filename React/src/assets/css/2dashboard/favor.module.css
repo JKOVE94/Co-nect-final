@@ -1,0 +1,23 @@
+.link:hover{
+    cursor: pointer;
+}
+
+.del {
+    width:80px;
+}
+.table {
+    table-layout: fixed;
+    text-align: center;
+}
+.container {
+    margin-top: 2rem;
+}
+
+.subtitle{
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+.icon {
+    color : yellow;
+}
