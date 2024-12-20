@@ -7,7 +7,7 @@ import { GET_DPARTINFO } from "../../../Redux/Reducer/departDataReducer";
 
 import "assets/css/3manage/userinfo.css";
 import ManageUserModal from "variables/Modal/ManageUserModal";
-import UserDropdown from "variables/Dropdown/UserDropdown";
+import ManagerUserDropdown from "variables/Dropdown/ManagerUserDropdown";
 import ManageUserToast from "variables/Toast/ManageUserToast";
 
 const UserInfo = (props) => {
@@ -127,11 +127,11 @@ const UserInfo = (props) => {
                             : "사용 제한"}
                         </td>
                         <td colSpan={2}>
-                          <UserDropdown
+                          <ManagerUserDropdown
                             pkNum={user.user_pk_num}
                             handleDelete={() => deleteUser(user.user_pk_num)}
                             handleReset={() => resetPW(user.user_pk_num)}
-                          ></UserDropdown>
+                          ></ManagerUserDropdown>
                         </td>
                       </tr>
                     ))}

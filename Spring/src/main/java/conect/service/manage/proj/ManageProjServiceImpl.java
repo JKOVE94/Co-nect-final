@@ -1,9 +1,12 @@
 package conect.service.manage.proj;
 
 import conect.data.dto.ProjectDto;
+import conect.data.dto.ProjectmemberDto;
 import conect.data.entity.ProjectEntity;
 import conect.data.entity.ProjectmemberEntity;
+import conect.data.entity.UserEntity;
 import conect.data.form.ProjectForm;
+import conect.data.form.ProjectmemberForm;
 import conect.data.repository.CompanyRepository;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.ProjectmemberRepository;
@@ -37,77 +40,44 @@ public class ManageProjServiceImpl implements ManageProjService {
     @Autowired
     private UserRepository userRepository;
 
-    // 삽입
+    // 생성
     @Override
-    public boolean insertProject(ProjectForm projectForm) {
-        ProjectmemberEntity projectMemberEntity = new ProjectmemberEntity();
+    public int insertProject(int compPkNum, ProjectForm projectForm) {
         ProjectEntity projectEntity = ProjectForm.toEntity(projectForm);
+        projectEntity.setCompanyEntity(companyRepository.findById(compPkNum).get());
+        projectEntity.setUserEntity(userRepository.findUserByUserPkNumAndCompPkNum(compPkNum, projectForm.getProj_fk_user_num()));
+        return projectRepository.save(projectEntity).getProjPkNum();
 
+    }
+
+    // 부분 조회, 조회수(Cookie)
+    @Override
+    public ProjectDto getProjectView(int compPkNum, int ProjectPkNum) {
+        return ProjectDto.fromEntity(projectRepository.findByProjCompNumAndProjPkNum(compPkNum, ProjectPkNum));
+    }
+
+//     수정
+    @Override
+    public boolean updateProject(int compPkNum, int projNum, ProjectForm form) {
         try{
-        projectEntity.setCompanyEntity(companyRepository.findById(projectForm.getProj_fk_comp_num()).get());
-
-        // 프로젝트 멤버 추가
-        projectMemberEntity.setProjectEntity(projectEntity);
-        projectMemberEntity.setUserEntity(userRepository.findById(projectForm.getProj_fk_user_num()).get());
-        projectMemberRepository.save(projectMemberEntity);
-
-        // 프로젝트 추가
+        ProjectEntity projectEntity = projectRepository.findByProjCompNumAndProjPkNum(compPkNum, projNum);
+        projectEntity.setProjTitle(form.getProj_title());
+        projectEntity.setProjContent(form.getProj_content());
+        projectEntity.setProjStartdate(form.getProj_startdate());
+        projectEntity.setProjEnddate(form.getProj_enddate());
+        projectEntity.setProjStatus(form.getProj_status());
+        projectEntity.setProjUpdated(form.getProj_updated());
         projectRepository.save(projectEntity);
-        }catch(Exception e){
-            System.out.println("프로젝트 추가 실패"+ e );
+        }
+        catch (Exception e) {
+            System.out.println("프로젝트 수정 실패" + e);
             return false;
         }
         return true;
     }
 
-    // 부분 조회, 조회수(Cookie)
-    @Override
-    public ProjectDto getProjectView(int ProjectPkNum) {
-        return projectRepository.findById(ProjectPkNum).map(ProjectDto::fromEntity).orElse(null);
-    }
-
-    @Override
-    public ProjectDto updateProject(int ProjectPkNum, ProjectForm ProjectForm) {
-        return null;
-    }
-
-    @Override
-    public void deleteProject(int ProjectPkNum) {
-
-    }
-
-    @Override
-    public List<Map<Integer, String>> getTargetNames(String targetNumsString) {
-        return List.of();
-    }
-
-    // 수정
-//    @Override
-//    public ProjectDto updateProject(int ProjectPkNum, ProjectForm ProjectForm) { // ProjectId를 ProjectPkNum으로 변경
-//        ProjectEntity updateProject = frepository.findById(ProjectPkNum).orElse(null); // ProjectId를 ProjectPkNum으로 변경
-//        if (updateProject != null) {
-//            updateProject.setProjectKind(ProjectForm.getProject_kind());
-//            updateProject.setProjectTargetnum(ProjectForm.getProject_targetnum());
-//            updateProject.setProjectName(ProjectForm.getProject_name());
-//            updateProject.setProjectRegdate(ProjectForm.getProject_regdate());
-//            updateProject.setProjectImport(ProjectForm.getProject_import());
-//            updateProject.setProjectContent(ProjectForm.getProject_content());
-//            updateProject.setProjectTag(ProjectForm.getProject_tag());
-//            updateProject.setProjectDepth(ProjectForm.getProject_depth());
-//            updateProject.setProjectView(ProjectForm.getProject_view());
-//            return ProjectDto.fromEntity(frepository.save(updateProject));
-//        }
-//        return null;
-//    }
-
-    // 삭제
-//    @Override
-//    public void deleteProject(int ProjectPkNum) {
-//        frepository.deleteById(ProjectPkNum);
-//    }
-
     // 페이징, 정렬, 검색
-    public Page<ProjectDto> getList(int comp_pk_num, int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText) {
+    public Page<ProjectDto> getList(int compPkNum, int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText) {
         // 정렬 정보 생성
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
 
@@ -118,32 +88,109 @@ public class ManageProjServiceImpl implements ManageProjService {
         Page<ProjectEntity> ProjectPage = Page.empty();
 
         if (searchType.equalsIgnoreCase("title")) {
-            ProjectPage = projectRepository.findByProjSearchTitleWithPaging(comp_pk_num, searchText, pageable);
-        } else if(searchType.equalsIgnoreCase("content")) {
-            ProjectPage = projectRepository.findByProjSearchContentWithPaging(comp_pk_num, searchText, pageable);
+            ProjectPage = projectRepository.findByProjSearchTitleWithPaging(compPkNum, searchText, pageable);
+        } else if (searchType.equalsIgnoreCase("content")) {
+            ProjectPage = projectRepository.findByProjSearchContentWithPaging(compPkNum, searchText, pageable);
         } else {
-            ProjectPage = projectRepository.findByProjCompNumWithPaging(comp_pk_num, pageable);
+            ProjectPage = projectRepository.findByProjCompNumWithPaging(compPkNum, pageable);
         }
         // ProjectEntity -> ProjectDto 변환
         return ProjectPage.map(ProjectDto::fromEntity);
     }
-//
-//    //targetNum 여러명 이름 불러오기
-//    public List<Map<Integer,String>> getTargetNames(String targetNumsString){
-//        StringTokenizer st = new StringTokenizer(targetNumsString,","); // nums String으로 관리하고, 구분자가 ',' 그래서 ,를 기준으로 스트링토크나이저 사용해서 각각의 토큰화
-//        List<Integer> userNums = new ArrayList<Integer>(); // 그 토큰을 INTEGER화 해서 담을 LIST => 순서가 필요없고 갯수가 정해져 있지 않아서 array X List O
-//        while(st.hasMoreTokens()) {// 토큰이 있을경우
-//            userNums.add(Integer.parseInt(st.nextToken())); // 다음 토큰을 찾아 이동하면서 해당 토큰(String) => parseInt => userNums라는 List<Integer>에 담아줌
-//        }
-//        //userNums 안에 데이터가 생김. 1개~ 그이상
-//
-//        Map<Integer,String> usermap = new HashMap<>(); // Map<사번, 이름> 정보를 보관하는 맵
-//        List<Map<Integer,String>> userMapList = new ArrayList<Map<Integer,String>>(); // 그 맵을 여러개 보관할 리스트
-//        for(int num : userNums) {
-//            String name = userRepository.findById(num).get().getUserName(); //유저의 번호 1개씩 요청해서 이름만 받아
-//            usermap.put(num, name); //받은 이름을 사번, 이름으로 맵 저장 => num으로 조회 => name은 그 num과 같은 데이터일수밖에 없음
-//            userMapList.add(usermap); //맵을 List 저장
-//        }
-//        return userMapList; // [{1:김민수},{2:이영희}] => find 배열을 순환적으로 돌아다니면서 사용자가 입력한 조건에 맞는 1개의 데이터를 찾아
-//    }
+
+    @Override
+    @Transactional
+    public boolean deleteProject(int compPkNum, int proj_pk_num) {
+        try {
+            projectRepository.deleteByProjCompNumAndProjPkNum(compPkNum,proj_pk_num);
+        } catch (Exception e) {
+            System.out.println("프로젝트 삭제 실패" + e);
+            return false;
+        }
+        return true;
+    }
+
+    //------------------------------------프로젝트 멤버-------------------------------------------------------------
+
+    @Override
+    public List<ProjectmemberDto> getProjectMembers(int compPkNum, int projPkNum) {
+        List<ProjectmemberEntity> projectmemberEntities = projectMemberRepository.findByProjmemFkProjNum(projPkNum);
+        return projectmemberEntities.stream()
+                .filter(entity -> entity.getUserEntity() != null && entity.getUserEntity().getCompanyEntity() != null && entity.getUserEntity().getCompanyEntity().getCompPkNum()==compPkNum)
+                .map(ProjectmemberDto::fromEntity)
+                .map(dto -> {dto.setProjmem_name(userRepository.findById(dto.getProjmem_fk_user_num()).get().getUserName()); return dto;})
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean insertProjectMembers(int compPkNum, ProjectmemberForm form){
+        try{
+            for(int userNum : form.getProjmem_fk_user_num()){
+                ProjectmemberEntity projectmemberEntity = new ProjectmemberEntity();
+                projectmemberEntity.setProjectEntity(projectRepository.findById(form.getProjmem_fk_proj_num()).get());
+                projectmemberEntity.setUserEntity(userRepository.findById(userNum).get());
+                projectMemberRepository.save(projectmemberEntity);
+            }
+        }catch (Exception e){
+            System.out.println("프로젝트 멤버 추가 실패" + e);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateProjectMembers(int compPkNum, ProjectmemberForm form){
+        try{
+            //기존 멤버 리스트 => 새로운 값과 비교해서 중복되지 않는 데이터는 삭제, 중복되는 데이터는 잔류
+            List<ProjectmemberEntity> originalMemberList = projectMemberRepository.findByProjmemFkProjNum(form.getProjmem_fk_proj_num());
+            List<Integer> originalMemberNumList = originalMemberList.stream()
+                    .map(ProjectmemberEntity::getUserEntity)
+                    .map(UserEntity::getUserPkNum)
+                    .collect(Collectors.toList());
+
+            //비교해서 삭제할 멤버 찾기
+            List<Integer> deleteMemeberNums = new ArrayList<>();
+            for(int num : originalMemberNumList){
+                if(!Arrays.stream(form.getProjmem_fk_user_num()).anyMatch(i -> i == num)){
+                    deleteMemeberNums.add(num);
+                }
+            }
+
+            //기존에 있던 멤버중 제거된 멤버 삭제
+            for(int userNum : deleteMemeberNums){
+                ProjectmemberEntity projectmemberEntity = projectMemberRepository.findByProjmemFkProjNumAndProjmemFkUserNum(form.getProjmem_fk_proj_num(), userNum);
+                projectMemberRepository.delete(projectmemberEntity);
+            }
+
+            //기존에 없던 멤버 추가
+            for(int userNum : form.getProjmem_fk_user_num()){
+                if(!originalMemberNumList.contains(userNum)){
+                    ProjectmemberEntity projectmemberEntity = new ProjectmemberEntity();
+                    projectmemberEntity.setProjectEntity(projectRepository.findById(form.getProjmem_fk_proj_num()).get());
+                    projectmemberEntity.setUserEntity(userRepository.findById(userNum).get());
+                    projectMemberRepository.save(projectmemberEntity);
+                }
+            }
+
+        }catch (Exception e){
+            System.out.println("프로젝트 멤버 수정 실패" + e);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteProjectMembers(int compPkNum, ProjectmemberForm form){
+        try{
+            for(int userNum : form.getProjmem_fk_user_num()){
+                ProjectmemberEntity projectmemberEntity = projectMemberRepository.findByProjmemFkProjNumAndProjmemFkUserNum(form.getProjmem_fk_proj_num(), userNum);
+                projectMemberRepository.delete(projectmemberEntity);
+            }
+        }catch (Exception e){
+            System.out.println("프로젝트 멤버 삭제 실패" + e);
+            return false;
+        }
+        return true;
+    }
+
 }

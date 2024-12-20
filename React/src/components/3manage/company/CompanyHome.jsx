@@ -20,10 +20,31 @@ const CompanyHome = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(`/${compNum}/manage/comp`);
-      console.log(response.data);
+      // console.log(response.data);
       setCompinfo(response.data);
     } catch (error) {
       console.error("Error fetching company info:", error);
+    }
+  };
+
+  const downloadImage = async (imageUrl) => {
+    try {
+      const response = await fetch(imageUrl);
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "profile_image.jpg");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading image:", error);
     }
   };
 
@@ -46,6 +67,17 @@ const CompanyHome = () => {
           }
         />
       </Routes>
+      <a
+        href="#"
+        onClick={() =>
+          downloadImage(
+            "https://storage.cloud.google.com/co-nect/emp_pic/1_100"
+          )
+        }
+      >
+        {" "}
+        사진
+      </a>
     </>
   );
 };

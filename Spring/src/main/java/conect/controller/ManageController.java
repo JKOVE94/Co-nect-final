@@ -1,10 +1,9 @@
 package conect.controller;
 
-import conect.data.dto.CompanyDto;
-import conect.data.dto.PostDto;
-import conect.data.dto.ProjectDto;
-import conect.data.dto.UserDto;
+import conect.data.dto.*;
 import conect.data.form.CompanyForm;
+import conect.data.form.ProjectForm;
+import conect.data.form.ProjectmemberForm;
 import conect.data.form.UserForm;
 import conect.service.manage.comp.ManageCompService;
 import conect.service.manage.proj.ManageProjService;
@@ -31,9 +30,19 @@ public class ManageController {
     private ManageCompService manageCompService;
 
     @Autowired
-    private ManageProjService ManageProjService;
+    private ManageProjService manageProjService;
 
-    //----------유저관리 (/manage/user)----------
+    //------------- 회사 관리 (/manage/comp) -------------
+    @GetMapping("/comp")
+    public CompanyDto getCompInfo(@PathVariable("comp_pk_num") int compNum){
+        return manageCompService.getCompanyInfo(compNum);
+    }
+    @PutMapping("/comp")
+    public void updateCompInfo(@PathVariable("comp_pk_num") String compNum, @RequestBody CompanyForm form){
+        manageCompService.updateCompanyInfo(form, Integer.parseInt(compNum));
+    }
+
+    //----------사원관리 (/manage/user)----------
     //유저 전체 정보 얻기
     @GetMapping("/user")
     public List<UserDto> getUserAll(@PathVariable(name="comp_pk_num") int comp_pk_num){
@@ -105,15 +114,6 @@ public class ManageController {
         return manageUserService.resetPassword(compNum, userno);
     }
 
-    //------------- 회사 관리 (/manage/comp) -------------
-    @GetMapping("/comp")
-    public CompanyDto getCompInfo(@PathVariable("comp_pk_num") int compNum){
-        return manageCompService.getCompanyInfo(compNum);
-    }
-    @PutMapping("/comp")
-    public void updateCompInfo(@PathVariable("comp_pk_num") String compNum, @RequestBody CompanyForm form){
-        manageCompService.updateCompanyInfo(form, Integer.parseInt(compNum));
-    }
 
     //----------------- 프로젝트 관리 (/manage/proj) -----------------
     @GetMapping("/proj")
@@ -131,7 +131,7 @@ public class ManageController {
             int blockSize = 5; // 한 블록당 페이지 버튼 수
 
             // 페이징 및 정렬 서비스 호출
-            Page<ProjectDto> postPage = ManageProjService.getList(compNum, page, pageSize, sortField, sortDirection, searchType, searchText);
+            Page<ProjectDto> postPage = manageProjService.getList(compNum, page, pageSize, sortField, sortDirection, searchType, searchText);
 
             // 총 페이지 수
             int totalPages = postPage.getTotalPages();
@@ -168,5 +168,52 @@ public class ManageController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 오류 발생 시
         }
+    }
+
+    //프로젝트 상세 조회
+    @GetMapping("/proj/{proj_pk_num}")
+    public ProjectDto getProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum){
+        return manageProjService.getProjectView(compNum, projNum);
+    }
+
+    //프로젝트 등록
+    @PostMapping("/proj")
+    public int insertProj(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectForm form){
+        System.out.println("insertProj");
+        return manageProjService.insertProject(compNum, form);
+    }
+
+    //프로젝트 삭제
+    @DeleteMapping("/proj/{proj_pk_num}")
+    public boolean deleteProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum){
+        return manageProjService.deleteProject(compNum, projNum);
+    }
+
+    //프로젝트 수정
+    @PutMapping("/proj/{proj_pk_num}")
+    public boolean updateProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum, @RequestBody ProjectForm form){
+        return manageProjService.updateProject(compNum, projNum, form);
+    }
+
+
+    //------ 프로젝트 멤버 관리 (/manage/projmem) ------
+
+    @GetMapping("/projmem/{proj_pk_num}")
+    public List<ProjectmemberDto> getProjMem(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum){
+        return manageProjService.getProjectMembers(compNum, projNum);
+    }
+
+    @PostMapping("/projmem")
+    public boolean insertProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm){
+        return manageProjService.insertProjectMembers(compNum, projMemForm);
+    }
+
+    @PutMapping("/projmem")
+    public boolean updateProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm){
+        return manageProjService.updateProjectMembers(compNum, projMemForm);
+    }
+    @DeleteMapping("/projmem")
+    public boolean deleteProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm){
+        return manageProjService.deleteProjectMembers(compNum, projMemForm);
     }
 }

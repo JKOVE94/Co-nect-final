@@ -5,33 +5,28 @@ import { Card, CardBody, CardHeader, Container } from "reactstrap";
 
 import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
+import ManageProjModal from "variables/Modal/ManageProjModal";
 
-const FreeDetail = () => {
-  const postPkNumInt = parseInt(useParams().postPkNum, 10);
+const ProjDetail = (props) => {
+  const projPkNumInt = parseInt(useParams().projPkNum, 10);
   const navigate = useNavigate();
-  const [post, setPost] = useState({});
+  const [proj, setProj] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  //즐겨찾기
-  const num = useSelector((state) => state.userData.user_pk_num);
-  const [favorList, setFavorList] = useState();
-  const handleFavorite = () => {
-    axios
-      .get(`/favorite/post/${num}/${postPkNumInt}`)
-      .then((res) => {
-        setFavorList(res.data);
-      })
-      .catch((err) => {
-        setFavorList(false);
-      });
-  };
+  const [showM, setShowM] = useState(false); //모달 상태와 관련된 state
+  const handleCloseM = () => setShowM(false); //모달을 닫는 함수
+  const handleShowM = () => setShowM(true); //모달을 열어주는 함수
+  const [type, setType] = useState(""); //모달 타입을 결정하는 state
 
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchProj = async () => {
       try {
-        const response = await axios.get(`/board/free/${postPkNumInt}`);
-        setPost(response.data);
+        const response = await axios.get(
+          `/${props.compNum}/manage/proj/${projPkNumInt}`
+        );
+        console.log(response.data);
+        setProj(response.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -39,17 +34,12 @@ const FreeDetail = () => {
       }
     };
 
-    fetchPost();
-    handleFavorite();
-  }, [postPkNumInt]);
+    fetchProj();
+  }, [projPkNumInt]);
 
   const handleDelete = async () => {
-    try {
-      await axios.delete(`/board/free/${postPkNumInt}`);
-      navigate("/main/free", { state: { success: true } });
-    } catch (err) {
-      setError("삭제 실패: " + err.message);
-    }
+    handleShowM();
+    setType("delete");
   };
 
   if (loading) return <div>Loading...</div>;
@@ -59,7 +49,7 @@ const FreeDetail = () => {
     <Container fluid style={{ Height: "40em", marginTop: "2em" }}>
       <Card style={{ Height: "40em", overflowY: "auto" }}>
         <CardHeader>
-          <h2>자유게시판</h2>
+          <h2>프로젝트 상세</h2>
         </CardHeader>
         <CardBody
           style={{
@@ -70,7 +60,7 @@ const FreeDetail = () => {
           }}
         >
           <div>
-            {post ? (
+            {proj ? (
               <table
                 className="table"
                 style={{
@@ -80,50 +70,117 @@ const FreeDetail = () => {
               >
                 <tbody>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
+                    <td
+                      style={{
+                        width: "10%",
+                        textAlign: "left",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      제 목
+                    </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.post_name}&nbsp;
+                      {proj.proj_title}&nbsp;
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>
-                      작 성 자
+                    <td
+                      style={{
+                        width: "10%",
+                        textAlign: "left",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      담 당 자
                     </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.user_name}
+                      {proj.proj_manager}
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>
-                      우선순위
+                    <td
+                      style={{
+                        width: "10%",
+                        textAlign: "left",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      상 태
                     </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.post_import}
+                      {proj.proj_status}
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>
-                      작 성 일
+                    <td
+                      style={{
+                        width: "10%",
+                        textAlign: "left",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      시 작 일
                     </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {new Date(post.post_regdate).toISOString().split("T")[0]}
+                      {proj.proj_startdate}
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
+                    <td
+                      style={{
+                        width: "10%",
+                        textAlign: "left",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      마 감 일
+                    </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {post.post_content}
+                      {proj.proj_enddate}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style={{
+                        width: "10%",
+                        textAlign: "left",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      멤 버
+                    </td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {proj.memberDtoList.map((member) => (
+                        <span key={member.projmem_pk_num}>
+                          {member.projmem_name}&nbsp;
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style={{
+                        width: "10%",
+                        textAlign: "left",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {" "}
+                      설 명
+                    </td>
+                    <td style={{ width: "90%", textAlign: "left" }}>
+                      {proj.proj_content}
                     </td>
                   </tr>
                 </tbody>
               </table>
             ) : (
-              <div>게시글을 찾을 수 없습니다.</div>
+              <div>해당 프로젝트 정보를 찾을 수 없습니다.</div>
             )}
             <br />
             <button
               className="btn btn-primary"
-              onClick={() => navigate(`/main/free/update/${postPkNumInt}`)}
+              onClick={() => navigate(`/manage/proj/update/${projPkNumInt}`)}
             >
               수정
             </button>
@@ -132,17 +189,25 @@ const FreeDetail = () => {
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => navigate("/main/free")}
+              onClick={() => navigate("/manage/proj")}
             >
               목록
             </button>
           </div>
           <br />
-          <div>댓글 공간</div>
         </CardBody>
       </Card>
+      <ManageProjModal
+        handleCloseM={handleCloseM}
+        handleShowM={handleShowM}
+        showM={showM}
+        type={type}
+        projPkNumInt={projPkNumInt}
+        compNum={props.compNum}
+        setType={setType}
+      />
     </Container>
   );
 };
 
-export default FreeDetail;
+export default ProjDetail;

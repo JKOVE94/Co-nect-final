@@ -2,8 +2,9 @@ import ProjList from "./ProjList";
 import { Route, Routes, useNavigate, userNavigate } from "react-router-dom";
 import ProjCreate from "./ProjCreate";
 import ProjDetail from "./ProjDetail";
-
 import ProjUpdate from "./ProjUpdate";
+import ProjAddMember from "./ProjAddMember";
+import "./manageProject.css";
 
 const ProjHome = () => {
   const compNum = JSON.parse(
@@ -21,6 +22,10 @@ const ProjHome = () => {
         <Route
           path="/update/:projPkNum"
           element={<ProjUpdate compNum={compNum} />}
+        />
+        <Route
+          path="/addMember/:projPkNum"
+          element={<ProjAddMember compNum={compNum} />}
         />
       </Routes>
     </div>

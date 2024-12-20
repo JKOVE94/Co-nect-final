@@ -4,18 +4,21 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
 
-const FreeCreate = () => {
+const ProjCreate = (props) => {
   // Redux에서 로그인한 유저 정보 가져오기
-  const writer = useSelector((state) => state.userData); 
+  const writer = useSelector((state) => state.userData);
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
-    post_targetnum: "",
-    post_name: "",
-    post_fk_user_num: writer.user_pk_num || "1", // 로그인한 유저의 pk_num을 기본값으로 설정
-    post_fk_comp_num: writer.user_fk_comp_num || "1", // 회사 번호도 Redux에서 가져온 값으로 설정
-    post_import: "",
-    post_content: "",
+    proj_title: "",
+    proj_content: "",
+    proj_startdate: "",
+    proj_enddate: "",
+    proj_status: "예정",
+    proj_updated: "",
+    proj_created: new Date().toISOString(), // 현재 시간 추가
+    proj_fk_comp_num: writer.user_pk_num, // 로그인한 유저의 pk_num을 기본값으로 설정
+    proj_fk_user_num: props.compNum, // 회사 번호도 Redux에서 가져온 값으로 설정
   });
 
   const handleChange = (e) => {
@@ -31,55 +34,61 @@ const FreeCreate = () => {
     // 기본값 처리
     const formToSubmit = {
       ...formData,
-      post_fk_user_num: formData.post_fk_user_num || "1",  // 값이 없으면 "1"로 설정
-      post_fk_comp_num: formData.post_fk_comp_num || "1",  // 값이 없으면 "1"로 설정
-      regdate: new Date().toISOString(),  // 현재 시간 추가
-      post_kind: "1",    // 기본값
-      post_fk_dpart_num: "1", // 기본값
-      post_tag: "red",   // 기본값
+      post_fk_user_num: formData.post_fk_user_num || "1", // 값이 없으면 "1"로 설정
+      post_fk_comp_num: formData.post_fk_comp_num || "1", // 값이 없으면 "1"로 설정
+      proj_created: new Date().toISOString(), // 현재 시간 추가
     };
 
-    console.log('Form data before submitting:', formToSubmit);
-    
+    console.log("Form data before submitting:", formToSubmit);
+
     axios
-      .post("/board/free", formToSubmit)
+      .post(`/${props.compNum}/manage/proj`, formToSubmit)
       .then((response) => {
         if (response.data !== 0) {
-          navigate(`/main/free/detail/${response.data}`);
+          navigate(`/manage/proj/detail/${response.data}`);
         }
       })
       .catch((error) => {
         console.error("게시글 저장 중 오류:", error);
-        alert("저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status);
+        alert(
+          "저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status
+        );
       });
   };
 
   const handleBackToList = () => {
-    navigate('/main/free'); // React Router로 리디렉션
+    navigate("/manage/proj"); // React Router로 리디렉션
   };
 
   return (
     <Container fluid style={{ marginTop: "2em" }}>
       <Card>
         <CardHeader>
-          <h2>새 게시글 작성</h2>
+          <h2>새 프로젝트 등록</h2>
+          <button
+            onClick={handleSubmit}
+            type="submit"
+            className="btn btn-primary"
+          >
+            등록
+          </button>
         </CardHeader>
         <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="post_name">제목:</label>
+              <label htmlFor="proj_title">프로젝트 명:</label>
               <input
                 type="text"
                 className="form-control"
-                id="post_name"
-                name="post_name"
-                value={formData.post_name}
+                id="proj_title"
+                name="proj_title"
+                value={formData.proj_title}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="form-group">
-              <label htmlFor="post_fk_user_num">작성자:</label>
+              <label htmlFor="post_fk_user_num">담당자:</label>
               <input
                 type="text"
                 className="form-control"
@@ -92,35 +101,55 @@ const FreeCreate = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="post_import">우선순위:</label>
+              <label htmlFor="proj_startdate">프로젝트 시작일:</label>
+              <input
+                type="Date"
+                className="form-control"
+                id="proj_startdate"
+                name="proj_startdate"
+                value={formData.proj_startdate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="proj_enddate">프로젝트 마감일:</label>
+              <input
+                type="Date"
+                className="form-control"
+                id="proj_enddate"
+                name="proj_enddate"
+                value={formData.proj_enddate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="proj_status">프로젝트 상태:</label>
               <select
                 className="form-control"
-                id="post_import"
-                name="post_import"
-                value={formData.post_import}
+                id="proj_status"
+                name="proj_status"
+                value={formData.proj_status}
                 onChange={handleChange}
                 required
               >
                 <option value="">선택하세요</option>
-                <option value="높음">높음</option>
-                <option value="중간">중간</option>
-                <option value="낮음">낮음</option>
+                <option value="계획">계획</option>
+                <option value="진행중">진행중</option>
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="post_content">내용:</label>
+              <label htmlFor="proj_content">프로젝트 설명:</label>
               <textarea
                 className="form-control"
-                id="post_content"
-                name="post_content"
+                id="proj_content"
+                name="proj_content"
                 value={formData.post_content}
                 onChange={handleChange}
                 required
               ></textarea>
             </div>
-            <button onClick={handleSubmit} type="submit" className="btn btn-primary">게시글 저장</button>
-            <button type="button" className="btn btn-secondary" onClick={handleBackToList}>목록</button>
-            <button type="button" className="btn btn-secondary">임시저장</button>
           </form>
         </CardBody>
       </Card>
@@ -128,4 +157,4 @@ const FreeCreate = () => {
   );
 };
 
-export default FreeCreate;
+export default ProjCreate;

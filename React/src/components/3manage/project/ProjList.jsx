@@ -6,8 +6,10 @@ import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
 import SearchProject from "variables/Search/SearchProject";
 import "../../../assets/css/freepost/freelist.css";
+import ManagerProjDropdown from "variables/Dropdown/ManagerProjDropdown";
+import ManageProjModal from "variables/Modal/ManageProjModal";
 
-const FreeList = (props) => {
+const ProjList = (props) => {
   const [projs, setProjs] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -19,6 +21,7 @@ const FreeList = (props) => {
   //검색 type:title,name
   const [searchText, setSearchText] = useState("");
   const [searchType, setSearchType] = useState("");
+  const [projPkNumInt, setProjPkNumInt] = useState(0);
 
   const navigate = useNavigate();
 
@@ -125,8 +128,15 @@ const FreeList = (props) => {
     }
   };
 
-  //즐겨찾기
-  const num = useSelector((state) => state.userData.user_pk_num);
+  const [showM, setShowM] = useState(false); //모달 상태와 관련된 state
+  const handleCloseM = () => setShowM(false); //모달을 닫는 함수
+  const handleShowM = () => setShowM(true); //모달을 열어주는 함수
+  const [type, setType] = useState(""); //모달 타입을 결정하는 state
+  const handleDelete = async (projNum) => {
+    setProjPkNumInt(projNum);
+    handleShowM();
+    setType("delete");
+  };
 
   return (
     <Container fluid style={{ Height: "40em", marginTop: "1em" }}>
@@ -149,44 +159,61 @@ const FreeList = (props) => {
           <table className="table" style={{ fontSize: "1.2rem" }}>
             <thead>
               <tr>
-                <th style={{ width: "80px" }}></th>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자</th>
+                <th
+                  onClick={() => handleSortChange("projPkNum")}
+                  style={{ cursor: "pointer" }}
+                >
+                  번호
+                  {sortField === "projPkNum" &&
+                    (sortDirection === "DESC" ? "▼" : "▲")}
+                </th>
                 <th
                   onClick={() => handleSortChange("projTitle")}
+                  style={{ cursor: "pointer" }}
+                >
+                  제목
+                  {sortField === "projTitle" &&
+                    (sortDirection === "DESC" ? "▼" : "▲")}
+                </th>
+                <th
+                  onClick={() => handleSortChange("userEntity.userName")}
+                  style={{ cursor: "pointer" }}
+                >
+                  담당자
+                  {sortField === "userEntity.userName" &&
+                    (sortDirection === "DESC" ? "▼" : "▲")}
+                </th>
+                <th
+                  onClick={() => handleSortChange("projCreated")}
                   style={{ cursor: "pointer" }}
                 >
                   등록일
-                  {sortField === "projTitle" &&
+                  {sortField === "projCreated" &&
                     (sortDirection === "DESC" ? "▼" : "▲")}
                 </th>
-                <th
-                  onClick={() => handleSortChange("projTitle")}
-                  style={{ cursor: "pointer" }}
-                >
-                  조회수{" "}
-                  {sortField === "projTitle" &&
-                    (sortDirection === "DESC" ? "▼" : "▲")}
-                </th>
+                <th>참여 인원 </th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {projs.length > 0 ? (
                 projs.map((proj, index) => (
-                  <tr key={proj.post_pk_num || `post-${index}`}>
-                    <td
-                      style={{ display: "flex", justifyContent: "center" }}
-                    ></td>
-                    <td>{proj.post_pk_num}</td>
+                  <tr key={proj.proj_pk_num || `post-${index}`}>
+                    <td>{proj.proj_pk_num}</td>
                     <td>
-                      <Link to={`/main/free/detail/${proj.post_pk_num}`}>
+                      <Link to={`/manage/proj/detail/${proj.proj_pk_num}`}>
                         {proj.proj_title}
                       </Link>
                     </td>
-                    <td>{proj.user_name}</td>
-                    <td></td>
-                    <td>{proj.post_view}</td>
+                    <td>{proj.proj_manager}</td>
+                    <td>{proj.proj_created}</td>
+                    <td>{proj.memberDtoList.length}</td>
+                    <td>
+                      <ManagerProjDropdown
+                        projNum={proj.proj_pk_num}
+                        handleDelete={handleDelete}
+                      />
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -198,12 +225,21 @@ const FreeList = (props) => {
           </table>
           <button
             className="btn btn-primary"
-            onClick={() => navigate(`/main/free/create`)}
+            onClick={() => navigate(`/manage/proj/create`)}
+            style={{
+              float: "left",
+              position: "relative",
+              marginTop: "2em",
+              marginLeft: "1em",
+            }}
           >
-            글쓰기
+            프로젝트 등록
           </button>
           <div
             style={{
+              position: "relative",
+              left: "-2em",
+              marginTop: "2em",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -243,8 +279,18 @@ const FreeList = (props) => {
           </div>
         </CardBody>
       </Card>
+      <ManageProjModal
+        handleCloseM={handleCloseM}
+        handleShowM={handleShowM}
+        showM={showM}
+        type={type}
+        projPkNumInt={projPkNumInt}
+        compNum={props.compNum}
+        setType={setType}
+        fetchProjs={fetchProjs}
+      />
     </Container>
   );
 };
 
-export default FreeList;
+export default ProjList;
