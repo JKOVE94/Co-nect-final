@@ -77,9 +77,15 @@ public class ProjectController {
 		return projServiceImpl.getListAll();
 	}
 	
-	@GetMapping("/projread/{projPkNum}")
-	public ProjectDto getProjById(@PathVariable("projPkNum")int projPkNum){
-		System.out.println("projPkNum : "+projPkNum);
+
+	@GetMapping("/ProjSel/{user_pk_num}")
+	public List<ProjectDto> getUserProject(@PathVariable("user_pk_num") int user_pk_num){
+		return projServiceImpl.getUserProjectData(user_pk_num);
+	}
+
+	
+	@GetMapping("/projdetail/{projPkNum}")
+		public ProjectDto getProjById(@PathVariable("projPkNum") int projPkNum){
 		return projServiceImpl.getProjById(projPkNum);
 	}
 
@@ -94,6 +100,8 @@ public class ProjectController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("프로젝트 생성 실패: " + e.getMessage());
 		}
 	}
+
+
 
 	// 프로젝트 수정
 	@PutMapping("/projedit/{projPkNum}")
@@ -112,18 +120,15 @@ public class ProjectController {
 	public List<ProjectDto> getAllProj(@PathVariable("compNum")int compNum){
 		return projServiceImpl.getAllProjInfo(compNum);
 	}
-	
-	//검색 - status list 반환
-	@GetMapping("/status/{compNum}")
-	public Set<String> getStatusList(@PathVariable("compNum")int compNum){
-		return projServiceImpl.getStatusAll(compNum);
+
+	@GetMapping("/user/{user_pk_num}")
+	public ResponseEntity<Map<String, Object>> getUserRelatedData(@PathVariable("user_pk_num") int userPkNum) {
+		Map<String, Object> userData = projServiceImpl.getUserRelatedData(userPkNum);
+		return ResponseEntity.ok(userData);
 	}
+
+
+
 	
-	//검색데이터 반환
-	@GetMapping("/search")
-	public List<ProjectDto> getSearchData(@RequestParam("status")String status,
-										@RequestParam("searchText")String searchText){	
-		return projServiceImpl.getSearchData(status, searchText);
-	}
 
 }

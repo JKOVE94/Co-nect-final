@@ -3,9 +3,8 @@ package conect.data.dto;
 import conect.data.entity.RecommendationEntity;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 @Setter
 @Getter
@@ -39,6 +38,7 @@ public class RecommendationDto {
         }
         recommendationDto.setRec_likes(recommendationEntity.getReclikesEntities().size());
         recommendationDto.setReply(recommendationEntity.getReplyEntities().size());
+
         return recommendationDto;
     }
 

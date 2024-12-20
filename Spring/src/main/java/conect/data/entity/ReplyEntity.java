@@ -6,15 +6,16 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Setter
 @Getter
 @Entity
 @Table(name = "reply")
 public class ReplyEntity {
+
     @Id
     private int replyPkNum; //댓글 번호 [PK, INT]
     private String replyContent; //댓글 내용 [TEXT]
@@ -34,4 +35,5 @@ public class ReplyEntity {
     
     @OneToMany(mappedBy = "replyEntity")
     List<ReplyLikesEntity> replylikesEntities;
+
 }

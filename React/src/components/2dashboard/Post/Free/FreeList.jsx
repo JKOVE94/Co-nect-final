@@ -1,25 +1,27 @@
-import axios from "axios"; // Axios를 사용하여 HTTP 요청을 보냄
-import React, { useState, useEffect } from "react"; // React 훅 사용
-import { Link, useNavigate } from "react-router-dom"; // React Router의 Link와 useNavigate 사용
-import { format } from "date-fns"; // 날짜 포맷팅을 위한 라이브러리
-import { Card, CardBody, CardHeader, Container } from "reactstrap"; // 부트스트랩 스타일링을 위한 컴포넌트
+
+import axiosInstance from "../../../../api/axiosInstance";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { format } from "date-fns"; // 날짜 포맷팅
+import { Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const FreeList = () => {
-  // 상태 정의
-  const [posts, setPosts] = useState([]); // 게시글 목록
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
-  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-  const [pageBlock, setPageBlock] = useState(0); // 페이지 블록 번호 (페이지 그룹)
-  const [totalBlocks, setTotalBlocks] = useState(0); // 전체 페이지 블록 수
-  const [sortField, setSortField] = useState("postRegdate"); // 정렬 필드 (기본값: 등록일)
-  const [sortDirection, setSortDirection] = useState("DESC"); // 정렬 방향 (기본값: 내림차순)
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageBlock, setPageBlock] = useState(0);
+  const [totalBlocks, setTotalBlocks] = useState(0);
+  const [sortField, setSortField] = useState("postRegdate"); // 기본 정렬: 최신순
+  const [sortDirection, setSortDirection] = useState("DESC"); // 기본 정렬 방향: 내림차순
 
   const navigate = useNavigate(); // 페이지 이동을 위한 navigate 훅
 
   // 게시글 데이터를 가져오는 함수
   const fetchPosts = (page, block, sortField, sortDirection) => {
-    axios
-      .get(`/board/free?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}`)
+    axiosInstance
+      .get(
+        `/board/free?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}`
+      )
       .then((res) => {
         setPosts(res.data.posts); // 게시글 목록 업데이트
         setCurrentPage(res.data.currentPage); // 현재 페이지 설정
@@ -49,15 +51,29 @@ const FreeList = () => {
 
   // 페이지 블록 이동 함수 (이전/다음)
   const handlePageBlockChange = (direction) => {
-    const newPageBlock = pageBlock + direction; // 블록 번호를 변경
-    setPageBlock(newPageBlock); // 새로운 블록 번호 설정
-    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock, sortField, sortDirection); // 해당 블록의 게시글을 가져옴
+
+    const newPageBlock = pageBlock + direction;
+    setPageBlock(newPageBlock);
+    fetchPosts(
+      newPageBlock * pagesPerBlock,
+      newPageBlock,
+      sortField,
+      sortDirection
+    );
+
   };
 
   // 페이지 이동 함수
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber); // 현재 페이지 설정
-    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock), sortField, sortDirection); // 해당 페이지의 게시글을 가져옴
+
+    setCurrentPage(pageNumber);
+    fetchPosts(
+      pageNumber,
+      Math.floor(pageNumber / pagesPerBlock),
+      sortField,
+      sortDirection
+    );
+
   };
 
   // 날짜 포맷팅 함수
@@ -68,9 +84,12 @@ const FreeList = () => {
   // 정렬 필드 변경 함수
   const handleSortChange = (field) => {
     // 정렬 필드 변경 시 방향을 토글 (기본: DESC)
-    const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
-    setSortField(field); // 정렬 필드 업데이트
-    setSortDirection(newDirection); // 정렬 방향 업데이트
+
+    const newDirection =
+      sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
+    setSortField(field);
+    setSortDirection(newDirection);
+
   };
 
   return (
@@ -83,13 +102,17 @@ const FreeList = () => {
               className="btn btn-secondary"
               onClick={() => handleSortChange("postRegdate")}
             >
-              최신순 {sortField === "postRegdate" && (sortDirection === "DESC" ? "▼" : "▲")}
+              최신순{" "}
+              {sortField === "postRegdate" &&
+                (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
             <button
               className="btn btn-secondary"
               onClick={() => handleSortChange("postView")}
             >
-              조회수순 {sortField === "postView" && (sortDirection === "DESC" ? "▼" : "▲")}
+              조회수순{" "}
+              {sortField === "postView" &&
+                (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
           </div>
         </CardHeader>

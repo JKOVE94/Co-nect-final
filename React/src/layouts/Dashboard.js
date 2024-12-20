@@ -1,54 +1,102 @@
-import React from "react";
-import { useLocation, Route, Routes, Navigate } from "react-router-dom";
-import { Container } from "reactstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation, Route, Routes, useNavigate } from "react-router-dom";
 import Navbar from "components/2dashboard/Navbars/Navbar.js";
-import Footer from "components/2dashboard/Footers/Footer.js";
 import Sidebar from "components/2dashboard/Sidebar/Sidebar.js";
 import Header from "components/2dashboard/Headers/Header.js";
 import BinHeader from "components/2dashboard/Headers/binHeader";
 import routes from "routes.js";
-import Item1 from "layouts/itemFrame/Item1";
-import MyToDoList from "components/TempComp/MyToDOList";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import MainComponent from "components/MainComponent";
 import ProjStatus from "components/TempComp/ProjStatus";
-import Projtable from "components/TempComp/ProjTable";
-import MainComponent from "components/MainComponent"
 import ProjectHome from "components/2dashboard/Project/ProjectHome";
 import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
 import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
 import ErrPage from "components/2dashboard/ErrPage";
-import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 import Function from "components/2dashboard/Function/Function";
 import FreeHome from "components/2dashboard/Free/FreeHome";
-import RecHome from "components/2dashboard/recommendation/RecHome";
-
+import axiosInstance from "../api/axiosInstance";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGOUT } from "../Redux/Reducer/userDataReducer";
+import TaskList from "components/2dashboard/Task/TaskList";
+import TaskDetail from "components/2dashboard/Task/TaskDetail";
 
 const Dashboard = (props) => {
-  const mainContent = React.useRef(null);
+  const mainContent = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.userData);
-  
-  
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    dispatch(LOGOUT());
+    navigate("/login");
+  };
+
+  const verifyToken = async () => {
+    const token = sessionStorage.getItem("token");
+    if (!token) return false;
+
+    try {
+      const response = await axiosInstance.post("/validate-token", { token });
+      return response.data.isValid;
+    } catch (error) {
+      console.error("토큰 검증 실패:", error);
+      return false;
+    }
+  };
+
+  const refreshToken = async () => {
+    const token = sessionStorage.getItem("token");
+    try {
+      const response = await axiosInstance.post("/refresh-token", { token });
+      const newToken = response.data.token;
+      sessionStorage.setItem("token", newToken);
+      return true;
+    } catch (error) {
+      console.error("토큰 갱신 실패:", error);
+      return false;
+    }
+  };
 
   useEffect(() => {
-    if (user.user_pk_num === 0) {
+    const checkAuthStatus = async () => {
+      setIsLoading(true);
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        handleLogout();
+        return;
+      }
+
+      const isValid = await verifyToken();
+      if (!isValid) {
+        const refreshed = await refreshToken();
+        if (!refreshed) {
+          handleLogout();
+          return;
+        }
+      }
+      setIsLoading(false);
+    };
+
+    checkAuthStatus();
+
+    const tokenRefreshInterval = setInterval(refreshToken, 15 * 60 * 1000);
+
+    return () => clearInterval(tokenRefreshInterval);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && user.user_pk_num === 0) {
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [user, navigate, isLoading]);
 
-  React.useEffect(() => {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    if (mainContent.current) {
-      mainContent.current.scrollTop = 0;
-    }
-  }, [location]);
+  const isProjReadPath = location.pathname.includes("/projdetail");
 
-  // 조건부 렌더링을 위한 변수 설정
-  const isProjReadPath = location.pathname.includes("/proj/projdetail");
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <>
@@ -62,14 +110,14 @@ const Dashboard = (props) => {
         }}
       />
       <div className="main-content" ref={mainContent}>
-        {isProjReadPath ? "" : <Navbar />}
-        {/* 조건부 렌더링으로 헤더 선택 */}
+        {!isProjReadPath && <Navbar />}
         {isProjReadPath ? <BinHeader /> : <Header />}
         <Routes>
           <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
-          <Route path="/proj/*" element={<ProjectHome />}/>
-          <Route path="/free/*" element={<FreeHome />} />
+          <Route path="/proj/*" element={<ProjectHome />} />
+          <Route path="/task/:projectNum" element={<TaskList />} />
+          <Route path="/task/detail/:taskPkNum" element={<TaskDetail />} />
           <Route path="/projfavorite" element={<ProjFavorite />} />
           <Route path="/freefavorite" element={<FreeFavorite />} />
           <Route path="/function" element={<Function />} />

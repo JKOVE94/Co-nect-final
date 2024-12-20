@@ -131,15 +131,19 @@ public class PostController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 오류 시 500 응답 반환
 		}
 	}
+	
+	
+	
+	
+
 }
 
-// 아래 주석은 임시 저장 관련 메서드로 필요 시 활성화 가능
-/*
-	// 임시 저장된 게시글 생성
-	@PostMapping("/temporary")
-	public TemporaryDto saveTemporary(@RequestBody PostForm postForm) {
-		return TemporaryDto.fromEntity(tempService.saveTemporary(postForm));
-	}
+//-----------------------------------------------------------------------------------------------
+//     // 임시 저장된 게시글 생성
+//     @PostMapping("/temporary")
+//     public TemporaryDto saveTemporary(@RequestBody PostForm postForm) {
+//         return TemporaryDto.fromEntity(tempService.saveTemporary(postForm));
+//     }
 
 	// 임시 저장된 게시글 목록 조회
 	@GetMapping("/temporary")

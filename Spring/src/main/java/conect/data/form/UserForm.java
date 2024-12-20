@@ -20,9 +20,9 @@ public class UserForm {
     private String user_pic; // 사용자 사진
     private LocalDateTime user_lastlogin; // 사용자 마지막 로그인 일시
     private int user_trynum; // 사용자 로그인 시도 횟수
-    private boolean user_locked; // 사용자 계정 잠김 여부
+    private Boolean user_locked; // 사용자 계정 잠김 여부
     private int user_author; // 사용자 권한
-    private boolean user_istemppw; // 사용자 임시 비밀번호 여부
+    private Boolean user_istemppw; // 사용자 임시 비밀번호 여부
     private int user_fk_comp_num; // 사용자 회사 번호
     private MultipartFile user_picfile; // 사용자 사진 파일
 
@@ -36,9 +36,9 @@ public class UserForm {
         entity.setUserPic(form.getUser_pic());
         entity.setUserLastlogin(form.getUser_lastlogin());
         entity.setUserTrynum(form.getUser_trynum());
-        entity.setUserLocked(form.isUser_locked());
+        entity.setUserLocked(form.getUser_locked());
         entity.setUserAuthor(form.getUser_author());
-        entity.setUserIstemppw(form.isUser_istemppw());
+        entity.setUserIstemppw(form.getUser_istemppw());
         return entity;
     }
 }

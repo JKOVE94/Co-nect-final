@@ -18,12 +18,10 @@ public class UserDto {
     private String user_pic; // 사용자 사진
     private LocalDateTime user_lastlogin; // 사용자 마지막 로그인 일시
     private int user_trynum; // 사용자 로그인 시도 횟수
-    private boolean user_locked; // 사용자 계정 잠김 여부
+    private Boolean user_locked; // 사용자 계정 잠김 여부
     private int user_author; // 사용자 권한
-    private boolean user_istemppw; // 사용자 임시 비밀번호 여부
+    private Boolean user_istemppw; // 사용자 임시 비밀번호 여부
     private int user_fk_comp_num; // 사용자 회사 번호
-
-    // Getters and Setters
 
     public static UserDto fromEntity(UserEntity user) {
         UserDto userDto = new UserDto();
@@ -35,9 +33,9 @@ public class UserDto {
         userDto.setUser_pic(user.getUserPic());
         userDto.setUser_lastlogin(user.getUserLastlogin());
         userDto.setUser_trynum(user.getUserTrynum());
-        userDto.setUser_locked(user.isUserLocked());
+        userDto.setUser_locked(user.getUserLocked());
         userDto.setUser_author(user.getUserAuthor());
-        userDto.setUser_istemppw(user.isUserIstemppw());
+        userDto.setUser_istemppw(user.getUserIstemppw());
         userDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
         return userDto;
     }

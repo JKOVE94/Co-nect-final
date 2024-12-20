@@ -10,7 +10,6 @@ import lombok.Setter;
 @Table(name = "projectmember")
 public class ProjectmemberEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int projmemPkNum; //프로젝트 멤버 번호 [PK, INT]
 
     @ManyToOne
@@ -20,4 +19,6 @@ public class ProjectmemberEntity {
     @ManyToOne
     @JoinColumn(name = "projmem_fk_proj_num")
     private ProjectEntity projectEntity;
+
 }
+

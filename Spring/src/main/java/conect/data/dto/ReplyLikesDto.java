@@ -12,6 +12,7 @@ public class ReplyLikesDto {
     private int reply_fk_num; // 댓글 엔티티 번호
     private Integer reply_likes;
 
+
     public static ReplyLikesDto fromEntity(ReplyLikesEntity replyLikesEntity) {
         ReplyLikesDto replyLikesDto = new ReplyLikesDto();
         replyLikesDto.setReplylike_pk_num(replyLikesEntity.getReplylikePkNum());

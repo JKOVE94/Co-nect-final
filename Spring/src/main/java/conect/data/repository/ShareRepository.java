@@ -15,4 +15,5 @@ public interface ShareRepository extends JpaRepository<ShareEntity,Integer> {
 	
 	ShareEntity findByShareUserAndTodoEntity_TodoPkNum(int num, int todonum);
 	
+
 }

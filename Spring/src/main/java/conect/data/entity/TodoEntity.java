@@ -35,4 +35,5 @@ public class TodoEntity {
     
     @OneToMany(mappedBy = "todoEntity")
     private List<ShareEntity> shareEntities;
+
 }

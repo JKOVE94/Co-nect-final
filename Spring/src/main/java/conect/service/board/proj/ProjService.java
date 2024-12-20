@@ -18,14 +18,16 @@ public interface ProjService {
 	List<TaskDto> getAllTaskWithUser(int user_pk_num);
 	
 	// 검색
-	Set<String> getStatusAll(int compNum);
-	List<ProjectDto> getSearchData(String status, String title);
+	//Set<String> getStatusAll(int compNum);
+//	List<ProjectDto> getSearchData(String status, String title);
 
 	List<ProjectDto> getListAll();
 
 	ProjectDto getProjById(int projPkNum);
 	
 	List<ProjectDto> getAllProjects();
+	
+	List<ProjectDto> getUserProjectData(int userPkNum);
 	
 	// 페이징
 	//public Page<ProjectDto> getList(int page, int pageSize);

@@ -44,6 +44,7 @@ public class TodoServiceImpl implements TodoService {
     	}
     	
     	return todoList.stream().map(TodoDto::fromEntity).toList();
+
     }
     
     @Override
@@ -63,6 +64,7 @@ public class TodoServiceImpl implements TodoService {
 		}
 	}
     
+
     
     @Override
     @Transactional
@@ -98,6 +100,7 @@ public class TodoServiceImpl implements TodoService {
                     
                 }
     		}
+
     		return true;
     	} catch(Exception e) {
     		System.out.println(e.getMessage());

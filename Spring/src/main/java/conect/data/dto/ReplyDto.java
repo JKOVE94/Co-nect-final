@@ -3,9 +3,8 @@ package conect.data.dto;
 import conect.data.entity.ReplyEntity;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -18,6 +17,7 @@ public class ReplyDto {
     private int reply_fk_user_num; // 사용자 엔티티 번호
     private int reply_fk_rec_num; // 추천 엔티티 번호
     private Integer reply_likes;
+
 
     // Getters and Setters
 

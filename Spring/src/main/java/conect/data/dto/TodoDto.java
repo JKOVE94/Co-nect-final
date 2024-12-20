@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter
 @Setter
 public class TodoDto {
@@ -23,6 +24,7 @@ public class TodoDto {
     private String todo_category; // 투두리스트 카테고리
     private int todo_fk_user_num; // 사용자 고유번호
     private List<Integer> share_user;
+
 
     // Getters and Setters
 

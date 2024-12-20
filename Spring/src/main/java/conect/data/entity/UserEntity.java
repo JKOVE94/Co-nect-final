@@ -24,9 +24,9 @@ public class UserEntity {
     private String userMail; //사용자 이메일 [VARCHAR]
     private String userPic; //사용자 사진 [LONGBLOB]
     private LocalDateTime userLastlogin; //사용자 마지막 로그인 일시 [DATETIME]
-    private boolean userIstemppw; //임시 비밀번호 여부 [TINYINT] (false 0, true 1)
+    private Boolean userIstemppw; //임시 비밀번호 여부 [TINYINT] (false 0, true 1)
     private int userTrynum; //사용자 로그인 시도 횟수 [INT] (로그인 실패 시 증가)
-    private boolean userLocked; //사용자 계정 잠김 여부 [TINYINT] (false 0, true 1)
+    private Boolean userLocked; //사용자 계정 잠김 여부 [TINYINT] (false 0, true 1)
     private int userAuthor; //사용자 권한 [INT] (1, 2, 3, 4)
 
     @ManyToOne

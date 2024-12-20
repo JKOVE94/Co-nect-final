@@ -20,3 +20,5 @@ public class ReclikesEntity {
     @JoinColumn(name = "reclike_fk_rec_num")
     private RecommendationEntity recommendationEntity;
 }
+
+

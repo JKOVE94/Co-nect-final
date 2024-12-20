@@ -5,6 +5,7 @@ import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 import ToogleSwitch from "variables/TreeTable_Gantt/ToogleSwitch";
 
 const ProjDetail = () => {
+
   const { projPkNum } = useParams();
   const projPkNumInt = parseInt(projPkNum, 10); // 10진수로 변환
   // console.log("PROJ :" + projPkNumInt);
@@ -12,6 +13,7 @@ const ProjDetail = () => {
     <>
       <ProjHeaders />
       <TreeAndGantt projPkNum={projPkNumInt} />
+
     </>
   );
 };

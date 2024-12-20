@@ -3,10 +3,9 @@ package conect.data.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Setter
 @Getter
@@ -20,6 +19,7 @@ public class RecommendationEntity {
     private String recContent; //건의 내용 [TEXT]
     private String recTitle; //건의 제목 [VARCHAR]
     private LocalDateTime recRegdate; //건의 등록일 [DATETIME]
+
     private int recView; //건의 조회수 [INT]
 
     @ManyToOne
@@ -35,4 +35,5 @@ public class RecommendationEntity {
     
     @OneToMany(mappedBy = "recommendationEntity")
     List<ReplyEntity> replyEntities;
+
 }

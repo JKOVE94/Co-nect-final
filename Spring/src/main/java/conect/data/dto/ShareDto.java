@@ -11,6 +11,7 @@ public class ShareDto {
     private int share_user; // 공유한 유저 번호
     private int todo_fk_num;
 
+
     public static ShareDto fromEntity(ShareEntity shareEntity) {
         ShareDto shareDto = new ShareDto();
         shareDto.setShare_pk_num(shareEntity.getSharePkNum());
