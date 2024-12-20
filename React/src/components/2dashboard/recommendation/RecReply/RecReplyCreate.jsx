@@ -29,16 +29,16 @@ const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent }) => {
     });
   }, [recPkNum, num, replyParent]);
 
-  const handleClick = () => {
-    axios
-      .post(`/${compNum}/rec/reply`, data)
-      .then((res) => {
-        if (res.data) {
-          setText("");
-          getData();
-        }
-      })
-      .catch((err) => console.log(err));
+  const handleClick = async () => {
+    try {
+      const response = await axios.post(`/${compNum}/rec/reply`, data);
+      if (response.data) {
+        setText(""); // 입력 필드 초기화
+      }
+      await getData(); // 데이터 갱신
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

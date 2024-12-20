@@ -16,16 +16,18 @@ const RecReplyList = ({recPkNum}) => {
 
     const getData = async () => {
         try {
-          const res = await axios.get(`/${compNum}/rec/reply/${recPkNum}`);
-          setDatas(res.data.map(data => ({ ...data, disable: true })));
+            const res = await axios.get(`/${compNum}/rec/reply/${recPkNum}`);
+            const data = res.data
+                .map((data) => ({ ...data, disable: true }))
+            setDatas(data);
         } catch (err) {
-          console.log("Error fetching data:", err);
+            console.log(err);
         }
-      };
-
-    useEffect(()=>{
+    };
+    
+    useEffect(() => {
         getData();
-    },[recPkNum])
+    }, []);
     
     return(
         <Card>

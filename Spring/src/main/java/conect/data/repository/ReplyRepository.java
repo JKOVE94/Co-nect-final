@@ -11,5 +11,5 @@ public interface ReplyRepository extends JpaRepository<ReplyEntity,Integer> {
 	
 	Optional<ReplyEntity> findTopByOrderByReplyParentDesc();
 	List<ReplyEntity> findByRecommendationEntity_RecPkNum(int num);
-	List<ReplyEntity> findByRecommendationEntity_RecPkNumOrderByReplyParentAscReplyRegdateAsc(int recPkNum);
+	List<ReplyEntity> findByRecommendationEntity_RecPkNumOrderByReplyParentAscReplyDepthAscReplyRegdateDesc(int recPkNum);
 }

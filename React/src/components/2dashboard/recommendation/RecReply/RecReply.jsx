@@ -17,6 +17,7 @@ const RecReply = ({data, getData, recPkNum}) => {
     const [hide, setHide] = useState(true);
 
     useEffect(()=>{
+        setText(data.reply_content);
         setReply({...data, disable:true});
     },[data])
     
@@ -81,7 +82,7 @@ const RecReply = ({data, getData, recPkNum}) => {
                 }
                 <br/>
                 <small>{moment(reply.reply_regdate).format("YYYY-MM-DD HH:mm")}
-                    {reply.reply_fk_user_num !== num ? <Button variant="light" onClick={()=>setHide(!hide)}>답글달기</Button> :<></>}
+                    {reply.reply_fk_user_num !== num && reply.reply_depth === 0? <Button variant="light" onClick={()=>setHide(!hide)}>답글달기</Button> :<></>}
                 </small>
             </div>
             <RecReplyCreate onHide={hide} recPkNum={recPkNum} replyParent={reply.reply_parent} getData={getData} />

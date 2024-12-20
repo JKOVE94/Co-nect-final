@@ -162,7 +162,7 @@ public class recommendationServiceImpl implements recommendationService {
 	@Override
 	public List<ReplyDto> getReplyAll(int num) {
 		
-		return replyRepository.findByRecommendationEntity_RecPkNumOrderByReplyParentAscReplyRegdateAsc(num)
+		return replyRepository.findByRecommendationEntity_RecPkNumOrderByReplyParentAscReplyDepthAscReplyRegdateDesc(num)
 				.stream().map(ReplyDto::fromEntity).toList();
 	}
 	
