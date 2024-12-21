@@ -27,26 +27,35 @@ const CompanyHome = () => {
     }
   };
 
-  const downloadImage = async (imageUrl) => {
-    try {
-      const response = await fetch(imageUrl);
-      console.log(response);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
+  function downloadFileWithFetch(filepath) {
+    const baseUrl = "https://storage.cloud.google.com/co-nect/emp_pic/";
+    const filename = filepath.split("/").pop();
+    const url = baseUrl + filename;
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "profile_image.jpg");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading image:", error);
-    }
-  };
+    fetch(url, { mode: "cors" }) // mode: 'cors' 옵션 추가
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with your fetch operation:",
+          error
+        );
+      });
+  }
 
   return (
     <>
@@ -70,10 +79,11 @@ const CompanyHome = () => {
       <a
         href="#"
         onClick={() =>
-          downloadImage(
+          downloadFileWithFetch(
             "https://storage.cloud.google.com/co-nect/emp_pic/1_100"
           )
         }
+        // download={true}
       >
         {" "}
         사진

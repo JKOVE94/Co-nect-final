@@ -44,6 +44,6 @@ public class ProjectEntity {
 
     @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
     @JsonBackReference
-    private List<ProjectmemberEntity> projectmemberEntities = new ArrayList<>();
+    private List<ProjectmemberEntity> projectmemberEntities;
 
 }

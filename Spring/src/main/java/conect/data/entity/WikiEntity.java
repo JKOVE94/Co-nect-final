@@ -22,9 +22,6 @@ public class WikiEntity {
     private int wikiView; //조회수 [INT]
     private int wikiBoardtype; //게시판 종류 [INT] (1, 2)
 
-    @OneToOne(mappedBy = "wikiEntity")
-    private FileEntity fileEntity;
-
     @ManyToOne
     @JoinColumn(name = "wiki_fk_user_num")
     private UserEntity userEntity;
@@ -32,4 +29,7 @@ public class WikiEntity {
     @ManyToOne
     @JoinColumn(name = "wiki_fk_proj_num")
     private ProjectEntity projectEntity;
+
+    @OneToOne(mappedBy = "wikiEntity")
+    private FileEntity fileEntity;
 }

@@ -25,4 +25,9 @@ public class CompanyEntity {
     @OneToMany(mappedBy = "companyEntity", orphanRemoval = true)
     @JsonBackReference
     private List<UserEntity> userEntities;
+
+    @OneToMany(mappedBy = "companyEntity", orphanRemoval = true)
+    @JsonBackReference
+    private List<ProjectEntity> projectEntities;
+    
 }
