@@ -10,14 +10,13 @@ import ProjStatus from "components/TempComp/ProjStatus";
 import ProjectHome from "components/2dashboard/Project/ProjectHome";
 import ProjFavorite from "components/2dashboard/Favorite/ProjFavorite";
 import FreeFavorite from "components/2dashboard/Favorite/FreeFavorite";
-import ErrPage from "components/2dashboard/ErrPage";
 import Function from "components/2dashboard/Function/Function";
-import FreeHome from "components/2dashboard/Free/FreeHome";
 import axiosInstance from "../api/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT } from "../Redux/Reducer/userDataReducer";
 import TaskList from "components/2dashboard/Task/TaskList";
 import TaskDetail from "components/2dashboard/Task/TaskDetail";
+import RecHome from "components/2dashboard/recommendation/RecHome";
 
 const Dashboard = (props) => {
   const mainContent = useRef(null);
@@ -122,7 +121,6 @@ const Dashboard = (props) => {
           <Route path="/freefavorite" element={<FreeFavorite />} />
           <Route path="/function" element={<Function />} />
           <Route path="/rec/:projPkNum/*" element={<RecHome />} />
-          <Route path="/err" element={<ErrPage />} />
         </Routes>
       </div>
     </>

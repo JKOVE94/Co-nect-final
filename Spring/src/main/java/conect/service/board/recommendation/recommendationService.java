@@ -13,20 +13,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 public interface recommendationService {
-
+	
+	//--건의사항 게시글--
+	//모든 건의사항
 	Page<RecommendationDto> getRecAll(int projNum, String sortField, String sortDirection, int page, int size);
-	void addRecData(RecommendationForm bean);
-	RecommendationDto getRecData(int projNum, int recNum);
-	boolean checkReclike(int usernum, int recnum);
-	void addReclike(int usernum, int recnum);
-	void delReclike(int usernum, int recnum);
-	boolean checkReplylike(int usernum, int replynum);
-	void addReplylike(int usernum, int replynum);
-	void delReplylike(int usernum, int replynum);
-	RecommendationDto updateRecData(int recNum, RecommendationForm bean);
-	void delRecData(int recPkNum);
-	void addRecReply(ReplyForm bean);
-	List<ReplyDto> getReplyAll(int num);
-	void delReplyData(int replyPkNum);
-	ReplyDto updateReplyData(ReplyForm bean);
+	//건의사항 게시글
+	RecommendationDto getRecOne(int projNum, int recNum);
+	//건의사항 등록
+	void addRec(RecommendationForm bean);
+	//건의사항 수정
+	RecommendationDto editRec(int recNum, RecommendationForm bean);
+	//건의사항 삭제
+	void dropRec(int recNum);
+	//좋아요가 가장 많은 건의사항 게시글
+	Page<RecommendationDto> getMostLike(int projnum);
+	
+	//--건의사항 좋아요--
+	//로그인한 유저가 건의사항 좋아요 눌렀는지 확인
+	boolean checkReclike(int userNum, int recNum);
+	//건의사항 좋아요 등록
+	void addReclike(int userNum, int recNum);
+	//건의사항 좋아요 삭제
+	void dropReclike(int userNum, int recNum);
+	
 }

@@ -16,7 +16,7 @@ public class ReplyDto {
     private int reply_depth; // 댓글의 깊이
     private int reply_fk_user_num; // 사용자 엔티티 번호
     private int reply_fk_rec_num; // 추천 엔티티 번호
-    private Integer reply_likes;
+    private Integer reply_likes; // 댓글 좋아요 수
 
 
     // Getters and Setters

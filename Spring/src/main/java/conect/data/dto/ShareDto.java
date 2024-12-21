@@ -9,7 +9,7 @@ import lombok.Setter;
 public class ShareDto {
     private int share_pk_num; // 공유 번호
     private int share_user; // 공유한 유저 번호
-    private int todo_fk_num;
+    private int todo_fk_num; // 일정 번호
 
 
     public static ShareDto fromEntity(ShareEntity shareEntity) {

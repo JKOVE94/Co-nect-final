@@ -46,6 +46,10 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-storage:2.1.0'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter', version: '1.2.5.RELEASE'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-storage', version: '1.2.5.RELEASE'
+    
+    //입력 값 검증
+    implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
+    implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 }
 
 tasks.named('test') {

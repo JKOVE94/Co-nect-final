@@ -50,8 +50,6 @@ public class TaskController {
 
     @PutMapping("/task/update/{task_pk_num}")
     public void updateTask(@RequestBody TaskForm form) {
-        System.out.println("task_pk_num : " + form.getTask_pk_num());
-        System.out.println("task_title : " + form.getTask_title());
         taskService.updateTask(form);
     }
     @DeleteMapping("/task/delete/{task_pk_num}")
@@ -106,4 +104,3 @@ public class TaskController {
 
 
 }
-

@@ -16,8 +16,8 @@ public class RecommendationDto {
     private int rec_view; // 건의 조회수
     private int rec_fk_user_num; // 사용자 엔티티 번호
     private int rec_fk_proj_num; // 프로젝트 엔티티 번호
-    private Integer rec_likes;
-    private Integer reply;
+    private Integer rec_likes; // 건의사항 좋아요 수
+    private Integer reply; // 건의사항 댓글 수
 
     // Getters와 Setters
 

@@ -1,6 +1,6 @@
-import axios from "axios";
-import { zhCN } from "date-fns/locale";
+import axiosInstance from "api/axiosInstance";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Button,
   Col,
@@ -9,16 +9,15 @@ import {
   FormLabel,
   Row,
 } from "react-bootstrap";
-import { useSelector } from "react-redux";
 
 const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent }) => {
-  const num = useSelector((state) => state.userData.user_pk_num);
-  const compNum = JSON.parse(
-    //회사번호
-    sessionStorage.getItem("persist:userInfo")
-  ).user_fk_comp_num;
+
+  const num = useSelector((state) => state.userData.user_pk_num); //사번
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+
   const [data, setData] = useState({});
   const [text, setText] = useState("");
+
   useEffect(() => {
     setData({
       ...data,
@@ -31,7 +30,7 @@ const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent }) => {
 
   const handleClick = async () => {
     try {
-      const response = await axios.post(`/${compNum}/rec/reply`, data);
+      const response = await axiosInstance.post(`/${compNum}/rec/reply`, data);
       if (response.data) {
         setText(""); // 입력 필드 초기화
       }
@@ -43,9 +42,11 @@ const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent }) => {
 
   return (
     <FormGroup hidden={onHide}>
-      <FormLabel>댓글쓰기</FormLabel>
-      <Row className="align-items-center" style={{ height: "auto" }}>
-        <Col md={10}>
+      <Row className="align-items-center justify-content-start" style={{ height: "auto" }}>
+        <Col md={'auto'}>
+        댓글쓰기
+        </Col>
+        <Col md={9} >
           <FormControl
             type="text"
             id="reply_content"
@@ -57,7 +58,7 @@ const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent }) => {
             }}
           />
         </Col>
-        <Col md={2}>
+        <Col md={'auto'}>
           <Button onClick={handleClick}>입력</Button>
         </Col>
       </Row>

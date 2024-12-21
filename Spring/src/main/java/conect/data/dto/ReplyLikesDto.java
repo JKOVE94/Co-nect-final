@@ -10,7 +10,6 @@ public class ReplyLikesDto {
     private int replylike_pk_num; // 댓글 좋아요 번호
     private int user_fk_num; // 사용자 엔티티 번호
     private int reply_fk_num; // 댓글 엔티티 번호
-    private Integer reply_likes;
 
 
     public static ReplyLikesDto fromEntity(ReplyLikesEntity replyLikesEntity) {

@@ -16,9 +16,8 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
     @Query("SELECT u FROM UserEntity u WHERE u.companyEntity.compPkNum = ?1")
     List<UserEntity> findUserByCompany(int compno);
     
+    //해당 회사에 속한 사원 목록 반환
     List<UserEntity> findByCompanyEntity_compPkNum(int compno);
-
-
 
     Optional<UserEntity> findByUserId(String userId);
 

@@ -32,10 +32,5 @@ const RecModal = ({type, isOpen, onClose, fn}) => {
         );
         
     }
-
-
-    
-    
-    
 }
 export default RecModal;

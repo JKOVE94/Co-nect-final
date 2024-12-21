@@ -1,18 +1,18 @@
-import { Button, Dropdown } from "react-bootstrap";
 import RecReplylike from "./RecReplylike";
-import moment from "moment";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { useEffect, useState } from "react";
 import RecReplyCreate from "./RecReplyCreate";
+import axiosInstance from "api/axiosInstance";
+import moment from "moment";
+
+import { Badge, Button, Col, Dropdown, Row } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const RecReply = ({data, getData, recPkNum}) => {
-    const compNum = JSON.parse(
-        //회사번호
-        sessionStorage.getItem("persist:userInfo")
-      ).user_fk_comp_num;
-    const num = useSelector((state)=>state.userData.user_pk_num);
-    const [reply, setReply] = useState({});
+
+    const userNum = useSelector((state) => state.userData.user_pk_num); //사번
+    const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+
+    const [reply, setReply] = useState({}); //댓글
     const [text, setText] = useState(data.reply_content);
     const [hide, setHide] = useState(true);
 
@@ -22,7 +22,7 @@ const RecReply = ({data, getData, recPkNum}) => {
     },[data])
     
     const handleDelete = (replyPkNum) => {
-        axios.delete(`/${compNum}/rec/reply/${replyPkNum}`)
+        axiosInstance.delete(`/${compNum}/rec/reply/${replyPkNum}`)
         .then(res => {
             if(res.data){
                 getData();
@@ -37,7 +37,7 @@ const RecReply = ({data, getData, recPkNum}) => {
     }
 
     const handleClick = () => {
-        axios.put(`/${compNum}/rec/reply`,reply)
+        axiosInstance.put(`/${compNum}/rec/reply`,reply)
         .then(res => {
             setReply({...res.data, disable:true});
 
@@ -47,18 +47,22 @@ const RecReply = ({data, getData, recPkNum}) => {
 
     return (
         <>
-            <div style={{marginLeft:reply.reply_depth*30}}>
+            <div style={{marginLeft:reply.reply_depth*30, marginBottom:'1rem'}}>
+            <Row style={{height:'2rem', width:'100%'}}>
+                <Col md={11}>
                 {reply.reply_depth !== 0 ?  "└ " : ""}
                 익명{reply.reply_pk_num+1}<br/>
                 <input type="text" id="reply_content" value={text} disabled={reply.disable}
+                style={{width:'70%'}}
                     onChange={(e)=>{
                         setText(e.target.value);
                         setReply({...reply, [e.target.id]:e.target.value})
                     }} />
+                <Button style={{marginLeft:'1rem'}} hidden={reply.disable} onClick={handleClick} size="sm">수정확인</Button>
                 <RecReplylike replyPkNum={data.reply_pk_num} getData={getData} /> {data.reply_likes}
-                <Button hidden={reply.disable} onClick={handleClick}>수정확인</Button>
-                {reply.reply_fk_user_num === num ?
-                 
+                </Col>
+                <Col md={1} className="d-flex align-items-end">
+                {reply.reply_fk_user_num === userNum ?
                  <Dropdown>
                     <Dropdown.Toggle
                         id="dropdown-item-button"
@@ -80,10 +84,19 @@ const RecReply = ({data, getData, recPkNum}) => {
                  
                  :<></>
                 }
+                </Col>
+                </Row>
                 <br/>
-                <small>{moment(reply.reply_regdate).format("YYYY-MM-DD HH:mm")}
-                    {reply.reply_fk_user_num !== num && reply.reply_depth === 0? <Button variant="light" onClick={()=>setHide(!hide)}>답글달기</Button> :<></>}
-                </small>
+                <div style={{width:'100%', display:'flex'}}>
+                    <div style={{width:'20%'}}>
+                        <small>{moment(reply.reply_regdate).format("YYYY-MM-DD HH:mm")}</small>
+                    </div>
+                    <div>
+                    {reply.reply_fk_user_num !== userNum && reply.reply_depth === 0? 
+                        <small style={{cursor:'pointer'}} onClick={()=>setHide(!hide)}>답글달기</small>
+                    :<></>}
+                    </div>
+                </div>
             </div>
             <RecReplyCreate onHide={hide} recPkNum={recPkNum} replyParent={reply.reply_parent} getData={getData} />
         </>

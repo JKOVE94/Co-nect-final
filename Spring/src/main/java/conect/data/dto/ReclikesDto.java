@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 public class ReclikesDto {
     private int reclike_pk_num; // 건의 좋아요 번호
-    private int reclike_fk_user_num; // 사용자 엔티티 번호
-    private int reclike_fk_rec_num; // 추천 엔티티 번호
+    private int reclike_fk_user_num; // 사용자 엔티티 번호(사번)
+    private int reclike_fk_rec_num; //	건의사항 엔티티 번호
 
     // Getters와 Setters
 

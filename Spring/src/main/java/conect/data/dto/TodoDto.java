@@ -23,7 +23,7 @@ public class TodoDto {
     private LocalTime todo_endtime; // 투두리스트 종료시간
     private String todo_category; // 투두리스트 카테고리
     private int todo_fk_user_num; // 사용자 고유번호
-    private List<Integer> share_user;
+    private List<Integer> share_user; // 공유된 사원 정보(사번)
 
 
     // Getters and Setters

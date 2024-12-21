@@ -88,6 +88,7 @@ const Login = (props) => {
 
       if (responseData.status === 1) {
         sessionStorage.setItem("token", responseData.token);
+        console.log(responseData.token);
 
         dispatch(
           LOGIN({

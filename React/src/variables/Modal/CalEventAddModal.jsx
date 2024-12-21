@@ -1,16 +1,15 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Col, Form, Modal } from "react-bootstrap";
 import style from '../../assets/css/2dashboard/calendar.module.css'
 import ReactMention from "variables/mention/ReactMention";
+import axiosInstance from "api/axiosInstance";
 
-const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
-  const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버
-  const compNum = JSON.parse(
-    sessionStorage.getItem("persist:userInfo")
-  ).user_fk_comp_num;
+const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast, handleError }) => {
+  const num = useSelector((state) => state.userData.user_pk_num); //사번
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+  
   const [data, setData] = useState(); //전달할 데이터
   const [timeZon, setTimeZon] = useState();
 
@@ -27,18 +26,26 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   }
 
   const handleClick = async () => {
-    axios
+    axiosInstance
       .post(`/${compNum}/function/schedule`, data)
       .then((res) => {
         if (res.data) {
           handleToast("add", true);
           getEvent();
         }
+        handleError("",false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => handleError(err.response.data,true));
     onClose();
-    console.log(data);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(!e.target.checkValidity()){
+      return;
+    }
+    handleClick();
+  }
 
   const handleCheck = (e) => {
     setTimeZon(e.target.checked);
@@ -61,10 +68,11 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
           </Button>
         </Modal.Title>
       </Modal.Header>
+      <form onSubmit={handleSubmit}>
       <Modal.Body>
         <Form.Group className="mb-2">
-          <Form.Label>제목</Form.Label>
-          <Form.Control type="text" id="todo_title" onChange={handleChange} required/>
+          <Form.Label>제목<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
+          <Form.Control type="text" id="todo_title" onChange={handleChange} required={true}/>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>내용</Form.Label>
@@ -76,14 +84,14 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
           />
         </Form.Group>
         <Form.Group className="mb-2" >
-          <Form.Label>시작일</Form.Label>
+          <Form.Label>시작일<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
           <div style={{ display: "flex", justifyContent: "flex-start"}}>
             <Col md={6} style={{padding:"0"}}>
               <Form.Control
                 type="date"
                 id="todo_startdate"
                 onChange={handleChange}
-                required
+                required={true}
               />
             </Col>
             <Col md={5}>
@@ -97,14 +105,14 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
           </div>
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>종료일</Form.Label>
+          <Form.Label>종료일<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
           <div style={{ display: "flex", justifyContent: "flex-start"}}>
             <Col md={6} style={{padding:"0"}}>
               <Form.Control
                 type="date"
                 id="todo_enddate"
                 onChange={handleChange}
-                required
+                required={true}
               />
             </Col>
             <Col md={5}>
@@ -141,8 +149,9 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleClick}>등록</Button>
+        <Button type="submit">등록</Button>
       </Modal.Footer>
+      </form>
     </Modal>
   );
 };

@@ -1,195 +1,212 @@
-import axios from "axios";
+import axiosInstance from "api/axiosInstance";
 import moment from "moment";
+
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Badge,
   Card,
   CardBody,
   CardHeader,
-  Col,
-  Container,
   Pagination,
-  Row,
-  ToggleButton,
-  ToggleButtonGroup,
+  Table,
 } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+
 
 const RecList = () => {
-  const [datas, setDatas] = useState({});
-  const [mostLike, setMostLike] = useState({});
-  const [sortField, setSortField] = useState("recRegdate");
-  const [sortDirection, setSortDirection] = useState("desc");
-  const compNum = JSON.parse(
-    sessionStorage.getItem("persist:userInfo")
-  ).user_fk_comp_num;
-  const { projPkNum } = useParams(); ///:projPkNum으로 넘어온 값 가져오기
-  const [loading, setLoading] = useState(true);
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+  const { projPkNum } = useParams(); //프로젝트 번호
+
+  const [datas, setDatas] = useState({}); //건의사항 게시글
+  const [mostLike, setMostLike] = useState({}); //최상단에 위치할 글 (좋아요 수가 가장 많은 글)
+
+  const [sortField, setSortField] = useState("recRegdate"); //정렬컬럼 default:작성일자
+  const [sortDirection, setSortDirection] = useState("desc"); //정렬기준(asc/desc) default : desc
+  const [currentPage, setCurrentPage] = useState(0); //현재페이지번호
+
+  const [loading, setLoading] = useState(true); //데이터 로딩 중 true, 로딩 완료 false
+
+  const navigate = useNavigate();
+
+  //게시글 목록 불러오기
   const getData = async () => {
     setLoading(true);
-    axios
+    axiosInstance
       .get(`/${compNum}/rec/${projPkNum}`, {
         params: {
-          // 원하는 파라미터를 여기에 추가
-          sortField: sortField,       
-          sortDirection: sortDirection,
-          size : 10,
-          page: currentPage
-        }
+          sortField: sortField, //정렬컬럼
+          sortDirection: sortDirection, //정렬기준
+          size: 9, //한페이지에 보일 게시글 수
+          page: currentPage, //현재 페이지 번호
+        },
       })
       .then((res) => {
-        if(res.data.pageable.pageNumber === 0) {
-          const max = Math.max(...res.data.content.map((data) => data.rec_likes));
-          setMostLike(res.data.content.find((data) => data.rec_likes === max));
-        }
-        
-        setDatas(res.data);
-        setLoading(false);
+        setDatas(res.data); //게시글 목록 저장
+        setLoading(false); //로딩완료
       })
-      .catch((err) => {console.log(err);
-        setLoading(false);});
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
+  //최상단에 위치할 글 (좋아요 수가 가장 많은 글)
+  const getMostLike = async () => {
+    axiosInstance
+      .get(`/${compNum}/rec/${projPkNum}/mostlike`)
+      .then((res) => setMostLike(res.data.content[0]))
+      .catch((err) => console.log(err));
+  };
+
+  //페이지 변경
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber - 1);
   };
 
-  const navigate = useNavigate();
-
+  //정렬
   const handleSort = (field) => {
-    
-    if(sortField !== field ) {
-      setSortField(field); 
-      setSortDirection("desc"); 
+    if (sortField !== field) {
+      setSortField(field);
+      setSortDirection("desc");
     } else {
-      sortDirection === "asc" ? setSortDirection("desc") : setSortDirection("asc")
+      sortDirection === "asc"
+        ? setSortDirection("desc")
+        : setSortDirection("asc");
     }
-
-  }
-  const [currentPage, setCurrentPage] = useState(0);
+  };
 
   useEffect(() => {
+    getMostLike();
     getData();
   }, [sortField, sortDirection, currentPage]);
 
   return (
     <>
-      <Row className="mx-0 align-items-start justify-content-center">
-        <Col>
-          <Card>
-            <CardHeader
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <h2>건의사항 게시판</h2>
-            </CardHeader>
-            <CardBody style={{ Height: "40em", overflowY: "auto" }}>
-              {loading? (<div>로딩 중 ...</div>):(
-              <table className="table" style={{ fontSize: "1.2rem" }}>
-                <thead>
+      <Card>
+        <CardHeader
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <h2>건의사항 게시판</h2>
+        </CardHeader>
+        <CardBody style={{ height: "40em", overflowY: "auto" }}>
+          {loading ? (
+            <div>로딩 중 ...</div>
+          ) : (
+            <Table>
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>제목</th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("recRegdate")}
+                  >
+                    작성일
+                    <Badge bg="light">
+                      {sortField === "recRegdate" &&
+                        (sortDirection === "desc" ? "▼" : "▲")}
+                    </Badge>
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("recLikes")}
+                  >
+                    좋아요수
+                    <Badge bg="light">
+                      {sortField === "recLikes" &&
+                        (sortDirection === "desc" ? "▼" : "▲")}
+                    </Badge>
+                  </th>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleSort("recView")}
+                  >
+                    조회수
+                    <Badge bg="light">
+                      {sortField === "recView" &&
+                        (sortDirection === "desc" ? "▼" : "▲")}
+                    </Badge>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {mostLike && (
                   <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th style={{ cursor: "pointer" }} onClick={() => handleSort("recRegdate")}>
-                      작성일
-                      <Badge bg="light">
-                        {sortField === "recRegdate" && (sortDirection === "desc" ? "▼" : "▲")}
-                      </Badge>
-                    </th>
-                    <th style={{ cursor: "pointer" }} onClick={() => handleSort("recLikes")}>
-                      좋아요수
-                      <Badge bg="light">
-                        {sortField === "recLikes" && (sortDirection === "desc" ? "▼" : "▲")}
-                      </Badge>
-                    </th>
-                    <th style={{ cursor: "pointer" }} onClick={() => handleSort("recView")}>
-                      조회수
-                      <Badge bg="light">
-                        {sortField === "recView" && (sortDirection === "desc" ? "▼" : "▲")}
-                      </Badge>
-                    </th>
+                    <td style={{ color: "red" }}> HOT! </td>
+                    <td>
+                      <Link to={`./detail/${mostLike.rec_pk_num}`}>
+                        {mostLike.rec_title}[{mostLike.reply}]
+                      </Link>
+                    </td>
+                    <td>{moment(mostLike.rec_regdate).format("YYYY-MM-DD")}</td>
+                    <td> {mostLike.rec_likes} </td>
+                    <td> {mostLike.rec_view} </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {mostLike && (
-                    <tr>
-                      <td style={{ color: "red" }}> HOT! </td>
-                      <td>
-                        {" "}
-                        <Link to={`./detail/${mostLike.rec_pk_num}`}>
-                          {" "}
-                          {mostLike.rec_title}[{mostLike.reply}]
-                        </Link>{" "}
-                      </td>
-                      <td>
-                        {" "}
-                        {moment(mostLike.rec_regdate).format("YYYY-MM-DD")}{" "}
-                      </td>
-                      <td> {mostLike.rec_likes} </td>
-                      <td> {mostLike.rec_view} </td>
-                    </tr>
-                  )}
-                  {datas.content.length> 0 ? (
-                    datas.content.map((data, index) =>
-                      data.rec_pk_num !== mostLike.rec_pk_num ? (
-                        <tr key={index}>
-                          <td> {data.rec_pk_num} </td>
-                          <td>
-                            {" "}
-                            <Link to={`./detail/${data.rec_pk_num}`}>
-                              {" "}
-                              {data.rec_title} [{data.reply}]
-                            </Link>{" "}
-                          </td>
-                          <td>
-                            {" "}
-                            {moment(data.rec_regdate).format("YYYY-MM-DD")}{" "}
-                          </td>
-                          <td> {data.rec_likes} </td>
-                          <td> {data.rec_view} </td>
-                        </tr>
-                      ) : (
-                        <></>
-                      )
+                )}
+                {datas.content.length > 0 ? (
+                  datas.content.map((data, index) =>
+                    data.rec_pk_num !== mostLike.rec_pk_num ? (
+                      <tr key={index}>
+                        <td> {data.rec_pk_num} </td>
+                        <td>
+                          <Link to={{pathname:`./detail/${data.rec_pk_num}`, state:{data: data}}}>
+                            {data.rec_title} [{data.reply}]
+                          </Link>
+                        </td>
+                        <td>{moment(data.rec_regdate).format("YYYY-MM-DD")}</td>
+                        <td> {data.rec_likes} </td>
+                        <td> {data.rec_view} </td>
+                      </tr>
+                    ) : (
+                      <></>
                     )
-                  ) : (
-                    <tr>
-                      <td colSpan="5">작성된 건의사항이 없습니다.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-              )}
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate(`./create`)}
-              >
-                건의사항 등록
-              </button>
-              <Pagination className="justify-content-center">
-            <Pagination.Item
-            
+                  )
+                ) : (
+                  <tr>
+                    <td colSpan="5">작성된 건의사항이 없습니다.</td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          )}
+          <div className="d-flex justify-content-end">
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate(`./create`)}
+            >
+              건의사항 등록
+            </button>
+          </div>
+          {/* 페이징 */}
+          <Pagination className="justify-content-center">
+            <button
+              className={`btn btn-link`}
               onClick={() => handlePageChange(currentPage)}
               disabled={currentPage === 0}
-            > {'<<'} </Pagination.Item>
+            >
+              &laquo; 이전
+            </button>
             {[...Array(datas.totalPages)].map((num, index) => (
-              <Pagination.Item
+              <button
+                className={`btn btn-link`}
                 key={index}
                 onClick={() => handlePageChange(index + 1)}
+                disabled={currentPage === index}
               >
                 {index + 1}
-              </Pagination.Item>
+              </button>
             ))}
-            <Pagination.Item
+            <button
+              className={`btn btn-link`}
               onClick={() => handlePageChange(currentPage + 2)}
               disabled={currentPage === datas.totalPages - 1}
-            > {'>>'} </Pagination.Item>
+            >
+              다음 &raquo;
+            </button>
           </Pagination>
-          
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
+        </CardBody>
+      </Card>
     </>
   );
 };

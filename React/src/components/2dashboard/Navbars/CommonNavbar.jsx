@@ -1,9 +1,14 @@
 import React from "react";
 import { Sidebar as Side, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { NavItem, NavLink } from "reactstrap";
-import { NavLink as NavLinkRRD, Link } from "react-router-dom";
+import { NavLink as NavLinkRRD, Link, useLocation } from "react-router-dom";
 
 const CommonNavbar = () => {
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const proj = searchParams.get('proj');
+
     return(
         <>
         <Side>
@@ -26,7 +31,7 @@ const CommonNavbar = () => {
                 <NavLink to="/main/free" tag={NavLinkRRD}>자유게시판</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/main/rec/7" tag={NavLinkRRD}>건의사항</NavLink>
+                <NavLink to={`/main/rec/${proj}`} tag={NavLinkRRD}>건의사항</NavLink>
               </NavItem>
             </SubMenu>
             <SubMenu label="업무관리" icon={<i className="ni ni-calendar-grid-58 text-warning text-sm opacity-10" />}>

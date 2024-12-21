@@ -1,22 +1,25 @@
 import MyCalendar from "./MyCalendar";
 import MySchedule from "./MySchedule";
-import axios from "axios";
+import CalendarToast from "variables/Toast/CalendarToast";
+import MyShareSchedule from "./MyShareSchedule";
+import ScheduleCategory from "./ScheduleCategory";
+import axiosInstance from "api/axiosInstance";
+import Error from "./Error";
+
 import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import CalendarToast from "variables/Toast/CalendarToast";
+
 import "../../../assets/css/2dashboard/function.css";
 import style from "../../../assets/css/2dashboard/calendar.module.css";
-import MyShareSchedule from "./MyShareSchedule";
+
 import moment from "moment";
-import ScheduleCategory from "./ScheduleCategory";
+
 
 const Function = () => {
   
-  const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
-  const compNum = JSON.parse(
-    sessionStorage.getItem("persist:userInfo")
-  ).user_fk_comp_num;
+  const userNum = useSelector((state) => state.userData.user_pk_num); //사번
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
     
   //toast
   const [toastType, setToastType] = useState("");
@@ -24,16 +27,24 @@ const Function = () => {
   //calendar event(일정)
   const [events, setEvents] = useState([{}]);
   const [allEvents, setAllEvents] = useState([{}]);
+  //에러
+  const [error, setError] = useState();
+  const [errorIsOpen, setErrorIsOpen] = useState(false);
 
   const handleToast = (text, open) => {
     setToastType(text);
     setToastIsOpen(open);
   };
 
+  const handleError = (error, errorIsOpen)=>{
+    setError(error);
+    setErrorIsOpen(errorIsOpen);
+  }
+
   const handleGetEvent = async () => {
     //캘린더에 표시될 이벤트 불러오기
-    axios
-      .get(`/${compNum}/function/schedule/${num}`)
+    axiosInstance
+      .get(`/${compNum}/function/schedule/${userNum}`)
       .then((res) => {
         let todoEvent = res.data.map((data) => ({
           id: data.todo_pk_num, //일정 pk num
@@ -56,9 +67,10 @@ const Function = () => {
         }));
         setEvents([...todoEvent]);
         setAllEvents([...todoEvent]);
+        handleError("",false);
       })
       .catch((err) => {
-        console.log(err);
+        handleError(error.response.data,true);
       });
   };
 
@@ -97,6 +109,7 @@ const Function = () => {
                   events={events}
                   handleGetEvent={handleGetEvent}
                   handleToast={handleToast}
+                  handleError={handleError}
                 />
               </CardBody>
             </Card>
@@ -110,6 +123,9 @@ const Function = () => {
           />
         </div>
       </Container>
+      <Error err={error} isOpen={errorIsOpen} onClose={()=>{
+          setErrorIsOpen(false);
+      }}/>
     </>
   );
 };

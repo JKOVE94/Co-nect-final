@@ -1,22 +1,22 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
+import { Form, Modal, Button, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from '../../assets/css/2dashboard/calendar.module.css'
 import ReactMention from "variables/mention/ReactMention";
+import axiosInstance from "api/axiosInstance";
 
 const CalEventEditModal = ({
   isOpen,
   onClose,
   info,
   getEvent,
-  handleToast
+  handleToast,
+  handleError
 }) => {
-  const num = useSelector((state) => state.userData.user_pk_num);
-  const compNum = JSON.parse(
-    sessionStorage.getItem("persist:userInfo")
-  ).user_fk_comp_num;
+  const num = useSelector((state) => state.userData.user_pk_num); //사번
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+  
   const [data, setData] = useState({});
   const [read, setRead] = useState(); //수정 가능 여부
   const [users, setUsers] = useState([]);
@@ -43,7 +43,8 @@ const CalEventEditModal = ({
     setData({ ...data, [e.target.id]: e.target.value });
   };
 
-  const handleUpdateForm = () => {
+  const handleUpdateForm = (e) => {
+    e.preventDefault();
     setRead(false);
     setAllDay(false);
   };
@@ -52,29 +53,40 @@ const CalEventEditModal = ({
     setData({...data,share_user:mention});
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(!e.target.checkValidity()){
+      return;
+    }
+    handleUpdate();
+  }
+
   const handleUpdate = () => {
-    axios
+    axiosInstance
       .put(`/${compNum}/function/schedule/` + info.id, data)
       .then((res) => {
         if (res.data) {
           handleToast("update", true);
           getEvent();
         }
+        handleError("",false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => handleError(err,true));
     onClose();
   };
 
-  const handleDelete = () => {
-    axios
+  const handleDelete = (e) => {
+    e.preventDefault();
+    axiosInstance
       .delete(`/${compNum}/function/schedule/` + info.id)
       .then((res) => {
         if (res.data) {
           handleToast("del", true);
           getEvent();
         }
+        handleError("",false)
       })
-      .catch((err) => console.log(err));
+      .catch((err) => handleError(err,true));
     onClose();
   };
   
@@ -95,19 +107,21 @@ const CalEventEditModal = ({
           </Button>
         </Modal.Title>
       </Modal.Header>
+      <form onSubmit={handleSubmit}>
       <Modal.Body>
         <Form.Group className="mb-2">
-          <Form.Label>제목</Form.Label>
+          <Form.Label>제목<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
           <Form.Control
             type="text"
             id="todo_title"
             value={data.todo_title}
             onChange={handleChange}
             disabled={read}
+            required={true}
           />
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>내용</Form.Label>
+          <Form.Label>내용<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
           <Form.Control
             as="textarea"
             rows={10}
@@ -115,10 +129,11 @@ const CalEventEditModal = ({
             value={data.todo_content}
             onChange={handleChange}
             disabled={read}
+            required={true}
           />
         </Form.Group>
         <Form.Group className="mb-2" >
-          <Form.Label>시작일</Form.Label>
+          <Form.Label>시작일<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
           <div style={{ display: "flex", justifyContent: "flex-start"}}>
             <Col md={6} style={{padding:"0"}}>
               <Form.Control
@@ -127,6 +142,7 @@ const CalEventEditModal = ({
                 value={data.todo_startdate}
                 onChange={handleChange}
                 disabled={read}
+                required={true}
               />
             </Col>
             <Col md={5}>
@@ -142,7 +158,7 @@ const CalEventEditModal = ({
           </div>
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>종료일</Form.Label>
+          <Form.Label>종료일<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
           <div style={{ display: "flex", justifyContent: "flex-start"}}>
             <Col md={6} style={{padding:"0"}}>
               <Form.Control
@@ -151,6 +167,7 @@ const CalEventEditModal = ({
                 value={data.todo_enddate}
                 onChange={handleChange}
                 disabled={read}
+                required={true}
               />
             </Col>
             <Col md={5}>
@@ -194,11 +211,12 @@ const CalEventEditModal = ({
           {read ? (
             <Button onClick={handleUpdateForm}>수정</Button>
           ) : (
-            <Button onClick={handleUpdate}>수정확인</Button>
+            <Button type="submit">수정확인</Button>
           )}
           <Button onClick={handleDelete}>삭제</Button>
         </>
       </Modal.Footer>
+      </form>
     </Modal>
   );
 };

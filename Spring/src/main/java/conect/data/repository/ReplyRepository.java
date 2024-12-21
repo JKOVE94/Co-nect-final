@@ -9,8 +9,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReplyRepository extends JpaRepository<ReplyEntity,Integer> {
 	
+	//그룹번호가 가장 큰 엔티티 반환
 	Optional<ReplyEntity> findTopByOrderByReplyParentDesc();
-	void deleteByReplyParent(int num);
-	List<ReplyEntity> findByRecommendationEntity_RecPkNum(int num);
-	List<ReplyEntity> findByRecommendationEntity_RecPkNumOrderByReplyParentAscReplyDepthAscReplyRegdateDesc(int recPkNum);
+	
+	//그룹에 속하는 댓글 모두 삭제
+	void deleteByReplyParent(int parentNum);
+	
+	//댓글 목록
+	//정렬 기준 : 그룹 번호, 댓글 깊이, 작성일자
+	//가장 최신 댓글 상단 표시
+	List<ReplyEntity> findByRecommendationEntity_RecPkNumOrderByReplyParentDescReplyDepthAscReplyRegdateAsc(int recNum);
 }

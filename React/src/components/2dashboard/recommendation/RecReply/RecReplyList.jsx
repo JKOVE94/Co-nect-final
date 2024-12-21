@@ -1,22 +1,23 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Badge, Button, Card, CardBody, CardTitle, Col, Dropdown, DropdownButton } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import RecReplylike from "./RecReplylike";
 import RecReplyCreate from "./RecReplyCreate";
-import moment from "moment";
-import '../../../../assets/css/2dashboard/rec.css'
 import RecReply from "./RecReply";
+import axiosInstance from "api/axiosInstance";
+import { useEffect, useState } from "react";
+import { Card, CardBody, CardTitle, Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import '../../../../assets/css/2dashboard/rec.css'
+
 const RecReplyList = ({recPkNum}) => {
-    const compNum = JSON.parse(
-        //회사번호
-        sessionStorage.getItem("persist:userInfo")
-      ).user_fk_comp_num;
-    const [datas, setDatas] = useState([]);
+
+    const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+    const [datas, setDatas] = useState([]); //데이터
+
+    useEffect(() => {
+        getData();
+    }, []);
 
     const getData = async () => {
         try {
-            const res = await axios.get(`/${compNum}/rec/reply/${recPkNum}`);
+            const res = await axiosInstance.get(`/${compNum}/rec/reply/${recPkNum}`);
             const data = res.data
                 .map((data) => ({ ...data, disable: true }))
             setDatas(data);
@@ -25,12 +26,8 @@ const RecReplyList = ({recPkNum}) => {
         }
     };
     
-    useEffect(() => {
-        getData();
-    }, []);
-    
     return(
-        <Card>
+        <Card style={{border:'none', padding:'1rem'}}>
             <CardTitle>
                 댓글
             </CardTitle>

@@ -1,19 +1,18 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Form, FormControl } from "react-bootstrap";
 import { Mention } from "react-mentions";
 import { MentionsInput } from "react-mentions";
-import { Input } from "reactstrap";
 import style from "../../assets/css/mention.module.css";
 import { useSelector } from "react-redux";
+import axiosInstance from "api/axiosInstance";
 
 const ReactMention = ({ onMention, text, disabled, userList }) => {
   //onMention : 멘션 선택 시 동작, text : placeholder, disabled : boolean값
   //userList : 멘션 렌더링 시 default 값 (문자열)
 
-  const compno = useSelector((state) =>  state.userData.user_fk_comp_num); // 회사번호
+  const compNum = useSelector((state) =>  state.userData.user_fk_comp_num); // 회사번호
   const [users, setUsers] = useState([]); //전체 사원 목록
   const [data, setData] = useState(""); //멘션 input 입력값
+  const [error, setError] = useState();
 
   useEffect(() => { 
     //최초 렌더링 시 전체 사원 목록 가져오기기
@@ -34,8 +33,8 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
   }, [userList, users]);
 
   const getUserData = () => {
-    axios
-      .get(`/mention/${compno}`)
+    axiosInstance
+      .get(`/mention/${compNum}`)
       .then((res) => {
         const userData = res.data.map((data) => ({
           id: data.user_pk_num,
@@ -44,7 +43,7 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
         }));
         setUsers(userData);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => setError(err));
   };
 
   const handleChange = (e, newValue, newPlainTextValue, mentions) => {
@@ -69,6 +68,7 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
 
   return (
     <div>
+      {users && 
       <MentionsInput
         value={data}
         onChange={handleChange}
@@ -105,6 +105,8 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
           )}
         />
       </MentionsInput>
+      }
+      {error && <span style={{color:'red'}}>{error.response.data}</span>}
     </div>
   );
 };

@@ -1,30 +1,25 @@
 package conect.service.board.recommendation;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import org.hibernate.grammars.hql.HqlParser.IsNullPredicateContext;
+import org.hibernate.query.SortDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.web.PagedModel;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Service;
 
-import com.google.protobuf.Value;
-
-import conect.data.dto.ReclikesDto;
 import conect.data.dto.RecommendationDto;
 import conect.data.dto.ReplyDto;
+import conect.data.entity.ProjectEntity;
 import conect.data.entity.ReclikesEntity;
 import conect.data.entity.RecommendationEntity;
 import conect.data.entity.ReplyEntity;
 import conect.data.entity.ReplyLikesEntity;
+import conect.data.entity.UserEntity;
 import conect.data.form.RecommendationForm;
 import conect.data.form.ReplyForm;
 import conect.data.repository.ProjectRepository;
@@ -33,6 +28,7 @@ import conect.data.repository.RecommendationRepository;
 import conect.data.repository.ReplyLikesRepository;
 import conect.data.repository.ReplyRepository;
 import conect.data.repository.UserRepository;
+import conect.service.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -46,214 +42,183 @@ public class recommendationServiceImpl implements recommendationService {
 	private ProjectRepository projRepository;
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private ReplyRepository replyRepository;
-	@Autowired
-	private ReplyLikesRepository replyLikesRepository;
 	
+	//모든 건의사항
 	@Override
-	public Page<RecommendationDto> getRecAll(int num, String sortField, String sortDirection, int page, int size) {
+	public Page<RecommendationDto> getRecAll(int projNum, String sortField, String sortDirection, int page, int size) {
+		//프로젝트 번호, 정렬 기준 컬럼, 정렬 방향(ASC/DESC), 현재 페이지, 한 페이지에 보일 글 갯수
+		
+		Pageable pageable;
 		
 		try {
-			Page<RecommendationDto> list = Page.empty();
-			Pageable pageable = Pageable.unpaged();
-
+			//정렬기준이 좋아요 수
 			if(sortField.equalsIgnoreCase("recLikes")) {
 				pageable = PageRequest.of(page, size);
 				
+				//JPQL 사용
 				if(sortDirection.equalsIgnoreCase("asc")) {
-					list = recRepository.findByProjectEntity_projPkNumOrderByRecLikesAsc(num, pageable)
+					return recRepository.findByProjectEntity_projPkNumOrderByRecLikesAsc(projNum, pageable)
 							.map(RecommendationDto::fromEntity);
 				} else {
-					list = recRepository.findByProjectEntity_projPkNumOrderByRecLikesDesc(num, pageable)
+					return recRepository.findByProjectEntity_projPkNumOrderByRecLikesDesc(projNum, pageable)
 							.map(RecommendationDto::fromEntity);
 				}
-				
+			//정렬기준이 등록일, 조회수
 			} else {
-				Sort sort = Sort.by(Order.desc(sortField));
-				
-				if(sortDirection.equals("asc")) {
-					sort = Sort.by(Order.asc(sortField));
-					pageable = PageRequest.of(page, size, sort);
-				} else if(sortDirection.equals("desc")){
-					sort = Sort.by(Order.desc(sortField));
-					pageable = PageRequest.of(page, size, sort);
-				}
-					list = recRepository.findByProjectEntity_projPkNum(num, pageable)
+				Sort sort = sortDirection.equalsIgnoreCase("asc") ? Sort.by(Order.asc(sortField)) : Sort.by(Order.desc(sortField));
+				pageable = PageRequest.of(page, size, sort);
+				return recRepository.findByProjectEntity_projPkNum(projNum, pageable)
 							.map(RecommendationDto::fromEntity);
 			}
-			return list;
 			
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
 	
-	@Override
-	public void addRecData(RecommendationForm bean) {
-		try {
-			RecommendationEntity entity = RecommendationForm.toEntity(bean);
-			entity.setProjectEntity(projRepository.findById(bean.getRec_fk_proj_num()).get());
-			entity.setUserEntity(userRepository.findById(bean.getRec_fk_user_num()).get());
-			entity.setRecRegdate(LocalDateTime.now());
-			recRepository.save(entity);
-		} catch(Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}	
-	}
-	
+	//건의사항 게시글
 	@Override
 	@Transactional
-	public RecommendationDto getRecData(int projNum, int recNum) {
+	public RecommendationDto getRecOne(int projNum, int recNum) {
+		
 		try {
+			//조회 수 증가
 			recRepository.incrementRecView(recNum);
 			
 			RecommendationDto dto = 
 					RecommendationDto.fromEntity(recRepository.findByProjectEntity_projPkNumAndRecPkNum(projNum, recNum));
 			
 			return dto;
+		} catch(ResourceNotFoundException e) {
+			throw new ResourceNotFoundException("리소스를 찾을 수 없습니다: " + e.getMessage());
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	
 	}
 	
+	//건의사항 등록
 	@Override
-	public RecommendationDto updateRecData(int recNum, RecommendationForm bean) {
+	public void addRec(RecommendationForm bean) {
 		try {
 			RecommendationEntity entity = RecommendationForm.toEntity(bean);
-			entity.setProjectEntity(projRepository.findById(bean.getRec_fk_proj_num()).get());
-			entity.setUserEntity(userRepository.findById(bean.getRec_fk_user_num()).get());
 			
-			RecommendationEntity result = recRepository.save(entity);
-			return RecommendationDto.fromEntity(result);
+			ProjectEntity projectEntity = projRepository.findById(bean.getRec_fk_proj_num())
+	                .orElseThrow(() -> new ResourceNotFoundException("프로젝트를 찾을 수 없습니다. 프로젝트 번호 : " + bean.getRec_fk_proj_num()));
+	        entity.setProjectEntity(projectEntity);
+	        
+	        UserEntity userEntity = userRepository.findById(bean.getRec_fk_user_num())
+	                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다. 사번 : " + bean.getRec_fk_user_num()));
+	        entity.setUserEntity(userEntity);
+	        
+			entity.setRecRegdate(LocalDateTime.now()); //작성일자는 현재 시간
+			
+			recRepository.save(entity);
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	
 	}
 	
+	//건의사항 수정
+	@Override
+	public RecommendationDto editRec(int recNum, RecommendationForm bean) {
+		try {
+			RecommendationEntity entity = RecommendationForm.toEntity(bean);
+			// 프로젝트가 존재하지 않으면 예외 처리
+	        ProjectEntity projectEntity = projRepository.findById(bean.getRec_fk_proj_num())
+	                .orElseThrow(() -> new ResourceNotFoundException("프로젝트를 찾을 수 없습니다. 프로젝트 번호 : " + bean.getRec_fk_proj_num()));
+	        entity.setProjectEntity(projectEntity);
+	        
+	        UserEntity userEntity = userRepository.findById(bean.getRec_fk_user_num())
+	                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다. 사번 : " + bean.getRec_fk_user_num()));
+	        entity.setUserEntity(userEntity);
+			
+			return RecommendationDto.fromEntity(recRepository.save(entity));
+			
+		} catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}	
+	}
+	
+	//건의사항 삭제
 	@Override
 	@Transactional
-	public void delRecData(int recPkNum) {
+	public void dropRec(int recNum) {
 		try {
-			reclikesRepository.deleteByRecommendationEntity_RecPkNum(recPkNum);
-			recRepository.deleteById(recPkNum);
+			
+			if (!recRepository.existsById(recNum)) {
+                throw new ResourceNotFoundException("건의사항을 찾을 수 없습니다. 사번 : " + recNum);
+            }
+	        
+			//건의사항 좋아요 삭제
+			reclikesRepository.deleteByRecommendationEntity_RecPkNum(recNum);
+			//건의사항 삭제
+			recRepository.deleteById(recNum);
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	
 		
 	}
 	
+	//좋아요가 가장 많은 건의사항 게시글
 	@Override
-	public boolean checkReclike(int usernum, int recnum) {
-		if (reclikesRepository
-				.findByUserEntity_UserPkNumAndRecommendationEntity_RecPkNum(usernum, recnum) != null) {
-			return true;
-		}
-				
-		return false;
-	}
-	@Override
-	public void addReclike(int usernum, int recnum) {
-		ReclikesEntity entity = new ReclikesEntity();
-		entity.setUserEntity(userRepository.findById(usernum).get());
-		entity.setRecommendationEntity(recRepository.findById(recnum).get());
-		reclikesRepository.save(entity);
-	}
-	
-	@Override
-	public void delReclike(int usernum, int recnum) {
-		ReclikesEntity entity = reclikesRepository.findByUserEntity_UserPkNumAndRecommendationEntity_RecPkNum(usernum, recnum);
-		reclikesRepository.deleteById(entity.getReclikePkNum());
-	}
-	
-	@Override
-	@Transactional
-	public void addRecReply(ReplyForm bean) {
+	public Page<RecommendationDto> getMostLike(int projNum) {
 		try {
-			ReplyEntity entity = ReplyForm.toEntity(bean);
-			entity.setReplyRegdate(LocalDateTime.now());
-			entity.setRecommendationEntity(recRepository.findById(bean.getReply_fk_rec_num()).get());
-			entity.setUserEntity(userRepository.findById(bean.getReply_fk_user_num()).get());
-			Integer parentNum = bean.getReply_parent();
+			Pageable pageable = PageRequest.of(0, 1); //가장 상단에 위치한 글 1개만 가져오기
+			Page<RecommendationDto> list = recRepository.findByProjectEntity_projPkNumOrderByRecLikesDesc(projNum, pageable).map(RecommendationDto::fromEntity);
+			return list;
+		} catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}	
+		
+	}
+	
+	//로그인한 유저가 건의사항 좋아요 눌렀는지 확인
+	@Override
+	public boolean checkReclike(int userNum, int recNum) {
+	    try {
+	        // 좋아요 여부 확인
+	        if( reclikesRepository
+	                   .findByUserEntity_UserPkNumAndRecommendationEntity_RecPkNum(userNum, recNum) != null ) {
+	        	return true;
+	        } else {
+	        	return false;
+	        }
+	    } catch (Exception e) {
+	        // 예기치 않은 오류 처리
+	        throw new RuntimeException(e.getMessage());
+	    }
+	}
+	
+	//건의사항 좋아요 등록
+	@Override
+	public void addReclike(int userNum, int recNum) {
+		try {
+            ReclikesEntity entity = new ReclikesEntity();
+            entity.setUserEntity(userRepository.findById(userNum)
+            		.orElseThrow(() -> new ResourceNotFoundException("사원을 찾을 수 없습니다. 사번 : " + userNum)));
+            entity.setRecommendationEntity(recRepository.findById(recNum)
+            		.orElseThrow(() -> new ResourceNotFoundException("건의사항을 찾을 수 없습니다. 건의사항 번호 : " + recNum)));
+            reclikesRepository.save(entity);
+        } catch (Exception e) {
+            throw new RuntimeException("Error adding recommendation like: " + e.getMessage(), e);
+        }
+    }
+	
+	//건의사항 좋아요 삭제
+	@Override
+    public void dropReclike(int userNum, int recNum) {
+        try {
+            ReclikesEntity entity = reclikesRepository.findByUserEntity_UserPkNumAndRecommendationEntity_RecPkNum(userNum, recNum);
+            if (entity != null) {
+                reclikesRepository.deleteById(entity.getReclikePkNum());
+            } else {
+            	throw new ResourceNotFoundException("일치하는 데이터가 없습니다.");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error removing recommendation like: " + e.getMessage(), e);
+        }
+    }
 
-			if (parentNum > 0) {
-			    entity.setReplyParent(parentNum);
-			} else {
-			    replyRepository.findTopByOrderByReplyParentDesc().ifPresentOrElse(
-			        reply -> {
-			            entity.setReplyParent(reply.getReplyParent() + 1);
-			        },
-			        () -> {
-			            entity.setReplyParent(1);
-			        }
-			    );
-			}
-			replyRepository.save(entity);
-		
-		} catch(Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}	
-		
-	}
-	
-	@Override
-	public List<ReplyDto> getReplyAll(int num) {
-		
-		return replyRepository.findByRecommendationEntity_RecPkNumOrderByReplyParentAscReplyDepthAscReplyRegdateDesc(num)
-				.stream().map(ReplyDto::fromEntity).toList();
-	}
-	
-	@Override
-	public void addReplylike(int usernum, int replynum) {
-		ReplyLikesEntity entity = new ReplyLikesEntity();
-		entity.setUserEntity(userRepository.findById(usernum).get());
-		entity.setReplyEntity(replyRepository.findById(replynum).get());
-		replyLikesRepository.save(entity);
-		
-	}
-	
-	@Override
-	public boolean checkReplylike(int usernum, int replynum) {
-		if (replyLikesRepository
-				.findByUserEntity_UserPkNumAndReplyEntity_ReplyPkNum(usernum, replynum) != null) {
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public void delReplylike(int usernum, int replynum) {
-		ReplyLikesEntity entity = replyLikesRepository.findByUserEntity_UserPkNumAndReplyEntity_ReplyPkNum(usernum, replynum);
-		replyLikesRepository.deleteById(entity.getReplylikePkNum());
-		
-	}
-	
-	@Override
-	@Transactional
-	public void delReplyData(int replyPkNum) {
-		try {
-			replyLikesRepository.deleteByReplyEntity_ReplyPkNum(replyPkNum);
-			
-			ReplyDto dto = ReplyDto.fromEntity(replyRepository.findById(replyPkNum).get());
-			if(dto.getReply_depth() == 0) {
-				replyRepository.deleteByReplyParent(dto.getReply_parent());
-			} else {
-				replyRepository.deleteById(replyPkNum);
-			}
-			
-		} catch(Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}	
-	}
-	
-	@Override
-	public ReplyDto updateReplyData(ReplyForm bean) {
-		ReplyEntity entity = ReplyForm.toEntity(bean);
-		entity.setUserEntity(userRepository.findById(bean.getReply_fk_user_num()).get());
-		entity.setRecommendationEntity(recRepository.findById(bean.getReply_fk_rec_num()).get());
-		ReplyDto dto = ReplyDto.fromEntity(replyRepository.save(entity));
-		return dto;
-	}
 }
 
 

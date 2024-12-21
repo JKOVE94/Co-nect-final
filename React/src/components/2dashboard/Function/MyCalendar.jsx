@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import CalEventEditModal from "variables/Modal/CalEventEditModal";
 
-const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
+const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
 
   const [showModalIsOpen, setShowModalIsOpen] = useState(false); //상세보기 modal
   const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트추가 modal
@@ -95,9 +95,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
       <CalEventShowModal
         isOpen={showModalIsOpen}
         onClose={() => setShowModalIsOpen(false)}
-        getEvent={handleGetEvent}
         info={modalContent}
-        handleToast={handleToast}
       />
 
       <CalEventEditModal
@@ -106,6 +104,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
         getEvent={handleGetEvent}
         info={modalContent}
         handleToast={handleToast}
+        handleError={handleError}
       />
 
       <CalEventAddModal
@@ -113,6 +112,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
         onClose={() => setAddModalIsOpen(false)}
         getEvent={handleGetEvent}
         handleToast={handleToast}
+        handleError={handleError}
       />
 
     </>

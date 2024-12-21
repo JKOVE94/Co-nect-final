@@ -14,9 +14,9 @@ public interface TodoService {
 	void addTodoData(TodoForm bean);
 	
 	//Todo 삭제
-	boolean dropTodoData(int id);
+	void dropTodoData(int id);
 	
 	//Todo 수정
-	boolean editTodoData(TodoForm bean);
+	void editTodoData(TodoForm bean);
 	
 }
