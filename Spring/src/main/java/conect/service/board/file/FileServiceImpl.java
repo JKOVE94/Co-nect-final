@@ -161,7 +161,7 @@ public class FileServiceImpl implements FileService {
     // 수정
     @Override
     @Transactional
-    public FileDto updatePost(int filePkNum, MultipartFile file, String wikiTitle, String wikiContent) {
+    public FileDto updatePost(int filePkNum, MultipartFile file, String wikiTitle, String wikiContent, boolean wikiIsnotice) {
         // 수정 대상 파일 조회
         FileEntity fileEntity = fileRepository.findById(filePkNum)
                 .orElseThrow(() -> new RuntimeException("수정 대상 파일이 존재하지 않습니다."));
@@ -181,6 +181,7 @@ public class FileServiceImpl implements FileService {
             if (wikiEntity != null) {
                 wikiEntity.setWikiTitle(wikiTitle);
                 wikiEntity.setWikiContent(wikiContent);
+                wikiEntity.setWikiIsnotice(wikiIsnotice);
                 wikiRepository.save(wikiEntity); // 연관된 WikiEntity 저장
             }
 
@@ -233,22 +234,24 @@ public class FileServiceImpl implements FileService {
     }
 
     
-    // 페이징, 검색
- 	public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText) {
- 	   
+ // 페이징, 검색, 공지 여부 정렬 추가
+    public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText) {
+        // Pageable 객체 생성 (공지 여부 DESC 정렬 추가)
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("wikiEntity.wikiIsnotice"), Sort.Order.desc("filePkNum")));
 
- 	    // Pageable 객체 생성 (페이지와 정렬 정보 포함)
- 	    Pageable pageable = PageRequest.of(page, pageSize);
- 	    
- 	    // Repository를 통해 데이터를 조회
-     	Page<FileEntity> filePage = Page.empty();
-     	
-     	if (searchType.equalsIgnoreCase("file_name")) {
-     		filePage = fileRepository.findByFileNameContains(searchText, pageable);
-     	}  else {
-     		filePage = fileRepository.findAll(pageable);
-     	}
- 	    // PostEntity -> PostDto 변환
- 	    return filePage.map(FileDto::fromEntity);
- 	}
+        // Repository를 통해 데이터를 조회
+        Page<FileEntity> filePage;
+
+        if ("file_name".equalsIgnoreCase(searchType)) {
+            // 파일명 검색
+            filePage = fileRepository.findByFileNameContains(searchText, pageable);
+        } else {
+            // 전체 조회
+            filePage = fileRepository.findAll(pageable);
+        }
+
+        // FileEntity -> FileDto 변환
+        return filePage.map(FileDto::fromEntity);
+    }
+
 }

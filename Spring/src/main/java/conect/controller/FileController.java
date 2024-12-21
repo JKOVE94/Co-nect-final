@@ -1,8 +1,12 @@
 package conect.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,8 @@ import conect.service.board.file.FileService;
 import conect.service.board.wiki.WikiService;
 
 import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -154,11 +160,12 @@ public class FileController {
             @PathVariable("filePkNum") int filePkNum,
             @RequestParam(value = "file", required = false) MultipartFile file, // 파일은 선택적
             @RequestParam("wiki_title") String wikiTitle,
-            @RequestParam("wiki_content") String wikiContent
+            @RequestParam("wiki_content") String wikiContent,
+            @RequestParam("wiki_isnotice") boolean wikiIsnotice
     ) {
         try {
             // 서비스 호출로 수정 로직 처리
-            FileDto updatedFile = fileService.updatePost(filePkNum, file, wikiTitle, wikiContent);
+            FileDto updatedFile = fileService.updatePost(filePkNum, file, wikiTitle, wikiContent, wikiIsnotice);
 
             // 반환된 데이터가 null인 경우 (파일 또는 게시글 없음)
             if (updatedFile == null) {
@@ -175,15 +182,70 @@ public class FileController {
     // 게시글 삭제
     @DeleteMapping("/{filePkNum}")
     public ResponseEntity<Void> deleteFile(@PathVariable("filePkNum") int filePkNum) {
-        try {
-            fileService.deletePost(filePkNum);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
+        System.out.println("삭제 요청 도달, 파일 PK: " + filePkNum);
+
+        // 데이터 존재 여부 확인
+        if (!fileRepository.existsById(filePkNum)) {
+            System.out.println("삭제 대상이 존재하지 않습니다: " + filePkNum);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        System.out.println("삭제 대상이 확인되었습니다: " + filePkNum);
+
+        try {
+            // 삭제 로직 호출
+            fileService.deletePost(filePkNum);
+            System.out.println("삭제 완료, 파일 PK: " + filePkNum);
+            return ResponseEntity.noContent().build(); // 성공적으로 삭제됨
         } catch (Exception e) {
+            System.out.println("삭제 중 예외 발생: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    
+    @GetMapping("/download/{filePkNum}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable("filePkNum") int filePkNum) {
+        try {
+            // 파일 엔티티 조회
+            FileEntity fileEntity = fileRepository.findById(filePkNum)
+                    .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다."));
+
+            // 파일 경로 확인
+            String filePath = fileEntity.getFilePath();
+            System.out.println("다운로드 요청 파일 경로: " + filePath);
+
+            Resource resource;
+            if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
+                // URL 인코딩 처리
+                String encodedFilePath = java.net.URLEncoder.encode(filePath, "UTF-8")
+                        .replace("%3A", ":") // URL 프로토콜 복원
+                        .replace("%2F", "/"); // 경로 구분자 복원
+                resource = new UrlResource(encodedFilePath);
+            } else {
+                // 로컬 파일 시스템 경로 처리
+                Path path = Paths.get(filePath).toAbsolutePath().normalize();
+                resource = new UrlResource(path.toUri());
+            }
+
+            if (!resource.exists() || !resource.isReadable()) {
+                throw new RuntimeException("파일을 읽을 수 없습니다: " + filePath);
+            }
+
+            // 파일 이름 처리 (브라우저 호환성)
+            String encodedFileName = java.net.URLEncoder.encode(fileEntity.getFileName(), "UTF-8")
+                    .replace("+", "%20");
+
+            // Content-Disposition 헤더로 파일 다운로드 처리
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+        } catch (Exception e) {
+            System.err.println("파일 다운로드 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
 

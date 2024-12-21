@@ -12,7 +12,8 @@ const FileCreate = () => {
     wiki_title: "",
     wiki_content: "",
     wiki_fk_user_num: writer?.userNum || 1,
-    wiki_boardtype: 2,
+    wiki_fk_proj_num: 1, // 프로젝트 번호 기본값
+    wiki_isnotice: false, // 공지 여부 기본값
     file: null,
     file_name: "",
     file_size: 0,
@@ -20,10 +21,10 @@ const FileCreate = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -54,9 +55,8 @@ const FileCreate = () => {
     data.append("wiki_title", formData.wiki_title);
     data.append("wiki_content", formData.wiki_content);
     data.append("wiki_fk_user_num", formData.wiki_fk_user_num);
-    data.append("wiki_fk_proj_num", 1);
-    data.append("wiki_isnotice", false);
-    //vdata.append("wiki_boardtype", formData.wiki_boardtype);
+    data.append("wiki_fk_proj_num", formData.wiki_fk_proj_num);
+    data.append("wiki_isnotice", formData.wiki_isnotice);
 
     try {
       const response = await axios.post("/file", data);
@@ -115,6 +115,18 @@ const FileCreate = () => {
               ></textarea>
             </div>
             <div className="form-group">
+              <label htmlFor="wiki_isnotice">
+                <input
+                  type="checkbox"
+                  id="wiki_isnotice"
+                  name="wiki_isnotice"
+                  checked={formData.wiki_isnotice}
+                  onChange={handleChange}
+                />{" "}
+                공지로 설정
+              </label>
+            </div>
+            <div className="form-group">
               <label htmlFor="file">파일 첨부:</label>
               <input
                 type="file"
@@ -127,6 +139,9 @@ const FileCreate = () => {
               {formData.file && (
                 <div style={{ marginTop: "1em" }}>
                   <strong>선택한 파일:</strong> {formData.file_name}
+                  <br />
+                  <strong>크기:</strong> {(formData.file_size / (1024 * 1024)).toFixed(2)} MB
+                  <br />
                   {formData.file_type.startsWith("image/") && (
                     <img
                       src={URL.createObjectURL(formData.file)}

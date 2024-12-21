@@ -17,7 +17,7 @@ const FileDetail = () => {
         const response = await axios.get(`/file/${filePkNumInt}`);
         setPost(response.data);
       } catch (err) {
-        setError(err.message);
+        setError("게시글을 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);
       }
@@ -31,14 +31,34 @@ const FileDetail = () => {
   };
 
   const handleDelete = async () => {
-    console.log("handleDelete 호출됨"); // 함수 호출 확인
+    console.log("handleDelete 호출됨, 삭제 대상 ID:", filePkNumInt);
     try {
-      const response = await axios.delete(`/file/${filePkNumInt}`);
-      console.log("삭제 응답:", response);
+      await axios.delete(`/file/${filePkNumInt}`);
+      console.log("삭제 성공");
       navigate("/main/file", { state: { success: true } });
     } catch (err) {
-      console.error("삭제 실패:", err);
-      setError("삭제 실패: " + err.message);
+      console.error("삭제 실패:", err.response ? err.response.data : err.message);
+      setError("삭제 실패: " + (err.response ? err.response.data : err.message));
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      const response = await axios.get(`/file/download/${filePkNumInt}`, {
+        responseType: "blob",
+      });
+
+      // 브라우저에서 파일 다운로드
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", post.file_name); // 파일 이름 설정
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("파일 다운로드 실패:", err);
+      alert("파일 다운로드 중 오류가 발생했습니다.");
     }
   };
 
@@ -69,8 +89,8 @@ const FileDetail = () => {
                 style={{
                   margin: "0",
                   padding: "0.5em 0",
-                  fontSize: "1.5rem", // 강조된 크기
-                  color: "#343a40", // 어두운 색상으로 강조
+                  fontSize: "1.5rem",
+                  color: "#343a40",
                   fontWeight: "bold",
                 }}
               >
@@ -115,14 +135,13 @@ const FileDetail = () => {
               {post.file_name ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "1em" }}>
                   <p style={{ margin: "0", fontSize: "1.1rem" }}>{post.file_name}</p>
-                  <a
-                    href={post.file_path}
-                    download={post.file_name}
-                    className="btn btn-success"
+                  <Button
+                    color="success"
+                    onClick={handleDownload}
                     style={{ fontSize: "1rem" }}
                   >
                     다운로드
-                  </a>
+                  </Button>
                 </div>
               ) : (
                 <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
@@ -176,24 +195,24 @@ const FileDetail = () => {
       </Card>
 
       {/* 삭제 확인 모달 */}
-      <Modal isOpen={isModalOpen} toggle={toggleModal}>
-  <ModalHeader toggle={toggleModal}>삭제 확인</ModalHeader>
-  <ModalBody>정말로 이 파일을 삭제하시겠습니까?</ModalBody>
-  <ModalFooter>
-    <Button
-      color="danger"
-      onClick={() => {
-        console.log("삭제 버튼 클릭됨"); // 버튼 클릭 확인
-        handleDelete(); // 삭제 함수 호출
-      }}
-    >
-      삭제
-    </Button>
-    <Button color="secondary" onClick={toggleModal}>
-      취소
-    </Button>
-  </ModalFooter>
-</Modal>
+      <Modal isOpen={isModalOpen} toggle={toggleModal} backdrop="static">
+        <ModalHeader toggle={toggleModal}>삭제 확인</ModalHeader>
+        <ModalBody>정말로 이 파일을 삭제하시겠습니까?</ModalBody>
+        <ModalFooter>
+          <Button
+            color="danger"
+            onClick={() => {
+              handleDelete();
+              toggleModal();
+            }}
+          >
+            삭제
+          </Button>
+          <Button color="secondary" onClick={toggleModal}>
+            취소
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Container>
   );
 };

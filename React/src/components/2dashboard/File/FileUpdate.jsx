@@ -9,6 +9,7 @@ const FileUpdate = () => {
   const [file, setFile] = useState({
     wiki_title: "",
     wiki_content: "",
+    wiki_isnotice: false, // 중요 여부 추가
     file_name: "",
   });
   const [newFile, setNewFile] = useState(null); // 새 파일 저장용 상태
@@ -20,9 +21,10 @@ const FileUpdate = () => {
         const response = await axios.get(`/file/${filePkNum}`);
         console.log("Fetched file data:", response.data); // 데이터 확인
         setFile({
-          wiki_title: response.data.wiki.wiki_title || "", // wikiTitle에서 제목 가져오기
-          wiki_content: response.data.wiki.wiki_content || "", // wikiContent에서 내용 가져오기
-          file_name: response.data.file_name || "", // 기존 파일 이름 가져오기
+          wiki_title: response.data.wiki.wiki_title || "",
+          wiki_content: response.data.wiki.wiki_content || "",
+          wiki_isnotice: response.data.wiki.wiki_isnotice || false,
+          file_name: response.data.file_name || "",
         });
       } catch (error) {
         console.error("Error fetching file:", error);
@@ -34,8 +36,8 @@ const FileUpdate = () => {
   }, [filePkNum]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFile({ ...file, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setFile({ ...file, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleFileChange = (e) => {
@@ -49,6 +51,7 @@ const FileUpdate = () => {
       const formData = new FormData();
       formData.append("wiki_title", file.wiki_title);
       formData.append("wiki_content", file.wiki_content);
+      formData.append("wiki_isnotice", file.wiki_isnotice); // 중요 여부 추가
       if (newFile) {
         formData.append("file", newFile); // 새 파일이 있는 경우 추가
       }
@@ -77,7 +80,7 @@ const FileUpdate = () => {
     <Container fluid style={{ marginTop: "2em" }}>
       <Card>
         <CardHeader>
-          <h2>게시글 수정</h2>
+          <h2>파일 수정</h2>
         </CardHeader>
         <CardBody>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -119,12 +122,23 @@ const FileUpdate = () => {
                 onChange={handleFileChange}
               />
             </div>
-            <div style={{ marginTop: "1.5em" }}>
-              <button type="submit" className="btn btn-primary" style={{ marginRight: "1em" }}>
+            <div style={{ marginTop: "2em", display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "1em" }}>
+              <label htmlFor="wiki_isnotice" style={{ margin: "0", fontWeight: "bold" }}>
+                <input
+                  type="checkbox"
+                  id="wiki_isnotice"
+                  name="wiki_isnotice"
+                  checked={file.wiki_isnotice}
+                  onChange={handleChange}
+                  style={{ marginRight: "0.5em" }}
+                />
+                공지로 설정
+              </label>
+              <button type="submit" className="btn btn-primary">
                 수정
               </button>
               <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-                취소
+                목록
               </button>
             </div>
           </form>

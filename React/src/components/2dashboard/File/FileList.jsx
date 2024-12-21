@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import Search from "variables/Search/Search";
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
@@ -14,15 +15,15 @@ const FileList = () => {
 
   const fetchFiles = (page, block, sortField, sortDirection, searchType, searchText) => {
     axios
-      .get("/file", { // 파일 목록 API 호출
+      .get("/file", {
         params: {
           page: page,
           pageBlock: block,
           sortField: sortField,
           sortDirection: sortDirection,
           searchType: searchType,
-          searchText: searchText
-        }
+          searchText: searchText,
+        },
       })
       .then((res) => {
         if (Array.isArray(res.data.files)) {
@@ -38,6 +39,27 @@ const FileList = () => {
         console.error("파일을 불러오는 중 오류 발생:", error);
       });
   };
+
+  const handleDownload = async (filePkNum, fileName) => {
+    try {
+      const response = await axios.get(`/file/download/${filePkNum}`, {
+        responseType: "blob", // 파일 데이터를 받아오기 위해 blob 타입으로 설정
+      });
+  
+      // 브라우저에서 다운로드 처리
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", decodeURIComponent(fileName)); // 파일 이름 설정
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("파일 다운로드 중 오류:", error);
+      alert("파일을 다운로드하는 중 오류가 발생했습니다.");
+    }
+  };
+  
 
   const pagesPerBlock = 5;
   const startPageOfBlock = pageBlock * pagesPerBlock;
@@ -72,6 +94,13 @@ const FileList = () => {
       <Card style={{ height: "45em", position: "relative" }}>
         <CardHeader>
           <h2>파일 게시판</h2>
+          {/* <Search
+            type='post'
+            value={searchText}
+            onChange={handleChange}
+            onSearch={handleSearch}
+            onKeyDown={handleKeyDown}
+          /> */}
         </CardHeader>
         <CardBody style={{ height: "calc(100% - 4em)", overflowY: "hidden" }}>
           <table className="table" style={{ fontSize: "1.2rem" }}>
@@ -91,8 +120,26 @@ const FileList = () => {
                     <td>{file.file_pk_num}</td>
                     <td>
                       <Link to={`/main/file/detail/${file.file_pk_num}`}>
+                        {file.wiki.wiki_isnotice && (
+                          <span
+                            style={{
+                              color: "goldenrod",
+                              marginRight: "0.5em",
+                              display: "inline-block",
+                            }}
+                          >
+                            <i className="fas fa-bell"></i>
+                          </span>
+                        )}
                         {file.file_name}
                       </Link>
+                      <span
+                        title="파일 다운로드"
+                        style={{ cursor: "pointer", marginLeft: "0.5em", color: "blue" }}
+                        onClick={() => handleDownload(file.file_pk_num, file.file_name)}
+                      >
+                        📥
+                      </span>
                     </td>
                     <td>{file.wiki.user_name}</td>
                     <td>{formatDate(file.wiki.wiki_regdate)}</td>
@@ -111,7 +158,7 @@ const FileList = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: "1em"
+              marginTop: "1em",
             }}
           >
             <button
@@ -145,9 +192,9 @@ const FileList = () => {
             style={{
               position: "absolute",
               bottom: "2em",
-              right: "2em"
+              right: "2em",
             }}
-            onClick={() => navigate('/main/file/create')} // 파일 업로드 버튼 클릭 시 업로드 페이지로 이동
+            onClick={() => navigate("/main/file/create")}
           >
             파일 업로드
           </button>
