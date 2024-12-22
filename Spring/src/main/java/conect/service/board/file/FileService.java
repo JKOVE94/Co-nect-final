@@ -25,7 +25,7 @@ public interface FileService {
 	public List<FileDto> getPostAll();
 	
 	// 부분 조회
-	public FileDto getPostView(Integer filePkNum);
+    public FileDto getPostView(Integer filePkNum, HttpServletRequest request, HttpServletResponse response);
 
 	// 수정
 	public FileDto updatePost(int filePkNum, MultipartFile file, String wikiTitle, String wikiContent, boolean wikiIsnotice);
@@ -34,7 +34,7 @@ public interface FileService {
 	void deletePost(int filePkNum);
 
 	// 페이징
-	public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText);
+    public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText, String sortBy, boolean isDescending);
 
          
 }

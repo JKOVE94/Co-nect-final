@@ -23,6 +23,5 @@ public interface FileRepository extends JpaRepository<FileEntity,Integer> {
 	
 	//검색 - file name
 	Page<FileEntity> findByFileNameContains(String searchText, Pageable pageable);
-	//검색 - user name
-	// Page<FileEntity> findByUserEntity_UserNameContains(String searhText, Pageable pageable);
-}
+	// 검색 - 작성자명 (WikiEntity와 연관된 userEntity 사용)
+    Page<FileEntity> findByWikiEntity_UserEntity_UserNameContains(String searchText, Pageable pageable);}

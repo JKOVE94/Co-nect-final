@@ -9,7 +9,6 @@ import FavorCheck from "../Favorite/FavorCheck";
 import "../../../assets/css/freepost/freelist.css"
 
 const FreeList = () => {
- 
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);

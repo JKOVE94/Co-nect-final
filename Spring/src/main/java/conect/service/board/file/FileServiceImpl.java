@@ -38,6 +38,9 @@ import conect.data.repository.FileRepository;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.UserRepository;
 import conect.data.repository.WikiRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -138,11 +141,36 @@ public class FileServiceImpl implements FileService {
                 .collect(Collectors.toList());
     }
 
-    // 부분 조회
+ // 부분 조회 (조회수 증가 포함)
     @Override
-    public FileDto getPostView(Integer filePkNum) {
+    public FileDto getPostView(Integer filePkNum, HttpServletRequest request, HttpServletResponse response) {
+        // 쿠키 확인
+        Cookie[] cookies = request.getCookies();
+        boolean hasViewed = false;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("viewedPost_" + filePkNum)) {
+                    hasViewed = true;
+                    break;
+                }
+            }
+        }
+
+        // 조회수 증가
+        if (!hasViewed) {
+            incrementViewCount(filePkNum);
+
+            // 새로운 쿠키 생성
+            Cookie newCookie = new Cookie("viewedPost_" + filePkNum, "true");
+            newCookie.setMaxAge(86400); // 1일
+            newCookie.setHttpOnly(true);
+            newCookie.setPath("/");
+            response.addCookie(newCookie);
+        }
+
         FileEntity fileEntity = fileRepository.findById(filePkNum)
-                .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다"));
+                .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다."));
 
         FileDto fileDto = FileDto.fromEntity(fileEntity);
 
@@ -156,6 +184,19 @@ public class FileServiceImpl implements FileService {
         }
 
         return fileDto;
+    }
+    
+    // 조회수 증가 로직
+    @Transactional
+    public void incrementViewCount(Integer filePkNum) {
+        FileEntity fileEntity = fileRepository.findById(filePkNum)
+                .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다."));
+
+        WikiEntity wikiEntity = fileEntity.getWikiEntity();
+        if (wikiEntity != null) {
+            wikiEntity.setWikiView(wikiEntity.getWikiView() + 1);
+            wikiRepository.save(wikiEntity);
+        }
     }
 
     // 수정
@@ -235,9 +276,11 @@ public class FileServiceImpl implements FileService {
 
     
  // 페이징, 검색, 공지 여부 정렬 추가
-    public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText) {
-        // Pageable 객체 생성 (공지 여부 DESC 정렬 추가)
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("wikiEntity.wikiIsnotice"), Sort.Order.desc("filePkNum")));
+    public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText, String sortBy, boolean isDescending) {
+        // 공지사항 여부를 우선 정렬하고, 그다음 사용자 지정 정렬 기준 적용
+        Sort sort = Sort.by(Sort.Order.desc("wikiEntity.wikiIsnotice"))
+                        .and(isDescending ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
 
         // Repository를 통해 데이터를 조회
         Page<FileEntity> filePage;
@@ -245,6 +288,9 @@ public class FileServiceImpl implements FileService {
         if ("file_name".equalsIgnoreCase(searchType)) {
             // 파일명 검색
             filePage = fileRepository.findByFileNameContains(searchText, pageable);
+        } else if ("user_name".equalsIgnoreCase(searchType)) {
+            // 작성자명 검색
+            filePage = fileRepository.findByWikiEntity_UserEntity_UserNameContains(searchText, pageable);
         } else {
             // 전체 조회
             filePage = fileRepository.findAll(pageable);
@@ -253,5 +299,6 @@ public class FileServiceImpl implements FileService {
         // FileEntity -> FileDto 변환
         return filePage.map(FileDto::fromEntity);
     }
+
 
 }

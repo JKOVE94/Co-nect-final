@@ -20,6 +20,8 @@ import conect.data.repository.FileRepository;
 import conect.data.repository.WikiRepository;
 import conect.service.board.file.FileService;
 import conect.service.board.wiki.WikiService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Map;
 import java.nio.file.Path;
@@ -44,19 +46,22 @@ public class FileController {
     @Autowired
     private WikiRepository wikiRepository;
 
-    // 모든 게시글 조회
+ // 모든 게시글 조회
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllPosts(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock,
             @RequestParam(name = "searchType", defaultValue = "") String searchType,
-            @RequestParam(name = "searchText", defaultValue = "") String searchText
+            @RequestParam(name = "searchText", defaultValue = "") String searchText,
+            @RequestParam(name = "sortBy", defaultValue = "wikiEntity.wikiRegdate") String sortBy,
+            @RequestParam(name = "isDescending", defaultValue = "true") boolean isDescending
     ) {
         try {
             int pageSize = 10; // 한 페이지당 항목 수
             int blockSize = 5; // 한 블록당 페이지 버튼 수
 
-            Page<FileDto> postPage = fileService.getList(page, pageSize, searchType, searchText);
+            // 정렬 및 검색 조건에 따라 서비스 호출
+            Page<FileDto> postPage = fileService.getList(page, pageSize, searchType, searchText, sortBy, isDescending);
 
             int totalPages = postPage.getTotalPages();
             int totalBlocks = (int) Math.ceil((double) totalPages / blockSize);
@@ -88,11 +93,15 @@ public class FileController {
         }
     }
 
+
     // 특정 게시글 조회
     @GetMapping("/{filePkNum}")
-    public ResponseEntity<FileDto> getPost(@PathVariable("filePkNum") Integer filePkNum) {
+    public ResponseEntity<FileDto> getPost(
+            @PathVariable("filePkNum") Integer filePkNum,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         try {
-            FileDto fileDto = fileService.getPostView(filePkNum);
+            FileDto fileDto = fileService.getPostView(filePkNum, request, response);
             return ResponseEntity.ok(fileDto);
         } catch (Exception e) {
             e.printStackTrace();

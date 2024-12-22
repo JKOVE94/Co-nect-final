@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import FileSearch from "variables/Search/FileSearch";
 import Search from "variables/Search/Search";
 
 const FileList = () => {
@@ -11,6 +12,13 @@ const FileList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageBlock, setPageBlock] = useState(0);
   const [totalBlocks, setTotalBlocks] = useState(0);
+  const [sortField, setSortField] = useState("wikiRegdate"); // 기본 정렬: 최신순
+  const [sortDirection, setSortDirection] = useState("DESC"); // 기본 정렬 방향: 내림차순
+  
+  //검색 type:title,name
+  const [searchText, setSearchText] = useState("");
+  const [searchType, setSearchType] = useState("");
+
   const navigate = useNavigate();
 
   const fetchFiles = (page, block, sortField, sortDirection, searchType, searchText) => {
@@ -40,6 +48,7 @@ const FileList = () => {
       });
   };
 
+  // 파일 다운로드
   const handleDownload = async (filePkNum, fileName) => {
     try {
       const response = await axios.get(`/file/download/${filePkNum}`, {
@@ -60,7 +69,7 @@ const FileList = () => {
     }
   };
   
-
+  // 페이징
   const pagesPerBlock = 5;
   const startPageOfBlock = pageBlock * pagesPerBlock;
   const endPageOfBlock = Math.min(startPageOfBlock + pagesPerBlock, totalPages);
@@ -82,25 +91,59 @@ const FileList = () => {
   };
 
   useEffect(() => {
-    fetchFiles(0, 0); // 컴포넌트 마운트 시 파일 목록을 불러옵니다.
-  }, []);
+      fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
+    }, [sortField, sortDirection]);
 
+  // 날짜 포맷팅
   const formatDate = (date) => {
     return format(new Date(date), "yyyy-MM-dd");
   };
+
+  // 정렬
+  const handleSortChange = (field) => {
+    const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
+    setSortField(field);
+    setSortDirection(newDirection);
+  
+    // 정렬 필드와 방향이 변경되었으므로 즉시 데이터를 다시 가져옵니다.
+    fetchFiles(currentPage, pageBlock, field, newDirection, searchType, searchText);
+  };
+  
+
+  //검색
+  const handleKeyDown = (e) => {
+    //사용자가 enter입력 시 search 실행
+    if (e.keyCode === 13) handleSearch();
+  };
+  const handleChange = (e) => {
+    if(e.target.id==="type"){
+      setSearchType(e.target.value);
+    } else if(e.target.id==="search") {
+      setSearchText(e.target.value.trim());
+    }
+  };
+
+  const handleSearch = async () => {
+    if(searchType === "" || searchType === null){
+      //사용자가 type을 선택하지 않았거나 입력값이 없을 경우 search 실행하지 않음
+      return;
+    } else {
+      fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
+    }
+  };
+
 
   return (
     <Container fluid style={{ marginTop: "1em" }}>
       <Card style={{ height: "45em", position: "relative" }}>
         <CardHeader>
           <h2>파일 게시판</h2>
-          {/* <Search
-            type='post'
-            value={searchText}
-            onChange={handleChange}
-            onSearch={handleSearch}
-            onKeyDown={handleKeyDown}
-          /> */}
+          <FileSearch
+              value={searchText}
+              onChange={handleChange}
+              onSearch={handleSearch}
+              onKeyDown={handleKeyDown}
+            />
         </CardHeader>
         <CardBody style={{ height: "calc(100% - 4em)", overflowY: "hidden" }}>
           <table className="table" style={{ fontSize: "1.2rem" }}>
@@ -109,8 +152,22 @@ const FileList = () => {
                 <th>번호</th>
                 <th>파일제목</th>
                 <th>작성자</th>
-                <th>작성일</th>
-                <th>조회수</th>
+                <th
+                  onClick={() => handleSortChange("wikiRegdate")}
+                  style={{ cursor: "pointer" }}
+                >
+                  작성일
+                  {sortField === "wikiRegdate" &&
+                    (sortDirection === "DESC" ? "▼" : "▲")}
+                </th>
+                <th
+                  onClick={() => handleSortChange("wikiView")}
+                  style={{ cursor: "pointer" }}
+                >
+                  조회수
+                  {sortField === "wikiView" &&
+                    (sortDirection === "DESC" ? "▼" : "▲")}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -143,7 +200,7 @@ const FileList = () => {
                     </td>
                     <td>{file.wiki.user_name}</td>
                     <td>{formatDate(file.wiki.wiki_regdate)}</td>
-                    <td>{file.wiki_view}</td>
+                    <td>{file.wiki.wiki_view}</td>
                   </tr>
                 ))
               ) : (
