@@ -89,18 +89,18 @@ const NotiDetail = () => {
         <CardHeader>
           <h2>공지게시판 상세보기</h2>
         </CardHeader>
-        <CardBody style={{ fontSize: "1.2rem", marginTop: "1em" }}>
+        <CardBody style={{ fontSize: "1.2rem", marginTop: "1em"}}>
           {noti ? (
             <table className="table" style={{ border: "1px solid lightgray" }}>
               <tbody>
                 <tr>
                   <td style={{ width: "10%" }}>제목</td>
                   <td>
-                    {noti.noti_isnotice && (
-                      <span role="img" aria-label="bell">
-                        🔔&nbsp;
-                      </span>
-                    )}
+                  {noti.noti_import === 1 && (
+                        <span style={{ marginRight: "0.5em" }}>
+                          <i className="bi bi-pin-angle-fill" style={{ color: "red" }}></i>
+                        </span>
+                      )}
                     <strong>{noti.noti_title}</strong>
                   </td>
                 </tr>
@@ -122,7 +122,15 @@ const NotiDetail = () => {
                 </tr>
                 <tr>
                   <td>내용</td>
-                  <td>{noti.noti_content}</td>
+                  <td style={{ 
+                      whiteSpace: 'pre-wrap',     // 줄바꿈 보존
+                      wordBreak: 'break-all',     // 긴 텍스트 줄바꿈
+                      minHeight: '200px',         // 최소 높이 설정
+                      verticalAlign: 'top',       // 내용 상단 정렬
+                      padding: '15px',             // 여백 추가
+                      textAlign: 'left',        // 왼쪽 정렬
+                      paddingLeft: '100px'       // 왼쪽 여백
+                   }}>{noti.noti_content}</td>
                 </tr>
               </tbody>
             </table>
