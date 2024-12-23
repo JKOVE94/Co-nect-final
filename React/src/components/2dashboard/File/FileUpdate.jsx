@@ -132,7 +132,7 @@ const FileUpdate = () => {
                   onChange={handleChange}
                   style={{ marginRight: "0.5em" }}
                 />
-                공지로 설정
+                중요 파일
               </label>
               <button type="submit" className="btn btn-primary">
                 수정

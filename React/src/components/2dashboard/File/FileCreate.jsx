@@ -160,7 +160,7 @@ const FileCreate = () => {
                   checked={formData.wiki_isnotice}
                   onChange={handleChange}
                 />{" "}
-                공지로 설정
+                중요 파일
               </label>
             </div>
             <div style={{ marginTop: "1.5em", textAlign: "right" }}>
