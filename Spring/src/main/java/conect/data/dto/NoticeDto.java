@@ -21,6 +21,7 @@ public class NoticeDto {
     private int noti_fk_comp_num;
     private String userName;//작성자 명
     private String projName; //프로젝트 명
+    private int noti_view; //조회수
 
     // 페이징 관련 필드 추가
     private List<NoticeDto> content;
@@ -30,9 +31,6 @@ public class NoticeDto {
     private boolean first;
     private boolean last;
 
-    //조회수 관련
-    private String noti_view;// 실제 조회한 userNum, 문자열
-    private int viewCount;// 화면에 보여줄 조회수
 
     //fromEntity
     public  static NoticeDto fromEntity(NoticeEntity entity){
@@ -46,8 +44,7 @@ public class NoticeDto {
         dto.setNoti_modedate(entity.getNotiModdate());
         dto.setNoti_deleted(entity.getNotiDeleted());
         dto.setNoti_import(entity.getNotiImport());
-        dto.setNoti_view(entity.getNoti_view());
-        dto.setViewCount(entity.getViewUsers().size());
+        dto.setNoti_view(entity.getNotiView());
         dto.setNoti_fk_comp_num(entity.getCompanyEntity().getCompPkNum());
         dto.setUserName(entity.getUserEntity().getUserName());
         dto.setProjName(entity.getProjectEntity().getProjTitle());

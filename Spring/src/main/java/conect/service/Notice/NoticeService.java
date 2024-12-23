@@ -2,6 +2,8 @@ package conect.service.Notice;
 
 import conect.data.dto.NoticeDto;
 import conect.data.form.NoticeForm;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -14,7 +16,7 @@ public interface NoticeService {
                                  String sortField, String sortDirection,
                                  String searchType, String searchText);
     //부분 조회
-    Optional<NoticeDto> getOneNotice(int notiNum);
+    Optional<NoticeDto> getOneNotice(int notiNum ,HttpServletRequest request ,HttpServletResponse response);
     //공지글 추가
     void addNotice(NoticeForm form);
     //공지글 수정
@@ -22,7 +24,6 @@ public interface NoticeService {
     //공지글 삭제
     void delNotice(int notiNum);
     //조회수 증가
-    void updateViewCount(int notiNum, int userPkNum);
-    //조회수 가져오기
-    //public int getViewCount(int notiNum);
+    void incrementViewCount(int notiNum);
+
 }

@@ -2,13 +2,14 @@ package conect.controller;
 import conect.data.dto.NoticeDto;
 import conect.data.form.NoticeForm;
 import conect.service.Notice.NoticeService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,23 +46,20 @@ public class NoticeController {
 
     //공지 게시글 하나 보기
     @GetMapping("/{notiNum}")
-    public Optional<NoticeDto> getNoticeOne(@PathVariable("notiNum") int notiPkNum, @RequestParam int userPkNum){
+    public Optional<NoticeDto> getNoticeOne(@PathVariable("notiNum") int notiPkNum
+                                            , HttpServletRequest request
+                                            , HttpServletResponse response
+                                            ){
         System.out.println("notiNum:"+ notiPkNum);
-        noticeService.updateViewCount(notiPkNum, userPkNum);
-        //noticeService.updateCount(notiPkNum); //조회수 증가 -> 나중에 react에서 form에 +1하고 넘겨주기
-        return noticeService.getOneNotice(notiPkNum);
+        return noticeService.getOneNotice(notiPkNum, request, response);
     }
 
-    //조회수 증가
 
     //공지 게시글 수정
     @PutMapping("update/{notiPkNum}")
     public void updateNotice(@PathVariable int notiPkNum, @RequestBody NoticeForm form){
         noticeService.upNotice(notiPkNum, form);
     }
-
-    //중요도 박스 체크 요청
-
 
     //공지 게시글 추가
     @PostMapping("/insert")

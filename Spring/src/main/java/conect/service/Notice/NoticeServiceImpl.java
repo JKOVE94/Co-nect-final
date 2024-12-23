@@ -6,6 +6,10 @@ import conect.data.repository.CompanyRepository;
 import conect.data.repository.NoticeRepository;
 import conect.data.repository.ProjectRepository;
 import conect.data.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -57,34 +61,51 @@ public class NoticeServiceImpl implements NoticeService{
 
     //공지 하나 출력
     @Override
-    public Optional<NoticeDto> getOneNotice(int notiNum) {
+    public Optional<NoticeDto> getOneNotice(int notiNum ,HttpServletRequest request ,HttpServletResponse response) {
+        //세션에서 조회 기록 확인
+        HttpSession session = request.getSession();
+        String sessionKey = "viewedNoti_" + notiNum;
+        Boolean hasViewedInSession = (Boolean) session.getAttribute(sessionKey);
+
+        // 쿠키 확인
+        Cookie[] cookies = request.getCookies();
+        boolean hasViewedInCookie = false;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("viewedNoti_" + notiNum)) {
+                    hasViewedInCookie = true;
+                    break;
+                }
+            }
+        }
+        // 조회수 증가 처리
+        if ((hasViewedInSession == null || !hasViewedInSession) && !hasViewedInCookie) {
+            incrementViewCount(notiNum);
+
+            // 세션에 조회 기록 저장
+            session.setAttribute(sessionKey, true);
+
+            // 새로운 쿠키 생성
+            Cookie newCookie = new Cookie("viewedNoti_" + notiNum, "true");
+            newCookie.setMaxAge(86400); // 1일
+            newCookie.setHttpOnly(true);
+            newCookie.setPath("/");
+            response.addCookie(newCookie);
+        }
+
         return notiRepository.getOneNotice(notiNum)
                 .map(NoticeDto::fromEntity);
     }
 
     //조회수 증가
-    @Transactional
     @Override
-    public void updateViewCount(int notiNum, int userPkNum) {
-        NoticeEntity notice = notiRepository.findById(notiNum).orElseThrow();
-        List<Integer> viewers = notice.getViewUsers();
-
-        if (!viewers.contains(userPkNum)) {
-            viewers.add(userPkNum);
-            notice.setViewUsers(viewers);
-            notiRepository.save(notice);
-        }
+    public void incrementViewCount(int notiNum) {
+        NoticeEntity notice = notiRepository.findById(notiNum)
+                .orElseThrow(() -> new RuntimeException("공지사항이 존재하지 않습니다."));
+        notice.setNotiView(notice.getNotiView() + 1); //조회수 1증가
+        notiRepository.save(notice);
     }
-
-    // 조회수 가져오기
-    /*
-    @Override
-    public int getViewCount(int notiNum) {
-        NoticeEntity notice = notiRepository.findById(notiNum).orElseThrow();
-        return notice.getViewUsers().size();
-    }
-     */
-
 
     //새 공지 추가
     @Transactional

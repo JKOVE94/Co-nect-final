@@ -33,11 +33,7 @@ const NotiDetail = () => {
 
     const fetchNoti = async () => {
       try {
-        const response = await axios.get(`/main/${compPkNum}/notice/${notiPkNum}`, {
-          params: {
-            userPkNum: loginUser.user_pk_num  // 로그인한 사용자 ID를 파라미터로 전달
-          }
-        });
+        const response = await axios.get(`/main/${compPkNum}/notice/${notiPkNum}`);
         setNoti(response.data);
       } catch (err) {
         setError(err.message);
@@ -143,7 +139,7 @@ const NotiDetail = () => {
             fontSize: "0.8rem",
             color: "#666"  // 회색톤의 글자색
             }}>
-            조회수: {noti.viewCount}
+            조회수: {noti.noti_view}
           </div>
 
 
