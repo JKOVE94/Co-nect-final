@@ -33,8 +33,6 @@ public interface FileService {
 	// 삭제
 	void deletePost(int filePkNum);
 
-	// 페이징
-    public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText, String sortBy, boolean isDescending);
-
-         
+	// 페이징, 정렬
+    public Page<FileDto> getList(int page, int pageSize, String searchType, String searchText, String sortBy, boolean isDescending);      
 }

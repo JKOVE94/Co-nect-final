@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify"; // Import Toast components
+import "react-toastify/dist/ReactToastify.css"; // Import Toast CSS
 
 const FileCreate = () => {
   const writer = useSelector((state) => state.userData);
@@ -12,8 +14,8 @@ const FileCreate = () => {
     wiki_title: "",
     wiki_content: "",
     wiki_fk_user_num: writer?.userNum || 1,
-    wiki_fk_proj_num: 1, // 프로젝트 번호 기본값
-    wiki_isnotice: false, // 공지 여부 기본값
+    wiki_fk_proj_num: 1,
+    wiki_isnotice: false,
     file: null,
     file_name: "",
     file_size: 0,
@@ -34,7 +36,7 @@ const FileCreate = () => {
 
     const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
     if (file.size > maxFileSize) {
-      alert("파일 크기는 10MB를 초과할 수 없습니다.");
+      toast.error("파일 크기는 10MB를 초과할 수 없습니다."); // Error toast
       return;
     }
 
@@ -61,21 +63,21 @@ const FileCreate = () => {
     try {
       const response = await axios.post("/file", data);
 
-      console.log("서버 응답:", response.data); // 서버 응답 확인
+      console.log("서버 응답:", response.data);
       if (response.data != null) {
-        alert("파일이 성공적으로 업로드되었습니다.");
-        navigate(`/main/file/detail/${response.data}`);
+        toast.success("파일이 성공적으로 업로드되었습니다!"); // Success toast
+        setTimeout(() => navigate(`/main/file/detail/${response.data}`), 1000); // Redirect after 3 seconds
       } else {
         throw new Error("저장된 파일 ID가 반환되지 않았습니다.");
       }
     } catch (error) {
       console.error("파일 업로드 중 오류:", error);
       const status = error.response?.status;
-      alert(
-        `저장 중 오류가 발생했습니다.\n${
-          status ? `오류 코드: ${status}` : "서버에 연결할 수 없습니다."
+      toast.error(
+        `저장 중 오류가 발생했습니다.${
+          status ? `\n오류 코드: ${status}` : "\n서버에 연결할 수 없습니다."
         }`
-      );
+      ); // Error toast
     }
   };
 
@@ -85,6 +87,7 @@ const FileCreate = () => {
 
   return (
     <Container fluid style={{ marginTop: "2em" }}>
+      <ToastContainer /> {/* Toast container */}
       <Card>
         <CardHeader>
           <h2>새 파일 등록</h2>
@@ -115,19 +118,8 @@ const FileCreate = () => {
               ></textarea>
             </div>
             <div className="form-group">
-              <label htmlFor="wiki_isnotice">
-                <input
-                  type="checkbox"
-                  id="wiki_isnotice"
-                  name="wiki_isnotice"
-                  checked={formData.wiki_isnotice}
-                  onChange={handleChange}
-                />{" "}
-                공지로 설정
-              </label>
-            </div>
-            <div className="form-group">
-              <label htmlFor="file">파일 첨부:</label>
+              <label htmlFor="file">파일 첨부:</label> <br />
+              파일은 10MB 이하만 등록 가능합니다.
               <input
                 type="file"
                 className="form-control"
@@ -140,7 +132,8 @@ const FileCreate = () => {
                 <div style={{ marginTop: "1em" }}>
                   <strong>선택한 파일:</strong> {formData.file_name}
                   <br />
-                  <strong>크기:</strong> {(formData.file_size / (1024 * 1024)).toFixed(2)} MB
+                  <strong>크기:</strong>{" "}
+                  {(formData.file_size / (1024 * 1024)).toFixed(2)} MB
                   <br />
                   {formData.file_type.startsWith("image/") && (
                     <img
@@ -158,11 +151,25 @@ const FileCreate = () => {
                 </div>
               )}
             </div>
-            <div style={{ marginTop: "1.5em" }}>
+            <div className="form-group" style={{ marginTop: "1.5em" }}>
+              <label htmlFor="wiki_isnotice">
+                <input
+                  type="checkbox"
+                  id="wiki_isnotice"
+                  name="wiki_isnotice"
+                  checked={formData.wiki_isnotice}
+                  onChange={handleChange}
+                />{" "}
+                공지로 설정
+              </label>
+            </div>
+            <div style={{ marginTop: "1.5em", textAlign: "right" }}>
               <button
                 type="submit"
                 className="btn btn-primary"
-                disabled={!formData.file || !formData.wiki_title || !formData.wiki_content}
+                disabled={
+                  !formData.file || !formData.wiki_title || !formData.wiki_content
+                }
                 style={{ marginRight: "1em" }}
               >
                 게시글 저장

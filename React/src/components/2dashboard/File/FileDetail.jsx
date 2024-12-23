@@ -9,7 +9,7 @@ const FileDetail = () => {
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -27,17 +27,14 @@ const FileDetail = () => {
   }, [filePkNumInt]);
 
   const toggleModal = () => {
-    setIsModalOpen(!isModalOpen); // 모달 열기/닫기
+    setIsModalOpen(!isModalOpen);
   };
 
   const handleDelete = async () => {
-    console.log("handleDelete 호출됨, 삭제 대상 ID:", filePkNumInt);
     try {
       await axios.delete(`/file/${filePkNumInt}`);
-      console.log("삭제 성공");
       navigate("/main/file", { state: { success: true } });
     } catch (err) {
-      console.error("삭제 실패:", err.response ? err.response.data : err.message);
       setError("삭제 실패: " + (err.response ? err.response.data : err.message));
     }
   };
@@ -47,17 +44,14 @@ const FileDetail = () => {
       const response = await axios.get(`/file/download/${filePkNumInt}`, {
         responseType: "blob",
       });
-
-      // 브라우저에서 파일 다운로드
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", post.file_name); // 파일 이름 설정
+      link.setAttribute("download", post.file_name);
       document.body.appendChild(link);
       link.click();
       link.remove();
     } catch (err) {
-      console.error("파일 다운로드 실패:", err);
       alert("파일 다운로드 중 오류가 발생했습니다.");
     }
   };
@@ -133,15 +127,29 @@ const FileDetail = () => {
                 파일
               </h5>
               {post.file_name ? (
-                <div style={{ display: "flex", alignItems: "center", gap: "1em" }}>
-                  <p style={{ margin: "0", fontSize: "1.1rem" }}>{post.file_name}</p>
-                  <Button
-                    color="success"
-                    onClick={handleDownload}
-                    style={{ fontSize: "1rem" }}
-                  >
-                    다운로드
-                  </Button>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.5em",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "1em" }}>
+                    <p style={{ margin: "0", fontSize: "1.1rem" }}>{post.file_name}</p>
+                    <Button
+                      color="success"
+                      onClick={handleDownload}
+                      style={{ fontSize: "1rem" }}
+                    >
+                      다운로드
+                    </Button>
+                  </div>
+                  <div style={{ display: "flex", gap: "2em" }}>
+                    <p style={{ margin: "0", fontSize: "1.1rem" }}>
+                      <strong>크기:</strong> {post.file_size ? (post.file_size / (1024 * 1024)).toFixed(2) + " MB" : "알 수 없음"}
+                    </p>                    
+                    <p style={{ margin: "0", fontSize: "1.1rem" }}>파일 유형: {post.file_type || "알 수 없음"}</p>
+                  </div>
                 </div>
               ) : (
                 <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
@@ -187,9 +195,7 @@ const FileDetail = () => {
             <Button color="danger" onClick={toggleModal}>
               삭제
             </Button>
-            <Button color="secondary" onClick={() => navigate("/main/file")}>
-              목록
-            </Button>
+            <Button color="secondary" onClick={() => navigate("/main/file")}>목록</Button>
           </div>
         </CardBody>
       </Card>

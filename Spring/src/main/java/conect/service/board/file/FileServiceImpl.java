@@ -41,6 +41,7 @@ import conect.data.repository.WikiRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -129,9 +130,6 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-
-
-
     // 전체 조회
     @Override
     public List<FileDto> getPostAll() {
@@ -144,31 +142,43 @@ public class FileServiceImpl implements FileService {
  // 부분 조회 (조회수 증가 포함)
     @Override
     public FileDto getPostView(Integer filePkNum, HttpServletRequest request, HttpServletResponse response) {
-        // 쿠키 확인
+    	 // 세션에서 조회 기록 확인
+        HttpSession session = request.getSession();
+        String sessionKey = "viewedPost_" + filePkNum;
+        Boolean hasViewedInSession = (Boolean) session.getAttribute(sessionKey);
+    	
+    	// 쿠키 확인
         Cookie[] cookies = request.getCookies();
-        boolean hasViewed = false;
+        boolean hasViewedInCookie = false; // 게시물 확인 여부
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("viewedPost_" + filePkNum)) {
-                    hasViewed = true;
+                	hasViewedInCookie  = true;
                     break;
                 }
             }
         }
 
         // 조회수 증가
-        if (!hasViewed) {
+        // 조회수 확인되었을 때 실행되는 로직
+        if ((hasViewedInSession == null || !hasViewedInSession) && !hasViewedInCookie) {
             incrementViewCount(filePkNum);
+            
+            // 세션에 조회 기록 저장
+            session.setAttribute(sessionKey, true);
 
             // 새로운 쿠키 생성
-            Cookie newCookie = new Cookie("viewedPost_" + filePkNum, "true");
-            newCookie.setMaxAge(86400); // 1일
+            Cookie newCookie = new Cookie("viewedPost_" + filePkNum, "true"); 
+            // 쿠키 이름 : 확인된게시물_게시물PkNum => 특정 파일을 사용자가 조회했는지 쿠키로 저장합니다. 
+            // 해당 게시물을 1일 이내 다시 조회하면 저장된 쿠키를 확인하고 조회수 증가 X
+            newCookie.setMaxAge(86400); // 쿠키 유효 기간 : 1일
             newCookie.setHttpOnly(true);
-            newCookie.setPath("/");
+            newCookie.setPath("/"); // 모든 경로에서 쿠키 유효
             response.addCookie(newCookie);
         }
-
+        
+        // 부분 조회 로직
         FileEntity fileEntity = fileRepository.findById(filePkNum)
                 .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다."));
 
@@ -189,11 +199,12 @@ public class FileServiceImpl implements FileService {
     // 조회수 증가 로직
     @Transactional
     public void incrementViewCount(Integer filePkNum) {
-        FileEntity fileEntity = fileRepository.findById(filePkNum)
+        FileEntity fileEntity = fileRepository.findById(filePkNum) // FileEntity에서 Pk 값 가져옴
                 .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다."));
 
-        WikiEntity wikiEntity = fileEntity.getWikiEntity();
-        if (wikiEntity != null) {
+        WikiEntity wikiEntity = fileEntity.getWikiEntity(); // FileEntity에서 WikiEntity 정보 가져옴
+        
+        if (wikiEntity != null) { // wikiEntity가 비어있지 않을 때 조회수 증가
             wikiEntity.setWikiView(wikiEntity.getWikiView() + 1);
             wikiRepository.save(wikiEntity);
         }
