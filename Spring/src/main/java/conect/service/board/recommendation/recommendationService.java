@@ -27,6 +27,8 @@ public interface recommendationService {
 	void dropRec(int recNum);
 	//좋아요가 가장 많은 건의사항 게시글
 	Page<RecommendationDto> getMostLike(int projnum);
+	//건의사항 게시글 조회수 증가
+	void RecView(int recNum);
 	
 	//--건의사항 좋아요--
 	//로그인한 유저가 건의사항 좋아요 눌렀는지 확인

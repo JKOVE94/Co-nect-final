@@ -1,5 +1,7 @@
 package conect.controller;
 
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +51,20 @@ public class RecommendationController {
 		return ResponseEntity.ok(list);
 	}
 	
-	//건의사항 게시글
+	//건의사항 게시글 상세 조회
 	@GetMapping("/{proj}/{rec}")
 	public ResponseEntity<Object> getRecDetail(@PathVariable("compNum")int compNum, 
-			@PathVariable(name="proj")int projnum,
-			@PathVariable("rec")int recnum){
+			@PathVariable(name="proj")int projNum,
+			@PathVariable("rec")int recNum,
+			@PathVariable("user")int userNum,
+			HttpResponse response,
+			HttpRequest request){
 
-		RecommendationDto dto = recService.getRecOne(projnum, recnum);
+		//조회스 증가 (사원당 1일 1회 증가)
+		
+		
+		
+		RecommendationDto dto = recService.getRecOne(projNum, recNum);
 		return ResponseEntity.ok(dto);
 	}
 	

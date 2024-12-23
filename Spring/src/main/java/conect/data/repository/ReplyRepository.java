@@ -18,5 +18,5 @@ public interface ReplyRepository extends JpaRepository<ReplyEntity,Integer> {
 	//댓글 목록
 	//정렬 기준 : 그룹 번호, 댓글 깊이, 작성일자
 	//가장 최신 댓글 상단 표시
-	List<ReplyEntity> findByRecommendationEntity_RecPkNumOrderByReplyParentDescReplyDepthAscReplyRegdateAsc(int recNum);
+	List<ReplyEntity> findByRecommendationEntity_RecPkNumOrderByReplyParentDescReplyDepthAscReplyRegdateDesc(int recNum);
 }

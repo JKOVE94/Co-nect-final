@@ -36,7 +36,7 @@ public class replyServiceImpl implements replyService{
 	public List<ReplyDto> getReplyAll(int recNum) {
 		//그룹번호, 댓글 깊이(댓글,대댓글 구분용), 작성일자 정렬
 		try {
-			List<ReplyDto> dto = replyRepository.findByRecommendationEntity_RecPkNumOrderByReplyParentDescReplyDepthAscReplyRegdateAsc(recNum)
+			List<ReplyDto> dto = replyRepository.findByRecommendationEntity_RecPkNumOrderByReplyParentDescReplyDepthAscReplyRegdateDesc(recNum)
 					.stream().map(ReplyDto::fromEntity).toList();
 			return dto;
 		} catch (Exception e) {
@@ -133,6 +133,7 @@ public class replyServiceImpl implements replyService{
 		}	
 		
 	}
+	
 	//댓글 좋아요 등록
 	@Override
 	public void addReplylike(int userNum, int replyNum) {

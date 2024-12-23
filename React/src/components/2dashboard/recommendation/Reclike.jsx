@@ -2,7 +2,7 @@ import axiosInstance from "api/axiosInstance";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const Reclike = ({recPkNum, likes}) => {
+const Reclike = ({recPkNum, likes, handleError}) => {
 
   const userNum = useSelector((state) => state.userData.user_pk_num); //사원번호
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
@@ -20,7 +20,7 @@ const Reclike = ({recPkNum, likes}) => {
   const handleCheck = () => {
     axiosInstance.get(`/${compNum}/rec/like/${userNum}/${recPkNum}`)
     .then(res => setIsCheck(res.data))
-    .catch(err => console.log(err));
+    .catch(err => handleError(err.response.data,true));
   }
 
   //좋아요 등록
@@ -32,7 +32,7 @@ const Reclike = ({recPkNum, likes}) => {
             setNum(pre=> pre + 1);
         };
     })
-    .catch(err => console.log(err));
+    .catch(err => handleError("좋아요를 누르지 못했습니다. 잠시 후 다시 시도해주세요.",true));
   } 
 
   //좋아요 삭제
@@ -44,7 +44,7 @@ const Reclike = ({recPkNum, likes}) => {
             setNum(pre => pre - 1);
         };
     })
-    .catch(err => console.log(err));
+    .catch(err => handleError("좋아요를 취소하는 중 문제가 발생했습니다. 다시 시도해주세요.",true));
   }
   return (
     <>

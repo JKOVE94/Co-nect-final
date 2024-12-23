@@ -9,7 +9,7 @@ import {
   Form,
 } from "react-bootstrap";
 
-const RecCreate = () => {
+const RecCreate = ({handleError}) => {
   const userNum = useSelector((state) => state.userData.user_pk_num); //사번
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
 
@@ -40,7 +40,7 @@ const RecCreate = () => {
           navigate(`/main/rec/${projPkNum}`);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => handleError("게시글 등록에 실패했습니다. 다시 시도해주세요.",true));
   };
 
   return (

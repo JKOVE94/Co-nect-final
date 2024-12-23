@@ -34,12 +34,10 @@ public interface RecommendationRepository extends JpaRepository<RecommendationEn
 	//건의사항 게시글 반환
 	RecommendationEntity findByProjectEntity_projPkNumAndRecPkNum(int projNum, int recNum);
 	
-
 	//조회수 증가
 	@Modifying
     @Transactional
     @Query("UPDATE RecommendationEntity r SET r.recView = r.recView + 1 WHERE r.recPkNum = :recPkNum")
     int incrementRecView(@Param("recPkNum") int recNum);
-	
 
 }

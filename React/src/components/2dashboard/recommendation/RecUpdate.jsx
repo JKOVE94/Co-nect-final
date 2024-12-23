@@ -13,7 +13,7 @@ import {
   Row,
 } from "react-bootstrap";
 
-const RecUpdate = () => {
+const RecUpdate = ({handleError}) => {
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
 
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const RecUpdate = () => {
           state: { data: res.data },
         })
       )
-      .catch((err) => console.log(err));
+      .catch((err) => handleError("게시글 수정에 실패하였습니다. 다시 시도해주세요.",true));
   };
 
   return (

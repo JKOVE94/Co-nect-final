@@ -71,7 +71,7 @@ const CalEventEditModal = ({
         }
         handleError("",false);
       })
-      .catch((err) => handleError(err.response.data,true));
+      .catch((err) => handleError("일정 등록에 실패하였습니다. 다시 시도해주세요.",true));
     onClose();
   };
 

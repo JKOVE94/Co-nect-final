@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 
 
-const RecList = () => {
+const RecList = ({handleError}) => {
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
   const { projPkNum } = useParams(); //프로젝트 번호
 
@@ -48,6 +48,7 @@ const RecList = () => {
       .catch((err) => {
         console.log(err);
         setLoading(false);
+        handleError("건의사항 목록을 불러올 수 없습니다.",true)
       });
   };
 
@@ -56,7 +57,7 @@ const RecList = () => {
     axiosInstance
       .get(`/${compNum}/rec/${projPkNum}/mostlike`)
       .then((res) => setMostLike(res.data.content[0]))
-      .catch((err) => console.log(err));
+      .catch((err) => handleError("추천 게시글을 불러올 수 없습니다.",true));
   };
 
   //페이지 변경

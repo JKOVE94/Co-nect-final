@@ -76,16 +76,15 @@ public class recommendationServiceImpl implements recommendationService {
 		}
 	}
 	
-	//건의사항 게시글
+	//건의사항 게시글 조회
 	@Override
 	@Transactional
 	public RecommendationDto getRecOne(int projNum, int recNum) {
 		
 		try {
-			//조회 수 증가
-			recRepository.incrementRecView(recNum);
 			
 			RecommendationEntity entity = recRepository.findByProjectEntity_projPkNumAndRecPkNum(projNum, recNum);
+			
 			if(entity == null) {
 				throw new ResourceNotFoundException("리소스를 찾을 수 없습니다: 프로젝트 번호 " + projNum + ", 추천 번호 " + recNum);
 			}
@@ -178,6 +177,16 @@ public class recommendationServiceImpl implements recommendationService {
 			throw new RuntimeException(e.getMessage());
 		}	
 		
+	}
+	
+	//조회수
+	@Override
+	public void RecView(int recNum) {
+		try {
+			recRepository.incrementRecView(recNum);
+		} catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}	
 	}
 	
 	//로그인한 유저가 건의사항 좋아요 눌렀는지 확인

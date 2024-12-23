@@ -9,14 +9,12 @@ import {
   Card,
   CardBody,
   CardTitle,
-  Col,
   Form,
   FormGroup,
-  Row,
 } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-const RecDetail = () => {
+const RecDetail = ({handleError}) => {
   const userNum = useSelector((state) => state.userData.user_pk_num); //사원번호
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
 
@@ -46,7 +44,7 @@ const RecDetail = () => {
         .then((res) => {
           setData(res.data);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => handleError("게시글을 불러올 수 없습니다.",true));
     }
   };
 
@@ -58,7 +56,7 @@ const RecDetail = () => {
           navigate("../");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => handleError("게시글 삭제에 실패했습니다. 다시 시도해주세요.",true));
   };
 
   return (

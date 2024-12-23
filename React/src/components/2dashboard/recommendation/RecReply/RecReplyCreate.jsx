@@ -10,7 +10,7 @@ import {
   Row,
 } from "react-bootstrap";
 
-const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent }) => {
+const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent, handleError }) => {
 
   const num = useSelector((state) => state.userData.user_pk_num); //사번
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
@@ -36,7 +36,7 @@ const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent }) => {
       }
       await getData(); // 데이터 갱신
     } catch (err) {
-      console.log(err);
+      handleError("댓글 등록에 실패했습니다. 다시 시도해주세요.", true);
     }
   };
 

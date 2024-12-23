@@ -70,7 +70,7 @@ const Function = () => {
         handleError("",false);
       })
       .catch((err) => {
-        handleError(err.response.data,true);
+        handleError("일정을 불러올 수 없습니다.",true);
       });
   };
 

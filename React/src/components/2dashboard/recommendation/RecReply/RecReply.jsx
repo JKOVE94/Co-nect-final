@@ -3,11 +3,11 @@ import RecReplyCreate from "./RecReplyCreate";
 import axiosInstance from "api/axiosInstance";
 import moment from "moment";
 
-import { Badge, Button, Col, Dropdown, Row } from "react-bootstrap";
+import { Button, Col, Dropdown, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-const RecReply = ({data, getData, recPkNum}) => {
+const RecReply = ({data, getData, recPkNum, handleError}) => {
 
     const userNum = useSelector((state) => state.userData.user_pk_num); //사번
     const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
@@ -27,7 +27,7 @@ const RecReply = ({data, getData, recPkNum}) => {
             if(res.data){
                 getData();
             }
-        }).catch(err=>console.log(err))
+        }).catch(err=> handleError("댓글 삭제에 실패했습니다. 다시 시도해주세요.", true))
     }    
     const handleUpdate = (type) => {
         if(type==="up")
@@ -40,14 +40,13 @@ const RecReply = ({data, getData, recPkNum}) => {
         axiosInstance.put(`/${compNum}/rec/reply`,reply)
         .then(res => {
             setReply({...res.data, disable:true});
-
         })
-        .catch(err => console.log(err));
+        .catch(err => handleError("댓글 수정에 실패했습니다. 다시 시도해주세요.", true));
     }
 
     return (
         <>
-            <div style={{marginLeft:reply.reply_depth*30, marginBottom:'1rem'}}>
+            <div style={{marginLeft:reply.reply_depth*30||0, marginBottom:'1rem'}}>
             <Row style={{height:'2rem', width:'100%'}}>
                 <Col md={11}>
                 {reply.reply_depth !== 0 ?  "└ " : ""}
@@ -98,7 +97,9 @@ const RecReply = ({data, getData, recPkNum}) => {
                     </div>
                 </div>
             </div>
-            <RecReplyCreate onHide={hide} recPkNum={recPkNum} replyParent={reply.reply_parent} getData={getData} />
+            <div style={{marginLeft:'30px'}}>
+                <RecReplyCreate onHide={hide} recPkNum={recPkNum} replyParent={reply.reply_parent} getData={getData} handleError={handleError}/>
+            </div>
         </>
     );
 }

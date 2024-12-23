@@ -4,10 +4,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const ResourceSlice = createSlice({
   name: "projData", // Store 설정의 whitelist와 일치하도록 변경
   initialState: {
-    proj_pk_num: 0 // 프로젝트 고유 번호호
+    proj_pk_num: 0 // 프로젝트 고유 번호
   },
   reducers: {
-    // 로그인 시 상태 업데이트
+    // 프로젝트 선택 시 pk num 저장
     PROJSEL: (state, action) => {
       state.proj_pk_num = action.payload.proj_pk_num;
     },
