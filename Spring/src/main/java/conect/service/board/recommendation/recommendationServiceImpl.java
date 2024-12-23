@@ -29,6 +29,10 @@ import conect.data.repository.ReplyLikesRepository;
 import conect.data.repository.ReplyRepository;
 import conect.data.repository.UserRepository;
 import conect.service.ResourceNotFoundException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -181,9 +185,38 @@ public class recommendationServiceImpl implements recommendationService {
 	
 	//조회수
 	@Override
-	public void RecView(int recNum) {
+	public void addRecView(int recNum, HttpServletRequest request, HttpServletResponse response) {
+		//조회수 증가 (페이지 진입 시 사원당 1일 1회 증가)
+        
 		try {
-			recRepository.incrementRecView(recNum);
+			HttpSession session = request.getSession();
+			String sessionKey = "recView"+recNum;
+			Boolean isView = (Boolean)session.getAttribute(sessionKey);
+			
+			Cookie[] cookies = request.getCookies();
+	        boolean hasCookie = false;
+	        
+	        if (cookies != null) {
+	            for (Cookie cookie : cookies) {
+	                if (cookie.getName().equals("recView" + recNum)) {
+	                	hasCookie  = true;
+	                    break;
+	                }
+	            }
+	        }
+	        
+	        if((isView == null || !isView)&& !hasCookie) {
+	        	recRepository.incrementRecView(recNum);
+	        	
+	        	session.setAttribute(sessionKey, true);
+	        	Cookie newCookie = new Cookie("recView"+recNum, "true");
+	        	
+	        	newCookie.setMaxAge(86400);
+	        	newCookie.setHttpOnly(true);
+	            newCookie.setPath("/");
+	            response.addCookie(newCookie);
+	        }
+	        
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	

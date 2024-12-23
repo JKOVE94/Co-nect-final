@@ -29,6 +29,8 @@ import conect.data.form.ReplyForm;
 import conect.service.ResourceNotFoundException;
 import conect.service.board.recommendation.recommendationService;
 import conect.service.board.reply.replyService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/{compNum}/rec")
@@ -56,14 +58,10 @@ public class RecommendationController {
 	public ResponseEntity<Object> getRecDetail(@PathVariable("compNum")int compNum, 
 			@PathVariable(name="proj")int projNum,
 			@PathVariable("rec")int recNum,
-			@PathVariable("user")int userNum,
-			HttpResponse response,
-			HttpRequest request){
+			HttpServletRequest request, 
+			HttpServletResponse response){
 
-		//조회스 증가 (사원당 1일 1회 증가)
-		
-		
-		
+		recService.addRecView(recNum, request, response);
 		RecommendationDto dto = recService.getRecOne(projNum, recNum);
 		return ResponseEntity.ok(dto);
 	}
