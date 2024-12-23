@@ -44,11 +44,7 @@ const WikiDetail = () => {
     // 게시글 데이터 fetch 함수 정의
     const fetchWiki = async () => {
       try {
-        const response = await axios.get(`/wiki/wikidetail/${wikiPkNum}`, {
-          params: {
-            userPkNum: loginUser.user_pk_num, // 로그인한 사용자 ID를 파라미터로 전달
-          },
-        });
+        const response = await axios.get(`/wiki/wikidetail/${wikiPkNum}`);
         setWiki(response.data); // 성공 시 게시글 데이터 저장
         console.log(response.data); // wiki 객체 구조 확인
       } catch (err) {

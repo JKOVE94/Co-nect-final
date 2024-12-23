@@ -17,7 +17,7 @@ public class WikiDto {
     private String wiki_content; // 위키 내용
     private boolean wiki_isnotice; // 공지사항 여부
     private LocalDate wiki_regdate; // 작성일
-    private String wiki_view; // 조회수
+    private int wiki_view; // 조회수
     private int viewCount;// 화면에 보여줄 조회수
     private boolean wiki_boardtype; // 게시판 종류
     private int wiki_fk_user_num; // 사용자 고유번호
@@ -36,7 +36,6 @@ public class WikiDto {
         wikiDto.setWiki_isnotice(wiki.isWikiIsnotice());
         wikiDto.setWiki_regdate(wiki.getWikiRegdate());
         wikiDto.setWiki_view(wiki.getWikiView());
-        wikiDto.setViewCount(wiki.getViewUsers().size());
         wikiDto.setWiki_boardtype(wiki.isWikiBoardtype());
         wikiDto.setWiki_fk_user_num(wiki.getUserEntity().getUserPkNum());
         wikiDto.setWiki_fk_proj_num(wiki.getProjectEntity().getProjPkNum());

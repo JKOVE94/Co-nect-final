@@ -238,7 +238,7 @@ const WikiUpdate = () => {
               </p>
             )}
             {!fileState.fileName && (
-              <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+              <p style={{ fontSize: "12px", color: "#888", textAlign: "right"}}>
                 (한 번에 하나의 파일만 업로드할 수 있습니다.<br />
                 여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
               </p>
@@ -260,14 +260,27 @@ const WikiUpdate = () => {
       </CardBody>
 
       {/* 모달 컴포넌트 수정 */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Body style={{ textAlign: "center" }}>{modalMessage}</Modal.Body>
-        <Modal.Footer style={{ justifyContent: "center" }}>
-          <Button variant="primary" onClick={() => setShowModal(false)}>
-            닫기
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <Modal
+  show={showModal}
+  onHide={() => setShowModal(false)}
+  style={{
+    position: "fixed", // fixed 위치 지정 (스크롤에 영향을 받지 않음)
+    top: "80%", // 화면 상단에서 50% 위치
+    left: "50%", // 화면 왼쪽에서 50% 위치
+    transform: "translate(-50%, -50%)", // 정확한 중앙 정렬
+    width: "100%", // 너비를 100%로 설정하여 중앙에서 크기 지정
+    zIndex: 1050, // 모달이 다른 콘텐츠 위에 보이도록 설정
+  }}
+>
+  <Modal.Body style={{ textAlign: "center" }}>
+    {modalMessage}
+  </Modal.Body>
+  <Modal.Footer style={{ justifyContent: "center" }}>
+    <Button variant="primary" onClick={() => setShowModal(false)}>
+      닫기
+    </Button>
+  </Modal.Footer>
+</Modal>
     </Card>
   );
 };

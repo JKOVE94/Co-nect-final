@@ -26,7 +26,7 @@ public class WikiEntity {
     private String wikiContent; //위키 내용 [TEXT]
     private boolean wikiIsnotice; //공지사항 여부 [INT] (0, 1)
     private LocalDate wikiRegdate; //작성일 [DATE]
-    private String wikiView; //조회수 [INT]
+    private int wikiView; //조회수 [INT]
     private boolean wikiBoardtype; //게시판 종류 [INT] (1, 2)
 
     @OneToOne(mappedBy = "wikiEntity")
@@ -41,21 +41,4 @@ public class WikiEntity {
     @JoinColumn(name = "wiki_fk_proj_num")
     @JsonIgnore
     private ProjectEntity projectEntity;
-    
-    // getter에서 String을 List로 변환
-    public List<Integer> getViewUsers() {
-        if (wikiView == null || wikiView.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return Arrays.stream(wikiView.split(","))
-                .map(Integer::parseInt)
-                .collect(Collectors.toList());
-    }
-
-    // setter에서 List를 String으로 변환
-    public void setViewUsers(List<Integer> users) {
-        this.wikiView = users.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
-    }
 }

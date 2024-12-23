@@ -1,6 +1,7 @@
 package conect.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.WikiDto;
 import conect.data.entity.FileEntity;
@@ -99,9 +101,8 @@ public class WikiController {
 
 	// 상세보기
 	@GetMapping("/wikidetail/{wikiPkNum}")
-	public WikiDto getWikiById(@PathVariable("wikiPkNum") int wikiPkNum, @RequestParam("userPkNum") int userPkNum) {
+	public WikiDto getWikiById(@PathVariable("wikiPkNum") int wikiPkNum) {
 		System.out.println("wikiPkNum : " + wikiPkNum);
-		wikiServiceImpl.updateViewCount(wikiPkNum, userPkNum);
 		return wikiServiceImpl.getWikiById(wikiPkNum);
 	}
 	
@@ -132,56 +133,29 @@ public class WikiController {
 		}
 	}
 
-	// 문서 수정
 	@PutMapping("/wikiedit/{wikiPkNum}")
-	public ResponseEntity<?> editWiki(@PathVariable("wikiPkNum") int wikiPkNum, @ModelAttribute WikiForm form) {
-	    try {
-	        // 위키 엔티티의 FileEntity가 null일 수 있으므로 안전하게 처리
-	        WikiDto wiki = wikiServiceImpl.getWikiById(wikiPkNum);
-	        FileEntity existingFile = wikiServiceImpl.getWikiFileByWikiNum(wikiPkNum);
-        	System.out.println(existingFile + "======existingFile==========================test ------------------------------"); 
-	        // 파일 처리 로직
-	        if (form.getFileInput() != null && !form.getFileInput().isEmpty()) {
+	public ResponseEntity<?> editWiki(@RequestParam("filePkNum") int filePkNum,
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			@PathVariable("wikiPkNum") int wikiPkNum, 
+			@ModelAttribute WikiForm form) {
+		try {
+            // 파일이 업로드된 경우, 수정할 파일 ID와 함께 호출
+            if (file != null && !file.isEmpty()) {
+            	wikiServiceImpl.editWiki(filePkNum, file, wikiPkNum, form);  // WikiService의 editWiki 메서드 호출
+            } else {
+                // 파일 없이 수정만 할 경우
+            	wikiServiceImpl.editWiki(0, null, wikiPkNum, form);
+            }
 
-	            // 새 파일이 업로드된 경우
-	            if (existingFile != null) {
-	                // 기존 파일이 있다면 삭제
-	                wikiServiceImpl.deleteWikiFile(wikiPkNum);
-	            }
-	            // 새 파일 저장
-	            String fileUrl = wikiServiceImpl.saveFile(form);
-	            form.setFile_path(fileUrl);
-	            form.setFile_name(form.getFileInput().getName());
-	        } else {
-	            // 파일 input이 비어있는 경우
-	            if (form.getFile_name() == null || form.getFile_name().isEmpty()) {
-	                // 파일을 삭제하려는 경우
-	                if (existingFile != null) {
-	                    wikiServiceImpl.deleteWikiFile(wikiPkNum);
-	                }
-	                form.setFile_path(null);
-	                form.setFile_name(null);
-	            } else if (existingFile != null) {
-	                // 기존 파일 정보 유지
-	                form.setFile_name(existingFile.getFileName());
-	                form.setFile_path(existingFile.getFilePath());
-	            }
-	        }
-	        // 문서 수정 서비스 호출
-	        wikiServiceImpl.editWiki(wikiPkNum, form);
-	        return ResponseEntity.ok()
-	                .body(Map.of(
-	                    "message", "문서 수정 성공!",
-	                    "fileName", form.getFile_name(),
-	                    "filePath", form.getFile_path()
-	                ));
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                             .body("문서 수정 실패: " + e.getMessage());
-	    }
+            return ResponseEntity.ok(file);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("message", "문서 수정 실패: " + e.getMessage()));
+        }
 	}
-
+/*
 	// 문서 삭제
 	@DeleteMapping("/wikidelete/{wikiPkNum}")
 	public ResponseEntity<?> deleteWiki(@PathVariable("wikiPkNum") int wikiPkNum) {
@@ -193,4 +167,5 @@ public class WikiController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문서 삭제 실패: " + e.getMessage());
 		}
 	}
+	*/
 }
