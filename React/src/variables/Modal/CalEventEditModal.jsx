@@ -71,7 +71,7 @@ const CalEventEditModal = ({
         }
         handleError("",false);
       })
-      .catch((err) => handleError(err,true));
+      .catch((err) => handleError(err.response.data,true));
     onClose();
   };
 
@@ -86,7 +86,7 @@ const CalEventEditModal = ({
         }
         handleError("",false)
       })
-      .catch((err) => handleError(err,true));
+      .catch((err) => handleError(err.response.data,true));
     onClose();
   };
   

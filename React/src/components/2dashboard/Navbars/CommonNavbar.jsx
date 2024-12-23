@@ -2,12 +2,11 @@ import React from "react";
 import { Sidebar as Side, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { NavItem, NavLink } from "reactstrap";
 import { NavLink as NavLinkRRD, Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const CommonNavbar = () => {
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const proj = searchParams.get('proj');
+  const proj = useSelector((state)=>state.projData.proj_pk_num);
 
     return(
         <>

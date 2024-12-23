@@ -7,7 +7,7 @@ import { Container } from "react-bootstrap";
 
 const RecHome = () => {
   return(
-    <Container fluid style={{ marginTop: "1em", overflowY:"auto" }}>
+    <Container fluid style={{ marginTop: "1em", overflowY:"auto", height:"40rem" }}>
       <Routes>
         <Route path="/" element={<RecList />} />
         <Route path="/create" element={<RecCreate />} />

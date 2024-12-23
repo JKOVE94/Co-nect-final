@@ -70,7 +70,7 @@ const Function = () => {
         handleError("",false);
       })
       .catch((err) => {
-        handleError(error.response.data,true);
+        handleError(err.response.data,true);
       });
   };
 

@@ -85,12 +85,14 @@ public class recommendationServiceImpl implements recommendationService {
 			//조회 수 증가
 			recRepository.incrementRecView(recNum);
 			
-			RecommendationDto dto = 
-					RecommendationDto.fromEntity(recRepository.findByProjectEntity_projPkNumAndRecPkNum(projNum, recNum));
+			RecommendationEntity entity = recRepository.findByProjectEntity_projPkNumAndRecPkNum(projNum, recNum);
+			if(entity == null) {
+				throw new ResourceNotFoundException("리소스를 찾을 수 없습니다: 프로젝트 번호 " + projNum + ", 추천 번호 " + recNum);
+			}
 			
-			return dto;
-		} catch(ResourceNotFoundException e) {
-			throw new ResourceNotFoundException("리소스를 찾을 수 없습니다: " + e.getMessage());
+			return RecommendationDto.fromEntity(entity);
+		} catch (ResourceNotFoundException e) {
+	        throw e;
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	
@@ -113,6 +115,8 @@ public class recommendationServiceImpl implements recommendationService {
 			entity.setRecRegdate(LocalDateTime.now()); //작성일자는 현재 시간
 			
 			recRepository.save(entity);
+		} catch (ResourceNotFoundException e) {
+	        throw e;
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	
@@ -134,6 +138,8 @@ public class recommendationServiceImpl implements recommendationService {
 			
 			return RecommendationDto.fromEntity(recRepository.save(entity));
 			
+		} catch (ResourceNotFoundException e) {
+	        throw e;
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	
@@ -153,6 +159,8 @@ public class recommendationServiceImpl implements recommendationService {
 			reclikesRepository.deleteByRecommendationEntity_RecPkNum(recNum);
 			//건의사항 삭제
 			recRepository.deleteById(recNum);
+		} catch (ResourceNotFoundException e) {
+	        throw e;
 		} catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}	
@@ -199,7 +207,9 @@ public class recommendationServiceImpl implements recommendationService {
             entity.setRecommendationEntity(recRepository.findById(recNum)
             		.orElseThrow(() -> new ResourceNotFoundException("건의사항을 찾을 수 없습니다. 건의사항 번호 : " + recNum)));
             reclikesRepository.save(entity);
-        } catch (Exception e) {
+        } catch (ResourceNotFoundException e) {
+	        throw e;
+		} catch (Exception e) {
             throw new RuntimeException("Error adding recommendation like: " + e.getMessage(), e);
         }
     }
@@ -214,7 +224,9 @@ public class recommendationServiceImpl implements recommendationService {
             } else {
             	throw new ResourceNotFoundException("일치하는 데이터가 없습니다.");
             }
-        } catch (Exception e) {
+        } catch (ResourceNotFoundException e) {
+	        throw e;
+		} catch (Exception e) {
             throw new RuntimeException("Error removing recommendation like: " + e.getMessage(), e);
         }
     }
