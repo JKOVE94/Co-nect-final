@@ -4,6 +4,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import NotiToast from "variables/Toast/NotiToast";
 import { useSelector } from "react-redux";
+import ConfirmModal from "./ConfirmModal";
+import AlertModal from "./AlertModal";
 
 const NotiDetail = () => {
   const location = useLocation();
@@ -11,12 +13,13 @@ const NotiDetail = () => {
   const navigate = useNavigate();
   const compPkNum =1;//임시 테스트 회사 번호
   const loginUser = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
-
   const [type, setType] = useState(0);
   const [noti, setNoti] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false); // 확인/취소용 modal창 열림 닫힘 상태 관리
+  const [alertOpenNo, setAlertOpenNo] = useState(false); // 알림용 modal 창 열림 닫힘 상태 관리 
 
   useEffect(() => {
     const actionType = location.state?.actionType;
@@ -53,11 +56,23 @@ const NotiDetail = () => {
     }, 3000);
   };
 
+  const openModal=()=>{
+    setModalOpen(true);
+  }
+
+  const closeModal=()=>{
+    setModalOpen(false);
+  }
+
   const handleDelete = async () => {
       // 작성자 검증
       if (noti.noti_fk_user_num !== loginUser.user_pk_num) {
-      alert("작성자가 불일치합니다.");
-      navigate(`/main/noti/notidetail/${notiPkNum}`);
+      setAlertOpenNo(true);
+      setTimeout(()=>{
+        setAlertOpenNo(false);
+        setModalOpen(false);
+        navigate(`/main/noti/notidetail/${notiPkNum}`);  
+      },2000);
       return;
        }
     try {
@@ -72,6 +87,7 @@ const NotiDetail = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
+    <>
     <Container fluid style={{ marginTop: "2em" }}>
       <Card style={{ height: "40em", overflowY: "auto" }}>
         <CardHeader>
@@ -135,7 +151,7 @@ const NotiDetail = () => {
             <button className="btn btn-primary" onClick={() => navigate(`/main/noti/notiedit/${notiPkNum}`)}>
               수정
             </button>
-            <button className="btn btn-danger" onClick={handleDelete}>
+            <button className="btn btn-danger" onClick={openModal}>
               삭제
             </button>
             <button className="btn btn-secondary" onClick={() => navigate("/main/noti/notilist")}> 
@@ -146,6 +162,23 @@ const NotiDetail = () => {
       </Card>
       <NotiToast type={type} show={showToast} />
     </Container>
+      {/*Modal 창*/}
+      <ConfirmModal 
+        isOpen={modalOpen}
+        onClose={closeModal}
+        onConfirm={handleDelete}
+        title="삭제 확인"
+        message="해당 공지 글을 삭제하시겠습니까?"
+      />
+      <AlertModal 
+        isOpen={alertOpenNo}
+        setIsOpen={setAlertOpenNo}  // setState 직접 전달
+        title="알림"
+        message="작성자가 불일치합니다."
+        duration={2000} //2초 후 자동 닫힘
+      />
+    </>
+    
   );
 };
 

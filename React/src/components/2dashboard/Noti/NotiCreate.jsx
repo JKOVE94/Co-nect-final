@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useActionState, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import {
@@ -14,12 +14,18 @@ import {
   CardHeader,
 } from "reactstrap";
 import { Checkbox } from "rsuite";
+import ConfirmModal from "./ConfirmModal";
+import AlertModal from "./AlertModal";
 
 const NoticeCreate = () => {
   const navigate = useNavigate();
   const projNum = 6; // 테스트 projNum
   const compPkNum = 1; // 테스트 compNum
   const writer = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
+  const [modalOpen, setModalOpen] = useState(false); // 확인/취소용 modal창 열림 닫힘 상태 관리
+  // 알림용 modal 창 열림 닫힘 상태 관리 
+  const [alertOpenYes, setAlertOpenYes] = useState(false); 
+  const [alertOpenNo, setAlertOpenNo] = useState(false); 
 
   // Notice 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
@@ -55,20 +61,40 @@ const NoticeCreate = () => {
     try {
       await axios.post(`/main/${compPkNum}/notice/insert`, formData);
       // 등록 성공 시 리스트 페이지로 리다이렉트
-      alert("공지사항이 등록되었습니다.");
-      navigate("/main/noti/notilist");
+      setAlertOpenYes(true); //알림용 modal창 열림
+      setTimeout(()=>{ //navigation 시간 조정 2초뒤
+        navigate("/main/noti/notilist");
+      },2000);
+      
     } catch (error) {
       console.error("공지사항 등록 실패:", error);
-      alert("공지사항 등록에 실패했습니다.");
+      setAlertOpenNo(true); //알림용 modal창 열림
+      
     }
   };
 
+
   // 목록으로 이동
   const handleList = () => {
-    navigate("/main/noti/notilist");
+    setModalOpen(true); //Modal창 열림
+    
   };
 
+  //Modal창 닫는 함수
+  const closeModal =()=>{
+    setModalOpen(false); //Modal창 닫힘
+  }
+
+  //Modal창 확인 시 실행되는 함수
+  const confirmMove = () =>{
+    navigate("/main/noti/notilist"); //Modal창 확인 시 목록보기로 이동
+  }
+
+
+
+
   return (
+    <>
     <Card
       className="shadow rounded"
       style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
@@ -167,6 +193,29 @@ const NoticeCreate = () => {
         </form>
       </CardBody>
     </Card>
+    {/*Modal 창*/}
+    <ConfirmModal 
+        isOpen={modalOpen}
+        onClose={closeModal}
+        onConfirm={confirmMove}
+        title="목록 이동"
+        message="목록 페이지로 이동하시겠습니까? 작성 중인 내용은 저장되지 않습니다."
+      />
+      <AlertModal 
+        isOpen={alertOpenYes}
+        setIsOpen={setAlertOpenYes}  // setState 직접 전달
+        title="알림"
+        message="공지 글 등록이 완료되었습니다."
+        duration={2000} //2초 후 자동 닫힘
+      />
+        <AlertModal 
+        isOpen={alertOpenNo}
+        setIsOpen={setAlertOpenNo}  // setState 직접 전달
+        title="알림"
+        message="공지 사항 등록에 실패하였습니다."
+        duration={2000} //2초 후 자동 닫힘
+      />
+    </>  
   );
 };
 
