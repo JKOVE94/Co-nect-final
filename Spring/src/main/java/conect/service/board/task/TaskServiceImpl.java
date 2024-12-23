@@ -112,6 +112,21 @@ public class TaskServiceImpl implements TaskService {
                 .map(TaskDto::fromEntity)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskPkNum));
     }
+    
+    @Override
+    public List<TaskDto> getRelatedTasks(int taskPkNum) {
+        TaskEntity task = taskRepository.findById(taskPkNum).orElseThrow(() -> new RuntimeException("Task not found"));
+        Integer taskGroup = task.getTaskGroup();
+        Integer taskDepth = task.getTaskDepth();
+        
+        // 상위 태스크인 경우 하위 태스크를 찾고, 하위 태스크인 경우 상위 태스크를 찾음
+        Integer targetDepth = (taskDepth == 0) ? 1 : 0;
+        
+        return taskRepository.findRelatedTasks(taskGroup, targetDepth).stream()
+                .map(TaskDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 
 
 

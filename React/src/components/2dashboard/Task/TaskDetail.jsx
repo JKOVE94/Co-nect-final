@@ -10,7 +10,9 @@ import {
   Alert,
   Row,
   Col,
+  Table,
 } from "reactstrap";
+import TaskDepthContainer from "./TaskDepthContainer";
 
 const TaskDetail = () => {
   const { taskPkNum } = useParams(); // 태스크 ID를 URL 파라미터에서 가져옴
@@ -23,7 +25,7 @@ const TaskDetail = () => {
     const fetchTask = async () => {
       try {
         const response = await axiosInstance.get(`/board/task/${taskPkNum}`);
-        setTask(response.data[0]);
+        setTask(response.data);
         console.log(response.data);
       } catch (err) {
         setError(err.message);
@@ -59,68 +61,58 @@ const TaskDetail = () => {
           <Card style={{ height: "auto", overflowY: "auto" }}>
             <CardHeader>
               <h2>태스크 상세보기</h2>
+              <button
+                className="btn btn-primary m-1"
+                onClick={() => navigate(`/main/task/update/${taskPkNum}`)}
+              >
+                수정이력
+              </button>
             </CardHeader>
             <CardBody style={{ fontSize: "1.2rem", padding: "0" }}>
-              <table className="table" style={{ fontSize: "1.2rem" }}>
-                {task ? (
-                  <tbody>
-                    <tr>
-                      <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
-                      <td style={{ width: "90%", textAlign: "left" }}>
-                        {task.taskTitle}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{ width: "10%", textAlign: "left" }}>상 태</td>
-                      <td style={{ width: "90%", textAlign: "left" }}>
-                        {task.taskStatus}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{ width: "10%", textAlign: "left" }}>
-                        작 성 일
-                      </td>
-                      <td style={{ width: "90%", textAlign: "left" }}>
-                        {formatDate(task.taskCreated)}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{ width: "10%", textAlign: "left" }}>
-                        시작일
-                      </td>
-                      <td style={{ width: "90%", textAlign: "left" }}>
-                        {formatDate(task.taskStartdate)}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{ width: "10%", textAlign: "left" }}>
-                        마감일
-                      </td>
-                      <td style={{ width: "90%", textAlign: "left" }}>
-                        {formatDate(task.taskDeadline)}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{ width: "10%", textAlign: "left" }}>
-                        진행도
-                      </td>
-                      <td style={{ width: "90%", textAlign: "left" }}>
-                        {task.taskProgress}%
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{ width: "10%", textAlign: "left" }}>내 용</td>
-                      <td style={{ width: "90%", textAlign: "left" }}>
-                        {task.taskContent}
-                      </td>
-                    </tr>
-                  </tbody>
-                ) : (
-                  <div>태스크를 찾을 수 없습니다.</div>
-                )}
+              <Table responsive style={{ fontSize: "1.2rem" }}>
+                <tbody>
+                  <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
+                    <td colSpan="3" style={{ width: "90%", textAlign: "left" }}>
+                      {task.taskTitle}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>내 용</td>
+                    <td style={{ width: "40%", textAlign: "left" }}>
+                      {task.taskContent}
+                    </td>
+                    <td style={{ width: "10%", textAlign: "left" }}>담당자</td>
+                    <td style={{ width: "40%", textAlign: "left" }}>
+                      {task.userName}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>상 태</td>
+                    <td style={{ width: "40%", textAlign: "left" }}>
+                      {task.taskStatus}
+                    </td>
+                    <td style={{ width: "10%", textAlign: "left" }}>진행도</td>
+                    <td style={{ width: "40%", textAlign: "left" }}>
+                      {task.taskProgress}%
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>시작일</td>
+                    <td style={{ width: "40%", textAlign: "left" }}>
+                      {formatDate(task.taskStartdate)}
+                    </td>
+                    <td style={{ width: "10%", textAlign: "left" }}>마감일</td>
+                    <td style={{ minWidth: "40%", textAlign: "left" }}>
+                      {formatDate(task.taskDeadline)}
+                    </td>
+                  </tr>
+                </tbody>
+
                 {/* 버튼들 */}
                 <tr>
-                  <td colSpan="6" style={{ textAlign: "right" }}>
+                  <td colSpan="4" style={{ textAlign: "right" }}>
                     <button
                       className="btn btn-primary m-1"
                       onClick={() => navigate(`/main/task/update/${taskPkNum}`)}
@@ -143,9 +135,14 @@ const TaskDetail = () => {
                     </button>
                   </td>
                 </tr>
-              </table>
+              </Table>
             </CardBody>
           </Card>
+        </Col>
+      </Row>
+      <Row className="pt-3">
+        <Col>
+          <TaskDepthContainer task={task}></TaskDepthContainer>
         </Col>
       </Row>
     </Container>

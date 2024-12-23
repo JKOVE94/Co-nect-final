@@ -17,7 +17,7 @@ public class TaskDto {
     private Integer taskDuration;
     private Integer taskProgress;
     private String taskStatus;
-    private Integer taskPriority;
+    private String taskPriority;
     private LocalDate taskCreated;
     private Integer taskDepth;
     private Integer taskGroup;

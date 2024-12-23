@@ -98,7 +98,24 @@ public class TaskController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        
+        
     }
+    
+    @GetMapping("/task/{taskPkNum}/related")
+    public ResponseEntity<List<TaskDto>> getRelatedTasks(
+        @PathVariable("taskPkNum") int taskPkNum,
+        @RequestParam("taskGroup") int taskGroup,
+        @RequestParam("taskDepth") int taskDepth
+    ) {
+        try {
+            List<TaskDto> relatedTasks = taskService.getRelatedTasks(taskPkNum);
+            return new ResponseEntity<>(relatedTasks, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 

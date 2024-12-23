@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import axiosInstance from "../../../api/axiosInstance";
 import {
@@ -26,7 +26,6 @@ const TaskList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
-
   const { projectNum } = useParams();
 
   const fetchTasks = useCallback(
@@ -48,7 +47,7 @@ const TaskList = () => {
         )
         .then((res) => {
           console.log("API 응답:", res.data);
-          setTasks(res.data.tasks);
+          setTasks(sortTasks(res.data.tasks));
           setCurrentPage(res.data.currentPage + 1);
           setTotalPages(res.data.totalPages);
           setTotalBlocks(res.data.totalBlocks);
@@ -79,7 +78,6 @@ const TaskList = () => {
     startPageOfBlock + pagesPerBlock - 1,
     totalPages
   );
-
   const pageButtons = Array.from(
     { length: endPageOfBlock - startPageOfBlock + 1 },
     (_, index) => startPageOfBlock + index
@@ -94,6 +92,15 @@ const TaskList = () => {
       sortField,
       sortDirection
     );
+  };
+
+  const sortTasks = (tasks) => {
+    return tasks.sort((a, b) => {
+      if (a.taskGroup !== b.taskGroup) {
+        return a.taskGroup - b.taskGroup;
+      }
+      return a.taskDepth - b.taskDepth;
+    });
   };
 
   const handlePageChange = (pageNumber) => {
@@ -116,6 +123,11 @@ const TaskList = () => {
     setSortDirection(newSortDirection);
   };
 
+  const navigate = useNavigate();
+
+  const handleTaskCreate = () => {
+    navigate("/main/task/create");
+  };
   const handleSearch = () => {
     fetchTasks(1, 0, sortField, sortDirection);
   };
@@ -169,11 +181,23 @@ const TaskList = () => {
                   {tasks.length > 0 ? (
                     tasks.map((task) => (
                       <tr key={task.taskPkNum}>
-                        <td style={{ fontWeight: "bold" }}>
+                        <td
+                          style={{
+                            paddingLeft: `${task.taskDepth * 20}px`,
+                            fontWeight:
+                              task.taskDepth === 0 ? "bold" : "normal",
+                          }}
+                        >
+                          {task.taskDepth === 1 && (
+                            <span style={{ marginRight: "5px" }}>
+                              <i class="bi bi-arrow-return-right"></i>
+                            </span>
+                          )}
                           <Link to={`/main/task/detail/${task.taskPkNum}`}>
                             {task.taskTitle}
                           </Link>
                         </td>
+
                         <td>{task.taskContent}</td>
                         <td>{formatDate(task.taskStartdate)}</td>
                         <td>{formatDate(task.taskDeadline)}</td>
@@ -207,12 +231,11 @@ const TaskList = () => {
               <div className="d-flex justify-content-end">
                 <button
                   className="btn btn-primary mr-3 mt-3"
-                  onClick={() => Navigate(`/main`)}
+                  onClick={handleTaskCreate}
                 >
                   글쓰기
                 </button>
               </div>
-
               <div
                 style={{
                   display: "flex",
@@ -229,7 +252,6 @@ const TaskList = () => {
                 >
                   &laquo; 이전
                 </button>
-
                 {pageButtons.map((pageNumber) => (
                   <button
                     key={pageNumber}
@@ -241,7 +263,6 @@ const TaskList = () => {
                     {pageNumber}
                   </button>
                 ))}
-
                 <button
                   className={`btn btn-link ${
                     pageBlock + 1 >= totalBlocks ? "disabled" : ""

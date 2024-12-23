@@ -15,6 +15,8 @@ public interface TaskService {
     void insertTask(TaskForm form);
     void updateTask(TaskForm form);
     void deleteTask(int task_pk_num);
+    List<TaskDto> getRelatedTasks(int taskPkNum);
+
  // 페이징 
     public Page<TaskDto> getListByProject(int projectNum, int page, int pageSize, String sortField, String sortDirection, String searchText);
 }
