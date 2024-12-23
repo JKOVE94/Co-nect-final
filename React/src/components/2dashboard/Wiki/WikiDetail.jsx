@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import { useSelector } from "react-redux";
 import WikiToast from "variables/Toast/WikiToast";
-import { Button } from "react-bootstrap";
+import { Button, Modal, ModalBody, ModalFooter } from "react-bootstrap";
 
 const WikiDetail = () => {
   // 현재 URL의 state를 확인하기 위해 useLocation 사용
@@ -16,6 +17,8 @@ const WikiDetail = () => {
   const [wiki, setWiki] = useState({}); // 게시글 데이터 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
+  const loginUser = useSelector((state) => state.userData);
+  const [showConfirmModal, setShowConfirmModal] = useState(false); // 목록 이동 확인 모달 상태
 
   // 토스트 알림 상태 및 토글 함수
   const [showA, setShowA] = useState(false);
@@ -41,7 +44,11 @@ const WikiDetail = () => {
     // 게시글 데이터 fetch 함수 정의
     const fetchWiki = async () => {
       try {
-        const response = await axios.get(`/wiki/wikidetail/${wikiPkNum}`);
+        const response = await axios.get(`/wiki/wikidetail/${wikiPkNum}`, {
+          params: {
+            userPkNum: loginUser.user_pk_num, // 로그인한 사용자 ID를 파라미터로 전달
+          },
+        });
         setWiki(response.data); // 성공 시 게시글 데이터 저장
         console.log(response.data); // wiki 객체 구조 확인
       } catch (err) {
@@ -53,14 +60,39 @@ const WikiDetail = () => {
     fetchWiki(); // 게시글 데이터 요청 함수 호출
   }, [wikiPkNum, location.state]);
 
-  // 게시글 삭제 처리 함수
-  const handleDelete = async () => {
+  const handleFileDownload = async (filePath, fileName) => {
     try {
-      await axios.delete(`/wiki/wikidelete/${wikiPkNum}`); // 게시글 삭제 요청
-      navigate("/main/wiki/wikilist", { state: { success: true } }); // 삭제 후 목록 페이지로 이동
-    } catch (err) {
-      setError("삭제 실패: " + err.message); // 삭제 실패 시 에러 메시지 설정
+      const response = await axios.get(filePath, {
+        responseType: "blob", // 바이너리 데이터로 파일 다운로드
+      });
+
+      // 브라우저에서 파일 다운로드
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName); // 파일 이름 설정
+      document.body.appendChild(link);
+      link.click(); // 클릭 이벤트 트리거로 다운로드 실행
+      link.parentNode.removeChild(link); // 다운로드 후 링크 제거
+    } catch (error) {
+      console.error("파일 다운로드 실패:", error);
     }
+  };
+
+  // 삭제 버튼 클릭 시 모달 표시
+  const handleListClick = () => {
+    setShowConfirmModal(true); // 목록 이동 확인 모달 열기
+  };
+
+  // 모달에서 확인 버튼 클릭 시 목록으로 이동
+  const handleConfirmList = () => {
+    setShowConfirmModal(false); // 모달 닫기
+    navigate("/main/wiki/wikilist", { state: { success: true } }); // 목록 페이지로 이동
+  };
+
+  // 모달에서 취소 버튼 클릭 시 모달 닫기
+  const handleCancelList = () => {
+    setShowConfirmModal(false);
   };
 
   // 로딩 중일 때 표시
@@ -133,10 +165,22 @@ const WikiDetail = () => {
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {wiki.file_name && wiki.file_path ? (
                         <span>
-                          <a
-                            href={wiki.file_path}>
-                            {wiki.file_name}
-                          </a> 
+                          <a href={wiki.file_path}>{wiki.file_name}</a>&nbsp;
+                          <button
+                            onClick={() =>
+                              handleFileDownload(wiki.file_path, wiki.file_name)
+                            }
+                            style={{
+                              background: "none",
+                              border: "none",
+                              padding: "0",
+                              fontSize: "1.5em",
+                              cursor: "pointer",
+                            }}
+                            aria-label={`Download ${wiki.file_name}`}
+                          >
+                            ⬇️
+                          </button>
                         </span>
                       ) : (
                         <span>첨부된 파일이 없습니다.</span>
@@ -164,15 +208,42 @@ const WikiDetail = () => {
               >
                 수정 {/* 수정 버튼 */}
               </button>
-              <button className="btn btn-primary" onClick={handleDelete}>
-                삭제 {/* 삭제 버튼 */}
-              </button>
-              <button
-                className="btn btn-primary"
+              <Button variant="danger" block onClick={handleListClick}>
+                삭제
+              </Button>
+
+              <Modal
+                show={showConfirmModal}
+                onHide={() => setShowConfirmModal(false)}
+                style={{
+                  maxWidth: "500px",
+                  margin: "auto", // 자동으로 중앙 정렬
+                  top: "35%", // Modal을 화면 중앙에서 적당히 아래로 위치
+                }}
+              >
+                <ModalBody style={{ textAlign: "center" }}>
+                  정말 삭제하시겠습니까?
+                </ModalBody>
+                <ModalFooter style={{ justifyContent: "center" }}>
+                  <Button variant="primary" onClick={handleConfirmList}>
+                    확인
+                  </Button>
+                  <Button variant="danger" onClick={handleCancelList}>
+                    취소
+                  </Button>
+                </ModalFooter>
+              </Modal>
+              <Button
+                style={{
+                  backgroundColor: "#696969",
+                  borderColor: "#696969",
+                  color: "white",
+                }}
+                block
                 onClick={() => navigate("/main/wiki/wikilist")}
               >
-                목록 {/* 목록으로 돌아가기 버튼 */}
-              </button>
+                목록
+              </Button>
             </div>
           </div>
           <br />

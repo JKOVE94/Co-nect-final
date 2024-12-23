@@ -26,6 +26,7 @@ const WikiCreate = () => {
   const [fileName, setFileName] = useState(""); // 파일 이름 상태
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
   const [modalMessage, setModalMessage] = useState(""); // 모달 메시지 상태 추가
+  const [showConfirmModal, setShowConfirmModal] = useState(false); // 목록 이동 확인 모달 상태
 
   // 프로젝트 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
@@ -89,8 +90,7 @@ const WikiCreate = () => {
     setFormData((prevData) => ({
       ...prevData,
       fileInput: null,
-    })
-    );
+    }));
     setFileName("");
   };
 
@@ -132,9 +132,20 @@ const WikiCreate = () => {
     }
   };
 
-  // 목록 버튼 클릭 시 목록으로 이동
-  const handleList = () => {
+  // 목록 버튼 클릭 시 모달 표시
+  const handleListClick = () => {
+    setShowConfirmModal(true); // 목록 이동 확인 모달 열기
+  };
+
+  // 모달에서 확인 버튼 클릭 시 목록으로 이동
+  const handleConfirmList = () => {
+    setShowConfirmModal(false); // 모달 닫기
     navigate("/main/wiki/wikilist"); // 목록 페이지로 이동
+  };
+
+  // 모달에서 취소 버튼 클릭 시 모달 닫기
+  const handleCancelList = () => {
+    setShowConfirmModal(false);
   };
 
   return (
@@ -313,11 +324,34 @@ const WikiCreate = () => {
                     color: "white",
                   }}
                   block
-                  onClick={handleList}
+                  onClick={handleListClick}
                 >
                   목록
                 </Button>
               </Col>
+              {/* 목록 이동 확인 모달 */}
+              <Modal
+                isOpen={showConfirmModal}
+                toggle={() => setShowConfirmModal(false)}
+                style={{
+                  maxWidth: "500px",
+                  margin: "auto", // 자동으로 중앙 정렬
+                  top: "35%", // Modal을 화면 중앙에서 적당히 아래로 위치
+                }}
+              >
+                <ModalBody style={{ textAlign: "center" }}>
+                  작업 중인 내용이 사라집니다. <br />
+                  그래도 목록으로 이동하시겠습니까?
+                </ModalBody>
+                <ModalFooter style={{ justifyContent: "center" }}>
+                  <Button color="primary" onClick={handleConfirmList}>
+                    확인
+                  </Button>
+                  <Button color="danger" onClick={handleCancelList}>
+                    취소
+                  </Button>
+                </ModalFooter>
+              </Modal>
             </Row>
           </div>
         </form>

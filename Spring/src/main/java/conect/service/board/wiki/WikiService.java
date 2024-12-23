@@ -19,7 +19,10 @@ public interface WikiService {
 	
 	// 페이징, 정렬, 검색
 	Page<WikiDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
-
+	
+	//조회수 증가
+    void updateViewCount(int wikiPkNum, int userPkNum);
+	
 	WikiDto getWikiById(int wikiPkNum);
 	
 	// 문서 생성

@@ -119,6 +119,20 @@ public class WikiServiceImpl implements WikiService {
 		// PostEntity -> PostDto 변환
 		return wikiPage.map(WikiDto::fromEntity);
 	}
+	
+	//조회수 증가
+    @Transactional
+    @Override
+    public void updateViewCount(int wikiPkNum, int userPkNum) {
+        WikiEntity wiki = wrepository.findById(wikiPkNum).orElseThrow();
+        List<Integer> viewers = wiki.getViewUsers();
+
+        if (!viewers.contains(userPkNum)) {
+            viewers.add(userPkNum);
+            wiki.setViewUsers(viewers);
+            wrepository.save(wiki);
+        }
+    }
 
 	// 상세보기
 	public WikiDto getWikiById(int wikiPkNum) {

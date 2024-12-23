@@ -87,7 +87,7 @@ public class WikiController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 오류 시 500 응답 반환
 		}
 	}
-
+	
 	/*
 	 * // 문서 목록 조회
 	 * 
@@ -99,8 +99,9 @@ public class WikiController {
 
 	// 상세보기
 	@GetMapping("/wikidetail/{wikiPkNum}")
-	public WikiDto getWikiById(@PathVariable("wikiPkNum") int wikiPkNum) {
+	public WikiDto getWikiById(@PathVariable("wikiPkNum") int wikiPkNum, @RequestParam("userPkNum") int userPkNum) {
 		System.out.println("wikiPkNum : " + wikiPkNum);
+		wikiServiceImpl.updateViewCount(wikiPkNum, userPkNum);
 		return wikiServiceImpl.getWikiById(wikiPkNum);
 	}
 	

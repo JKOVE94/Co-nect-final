@@ -18,7 +18,6 @@ import { Checkbox } from "rsuite";
 const WikiUpdate = () => {
   const navigate = useNavigate();
   const { wikiPkNum } = useParams();
-  const [fileName, setFileName] = useState(""); 
   const [showModal, setShowModal] = useState(false); 
   const [modalMessage, setModalMessage] = useState(""); 
 

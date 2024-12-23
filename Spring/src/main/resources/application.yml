@@ -33,6 +33,11 @@ spring:
         project-id: favorable-order-443405-t7
         bucket: co-nect
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 springdoc:
   swagger-ui:
     enabled: true
