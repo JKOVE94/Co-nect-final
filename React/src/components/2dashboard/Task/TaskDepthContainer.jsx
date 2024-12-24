@@ -95,7 +95,7 @@ const TaskDepthContainer = ({ task }) => {
             </Row>
           ))
         ) : (
-          <p>관련 업무가 없습니다.</p>
+          <p className="pt-3 pl-3">- 관련 업무가 없습니다.</p>
         )}
       </CardBody>
     </Card>

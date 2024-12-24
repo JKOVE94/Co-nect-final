@@ -1,7 +1,7 @@
 package conect.controller;
 import conect.data.dto.TaskDto;
+import conect.data.dto.TaskHistoryDto;
 import conect.data.form.TaskForm;
-import conect.service.board.proj.ProjServiceImpl;
 
 import conect.service.board.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,8 @@ import java.util.Map;
 public class TaskController {
     @Autowired
     private TaskService taskService;
+    
+    
 
     @GetMapping("/task/proj/{task_fk_proj_num}")
     public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable("task_fk_proj_num") int task_fk_proj_num) {
@@ -111,6 +113,16 @@ public class TaskController {
         try {
             List<TaskDto> relatedTasks = taskService.getRelatedTasks(taskPkNum);
             return new ResponseEntity<>(relatedTasks, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/task/history/{taskPkNum}")
+    public ResponseEntity<List<TaskHistoryDto>> getTaskHistory(@PathVariable("taskPkNum") int taskPkNum) {
+        try {
+            List<TaskHistoryDto> taskHistory = taskService.getTaskHistoryByTaskNum(taskPkNum);
+            return new ResponseEntity<>(taskHistory, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

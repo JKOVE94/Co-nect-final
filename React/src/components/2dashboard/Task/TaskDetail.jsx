@@ -6,27 +6,26 @@ import {
   CardBody,
   CardHeader,
   Container,
-  Spinner,
-  Alert,
   Row,
   Col,
   Table,
 } from "reactstrap";
 import TaskDepthContainer from "./TaskDepthContainer";
+import TaskHistoryModal from "./TaskHistoryModal";
 
 const TaskDetail = () => {
-  const { taskPkNum } = useParams(); // 태스크 ID를 URL 파라미터에서 가져옴
+  const { taskPkNum } = useParams();
   const navigate = useNavigate();
   const [task, setTask] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchTask = async () => {
       try {
         const response = await axiosInstance.get(`/board/task/${taskPkNum}`);
         setTask(response.data);
-        console.log(response.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -54,6 +53,12 @@ const TaskDetail = () => {
       : date.toISOString().split("T")[0];
   };
 
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>에러 발생: {error}</div>;
+
   return (
     <Container fluid style={{ height: "40em", marginTop: "2em" }}>
       <Row style={{ height: "auto" }}>
@@ -61,10 +66,7 @@ const TaskDetail = () => {
           <Card style={{ height: "auto", overflowY: "auto" }}>
             <CardHeader>
               <h2>태스크 상세보기</h2>
-              <button
-                className="btn btn-primary m-1"
-                onClick={() => navigate(`/main/task/update/${taskPkNum}`)}
-              >
+              <button className="btn btn-primary m-1" onClick={openModal}>
                 수정이력
               </button>
             </CardHeader>
@@ -97,7 +99,6 @@ const TaskDetail = () => {
                       {task.taskProgress}%
                     </td>
                   </tr>
-
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}>시작일</td>
                     <td style={{ width: "40%", textAlign: "left" }}>
@@ -109,32 +110,32 @@ const TaskDetail = () => {
                     </td>
                   </tr>
                 </tbody>
-
-                {/* 버튼들 */}
-                <tr>
-                  <td colSpan="4" style={{ textAlign: "right" }}>
-                    <button
-                      className="btn btn-primary m-1"
-                      onClick={() => navigate(`/main/task/update/${taskPkNum}`)}
-                    >
-                      수정
-                    </button>
-                    <button
-                      className="btn btn-danger m-1"
-                      onClick={handleDelete}
-                    >
-                      삭제
-                    </button>
-                    <button
-                      className="btn btn-secondary m-1"
-                      onClick={() =>
-                        navigate(`/main/task/${task.taskFkProjNum}`)
-                      }
-                    >
-                      목록
-                    </button>
-                  </td>
-                </tr>
+                <tfoot>
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: "right" }}>
+                      <button
+                        className="btn btn-primary m-1"
+                        onClick={() => navigate(`/main/task/update/${taskPkNum}`)}
+                      >
+                        수정
+                      </button>
+                      <button
+                        className="btn btn-danger m-1"
+                        onClick={handleDelete}
+                      >
+                        삭제
+                      </button>
+                      <button
+                        className="btn btn-secondary m-1"
+                        onClick={() =>
+                          navigate(`/main/task/${task.taskFkProjNum}`)
+                        }
+                      >
+                        목록
+                      </button>
+                    </td>
+                  </tr>
+                </tfoot>
               </Table>
             </CardBody>
           </Card>
@@ -142,9 +143,14 @@ const TaskDetail = () => {
       </Row>
       <Row className="pt-3">
         <Col>
-          <TaskDepthContainer task={task}></TaskDepthContainer>
+          <TaskDepthContainer task={task} />
         </Col>
       </Row>
+      <TaskHistoryModal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        taskPkNum={taskPkNum}
+      />
     </Container>
   );
 };
