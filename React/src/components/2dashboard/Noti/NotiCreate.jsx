@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useActionState, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import {
@@ -15,7 +15,8 @@ import {
 } from "reactstrap";
 import { Checkbox } from "rsuite";
 import ConfirmModal from "./ConfirmModal";
-import AlertModal from "./AlertModal";
+import NotiToast, { showToast } from '../../../variables/Toast/NotiToast';
+
 
 const NoticeCreate = () => {
   const navigate = useNavigate();
@@ -23,9 +24,7 @@ const NoticeCreate = () => {
   const compPkNum = 1; // 테스트 compNum
   const writer = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
   const [modalOpen, setModalOpen] = useState(false); // 확인/취소용 modal창 열림 닫힘 상태 관리
-  // 알림용 modal 창 열림 닫힘 상태 관리 
-  const [alertOpenYes, setAlertOpenYes] = useState(false); 
-  const [alertOpenNo, setAlertOpenNo] = useState(false); 
+
 
   // Notice 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
@@ -61,14 +60,13 @@ const NoticeCreate = () => {
     try {
       await axios.post(`/main/${compPkNum}/notice/insert`, formData);
       // 등록 성공 시 리스트 페이지로 리다이렉트
-      setAlertOpenYes(true); //알림용 modal창 열림
+      showToast.create();//토스트 창 생성
       setTimeout(()=>{ //navigation 시간 조정 2초뒤
         navigate("/main/noti/notilist");
       },2000);
       
     } catch (error) {
       console.error("공지사항 등록 실패:", error);
-      setAlertOpenNo(true); //알림용 modal창 열림
       
     }
   };
@@ -201,20 +199,7 @@ const NoticeCreate = () => {
         title="목록 이동"
         message="목록 페이지로 이동하시겠습니까? 작성 중인 내용은 저장되지 않습니다."
       />
-      <AlertModal 
-        isOpen={alertOpenYes}
-        setIsOpen={setAlertOpenYes}  // setState 직접 전달
-        title="알림"
-        message="공지 글 등록이 완료되었습니다."
-        duration={2000} //2초 후 자동 닫힘
-      />
-        <AlertModal 
-        isOpen={alertOpenNo}
-        setIsOpen={setAlertOpenNo}  // setState 직접 전달
-        title="알림"
-        message="공지 사항 등록에 실패하였습니다."
-        duration={2000} //2초 후 자동 닫힘
-      />
+      <NotiToast/>
     </>  
   );
 };

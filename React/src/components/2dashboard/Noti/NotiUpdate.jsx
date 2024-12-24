@@ -15,7 +15,7 @@ import {
 } from "reactstrap"; // UI 컴포넌트
 import { Checkbox } from "rsuite"; // 체크박스 컴포넌트
 import ConfirmModal from "./ConfirmModal";
-import AlertModal from "./AlertModal";
+import NotiToast, { showToast } from '../../../variables/Toast/NotiToast';
 
 const NotiUpdate = () => {
   const navigate = useNavigate();
@@ -23,14 +23,7 @@ const NotiUpdate = () => {
   const projNum = 6; // 테스트 projNum
   const compPkNum = 1; // 테스트 compNum
   const loginUser = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
-  
-  // 확인/취소용 modal창 열림 닫힘 상태 관리
-  const [modalOpen, setModalOpen] = useState(false);
-
-   // 알림용 modal 창 열림 닫힘 상태 관리
-  const [alertOpenYes, setAlertOpenYes] = useState(false);
-  const [alertOpenNo, setAlertOpenNo] = useState(false);
-  const [alertOpenNo2, setAlertOpenNo2] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);  // 확인/취소용 modal창 열림 닫힘 상태 관리
 
   // 폼 데이터 상태 관리
   const [formData, setFormData] = useState({
@@ -53,7 +46,8 @@ useEffect(() => {
 
       // 작성자 검증
       if (notiData.noti_fk_user_num !== loginUser.user_pk_num) {
-        setAlertOpenNo2(true);
+        //setAlertOpenNo2(true);
+        showToast.fail();//토스트 알림 작성자 불일치
         setTimeout(()=>{
           navigate("/main/noti/notilist");
         },2000)
@@ -99,12 +93,13 @@ useEffect(() => {
     e.preventDefault();
     try {
       await axios.put(`/main/${compPkNum}/notice/update/${notiPkNum}`, formData);
-      setAlertOpenYes(true);
+      //setAlertOpenYes(true);
+      showToast.update();
       setTimeout(()=>{
         navigate("/main/noti/notilist");
       },2000)
     } catch (error) {
-      setAlertOpenNo(true);
+      //setAlertOpenNo(true);
       console.error("수정 실패:", error);
     }
   };
@@ -243,28 +238,7 @@ useEffect(() => {
         title="목록 이동"
         message="목록 페이지로 이동하시겠습니까? 작성 중인 내용은 저장되지 않습니다."
       />
-      <AlertModal 
-        isOpen={alertOpenYes}
-        setIsOpen={setAlertOpenYes}  // setState 직접 전달
-        title="알림"
-        message="공지 글 수정이 완료되었습니다."
-        duration={2000} //2초 후 자동 닫힘
-      />
-        <AlertModal 
-        isOpen={alertOpenNo}
-        setIsOpen={setAlertOpenNo}  // setState 직접 전달
-        title="알림"
-        message="공지사항 수정에 실패했습니다."
-        duration={2000} //2초 후 자동 닫힘
-      />
-      <AlertModal 
-        isOpen={alertOpenNo2}
-        setIsOpen={setAlertOpenNo2}  // setState 직접 전달
-        title="알림"
-        message="작성자가 불일치합니다."
-        duration={2000} //2초 후 자동 닫힘
-      />
-    
+      <NotiToast/>
     </>
 
   );
