@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import { toast, ToastContainer } from "react-toastify"; // Toastify import
+import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
 
 const FileUpdate = () => {
   const { filePkNum } = useParams(); // URL에서 파일 ID 추출
@@ -28,7 +30,7 @@ const FileUpdate = () => {
         });
       } catch (error) {
         console.error("Error fetching file:", error);
-        alert("데이터를 불러오는데 실패했습니다.");
+        toast.error("데이터를 불러오는데 실패했습니다.");
       }
     };
 
@@ -63,12 +65,12 @@ const FileUpdate = () => {
       });
 
       if (response.status === 200) {
-        alert("수정이 완료되었습니다.");
-        navigate(`/main/file/detail/${filePkNum}`); // 수정 후 상세보기 페이지로 이동
+        toast.success("수정이 완료되었습니다!");
+        setTimeout(() => navigate(`/main/file/detail/${filePkNum}`), 2000); // 수정 후 상세보기 페이지로 이동
       }
     } catch (error) {
       console.error("Error updating file:", error);
-      alert("수정 중 문제가 발생했습니다.");
+      toast.error("수정 중 문제가 발생했습니다.");
     }
   };
 
@@ -78,6 +80,15 @@ const FileUpdate = () => {
 
   return (
     <Container fluid style={{ marginTop: "2em" }}>
+      {/* Toast Container */}
+      <ToastContainer
+        position="bottom-center" // 화면 하단 중앙에 토스트 표시
+        autoClose={3000} // 자동 닫힘 시간 설정
+        hideProgressBar // 진행 표시줄 숨김
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
       <Card>
         <CardHeader>
           <h2>파일 수정</h2>
@@ -122,8 +133,19 @@ const FileUpdate = () => {
                 onChange={handleFileChange}
               />
             </div>
-            <div style={{ marginTop: "2em", display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "1em" }}>
-              <label htmlFor="wiki_isnotice" style={{ margin: "0", fontWeight: "bold" }}>
+            <div
+              style={{
+                marginTop: "2em",
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: "1em",
+              }}
+            >
+              <label
+                htmlFor="wiki_isnotice"
+                style={{ margin: "0", fontWeight: "bold" }}
+              >
                 <input
                   type="checkbox"
                   id="wiki_isnotice"
@@ -137,7 +159,11 @@ const FileUpdate = () => {
               <button type="submit" className="btn btn-primary">
                 수정
               </button>
-              <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleCancel}
+              >
                 목록
               </button>
             </div>

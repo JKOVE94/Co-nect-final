@@ -1,6 +1,7 @@
 package conect.data.repository;
 
 import conect.data.entity.FileEntity;
+import conect.data.entity.PostEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,8 @@ public interface FileRepository extends JpaRepository<FileEntity,Integer> {
 	@EntityGraph(attributePaths = {"wikiEntity", "wikiEntity.userEntity"})
 	Optional<FileEntity> findById(Integer filePkNum);
 
+	// 페이징, 정렬 (Sort 포함되어 컨트롤러나 서비스에 전달)
+	Page<FileEntity> findAll(Pageable pageable);
 	
 	//검색 - file name
 	Page<FileEntity> findByFileNameContains(String searchText, Pageable pageable);

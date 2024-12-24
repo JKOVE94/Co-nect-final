@@ -36,7 +36,7 @@ const FileCreate = () => {
 
     const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
     if (file.size > maxFileSize) {
-      toast.error("파일 크기는 10MB를 초과할 수 없습니다."); // Error toast
+      toast.error("파일 크기는 10MB를 초과할 수 없습니다.", { autoClose: 3000 }); // Error toast with 3 seconds
       return;
     }
 
@@ -65,8 +65,8 @@ const FileCreate = () => {
 
       console.log("서버 응답:", response.data);
       if (response.data != null) {
-        toast.success("파일이 성공적으로 업로드되었습니다!"); // Success toast
-        setTimeout(() => navigate(`/main/file/detail/${response.data}`), 1000); // Redirect after 3 seconds
+        toast.success("파일이 성공적으로 업로드되었습니다!", { autoClose: 2000 }); // 2-second success toast
+        setTimeout(() => navigate(`/main/file/detail/${response.data}`), 2000); // Redirect after 2 seconds
       } else {
         throw new Error("저장된 파일 ID가 반환되지 않았습니다.");
       }
@@ -76,8 +76,9 @@ const FileCreate = () => {
       toast.error(
         `저장 중 오류가 발생했습니다.${
           status ? `\n오류 코드: ${status}` : "\n서버에 연결할 수 없습니다."
-        }`
-      ); // Error toast
+        }`,
+        { autoClose: 4000 } // 4 seconds for error toast
+      );
     }
   };
 
@@ -87,7 +88,15 @@ const FileCreate = () => {
 
   return (
     <Container fluid style={{ marginTop: "2em" }}>
-      <ToastContainer /> {/* Toast container */}
+      {/* Toast Container */}
+      <ToastContainer
+        position="bottom-center" // Display at the bottom center
+        autoClose={2000} // Default close time 2 seconds
+        hideProgressBar={true} // Hide progress bar
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
       <Card>
         <CardHeader>
           <h2>새 파일 등록</h2>

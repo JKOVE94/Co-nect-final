@@ -2,9 +2,21 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅
-import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
 import FileSearch from "variables/Search/FileSearch";
-import Search from "variables/Search/Search";
+import { toast, ToastContainer } from "react-toastify"; // Toastify import
+import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
+
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
@@ -12,8 +24,10 @@ const FileList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageBlock, setPageBlock] = useState(0);
   const [totalBlocks, setTotalBlocks] = useState(0);
-  const [sortField, setSortField] = useState("wikiRegdate"); // 기본 정렬: 최신순
+  const [sortField, setSortField] = useState("wikiEntity.wikiRegdate"); // 기본 정렬: 최신순
   const [sortDirection, setSortDirection] = useState("DESC"); // 기본 정렬 방향: 내림차순
+  const [selectedFile, setSelectedFile] = useState(null); // 선택된 파일 정보
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   //검색 type:title,name
   const [searchText, setSearchText] = useState("");
@@ -48,26 +62,38 @@ const FileList = () => {
       });
   };
 
-  // 파일 다운로드
-  const handleDownload = async (filePkNum, fileName) => {
-    try {
-      const response = await axios.get(`/file/download/${filePkNum}`, {
-        responseType: "blob", // 파일 데이터를 받아오기 위해 blob 타입으로 설정
-      });
-  
-      // 브라우저에서 다운로드 처리
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", decodeURIComponent(fileName)); // 파일 이름 설정
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error("파일 다운로드 중 오류:", error);
-      alert("파일을 다운로드하는 중 오류가 발생했습니다.");
-    }
+  const toggleModal = (file = null) => {
+    setSelectedFile(file); // 선택된 파일 정보 설정
+    setIsModalOpen(!isModalOpen);
   };
+
+ // 파일 다운로드
+const handleDownload = async () => {
+  if (!selectedFile) {
+    toast.error("다운로드할 파일이 선택되지 않았습니다.");
+    return;
+  }
+
+  const { filePkNum, fileName } = selectedFile;
+  try {
+    const response = await axios.get(`/file/download/${filePkNum}`, {
+      responseType: "blob", // 파일 데이터를 받아오기 위해 blob 타입으로 설정
+    });
+
+    // 브라우저에서 다운로드 처리
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", decodeURIComponent(fileName)); // 파일 이름 설정
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    toggleModal(); // 모달 닫기
+  } catch (error) {
+    console.error("파일 다운로드 중 오류:", error);
+    toast.error("파일을 다운로드하는 중 오류가 발생했습니다.");
+  }
+};
   
   // 페이징
   const pagesPerBlock = 5;
@@ -105,11 +131,10 @@ const FileList = () => {
     setSortField(field);
     setSortDirection(newDirection);
   
-    // 정렬 필드와 방향이 변경되었으므로 즉시 데이터를 다시 가져옵니다.
+    console.log("정렬 방향:", newDirection); // 디버깅 로그
     fetchFiles(currentPage, pageBlock, field, newDirection, searchType, searchText);
   };
   
-
   //검색
   const handleKeyDown = (e) => {
     //사용자가 enter입력 시 search 실행
@@ -153,11 +178,11 @@ const FileList = () => {
                 <th>파일제목</th>
                 <th>작성자</th>
                 <th
-                  onClick={() => handleSortChange("wikiRegdate")}
+                  onClick={() => handleSortChange("wikiEntity.wikiRegdate")}
                   style={{ cursor: "pointer" }}
                 >
                   작성일
-                  {sortField === "wikiRegdate" &&
+                  {sortField === "wikiEntity.wikiRegdate" &&
                     (sortDirection === "DESC" ? "▼" : "▲")}
                 </th>
                 <th
@@ -173,7 +198,11 @@ const FileList = () => {
             <tbody>
               {files.length > 0 ? (
                 files.map((file) => (
-                  <tr key={file.file_pk_num}>
+                  <tr 
+                    key={file.file_pk_num}
+                    style={{
+                      backgroundColor: file.wiki.wiki_isnotice ? "#f0f0f0" : "transparent", // 공지사항은 회색 배경
+                    }}>
                     <td>{file.file_pk_num}</td>
                     <td>
                       <Link to={`/main/file/detail/${file.file_pk_num}`}>
@@ -193,7 +222,7 @@ const FileList = () => {
                       <span
                         title="파일 다운로드"
                         style={{ cursor: "pointer", marginLeft: "0.5em", color: "blue" }}
-                        onClick={() => handleDownload(file.file_pk_num, file.file_name)}
+                        onClick={() => toggleModal({ filePkNum: file.file_pk_num, fileName: file.file_name })}
                       >
                         📥
                       </span>
@@ -257,6 +286,21 @@ const FileList = () => {
           </button>
         </CardBody>
       </Card>
+
+      <Modal isOpen={isModalOpen} toggle={() => toggleModal()} backdrop="static">
+        <ModalHeader toggle={() => toggleModal()}>파일 다운로드</ModalHeader>
+        <ModalBody>
+          {selectedFile ? `"${selectedFile.fileName}" 파일을 다운로드 하시겠습니까?` : "파일이 선택되지 않았습니다."}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={handleDownload}>
+            다운로드
+          </Button>
+          <Button color="secondary" onClick={() => toggleModal()}>
+            취소
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Container>
   );
 };
