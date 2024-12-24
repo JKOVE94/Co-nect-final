@@ -93,13 +93,11 @@ useEffect(() => {
     e.preventDefault();
     try {
       await axios.put(`/main/${compPkNum}/notice/update/${notiPkNum}`, formData);
-      //setAlertOpenYes(true);
-      showToast.update();
+      showToast.update(); //업데이트 토스트 창
       setTimeout(()=>{
         navigate("/main/noti/notilist");
       },2000)
     } catch (error) {
-      //setAlertOpenNo(true);
       console.error("수정 실패:", error);
     }
   };
@@ -115,7 +113,6 @@ useEffect(() => {
   // 목록 버튼 클릭 시 작업 취소하고 목록으로 이동
   const handleCancel = () => {
     navigate("/main/noti/notilist");
-    //alert("수정 작업이 취소 됩니다")//modal창으로 변경 예정
   };
 
   return (

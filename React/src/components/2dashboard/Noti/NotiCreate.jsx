@@ -60,7 +60,7 @@ const NoticeCreate = () => {
     try {
       await axios.post(`/main/${compPkNum}/notice/insert`, formData);
       // 등록 성공 시 리스트 페이지로 리다이렉트
-      showToast.create();//토스트 창 생성
+      showToast.create();  //토스트 창 생성(문서가 등록되었습니다.)
       setTimeout(()=>{ //navigation 시간 조정 2초뒤
         navigate("/main/noti/notilist");
       },2000);
