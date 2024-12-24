@@ -39,14 +39,14 @@ const RecReplyList = ({recPkNum}) => {
     
     return(
         <>
-        <Card style={{border:'none', padding:'1rem'}}>
+        <Card style={{border:'none',padding:'1rem', marginTop:'1rem'}}>
             <CardTitle>
-                댓글
+                댓글 {datas.length || 0}
             </CardTitle>
             <CardBody>
-            {datas ? datas.map((data,index) => (
+            {datas.length>0 ? datas.map((data,index) => (
                 <RecReply key={index} data={data} recPkNum={recPkNum} getData={getData} handleError={handleError}/>
-            )) : <></>}
+            )) :<>작성된 글이 없습니다.</>}
             </CardBody>
         </Card>
         <div className={style.createContainer}>

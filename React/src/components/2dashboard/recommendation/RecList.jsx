@@ -92,7 +92,7 @@ const RecList = ({handleError}) => {
         </CardHeader>
         <CardBody style={{ height: "40em", overflowY: "auto" }}>
           {loading ? (
-            <div>로딩 중 ...</div>
+            <div style={{textAlign:'center'}}>로딩 중 ...</div>
           ) : (
             <Table>
               <thead>
@@ -180,6 +180,7 @@ const RecList = ({handleError}) => {
             </button>
           </div>
           {/* 페이징 */}
+          <div>
           <Pagination className="justify-content-center">
             <button
               className={`btn btn-link`}
@@ -206,6 +207,7 @@ const RecList = ({handleError}) => {
               다음 &raquo;
             </button>
           </Pagination>
+          </div>
         </CardBody>
       </Card>
     </>

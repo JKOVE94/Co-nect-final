@@ -140,8 +140,8 @@ const RecDetail = ({handleError}) => {
             </button>
           </div>
         </CardBody>
-        <RecReplyList recPkNum={recPkNum} />
       </Card>
+      <RecReplyList recPkNum={recPkNum} />
       <RecModal
         type={type}
         isOpen={modalIsOpen}

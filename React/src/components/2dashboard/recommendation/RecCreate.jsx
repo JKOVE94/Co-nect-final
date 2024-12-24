@@ -55,7 +55,7 @@ const RecCreate = ({handleError}) => {
         >
           <h2>건의사항 등록</h2>
         </CardTitle>
-        <CardBody style={{ height: "40em", overflowY: "auto" }}>
+        <CardBody style={{overflowY: "auto" }}>
         <form onSubmit={handleSubmit}>
           <Form.Group>
             <Form.Label>제목</Form.Label>
