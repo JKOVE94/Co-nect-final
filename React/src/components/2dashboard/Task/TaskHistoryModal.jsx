@@ -3,10 +3,9 @@ import Modal from 'react-modal';
 import { Card, CardHeader, CardBody, Table } from 'reactstrap';
 import axiosInstance from '../../../api/axiosInstance';
 
-// Modal.setAppElement('#root'); // 앱의 루트 요소 설정
-
 const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
   const [taskHistory, setTaskHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
@@ -15,11 +14,14 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
   }, [isOpen, taskPkNum]);
 
   const fetchTaskHistory = async () => {
+    setLoading(true);
     try {
       const response = await axiosInstance.get(`/board/task/history/${taskPkNum}`);
       setTaskHistory(response.data);
     } catch (error) {
       console.error('태스크 수정 이력을 불러오는 데 실패했습니다:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,28 +55,34 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
           <button className="btn btn-secondary" onClick={onRequestClose}>닫기</button>
         </CardHeader>
         <CardBody style={{ fontSize: "1.2rem", padding: "0" }}>
-          <Table responsive style={{ fontSize: "1.2rem" }}>
-            <thead>
-              <tr>
-                <th>수정 일시</th>
-                <th>수정자</th>
-                <th>수정 항목</th>
-                <th>이전 값</th>
-                <th>변경 값</th>
-              </tr>
-            </thead>
-            <tbody>
-              {taskHistory.map((history, index) => (
-                <tr key={index}>
-                  <td>{formatDate(history.taskhisUpdated)}</td>
-                  <td>{history.userName}</td>
-                  <td>{history.taskhisType}</td>
-                  <td>{history.taskhisBeforevalue}</td>
-                  <td>{history.taskhisAftervalue}</td>
+          {loading ? (
+            <p className="text-center">로딩 중...</p>
+          ) : taskHistory.length === 0 ? (
+              <p className="text-center font-weight-bold pt-3">수정 이력이 없습니다.</p>
+          ) : (
+            <Table responsive style={{ fontSize: "1.2rem" }}>
+              <thead>
+                <tr>
+                  <th>수정 일시</th>
+                  <th>수정자</th>
+                  <th>수정 항목</th>
+                  <th>이전 값</th>
+                  <th>변경 값</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {taskHistory.map((history, index) => (
+                  <tr key={index}>
+                    <td>{formatDate(history.taskhisUpdated)}</td>
+                    <td>{history.userName}</td>
+                    <td>{history.taskhisType}</td>
+                    <td>{history.taskhisBeforevalue}</td>
+                    <td>{history.taskhisAftervalue}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </CardBody>
       </Card>
     </Modal>

@@ -96,6 +96,8 @@ const Login = (props) => {
             user_mail: responseData.user_mail,
             user_pic: responseData.user_pic,
             user_fk_comp_num: responseData.user_fk_comp_num,
+            user_author : responseData.user_author,
+            
           })
         );
 

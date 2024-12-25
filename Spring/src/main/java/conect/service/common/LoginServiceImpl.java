@@ -56,8 +56,9 @@ public class LoginServiceImpl implements LoginService {
                             loginDto.setUser_mail(user.getUserMail());
                             loginDto.setUser_pic(user.getUserPic());
                             loginDto.setUser_pictype(user.getUserPic());
-                            loginDto.setUser_fk_acc_authornum(user.getUserAuthor());
+                            loginDto.setUser_author(user.getUserAuthor());
                             loginDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
+
                         } else {
                             handleFailedLogin(user);
                             loginDto.setStatus(2);
