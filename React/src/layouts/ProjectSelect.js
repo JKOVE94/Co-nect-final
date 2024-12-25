@@ -6,7 +6,7 @@ import { CardBody, CardTitle, Row, Col, Card } from "reactstrap";
 import leftArrow from "../assets/img/icons/common/leftArrow.png";
 import rightArrow from "../assets/img/icons/common/rightArrow.png";
 import { useSelector } from "react-redux";
-import axiosInstance from "../api/axiosInstance"; // 커스텀 axios 인스턴스 사용
+import axiosInstance from "../api/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 
 const ProjectSelect = () => {
@@ -57,7 +57,7 @@ const ProjectSelect = () => {
       .catch((error) => {
         if (error.response && error.response.status === 403) {
           console.error("접근이 거부되었습니다. 로그인 상태를 확인하세요.");
-          navigate("/"); // 로그인 페이지로 리디렉션
+          navigate("/");
         } else {
           setError("데이터를 불러오는데 실패했습니다.");
           console.error("데이터 로딩 실패:", error);
@@ -77,14 +77,28 @@ const ProjectSelect = () => {
     return new Date(dateString).toLocaleDateString("ko-KR", options);
   };
 
-  if (loading) return <div>로딩 중...</div>;
-  if (error) return <div>에러: {error}</div>;
+  const renderContent = () => {
+    if (loading) return <div>로딩 중...</div>;
+    if (error) return <div>에러: {error}</div>;
+    
+    if (data.length === 0) {
+      return (
+        <div className="d-flex justify-content-center align-items-center" style={{ height: "25rem" }}>
+          <Card style={{ width: "90%", maxWidth: "400px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
+            <CardBody className="text-center">
+              <i className="fas fa-folder-open fa-3x text-muted mb-3"></i>
+              <h3 className="font-weight-bold">프로젝트가 없습니다</h3>
+              <p className="text-muted">새 프로젝트를 시작해보세요!</p>
+              <Link to="/create-project" className="btn btn-primary mt-3">
+                프로젝트 생성하기
+              </Link>
+            </CardBody>
+          </Card>
+        </div>
+      );
+    }
 
-  return (
-    <div
-      className="login-container align-items-center"
-      style={{ zIndex: "1", height: "25rem" }}
-    >
+    return (
       <Slider {...settings} style={{ zIndex: "8", width: "90%" }}>
         {data.map((proj, index) => (
           <div key={index}>
@@ -101,7 +115,7 @@ const ProjectSelect = () => {
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <CardBody className="p-5">
-                    <Row style={{ maxHeight: "3rem" }}>
+                    <Row style={{ maxHeight: "3rem", width: "120%" }}>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-primary text-white rounded-circle shadow">
                           <i className="fas fa-clipboard-list" />
@@ -169,6 +183,15 @@ const ProjectSelect = () => {
           </div>
         ))}
       </Slider>
+    );
+  };
+
+  return (
+    <div
+      className="login-container align-items-center"
+      style={{ zIndex: "1", height: "25rem" }}
+    >
+      {renderContent()}
     </div>
   );
 };
