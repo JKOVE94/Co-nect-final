@@ -64,6 +64,7 @@ const Dashboard = (props) => {
         {isProjReadPath ? "" : <Navbar />}
         {/* 조건부 렌더링으로 헤더 선택 */}
         {isProjReadPath ? <BinHeader /> : <Header />}
+        
         <Routes>
           <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />

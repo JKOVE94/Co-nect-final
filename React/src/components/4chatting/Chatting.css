@@ -1,0 +1,128 @@
+/* ChatListContainer 스타일 */
+.chat-list-container {
+  font-family: sans-serif;
+  width: 100%; /* 너비 조정 */
+  margin: 0;
+  padding: 1vw;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Header 스타일 */
+.chat-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chat-header-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.chat-header-title {
+  margin: 0;
+}
+
+/* SectionTitle 스타일 */
+.chat-section-title {
+  margin: 0 0 10px 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+}
+
+/* ChatItem 스타일 */
+.chat-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chat-icon {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  color: #666;
+}
+
+/* project 타입일 때 ChatIcon 스타일 */
+.chat-icon.project {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* user 타입일 때 ChatIcon 스타일 (기본 스타일과 동일) */
+.chat-icon.user {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+.chat-content {
+  flex-grow: 1;
+}
+
+.chat-name {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.chat-message {
+  font-size: 14px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-time {
+  font-size: 12px;
+  color: #999;
+  margin-left: auto;
+}
+
+.unread-badge {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+.searchBox {
+  margin-top: -1.5em;
+  padding-top: 0;
+  width: 100%;
+}
+.searchBar {
+  width: 100%;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  padding-left: 2em;
+  border-radius: 5px;
+}
+
+.searchGlass {
+  position: relative;
+  left: 0.7em;
+  top: 2em;
+  opacity: 0.6;
+}

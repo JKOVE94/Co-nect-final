@@ -16,14 +16,17 @@ import Manage from "layouts/Manage";
 import Login from "layouts/Login";
 import Store from "./Redux/Store";
 import ProjHeaders from "components/2dashboard/Headers/ProjHeaders";
+import ChatOffcanvas from "components/4chatting/ChatOffcanvas";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const persistor = persistStore(Store);
 
 root.render(
+  <>
   <Provider store={Store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
+      <ChatOffcanvas /> {/* 채팅 기능 관련 컴포넌트 */}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/main/*" element={<Dashboard />} />
@@ -33,4 +36,5 @@ root.render(
       </BrowserRouter>
     </PersistGate>
   </Provider>
+  </>
 );

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("{comp_pk_num}/proj")
+@RequestMapping("{compNum}/proj")
 public class ProjectController {
 	@Autowired
 	private ProjServiceImpl projServiceImpl;

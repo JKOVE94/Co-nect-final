@@ -24,7 +24,7 @@ const ProjHome = () => {
           element={<ProjUpdate compNum={compNum} />}
         />
         <Route
-          path="/addMember/:projPkNum"
+          path="/addMember/:projPkNum/:projName"
           element={<ProjAddMember compNum={compNum} />}
         />
       </Routes>

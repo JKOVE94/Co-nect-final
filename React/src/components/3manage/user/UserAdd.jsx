@@ -76,11 +76,15 @@ const UserAdd = (props) => {
     }
 
     try {
-      const response = await axios.post(`/${props.compNum}/manage/user`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `/conect/${props.compNum}/manage/user`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       switch (response.data) {
         case 1: // 성공

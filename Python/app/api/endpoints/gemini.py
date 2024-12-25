@@ -64,4 +64,4 @@ async def ask_gemini(question: str, db_connection=Depends(get_db_connection)):
     }
 
     answer = get_answer(question, db_data)
-    return {"답변": answer}
+    return {"answer": answer}

@@ -63,7 +63,7 @@ const Header = () => {
     setLoading(true);
     setError(null);
     axios
-      .get(`/proj/projread/${projPkNum}`)
+      .get(`/conect/proj/projread/${projPkNum}`)
       .then((res) => {
         setProj(res.data);
       })

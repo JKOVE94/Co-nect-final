@@ -12,7 +12,7 @@ const UserUnlock = (props) => {
 
   useEffect(() => {
     axios
-      .get(`/${props.compNum}/manage/user/locked`)
+      .get(`/conect/${props.compNum}/manage/user/locked`)
       .then((res) => {
         setUserInfos(res.data);
       })
@@ -39,14 +39,16 @@ const UserUnlock = (props) => {
 
   const handlePermit = async () => {
     await axios
-      .put(`/${props.compNum}/manage/user/locked`, checkedNumber)
+      .put(`/conect/${props.compNum}/manage/user/locked`, checkedNumber)
       .then((res) => {
         if (res.data === true) {
           setType("unlocked"); //토스트 타입
           toggleShowA(); //토스트 보이고 자동으로 사라지는 함수
-          axios.get(`/${props.compNum}/manage/user/locked`).then((res) => {
-            setUserInfos(res.data);
-          });
+          axios
+            .get(`/conect/${props.compNum}/manage/user/locked`)
+            .then((res) => {
+              setUserInfos(res.data);
+            });
         } else {
           setType("error");
           toggleShowA();

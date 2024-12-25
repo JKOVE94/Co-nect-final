@@ -29,7 +29,10 @@ const ManagerProjDropdown = (props) => {
         <Dropdown.Item onClick={() => props.handleDelete(props.projNum)}>
           삭제
         </Dropdown.Item>
-        <Dropdown.Item as={Link} to={`/manage/proj/addMember/${props.projNum}`}>
+        <Dropdown.Item
+          as={Link}
+          to={`/manage/proj/addMember/${props.projNum}/${props.projTitle}`}
+        >
           프로젝트 팀원 설정
         </Dropdown.Item>
       </Dropdown.Menu>

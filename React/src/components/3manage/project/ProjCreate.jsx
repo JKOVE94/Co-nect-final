@@ -42,7 +42,7 @@ const ProjCreate = (props) => {
     console.log("Form data before submitting:", formToSubmit);
 
     axios
-      .post(`/${props.compNum}/manage/proj`, formToSubmit)
+      .post(`/conect/${props.compNum}/manage/proj`, formToSubmit)
       .then((response) => {
         if (response.data !== 0) {
           navigate(`/manage/proj/detail/${response.data}`);

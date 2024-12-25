@@ -21,7 +21,7 @@ const ProjFavorite = () => {
 
   const getData = () => {
     axios
-      .get("/favorite/proj/" + num)
+      .get("/conect/favorite/proj/" + num)
       .then((res) => {
         //유저의 즐겨찾기 목록을 불러와 favorPorj에 저장
         setFavorProj(res.data);

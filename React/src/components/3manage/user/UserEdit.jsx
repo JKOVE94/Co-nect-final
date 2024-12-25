@@ -56,7 +56,7 @@ const UserAdd = () => {
 
     try {
       const response = await axios.put(
-        `/${compNum}/manage/user/${userPkNum}`,
+        `/conect/${compNum}/manage/user/${userPkNum}`,
         data,
         {
           headers: {
@@ -83,7 +83,7 @@ const UserAdd = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `/${compNum}/manage/user/${userPkNum}`
+          `/conect/${compNum}/manage/user/${userPkNum}`
         );
         setFormData(response.data);
       } catch (error) {

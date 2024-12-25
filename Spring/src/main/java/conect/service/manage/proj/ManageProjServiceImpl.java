@@ -193,4 +193,10 @@ public class ManageProjServiceImpl implements ManageProjService {
         return true;
     }
 
+    @Override
+    public List<ProjectDto> getProjectListWithUser(int compPkNum, int userPkNum) {
+        return projectRepository.findByProjCompNumAndUserPkNum(compPkNum, userPkNum).stream()
+                .map(ProjectDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 }

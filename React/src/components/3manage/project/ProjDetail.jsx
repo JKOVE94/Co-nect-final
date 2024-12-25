@@ -23,7 +23,7 @@ const ProjDetail = (props) => {
     const fetchProj = async () => {
       try {
         const response = await axios.get(
-          `/${props.compNum}/manage/proj/${projPkNumInt}`
+          `/conect/${props.compNum}/manage/proj/${projPkNumInt}`
         );
         console.log(response.data);
         setProj(response.data);

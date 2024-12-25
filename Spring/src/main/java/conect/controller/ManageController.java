@@ -216,4 +216,10 @@ public class ManageController {
     public boolean deleteProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm){
         return manageProjService.deleteProjectMembers(compNum, projMemForm);
     }
+
+    //----- 채팅용 프로젝트 관리 ----
+    @GetMapping("/chatproj/{user_pk_num}")
+    public List<ProjectDto> getChatProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("user_pk_num") int userNum){
+        return manageProjService.getProjectListWithUser(compNum, userNum);
+    }
 }

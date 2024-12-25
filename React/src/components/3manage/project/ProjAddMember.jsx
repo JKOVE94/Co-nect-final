@@ -1,10 +1,13 @@
 import axios, { all } from "axios";
 import React, { useEffect, useState } from "react";
 import { Card, CardHeader, Container, CardBody } from "reactstrap";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import arrowBlack from "assets/img/ect/arrow_black.png";
 
 const ProjAddMember = (props) => {
+  const nav = useNavigate();
+
+  const { projName } = useParams();
   const { projPkNum } = useParams();
   //원본 데이터  전체 사원
   const [allUser, setAllUser] = useState([]);
@@ -52,7 +55,7 @@ const ProjAddMember = (props) => {
 
   const handleAllUserFetch = async () => {
     try {
-      const response = await axios.get(`/${props.compNum}/manage/user`);
+      const response = await axios.get(`/conect/${props.compNum}/manage/user`);
       setAllUser(response.data);
       // console.log("All user:", response.data);
     } catch (error) {
@@ -63,7 +66,7 @@ const ProjAddMember = (props) => {
   const handleMemberFetch = async () => {
     try {
       const response = await axios.get(
-        `/${props.compNum}/manage/projmem/${projPkNum}`
+        `/conect/${props.compNum}/manage/projmem/${projPkNum}`
       );
       setProjmem(response.data);
       // console.log("projmem:", response.data);
@@ -74,10 +77,14 @@ const ProjAddMember = (props) => {
 
   const handleUpdateMember = async () => {
     try {
-      const response = await axios.put(`/${props.compNum}/manage/projmem`, {
-        projmem_fk_proj_num: projPkNum,
-        projmem_fk_user_num: fetchMemberNum,
-      });
+      const response = await axios.put(
+        `/conect/${props.compNum}/manage/projmem`,
+        {
+          projmem_fk_proj_num: projPkNum,
+          projmem_fk_user_num: fetchMemberNum,
+        }
+      );
+      nav(`/manage/proj/detail/${projPkNum}`);
 
       // console.log("projmem update:", response.data);
     } catch (error) {
@@ -163,19 +170,32 @@ const ProjAddMember = (props) => {
     event.target.style.display = "none"; // 이미지가 로드되지 않았을 때 숨기기
   };
 
+  const handleCancle = () => {
+    nav(-1);
+  };
+
   return (
     <>
       <Container fluid style={{ marginTop: "2em" }}>
         <Card>
           <CardHeader>
-            <h2>프로젝트 팀원 설정</h2>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={handleUpdateMember}
-            >
-              저장
-            </button>
+            <h2>프로젝트 팀원 설정 ({projName})</h2>
+            <div>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                onClick={handleUpdateMember}
+              >
+                저장
+              </button>
+              <button
+                type="submit"
+                className="btn btn-secondary"
+                onClick={handleCancle}
+              >
+                취소
+              </button>
+            </div>
           </CardHeader>
           <CardBody>
             <div class="container">
@@ -203,7 +223,7 @@ const ProjAddMember = (props) => {
                           <img
                             src={`https://storage.cloud.google.com/co-nect/emp_pic/${props.compNum}_${user.user_pk_num}`}
                             className="profile-image"
-                            onError={handleImageError}
+                            onError={(e) => handleImageError(e)}
                           />
                         </div>
                         &nbsp;&nbsp;
@@ -216,12 +236,15 @@ const ProjAddMember = (props) => {
                 </div>
                 <div class="buttons">
                   <button
-                    class="arrow-button"
+                    class="arrow-button-right btn btn-secondary"
                     onClick={() => handleMoveRight()}
                   >
                     &gt;
                   </button>
-                  <button class="arrow-button" onClick={() => handleMoveLeft()}>
+                  <button
+                    class="arrow-button-left btn btn-secondary"
+                    onClick={() => handleMoveLeft()}
+                  >
                     &lt;
                   </button>
                 </div>

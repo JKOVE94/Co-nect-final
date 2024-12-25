@@ -57,12 +57,14 @@ def search_similar_data(query_embedding, embeddings, data):
 def generate_answer_with_gemini(context, question):
     prompt = f"""
     다음 문맥을 참고하여 한국어로 질문에 답해주세요.
+    그리고 당신은 업무 어시스턴트를 위한 코넥트입니다. 누군가가 당신에대해서 물어본다면 당신의 이름은 코넥트, 역할은 업무 어시스턴트라고 소개하세요.
     tasks의 "task_fk_proj_num"은 각 작업이 속한 프로젝트의 고유 번호를 나타냅니다.
     projects 테이블의 "proj_pk_num"은 각 프로젝트의 고유 번호이며, tasks 테이블의 "task_fk_proj_num"과 연결됩니다.
-    
     **이번 질문에서는 tasks 테이블의 task_fk_proj_num 값을 프로젝트 번호로 간주하고 답변해주세요.**
-    
     tasks 테이블에서 task_fk_proj_num 컬럼 값이 존재하는 작업들만 사용하여, 각 프로젝트별 작업 수를 계산하고, 작업 수가 가장 많은 프로젝트 번호를 찾아주세요.
+    답면 문장의 길이가 200자 이하가 되도록 작성해주세요.
+    답변시에는 컬럼명이 바로 노출되지 않도록 설정해줘. 
+    최근에 생성된 업무, 프로젝트를 물어본다면 proj_created, task_created를 사용해서 찾아주고 언제 생성되었는지(proj_created or task_created), 그리고 프로젝트명(proj_title), 업무명(task_title)을 알려줘. 양식은 가장 최근에 생성된 [업무 or 프로젝트]는 [업무 or 프로젝트명]이고, [날짜]에 생성되었습니다. 
 
     문맥:
     {context}

@@ -34,7 +34,7 @@ const ProjList = (props) => {
     searchText
   ) => {
     axios
-      .get(`/${props.compNum}/manage/proj`, {
+      .get(`/conect/${props.compNum}/manage/proj`, {
         params: {
           page: page,
           pageBlock: block,
@@ -211,6 +211,7 @@ const ProjList = (props) => {
                     <td>
                       <ManagerProjDropdown
                         projNum={proj.proj_pk_num}
+                        projTitle={proj.proj_title}
                         handleDelete={handleDelete}
                       />
                     </td>

@@ -44,7 +44,7 @@ const UserInfo = (props) => {
   }, [departDataOrigin]);
 
   const handleFetch = async () => {
-    const response = await axios.get(`/${props.compNum}/manage/user`);
+    const response = await axios.get(`/conect/${props.compNum}/manage/user`);
     setUsers(response.data);
   };
 
@@ -68,7 +68,7 @@ const UserInfo = (props) => {
 
   const handleResetPermit = async (id) => {
     const response = await axios.put(
-      `/${props.compNum}/manage/user/reset/${id}`
+      `/conect/${props.compNum}/manage/user/reset/${id}`
     );
     await handleFetch(); //부모 컴포넌트에서 데이터를 다시 불러오도록 하는 함수
 

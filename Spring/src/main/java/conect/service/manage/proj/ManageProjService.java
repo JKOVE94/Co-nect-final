@@ -40,4 +40,7 @@ public interface ManageProjService {
 
     // 프로젝트 멤버 삭제
     boolean deleteProjectMembers(int compPkNum, ProjectmemberForm form);
+
+    //특정 유저가 속한 프로젝트 목록 조회
+    List<ProjectDto> getProjectListWithUser(int compPkNum, int userPkNum);
 }

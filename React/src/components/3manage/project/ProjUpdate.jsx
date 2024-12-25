@@ -21,7 +21,7 @@ const ProjUpdate = (props) => {
     const fetchproj = async () => {
       try {
         const response = await axios.get(
-          `/${props.compNum}/manage/proj/${projPkNum}`
+          `/conect/${props.compNum}/manage/proj/${projPkNum}`
         );
         setProj(response.data);
       } catch (error) {
@@ -41,7 +41,7 @@ const ProjUpdate = (props) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `/${props.compNum}/manage/proj/${projPkNum}`,
+        `/conect/${props.compNum}/manage/proj/${projPkNum}`,
         proj
       );
       if (response.status === 200) {
@@ -59,6 +59,11 @@ const ProjUpdate = (props) => {
   const handleDitail = () => {
     // 수정하지 않고 상세보기 페이지로 이동
     navigate(-1);
+  };
+
+  const handleAddMember = () => {
+    // 멤버 추가 페이지로 이동
+    navigate(`/manage/proj/addMember/${projPkNum}/${proj.proj_title}`);
   };
 
   return (
@@ -152,6 +157,13 @@ const ProjUpdate = (props) => {
                 required
               ></textarea>
             </div>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleAddMember}
+            >
+              멤버 추가
+            </button>
             <button
               type="button"
               className="btn btn-secondary"
