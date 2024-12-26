@@ -12,7 +12,6 @@ const {
   CardBody,
   Table,
   CardHeader,
-  Pagination,
 } = require("react-bootstrap");
 
 const ProjFavorite = () => {
@@ -20,31 +19,19 @@ const ProjFavorite = () => {
   const [favorProj, setFavorProj] = useState([{}]);
   const navigate = useNavigate();
 
-  //페이징
-  const [currentPage, setCurrentPage] = useState(0);
-
-  useEffect(() => {
-    getData();
-  }, [currentPage]);
-
   const getData = () => {
     axios
-      .get(`/favorite/proj/${num}`, {
-        params: {
-          size: 10,
-          page: currentPage,
-        },
-      })
+      .get("/favorite/proj/" + num)
       .then((res) => {
         //유저의 즐겨찾기 목록을 불러와 favorPorj에 저장
         setFavorProj(res.data);
       })
-      .catch((err) => navigate("/error"));
+      .catch();
   };
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber - 1);
-  };
+  useEffect(() => {
+    getData();
+  }, [num]);
 
   const handleClick = (num) => {
     axios
@@ -78,12 +65,12 @@ const ProjFavorite = () => {
               </tr>
             </thead>
             <tbody>
-              {favorProj.totalElements > 0 ? (
-                favorProj.content.map((proj) => (
+              {favorProj.length > 0 ? (
+                favorProj.map((proj) => (
                   <tr key={proj.favor_id}>
                     <td>{proj.proj_pk_num}</td>
                     <td>
-                      <Link to={`/main/proj/projdetail/${proj.proj_pk_num}`}>
+                      <Link to={`/main/proj/projdetail/${proj.favor_id}/tree`}>
                         {proj.proj_name}
                       </Link>
                     </td>
@@ -109,30 +96,6 @@ const ProjFavorite = () => {
               )}
             </tbody>
           </Table>
-          <Pagination className="justify-content-center">
-            <Pagination.Item
-              onClick={() => handlePageChange(currentPage)}
-              disabled={currentPage === 0}
-            >
-              {" "}
-              {"<<"}{" "}
-            </Pagination.Item>
-            {[...Array(favorProj.totalPages)].map((num, index) => (
-              <Pagination.Item
-                key={index}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Item
-              onClick={() => handlePageChange(currentPage + 2)}
-              disabled={currentPage === favorProj.totalPages - 1}
-            >
-              {" "}
-              {">>"}{" "}
-            </Pagination.Item>
-          </Pagination>
         </CardBody>
       </Card>
     </Container>

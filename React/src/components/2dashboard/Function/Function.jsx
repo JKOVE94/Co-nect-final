@@ -27,6 +27,18 @@ const Function = () => {
     axios
       .get("/function/schedule/" + num)
       .then((res) => {
+        let projEvent = res.data.proj.map((data) => ({
+          id: data.proj_pk_num,
+          title: data.proj_name,
+          start: data.proj_startdate,
+          end: data.proj_enddate,
+          content: data.proj_desc,
+          starttime: data.proj_startdate,
+          endtime: data.proj_enddate,
+          groupId: 0,
+          color: data.proj_tagcol,
+          editable: false,
+        }));
 
         let todoEvent = res.data.map((data) => ({
           id: data.todo_pk_num, //일정 pk num
@@ -41,7 +53,7 @@ const Function = () => {
           shared: data.shareUser, //일정 공유된 사람목록
           allDay: true,
           //일정 작성자만 수정 가능하게 설정
-          editable : data.todo_fk_user_num === num? true : false
+          editable: data.todo_fk_user_num === num ? true : false,
         }));
         setEvents([...todoEvent]);
       })
@@ -58,7 +70,7 @@ const Function = () => {
     <>
       <Container fluid className={style.calendar}>
         <Row className="mx-0 align-items-start justify-content-center">
-          <Col md={4} >
+          <Col md={4}>
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
                 <MySchedule events={events} />
@@ -81,6 +93,14 @@ const Function = () => {
                   handleGetEvent={handleGetEvent}
                   handleToast={handleToast}
                 />
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col md={4} style={{ marginTop: "2rem" }}>
+            <Card className={style.card2}>
+              <CardBody className={style.cardbody}>
+                <MySchedule events={events} />
               </CardBody>
             </Card>
           </Col>

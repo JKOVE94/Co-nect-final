@@ -91,9 +91,7 @@ const UserAdd = () => {
         <Col>
           <Card>
             <CardHeader>
-              <span style={{ fontSize: "2rem", fontWeight: "bold" }}>
-                직원 등록
-              </span>
+              <h2>사원 등록</h2>
               <button
                 className="btn btn-primary"
                 style={{

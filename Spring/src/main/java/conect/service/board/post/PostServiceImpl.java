@@ -57,13 +57,17 @@ public class PostServiceImpl implements PostService {
 		postEntity.setPostView(postForm.getPost_view());
 		postEntity.setUserEntity(userRepository.findById(postForm.getPost_fk_user_num()).get());
 		postEntity.setCompanyEntity(companyRepository.findById(postForm.getPost_fk_comp_num()).get());
+		
 		return frepository.save(postEntity);
 	}
 
 	// 전체 조회
 	@Override
 	public List<PostDto> getPostAll() {
-		return frepository.findAll().stream().map(PostDto::fromEntity).collect(Collectors.toList());
+		return frepository.findAll()
+				.stream()
+				.map(PostDto::fromEntity)
+				.collect(Collectors.toList());
 	}
 
 	// 부분 조회, 조회수(Cookie)
@@ -164,22 +168,5 @@ public class PostServiceImpl implements PostService {
 	    return postPage.map(PostDto::fromEntity);
 	}
 	
-	//targetNum 여러명 이름 불러오기
-	public List<Map<Integer,String>> getTargetNames(String targetNumsString){
-		StringTokenizer st = new StringTokenizer(targetNumsString,","); // nums String으로 관리하고, 구분자가 ',' 그래서 ,를 기준으로 스트링토크나이저 사용해서 각각의 토큰화
-		List<Integer> userNums = new ArrayList<Integer>(); // 그 토큰을 INTEGER화 해서 담을 LIST => 순서가 필요없고 갯수가 정해져 있지 않아서 array X List O
-		while(st.hasMoreTokens()) {// 토큰이 있을경우
-			userNums.add(Integer.parseInt(st.nextToken())); // 다음 토큰을 찾아 이동하면서 해당 토큰(String) => parseInt => userNums라는 List<Integer>에 담아줌
-		}
-		//userNums 안에 데이터가 생김. 1개~ 그이상
-		
-		Map<Integer,String> usermap = new HashMap<>(); // Map<사번, 이름> 정보를 보관하는 맵 
-		List<Map<Integer,String>> userMapList = new ArrayList<Map<Integer,String>>(); // 그 맵을 여러개 보관할 리스트
-		for(int num : userNums) {
-			String name = userRepository.findById(num).get().getUserName(); //유저의 번호 1개씩 요청해서 이름만 받아
-			usermap.put(num, name); //받은 이름을 사번, 이름으로 맵 저장 => num으로 조회 => name은 그 num과 같은 데이터일수밖에 없음
-			userMapList.add(usermap); //맵을 List 저장
-		}
-		return userMapList; // [{1:김민수},{2:이영희}] => find 배열을 순환적으로 돌아다니면서 사용자가 입력한 조건에 맞는 1개의 데이터를 찾아
-	}
+
 }

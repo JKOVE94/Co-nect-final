@@ -22,6 +22,7 @@ public class PostForm {
     private int post_fk_comp_num; //게시글 회사 고유번호 [FK, INT]
     private int post_fk_user_num; //게시글 작성자 사번 [FK, INT]
     private int post_temp;//게시글 저장 상태
+    
     public static PostEntity toEntity(PostForm form) {
         //외래키의 정보만 가지고 가서 findById로 찾아야함
         PostEntity entity = new PostEntity();

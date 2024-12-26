@@ -1,11 +1,9 @@
 package conect.service.common;
 
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.UserDto;
 import conect.data.entity.UserEntity;
 import conect.data.form.LoginForm;
 import conect.data.repository.CompanyRepository;
-import conect.data.repository.DepartmentRepository;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +18,6 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private CompanyRepository companyRepository;
-
-    @Autowired
-    private DepartmentRepository departmentRepository;
 
     /*
     로그인 상태를 숫자로 정의
@@ -45,9 +40,9 @@ public class LoginServiceImpl implements LoginService {
     public int checkLogin(LoginForm form) {
         try {
             //DB에 해당 정보가 있는가?
-            if (companyRepository.findById(form.getComp_pk_num()).get() != null) {
+            if (companyRepository.findById(form.getComp_pk_num()).isPresent()) {
                 //로그인 시도 횟수가 5회 미만인가?
-                if (userRepository.findById(form.getUser_pk_num()).get().getUserLocked() != 1) {
+                if (userRepository.findById(form.getUser_pk_num()).isPresent()) {
                     UserEntity user = userRepository.findById(form.getUser_pk_num()).get();
                     //유저가 입력한 pw와 DB의 pw가 일치하는가?
                     if (user.getUserPw().equals(form.getUser_pw())) {
@@ -60,7 +55,7 @@ public class LoginServiceImpl implements LoginService {
                         System.out.println("전 : "+user.getUserTrynum());
                         user.setUserTrynum(user.getUserTrynum() + 1); //로그인 시도횟수 증가
                         if(user.getUserTrynum()==6){
-                            user.setUserLocked(1); //계정 잠금
+                            user.setUserLocked(true); //계정 잠금
                             user.setUserTrynum(0); //계정 잠금 이후 tryNum 초기화 => 관리자의 로직에서는 Locked만 조절하면 됨
                         }
                         userRepository.save(user);
@@ -73,12 +68,5 @@ public class LoginServiceImpl implements LoginService {
         }catch(Exception e){
             return 2; //정보 불일치 - 해당 user_pk_num 없음 (Exception)
         }
-    }
-
-    @Override
-    public List<DepartmentDto> getDeparts() {
-        return departmentRepository.findAll().stream()
-                .map(DepartmentDto::fromEntity)
-                .collect(Collectors.toList());
     }
 }

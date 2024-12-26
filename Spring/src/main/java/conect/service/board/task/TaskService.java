@@ -11,4 +11,5 @@ public interface TaskService {
     void insertTask(TaskForm form);
     void updateTask(TaskForm form);
     void deleteTask(int task_pk_num);
+    List<TaskDto> getTaskBySearching(int projectNum, String searchType, String searchValue);
 }

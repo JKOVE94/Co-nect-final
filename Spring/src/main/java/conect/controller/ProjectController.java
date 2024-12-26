@@ -1,13 +1,11 @@
 package conect.controller;
-import conect.data.dto.DepartmentDto;
 import conect.data.dto.ProjectDto;
-import conect.data.entity.DepartmentEntity;
 import conect.data.form.ProjectForm;
 import conect.service.board.proj.ProjService;
 import conect.service.board.proj.ProjServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
-@RequestMapping("/proj")
+@RequestMapping("{comp_pk_num}/proj")
 public class ProjectController {
 	@Autowired
 	private ProjServiceImpl projServiceImpl;
@@ -82,14 +76,10 @@ public class ProjectController {
 	@GetMapping("/projread/{projPkNum}")
 	public ProjectDto getProjById(@PathVariable("projPkNum")int projPkNum){
 		System.out.println("projPkNum : "+projPkNum);
-		return projServiceImpl.getProjById(projPkNum);
+//		return projServiceImpl.getProjById(projPkNum);
+		return null;
 	}
-	
-	// 모든 부서 목록 반환 (셀렉트 박스용)
-    @GetMapping("/departments")
-    public List<DepartmentDto> getAllDepartments() {
-        return projServiceImpl.getAllDepartments();
-    }
+
 
 	// 프로젝트 생성
 	@PostMapping("/projadd")
@@ -116,22 +106,9 @@ public class ProjectController {
 	}
 	
     //프로젝트 게시판
-	@GetMapping("/{compNum}")
+	@GetMapping("/")
 	public List<ProjectDto> getAllProj(@PathVariable("compNum")int compNum){
 		return projServiceImpl.getAllProjInfo(compNum);
-	}
-	
-	//검색 - status list 반환
-	@GetMapping("/status/{compNum}")
-	public Set<String> getStatusList(@PathVariable("compNum")int compNum){
-		return projServiceImpl.getStatusAll(compNum);
-	}
-	
-	//검색데이터 반환
-	@GetMapping("/search")
-	public List<ProjectDto> getSearchData(@RequestParam("status")String status,
-										@RequestParam("searchText")String searchText){	
-		return projServiceImpl.getSearchData(status, searchText);
 	}
 
 }

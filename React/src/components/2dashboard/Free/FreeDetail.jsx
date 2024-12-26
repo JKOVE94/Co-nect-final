@@ -140,7 +140,6 @@ const FreeDetail = () => {
               </button>
           </div>
           <br />
-          <div>댓글 공간</div>
         </CardBody>
       </Card>
     </Container>

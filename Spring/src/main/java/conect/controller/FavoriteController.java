@@ -4,7 +4,6 @@ import conect.data.dto.FavoritesDto;
 import conect.data.dto.PostDto;
 import conect.data.dto.ProjectDto;
 import conect.data.dto.TaskDto;
-import conect.data.entity.FavoritesEntity;
 import conect.data.entity.PostEntity;
 import conect.data.form.PostForm;
 import conect.data.form.TaskForm;
@@ -12,11 +11,9 @@ import conect.service.board.favor.FavorService;
 import conect.service.board.post.PostService;
 import conect.service.board.proj.ProjService;
 
+import conect.service.board.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +33,12 @@ public class FavoriteController {
 	@Autowired
 	private FavorService favorService;
 
+	// 즐겨찾기
 	// 유저가 즐겨찾기 등록한 자유게시글 목록
 	@GetMapping("/post/{usernum}")
-	public ResponseEntity<Object> getAllFavoritePost(@PathVariable("usernum") int usernum,
-													@RequestParam(name="page", defaultValue = "0") int page,
-													@RequestParam(name="size", defaultValue = "10") int size) {
+	public ResponseEntity<Object> getAllFavoritePost(@PathVariable("usernum") int usernum) {
 		try {
-			Page<Object> favorList = favorService.getFavoritePost(usernum, page, size);
+			List<Map<String, Object>> favorList = favorService.getFavoritePost(usernum);
 			return ResponseEntity.ok(favorList);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Invalid input parameters"); // 잘못된 요청이 들어온 경우
@@ -53,14 +49,13 @@ public class FavoriteController {
 		}
 	}
 
-	// 유저가 즐겨찾기 등록한 프로젝트 목록
+	// 즐겨찾기
+	// 유저가 즐겨찾기 등록한 자유게시글 목록
 	@GetMapping("/proj/{usernum}")
-	public ResponseEntity<Object> getAllFavoriteProj(@PathVariable("usernum") int usernum,
-													@RequestParam(name="page", defaultValue = "0") int page,
-													@RequestParam(name="size", defaultValue = "10") int size) {
+	public ResponseEntity<Object> getAllFavoriteProj(@PathVariable("usernum") int usernum) {
 
 		try {
-			Page<Object> favorList = favorService.getFavoriteProj(usernum, page, size);
+			List<Map<String, Object>> favorList = favorService.getFavoriteProj(usernum);
 			return ResponseEntity.ok(favorList);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Invalid input parameters"); // 잘못된 요청이 들어온 경우
