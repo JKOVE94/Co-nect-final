@@ -18,4 +18,5 @@ public class LoginDto {
     private int user_trynum; //유저가 로그인 시도 횟수
     private int user_author; // 유저 권한
     private String token; // JWT 토큰
+    private Boolean user_locked;
 }

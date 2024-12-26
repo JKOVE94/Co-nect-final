@@ -51,7 +51,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-production-domain.com")); // 허용 도메인 설정
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-production-domain.com","chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff/index.html")); // 허용 도메인 설정
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용 HTTP 메서드 설정
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); // 허용 헤더 설정
         configuration.setExposedHeaders(Arrays.asList("Authorization")); // 클라이언트에서 접근 가능한 헤더 설정
