@@ -1,8 +1,10 @@
 package conect.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@Configuration
 public class WebConfig implements WebMvcConfigurer{
 	
 	@Override //WebMvcConfigurer의 추상 메소드를 재정의
