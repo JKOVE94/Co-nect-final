@@ -3,8 +3,6 @@ package conect.controller;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +23,7 @@ import conect.data.dto.TodoDto;
 import conect.data.form.TodoForm;
 import conect.service.ResourceNotFoundException;
 import conect.service.function.todo.TodoServiceImpl;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/{compNum}/function")
@@ -42,7 +41,7 @@ public class FunctionController {
     
     // 일정 등록
     @PostMapping("/schedule")
-    public ResponseEntity<Object> addTodo(@PathVariable("compNum") int compNum, @RequestBody @Validated TodoForm bean) {
+    public ResponseEntity<Object> addTodo(@PathVariable("compNum") int compNum, @RequestBody @Valid TodoForm bean) {
         todoServiceImpl.addTodoData(bean);
         return ResponseEntity.status(HttpStatus.CREATED).body("success");
     }
@@ -57,7 +56,7 @@ public class FunctionController {
 
     // 개인 일정 수정
     @PutMapping("/schedule/{id}")
-    public ResponseEntity<Object> editTodo(@PathVariable("compNum") int compNum, @PathVariable("id") int id, @RequestBody @Validated TodoForm bean) {
+    public ResponseEntity<Object> editTodo(@PathVariable("compNum") int compNum, @PathVariable("id") int id, @RequestBody @Valid TodoForm bean) {
         bean.setTodo_pk_num(id);
         todoServiceImpl.editTodoData(bean);
         return ResponseEntity.ok("success");

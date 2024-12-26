@@ -31,6 +31,7 @@ import conect.service.board.recommendation.recommendationService;
 import conect.service.board.reply.replyService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/{compNum}/rec")
@@ -68,7 +69,7 @@ public class RecommendationController {
 	
 	//건의사항 등록
 	@PostMapping("/")
-	public ResponseEntity<Object> addRec(@PathVariable("compNum")int compNum, @RequestBody @Validated RecommendationForm bean){
+	public ResponseEntity<Object> addRec(@PathVariable("compNum")int compNum, @RequestBody @Valid RecommendationForm bean){
 		
 		recService.addRec(bean);
 		return ResponseEntity.ok(true);
@@ -76,7 +77,7 @@ public class RecommendationController {
 	
 	//건의사항 수정
 	@PutMapping("/{rec}")
-	public ResponseEntity<Object> updateRec(@PathVariable("compNum")int compNum, @PathVariable("rec")int recnum, @RequestBody @Validated RecommendationForm bean){
+	public ResponseEntity<Object> updateRec(@PathVariable("compNum")int compNum, @PathVariable("rec")int recnum, @RequestBody @Valid RecommendationForm bean){
 		
 		RecommendationDto dto = recService.editRec(recnum, bean);
 		return ResponseEntity.ok(dto);
@@ -144,7 +145,7 @@ public class RecommendationController {
 	
 	//댓글 수정
 	@PutMapping("/reply")
-	public ResponseEntity<Object> updateReplyData(@PathVariable("compNum")int compNum, @RequestBody ReplyForm bean){
+	public ResponseEntity<Object> updateReplyData(@PathVariable("compNum")int compNum, @RequestBody @Valid ReplyForm bean){
 		
 		ReplyDto dto =  replyService.editReply(bean);
 		return ResponseEntity.ok(dto);

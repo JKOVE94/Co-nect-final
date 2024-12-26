@@ -1,14 +1,13 @@
 package conect.data.form;
 
 import conect.data.entity.TodoEntity;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
