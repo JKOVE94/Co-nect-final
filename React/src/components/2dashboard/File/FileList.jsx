@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { format } from "date-fns"; // 날짜 포맷팅
+import { format } from "date-fns";
 import {
   Card,
   CardBody,
@@ -14,9 +14,8 @@ import {
   ModalFooter,
 } from "reactstrap";
 import FileSearch from "variables/Search/FileSearch";
-import { toast, ToastContainer } from "react-toastify"; // Toastify import
-import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
@@ -24,12 +23,10 @@ const FileList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [pageBlock, setPageBlock] = useState(0);
   const [totalBlocks, setTotalBlocks] = useState(0);
-  const [sortField, setSortField] = useState("wikiEntity.wikiRegdate"); // 기본 정렬: 최신순
-  const [sortDirection, setSortDirection] = useState("DESC"); // 기본 정렬 방향: 내림차순
-  const [selectedFile, setSelectedFile] = useState(null); // 선택된 파일 정보
+  const [sortField, setSortField] = useState("wikiEntity.wikiRegdate");
+  const [sortDirection, setSortDirection] = useState("DESC");
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  //검색 type:title,name
   const [searchText, setSearchText] = useState("");
   const [searchType, setSearchType] = useState("");
 
@@ -39,20 +36,21 @@ const FileList = () => {
     axios
       .get("/file", {
         params: {
-          page: page,
+          page,
           pageBlock: block,
-          sortField: sortField,
-          sortDirection: sortDirection,
-          searchType: searchType,
-          searchText: searchText,
+          sortField,
+          sortDirection,
+          searchType,
+          searchText,
         },
       })
       .then((res) => {
-        if (Array.isArray(res.data.files)) {
-          setFiles(res.data.files);
-          setCurrentPage(res.data.currentPage);
-          setTotalPages(res.data.totalPages);
-          setTotalBlocks(res.data.totalBlocks);
+        const { files, currentPage, totalPages, totalBlocks } = res.data;
+        if (Array.isArray(files)) {
+          setFiles(files);
+          setCurrentPage(currentPage);
+          setTotalPages(totalPages);
+          setTotalBlocks(totalBlocks);
         } else {
           console.error("파일 목록이 배열이 아닙니다.");
         }
@@ -63,41 +61,38 @@ const FileList = () => {
   };
 
   const toggleModal = (file = null) => {
-    setSelectedFile(file); // 선택된 파일 정보 설정
+    setSelectedFile(file);
     setIsModalOpen(!isModalOpen);
   };
 
- // 파일 다운로드
-const handleDownload = async () => {
-  if (!selectedFile) {
-    toast.error("다운로드할 파일이 선택되지 않았습니다.");
-    return;
-  }
+  const handleDownload = async () => {
+    if (!selectedFile) {
+      toast.error("다운로드할 파일이 선택되지 않았습니다.");
+      return;
+    }
 
-  const { filePkNum, fileName } = selectedFile;
-  try {
-    const response = await axios.get(`/file/download/${filePkNum}`, {
-      responseType: "blob", // 파일 데이터를 받아오기 위해 blob 타입으로 설정
-    });
+    const { filePkNum, fileName } = selectedFile;
+    try {
+      const response = await axios.get(`/file/download/${filePkNum}`, {
+        responseType: "blob",
+      });
 
-    // 브라우저에서 다운로드 처리
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", decodeURIComponent(fileName)); // 파일 이름 설정
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", decodeURIComponent(fileName));
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
 
-    toast.success("파일 다운로드가 완료되었습니다!"); // 다운로드 성공 Toast
-    toggleModal(); // 모달 닫기
-  } catch (error) {
-    console.error("파일 다운로드 중 오류:", error);
-    toast.error("파일을 다운로드하는 중 오류가 발생했습니다.");
-  }
-};
-  
-  // 페이징
+      toast.success("파일 다운로드가 완료되었습니다!");
+      toggleModal();
+    } catch (error) {
+      console.error("파일 다운로드 중 오류:", error);
+      toast.error("파일을 다운로드하는 중 오류가 발생했습니다.");
+    }
+  };
+
   const pagesPerBlock = 5;
   const startPageOfBlock = pageBlock * pagesPerBlock;
   const endPageOfBlock = Math.min(startPageOfBlock + pagesPerBlock, totalPages);
@@ -119,62 +114,49 @@ const handleDownload = async () => {
   };
 
   useEffect(() => {
-      fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
-    }, [sortField, sortDirection]);
+    fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
+  }, [sortField, sortDirection]);
 
-  // 날짜 포맷팅
-  const formatDate = (date) => {
-    return format(new Date(date), "yyyy-MM-dd");
-  };
+  const formatDate = (date) => format(new Date(date), "yyyy-MM-dd");
 
-  // 정렬
   const handleSortChange = (field) => {
     const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
     setSortField(field);
     setSortDirection(newDirection);
-  
-    console.log("정렬 방향:", newDirection); // 디버깅 로그
     fetchFiles(currentPage, pageBlock, field, newDirection, searchType, searchText);
   };
-  
-  //검색
+
   const handleKeyDown = (e) => {
-    //사용자가 enter입력 시 search 실행
     if (e.keyCode === 13) handleSearch();
   };
+
   const handleChange = (e) => {
-    if(e.target.id==="type"){
-      setSearchType(e.target.value);
-    } else if(e.target.id==="search") {
-      setSearchText(e.target.value.trim());
+    const { id, value } = e.target;
+    if (id === "type") {
+      setSearchType(value);
+    } else if (id === "search") {
+      setSearchText(value.trim());
     }
   };
 
-  const handleSearch = async () => {
-    if(searchType === "" || searchType === null){
-      //사용자가 type을 선택하지 않았거나 입력값이 없을 경우 search 실행하지 않음
-      return;
-    } else {
+  const handleSearch = () => {
+    if (searchType) {
       fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
     }
   };
 
-
   return (
     <Container fluid style={{ marginTop: "1em" }}>
-      <ToastContainer 
-      autoClose={2000} // 2초 뒤에 자동으로 닫힘
-      hideProgressBar={true} // 모든 Toast에서 Progress bar 숨김
-      />
+      <ToastContainer autoClose={2000} hideProgressBar />
       <Card style={{ height: "45em", position: "relative" }}>
         <CardHeader>
           <h2>파일 게시판</h2>
           <FileSearch
-              value={searchText}
-              onChange={handleChange}
-              onSearch={handleSearch}
-              onKeyDown={handleKeyDown}
-            />
+            value={searchText}
+            onChange={handleChange}
+            onSearch={handleSearch}
+            onKeyDown={handleKeyDown}
+          />
         </CardHeader>
         <CardBody style={{ height: "calc(100% - 4em)", overflowY: "hidden" }}>
           <table className="table" style={{ fontSize: "1.2rem" }}>
@@ -204,11 +186,12 @@ const handleDownload = async () => {
             <tbody>
               {files.length > 0 ? (
                 files.map((file) => (
-                  <tr 
+                  <tr
                     key={file.file_pk_num}
                     style={{
-                      backgroundColor: file.wiki.wiki_isnotice ? "#f0f0f0" : "transparent", // 공지사항은 회색 배경
-                    }}>
+                      backgroundColor: file.wiki.wiki_isnotice ? "#f0f0f0" : "transparent",
+                    }}
+                  >
                     <td>{file.file_pk_num}</td>
                     <td>
                       <Link to={`/main/file/detail/${file.file_pk_num}`}>
@@ -245,14 +228,7 @@ const handleDownload = async () => {
               )}
             </tbody>
           </table>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: "1em",
-            }}
-          >
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "1em" }}>
             <button
               className={`btn btn-link ${pageBlock === 0 ? "disabled" : ""}`}
               onClick={() => pageBlock > 0 && handlePageBlockChange(-1)}
@@ -281,11 +257,7 @@ const handleDownload = async () => {
           </div>
           <button
             className="btn btn-primary"
-            style={{
-              position: "absolute",
-              bottom: "2em",
-              right: "2em",
-            }}
+            style={{ position: "absolute", bottom: "2em", right: "2em" }}
             onClick={() => navigate("/main/file/create")}
           >
             파일 업로드
@@ -293,16 +265,18 @@ const handleDownload = async () => {
         </CardBody>
       </Card>
 
-      <Modal isOpen={isModalOpen} toggle={() => toggleModal()} backdrop="static">
-        <ModalHeader toggle={() => toggleModal()}>파일 다운로드</ModalHeader>
+      <Modal isOpen={isModalOpen} toggle={toggleModal} backdrop="static">
+        <ModalHeader toggle={toggleModal}>파일 다운로드</ModalHeader>
         <ModalBody>
-          {selectedFile ? `"${selectedFile.fileName}" 파일을 다운로드 하시겠습니까?` : "파일이 선택되지 않았습니다."}
+          {selectedFile
+            ? `"${selectedFile.fileName}" 파일을 다운로드 하시겠습니까?`
+            : "파일이 선택되지 않았습니다."}
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={handleDownload}>
             다운로드
           </Button>
-          <Button color="secondary" onClick={() => toggleModal()}>
+          <Button color="secondary" onClick={toggleModal}>
             취소
           </Button>
         </ModalFooter>

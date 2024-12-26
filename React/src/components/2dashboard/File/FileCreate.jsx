@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
-import { toast, ToastContainer } from "react-toastify"; 
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const FileCreate = () => {
   const writer = useSelector((state) => state.userData);
+  const { projPkNum } = useParams(); // 프로젝트 번호
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -22,15 +23,16 @@ const FileCreate = () => {
     file_type: "",
   });
 
-  // Redux 상태가 업데이트되면 formData도 업데이트
+  // Update formData when writer or projPkNum changes
   useEffect(() => {
     if (writer?.user_pk_num) {
       setFormData((prevFormData) => ({
         ...prevFormData,
         wiki_fk_user_num: writer.user_pk_num,
+        wiki_fk_proj_num: projPkNum || prevFormData.wiki_fk_proj_num,
       }));
     }
-  }, [writer]);
+  }, [writer, projPkNum]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -46,39 +48,36 @@ const FileCreate = () => {
 
     const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
     if (file.size > maxFileSize) {
-      toast.error("파일 크기는 10MB를 초과할 수 없습니다.", { autoClose: 3000 }); // Error toast with 3 seconds
+      toast.error("파일 크기는 10MB를 초과할 수 없습니다.", { autoClose: 3000 });
       return;
     }
 
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       file,
       file_name: file.name,
       file_size: file.size,
       file_type: file.type,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = new FormData();
-    data.append("file", formData.file);
-    data.append("wiki_title", formData.wiki_title);
-    data.append("wiki_content", formData.wiki_content);
-    data.append("wiki_fk_user_num", formData.wiki_fk_user_num);
-    data.append("wiki_fk_proj_num", formData.wiki_fk_proj_num);
-    data.append("wiki_isnotice", formData.wiki_isnotice);
+    Object.keys(formData).forEach((key) => {
+      if (key === "file" && formData.file) {
+        data.append(key, formData.file);
+      } else if (key !== "file") {
+        data.append(key, formData[key]);
+      }
+    });
 
     try {
       const response = await axios.post("/file", data);
 
-      console.log("서버 응답:", response.data);
-      console.log("Redux에서 가져온 상태 (writer):", writer);
-
-
-      if (response.data != null) {
-        toast.success("파일이 성공적으로 업로드되었습니다!", { autoClose: 2000 }); 
+      if (response.data) {
+        toast.success("파일이 성공적으로 업로드되었습니다!", { autoClose: 2000 });
         setTimeout(() => navigate(`/main/file/detail/${response.data}`), 2000);
       } else {
         throw new Error("저장된 파일 ID가 반환되지 않았습니다.");
@@ -90,22 +89,19 @@ const FileCreate = () => {
         `저장 중 오류가 발생했습니다.${
           status ? `\n오류 코드: ${status}` : "\n서버에 연결할 수 없습니다."
         }`,
-        { autoClose: 4000 } // 4 seconds for error toast
+        { autoClose: 4000 }
       );
     }
   };
 
-  const handleBackToList = () => {
-    navigate("/main/file");
-  };
+  const handleBackToList = () => navigate("/main/file");
 
   return (
     <Container fluid style={{ marginTop: "2em" }}>
-      {/* Toast Container */}
       <ToastContainer
-        position="bottom-center" // Display at the bottom center
-        autoClose={2000} // Default close time 2 seconds
-        hideProgressBar={true} // Hide progress bar
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar
         closeOnClick
         pauseOnHover
         draggable
@@ -140,8 +136,7 @@ const FileCreate = () => {
               ></textarea>
             </div>
             <div className="form-group">
-              <label htmlFor="file">파일 첨부:</label> <br />
-              파일은 10MB 이하만 등록 가능합니다.
+              <label htmlFor="file">파일 첨부:</label>
               <input
                 type="file"
                 className="form-control"
@@ -154,8 +149,10 @@ const FileCreate = () => {
                 <div style={{ marginTop: "1em" }}>
                   <strong>선택한 파일:</strong> {formData.file_name}
                   <br />
-                  <strong>크기:</strong>{" "}
-                  {(formData.file_size / (1024 * 1024)).toFixed(2)} MB
+                  <strong>크기:</strong> {(
+                    formData.file_size /
+                    (1024 * 1024)
+                  ).toFixed(2)} MB
                   <br />
                   {formData.file_type.startsWith("image/") && (
                     <img
@@ -181,8 +178,7 @@ const FileCreate = () => {
                   name="wiki_isnotice"
                   checked={formData.wiki_isnotice}
                   onChange={handleChange}
-                />{" "}
-                중요 파일
+                /> 중요 파일
               </label>
             </div>
             <div style={{ marginTop: "1.5em", textAlign: "right" }}>

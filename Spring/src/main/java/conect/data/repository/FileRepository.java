@@ -14,17 +14,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface FileRepository extends JpaRepository<FileEntity,Integer> {
-	
-	@EntityGraph(attributePaths = {"wikiEntity", "wikiEntity.userEntity"})
-    List<FileEntity> findAll();
-	
-	@EntityGraph(attributePaths = {"wikiEntity", "wikiEntity.userEntity"})
-	Optional<FileEntity> findById(Integer filePkNum);
-
 	// 페이징, 정렬 (Sort 포함되어 컨트롤러나 서비스에 전달)
 	Page<FileEntity> findAll(Pageable pageable);
 	
 	//검색 - file name
 	Page<FileEntity> findByFileNameContains(String searchText, Pageable pageable);
+	
 	// 검색 - 작성자명 (WikiEntity와 연관된 userEntity 사용)
     Page<FileEntity> findByWikiEntity_UserEntity_UserNameContains(String searchText, Pageable pageable);}

@@ -47,9 +47,6 @@ public class FileController {
     
     @Autowired
     private WikiRepository wikiRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
 
     // 모든 게시글 조회
     @GetMapping
@@ -135,18 +132,12 @@ public class FileController {
             if (file.getSize() > maxFileSize) {
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("파일 크기가 10MB를 초과합니다.");
             }
-        
-            String userName = userRepository.findById(userNum)
-                    .map(UserEntity::getUserName)
-                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-            // int wikiPkNum = wikiService.addWikiEntity(wikiTitle, wikiContent, userNum, projNum, wikiNotice);
+ 
             // WikiEntity 생성
             int wikiPkNum = wikiService.addWikiEntity(wikiTitle, wikiContent, userNum, projNum, wikiNotice);
             WikiEntity wikiEntity = wikiRepository.findById(wikiPkNum)
                     .orElseThrow(() -> new RuntimeException("WikiEntity를 찾을 수 없습니다."));
             
-            // 여기서부터 오류 발생함
-        	// System.out.println("----------------------test------------------------------");
             // FileForm 객체 생성 및 파일 저장 로직
             FileForm fileForm = new FileForm();
             fileForm.setFile(file);

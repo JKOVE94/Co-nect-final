@@ -2,10 +2,7 @@ package conect.service.board.file;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,11 +24,7 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 
 import conect.data.dto.FileDto;
-import conect.data.dto.PostDto;
 import conect.data.entity.FileEntity;
-import conect.data.entity.PostEntity;
-import conect.data.entity.ProjectEntity;
-import conect.data.entity.UserEntity;
 import conect.data.entity.WikiEntity;
 import conect.data.form.FileForm;
 import conect.data.repository.FileRepository;
@@ -51,12 +44,6 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private WikiRepository wikiRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired
-    private ProjectRepository projectRepository;
 
     // GCP Storage 세팅
     @Value("${spring.cloud.gcp.storage.credentials.location}")
@@ -96,6 +83,7 @@ public class FileServiceImpl implements FileService {
             }
         }
         System.out.println(fileUrl);
+        
         return fileUrl;
     }
     
@@ -121,8 +109,7 @@ public class FileServiceImpl implements FileService {
 
             // 4. FileEntity 저장
             fileRepository.save(fileEntity);
-            // fileRepository.flush();  // 즉시 DB에 반영
-            return fileEntity; // 반환
+            return fileEntity; 
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,15 +170,6 @@ public class FileServiceImpl implements FileService {
                 .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다."));
 
         FileDto fileDto = FileDto.fromEntity(fileEntity);
-
-//        if (fileEntity.getWikiEntity() != null) {
-//            WikiEntity wikiEntity = fileEntity.getWikiEntity();
-//            fileDto.setWiki_regdate(wikiEntity.getWikiRegdate());
-//            fileDto.setWiki_view(wikiEntity.getWikiView());
-//            if (wikiEntity.getUserEntity() != null) {
-//                fileDto.setUser_name(wikiEntity.getUserEntity().getUserName());
-//            }
-//        }
 
         return fileDto;
     }
