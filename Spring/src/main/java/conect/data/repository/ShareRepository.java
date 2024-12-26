@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import conect.data.entity.ShareEntity;
 
-public interface ShareRepository extends JpaRepository<ShareEntity, String> {
+public interface ShareRepository extends JpaRepository<ShareEntity, Integer> {
 	@Modifying
 	@Query("UPDATE ShareEntity s SET s.shareUser = :shareUser WHERE s.todoEntity.todoPkNum = :todoId")
 	void saveByTodo(@Param("shareUser") String shareUser, @Param("todoId") int todoId);

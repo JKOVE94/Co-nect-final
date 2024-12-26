@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../React/src/assets/css/mention.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/MyShareSchedule.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventEditModal.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../React/src/variables/mention/ReactMention.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/MentionsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/RecEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/vote.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/mention/MentionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/mention/MentionServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../React/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../React/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/assets/css/2dashboard/calendar.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/assets/css/2dashboard/calendar.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Favorite/FavorCheck.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Favorite/FavorCheck.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/Function.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/Function.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/MyCalendar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/MyCalendar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Project/projCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Project/projCreate.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Project/projList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Project/projList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventAddModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventAddModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventShowModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventShowModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/FunctionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/FunctionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/TaskController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/ShareDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/ShareDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TodoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TodoDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/UserDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/UserDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/ShareEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/ShareEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TodoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TodoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/form/TodoForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/form/TodoForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/ShareRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/ShareRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TodoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TodoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/schedule/ScheduleService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/schedule/ScheduleServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/todo/TodoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/todo/TodoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package 2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package 3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package 4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package-lock 2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package-lock 3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package-lock 4.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2qWKoNhE6KOLtpWO6Yp41pzTLVR" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.embaded.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;daehyeon2&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jkove/Documents/GitHub/Co-nect-final/Python&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/services" />
+      <recent name="$PROJECT_DIR$/app/core" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="embaded" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Python" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/embaded.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.embaded" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.19072.16" />
+        <option value="bundled-python-sdk-8336bb23522e-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.19072.16" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="" />
+      <created>1734773064946</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1734773064946</updated>
+      <workItem from="1734773066002" duration="4643000" />
+      <workItem from="1734831621818" duration="47449000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Python$embaded.coverage" NAME="embaded Coverage Results" MODIFIED="1734874003690" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
