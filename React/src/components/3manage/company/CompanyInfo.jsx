@@ -13,9 +13,16 @@ const CompanyInfo = (props) => {
     <Card>
       <CardHeader>
         <h2>회사 정보</h2>
-        <button className="btn btn-primary" onClick={() => handleEditCompany()}>
-          수정
-        </button>
+        {props.userAuthor == 3 ? (
+          <button
+            className="btn btn-primary"
+            onClick={() => handleEditCompany()}
+          >
+            수정
+          </button>
+        ) : (
+          ""
+        )}
       </CardHeader>
       <CardBody>
         <table className="CompanyInfo">

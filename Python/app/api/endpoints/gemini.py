@@ -17,8 +17,9 @@ def get_db_connection():
 
 
 @router.get("/ask")
-async def ask_gemini(question: str, db_connection=Depends(get_db_connection)):
+async def ask_gemini(userPkNum: str, question: str, db_connection=Depends(get_db_connection)):
     # 데이터베이스에서 데이터 가져오기
+    myself_df = pd.read_sql_query(("SELECT * FROM user WHERE user_pk_num = %s"), db_connection, params=(userPkNum,))
     users_df = pd.read_sql_query("SELECT * FROM user", db_connection)
     projects_df = pd.read_sql_query("SELECT * FROM project", db_connection)
     projectmembers_df = pd.read_sql_query("SELECT * FROM projectmember", db_connection)
@@ -58,6 +59,7 @@ async def ask_gemini(question: str, db_connection=Depends(get_db_connection)):
     )
 
     db_data = {
+        "myself": myself_df,
         "users": users_df,
         "projects": project_member_user_df,  # 조인된 데이터프레임 전달
         "tasks": tasks_project_df  # 조인된 데이터프레임 전달

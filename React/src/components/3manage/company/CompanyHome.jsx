@@ -9,12 +9,13 @@ const CompanyHome = () => {
   const [compinfo, setCompinfo] = useState({});
   //   const [editedinfo, setEditedinfo] = useState({});
 
-  const compNum = JSON.parse(
-    sessionStorage.getItem("persist:userInfo")
-  ).user_fk_comp_num;
+  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
+  const compNum = userInfo.user_fk_comp_num;
 
   useEffect(() => {
     fetchData();
+    console.log("-----------------");
+    console.log(userInfo);
   }, []);
 
   const fetchData = async () => {
@@ -32,19 +33,29 @@ const CompanyHome = () => {
       <Routes>
         <Route
           path="/info"
-          element={<CompanyInfo compinfo={compinfo} compNum={compNum} />}
-        />
-        <Route
-          path="/edit/:compNum"
           element={
-            <CompanyEdit
+            <CompanyInfo
               compinfo={compinfo}
               compNum={compNum}
-              setCompinfo={setCompinfo}
-              fetchData={fetchData}
+              userAuthor={userInfo.user_author}
             />
           }
         />
+        {userInfo.user_author === 3 ? (
+          <Route
+            path="/edit/:compNum"
+            element={
+              <CompanyEdit
+                compinfo={compinfo}
+                compNum={compNum}
+                setCompinfo={setCompinfo}
+                fetchData={fetchData}
+              />
+            }
+          />
+        ) : (
+          ""
+        )}
       </Routes>
     </>
   );

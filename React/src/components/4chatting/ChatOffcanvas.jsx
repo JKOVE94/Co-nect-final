@@ -49,13 +49,7 @@ const Backdrop = styled.div`
   display: ${(props) => (props.show ? "block" : "none")};
 `;
 
-function CustomOffcanvas({
-  show,
-  onClose,
-  title,
-  children,
-  placement = "end",
-}) {
+function ChatOffcanvas({ show, onClose, title, children, placement = "end" }) {
   const offcanvasRef = useRef(null);
 
   // 외부 클릭 감지
@@ -90,25 +84,4 @@ function CustomOffcanvas({
   );
 }
 
-// 사용 예시
-function App() {
-  const [showOffcanvas, setShowOffcanvas] = useState(false);
-
-  return (
-    <div>
-      <button onClick={() => setShowOffcanvas(true)}>Show Offcanvas</button>
-
-      <CustomOffcanvas
-        show={showOffcanvas}
-        onClose={() => setShowOffcanvas(false)}
-        title="채팅"
-        placement="end"
-        style={{ padding: "0" }}
-      >
-        <ChatHome />
-      </CustomOffcanvas>
-    </div>
-  );
-}
-
-export default App;
+export default ChatOffcanvas;
