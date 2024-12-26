@@ -15,9 +15,6 @@ public class MentionsController {
 	@Autowired
 	private MentionServiceImpl mentionServiceImpl;
 	
-	@GetMapping("/mention")
-	public List<UserDto> getAccountAll(){
-		return mentionServiceImpl.getAccountAll();
-	}
+
 
 }

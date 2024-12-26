@@ -24,6 +24,7 @@ import Function from "components/2dashboard/Function/Function";
 import FreeHome from "components/2dashboard/Free/FreeHome";
 import WikiHome from "components/2dashboard/Wiki/WikiHome";
 import NotiHome from "components/2dashboard/Noti/NotiHome";
+import FileHome from "components/2dashboard/File/FileHome";
 
 
 const Dashboard = (props) => {
@@ -77,6 +78,7 @@ const Dashboard = (props) => {
           <Route path="/err" element={<ErrPage />} />
           <Route path="/wiki/*" element={<WikiHome />}/>
           <Route path="/noti/*" element={<NotiHome />}/>
+          <Route path="/file/*" element={<FileHome />}/>
         </Routes>
       </div>
     </>

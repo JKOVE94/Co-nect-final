@@ -53,6 +53,9 @@ const CommonNavbar = () => {
               <NavLink to="/main/wiki/wikilist" tag={NavLinkRRD}>
                 위키문서
               </NavLink>
+              <NavLink to="/main/file/" tag={NavLinkRRD}>
+                파일게시판
+              </NavLink>
             </NavItem>
           </SubMenu>
           <SubMenu
