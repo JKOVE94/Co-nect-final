@@ -2,10 +2,13 @@ package conect.service.board.task;
 
 import conect.data.dto.PostDto;
 import conect.data.dto.TaskDto;
+import conect.data.dto.TaskHistoryDto;
 import conect.data.entity.PostEntity;
 import conect.data.entity.TaskEntity;
+import conect.data.entity.TaskHistoryEntity;
 import conect.data.form.TaskForm;
 import conect.data.repository.ProjectRepository;
+import conect.data.repository.TaskHistoryRepository;
 import conect.data.repository.TaskRepository;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
+    
+    @Autowired
+    private TaskHistoryRepository taskHistoryRepository;
 
     @Override
     public List<TaskDto> getAllTask(int task_fk_proj_num) {
@@ -112,6 +118,30 @@ public class TaskServiceImpl implements TaskService {
                 .map(TaskDto::fromEntity)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskPkNum));
     }
+    
+    @Override
+    public List<TaskDto> getRelatedTasks(int taskPkNum) {
+        TaskEntity task = taskRepository.findById(taskPkNum).orElseThrow(() -> new RuntimeException("Task not found"));
+        Integer taskGroup = task.getTaskGroup();
+        Integer taskDepth = task.getTaskDepth();
+        
+        // 상위 태스크인 경우 하위 태스크를 찾고, 하위 태스크인 경우 상위 태스크를 찾음
+        Integer targetDepth = (taskDepth == 0) ? 1 : 0;
+        
+        return taskRepository.findRelatedTasks(taskGroup, targetDepth).stream()
+                .map(TaskDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+   
+    @Override
+    public List<TaskHistoryDto> getTaskHistoryByTaskNum(int taskPkNum) {
+        List<TaskHistoryEntity> entities = taskHistoryRepository.findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
+        return entities.stream()
+                .map(TaskHistoryDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+    
+
 
 
 

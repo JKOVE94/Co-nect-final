@@ -38,7 +38,7 @@ public class TaskEntity {
     private String taskStatus;
 
     @Column(name = "task_priority")
-    private Integer taskPriority;
+    private String taskPriority;
 
     @Column(name = "task_created")
     private LocalDate taskCreated;

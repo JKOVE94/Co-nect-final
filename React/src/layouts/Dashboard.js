@@ -17,6 +17,7 @@ import { LOGOUT } from "../Redux/Reducer/userDataReducer";
 import TaskList from "components/2dashboard/Task/TaskList";
 import TaskDetail from "components/2dashboard/Task/TaskDetail";
 import RecHome from "components/2dashboard/recommendation/RecHome";
+import TaskCreate from "components/2dashboard/Task/TaskCreate";
 
 const Dashboard = (props) => {
   const mainContent = useRef(null);
@@ -117,6 +118,7 @@ const Dashboard = (props) => {
           <Route path="/proj/*" element={<ProjectHome />} />
           <Route path="/task/:projectNum" element={<TaskList />} />
           <Route path="/task/detail/:taskPkNum" element={<TaskDetail />} />
+          <Route path="/task/create" element={<TaskCreate />} />
           <Route path="/projfavorite" element={<ProjFavorite />} />
           <Route path="/freefavorite" element={<FreeFavorite />} />
           <Route path="/function" element={<Function />} />
