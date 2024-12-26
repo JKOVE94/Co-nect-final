@@ -3,27 +3,27 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Col, Form, Modal } from "react-bootstrap";
-import style from '../../assets/css/2dashboard/calendar.module.css'
+import style from "../../assets/css/2dashboard/calendar.module.css";
 import ReactMention from "variables/mention/ReactMention";
 
 const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
-  const num = useSelector((state) =>  state.userData.user_pk_num); // 로그인한 유저 넘버
+  const num = useSelector((state) => state.userData.user_pk_num); // 로그인한 유저 넘버
   const [data, setData] = useState(); //전달할 데이터
   const [color, setColor] = useState("#318AAE");
 
-  useEffect(()=>{
+  useEffect(() => {
     setData((pre) => ({ ...pre, todo_fk_user_num: num, todo_tagcol: color }));
-  },[num])
+  }, [num]);
 
   const handleChange = (e) => {
     if (e.target.id === "todo_tagcol") setColor(e.target.value);
-    setData({ ...data, [e.target.id]: e.target.value});
+    setData({ ...data, [e.target.id]: e.target.value });
   };
 
   const handleMention = (mention) => {
-    let str = mention.join(",").slice(0, -1); 
-    setData({...data,shareUser:str});
-  }
+    let str = mention.join(",").slice(0, -1);
+    setData({ ...data, shareUser: str });
+  };
 
   const handleClick = async () => {
     axios
@@ -41,15 +41,19 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
-        <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%'}}>
-          <Col md='100%' style={{fontSize:'1.5rem'}}>일정 추가</Col>
+        <Modal.Title
+          style={{ display: "flex", alignItems: "center", width: "100%" }}
+        >
+          <Col md="100%" style={{ fontSize: "1.5rem" }}>
+            일정 추가
+          </Col>
           <Col md={5}>
             <Form.Control
               type="color"
               id="todo_tagcol"
               value={color}
               onChange={handleChange}
-              style={{width:'45px'}}
+              style={{ width: "45px" }}
             />
           </Col>
           <Button
@@ -64,7 +68,12 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast }) => {
       <Modal.Body>
         <Form.Group className="mb-2">
           <Form.Label>제목</Form.Label>
-          <Form.Control type="text" id="todo_title" onChange={handleChange} required/>
+          <Form.Control
+            type="text"
+            id="todo_title"
+            onChange={handleChange}
+            required
+          />
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>내용</Form.Label>

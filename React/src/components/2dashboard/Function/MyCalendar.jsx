@@ -11,13 +11,12 @@ import { useNavigate } from "react-router";
 import CalEventEditModal from "variables/Modal/CalEventEditModal";
 
 const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
-
   const [showModalIsOpen, setShowModalIsOpen] = useState(false); //상세보기 modal
   const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트추가 modal
   const [editModalIsOpen, setEditModalIsOpen] = useState(false); //이벤트수정 modal
 
   const [modalContent, setModalContent] = useState({}); //modal 내용
-  
+
   const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
   const navigate = useNavigate();
 
@@ -32,10 +31,11 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
     //공유된 일정인 경우 타이틀에 [공유] 표기
     return (
       <div>
-        {info.event.extendedProps.sharer !== num ?
-        <span>[공유] {info.event.title}</span>
-        :<span>{info.event.title}</span>
-      }
+        {info.event.extendedProps.sharer !== num ? (
+          <span>[공유] {info.event.title}</span>
+        ) : (
+          <span>{info.event.title}</span>
+        )}
       </div>
     );
   };
@@ -48,12 +48,12 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
       start: setTime(info.event.extendedProps.starttime), //시작일
       end: setTime(info.event.extendedProps.endtime), //종료일
       id: info.event.id, //일정 pk num
-      sharer:info.event.extendedProps.sharer.toString(), //일정 작성자(공유자)
-      shared:info.event.extendedProps.shared, //일정 공유된 사람 목록
+      sharer: info.event.extendedProps.sharer.toString(), //일정 작성자(공유자)
+      shared: info.event.extendedProps.shared, //일정 공유된 사람 목록
       tagcol: info.event.backgroundColor, //일정 색깔
     });
 
-    if(info.event.extendedProps.sharer === num){
+    if (info.event.extendedProps.sharer === num) {
       setEditModalIsOpen(true);
     } else {
       setShowModalIsOpen(true);
@@ -141,7 +141,6 @@ const MyCalendar = ({ events, handleGetEvent, handleToast }) => {
         getEvent={handleGetEvent}
         handleToast={handleToast}
       />
-
     </>
   );
 };

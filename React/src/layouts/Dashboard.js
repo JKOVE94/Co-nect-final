@@ -22,7 +22,8 @@ import ErrPage from "components/2dashboard/ErrPage";
 import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 import Function from "components/2dashboard/Function/Function";
 import FreeHome from "components/2dashboard/Free/FreeHome";
-import FileHome from "components/2dashboard/File/FileHome";
+import WikiHome from "components/2dashboard/Wiki/WikiHome";
+import NotiHome from "components/2dashboard/Noti/NotiHome";
 
 
 const Dashboard = (props) => {
@@ -70,11 +71,12 @@ const Dashboard = (props) => {
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
           <Route path="/proj/*" element={<ProjectHome />}/>
           <Route path="/free/*" element={<FreeHome />} />
-          <Route path="/file/*" element={<FileHome />} />
           <Route path="/projfavorite" element={<ProjFavorite />} />
           <Route path="/freefavorite" element={<FreeFavorite />} />
           <Route path="/function" element={<Function />} />
           <Route path="/err" element={<ErrPage />} />
+          <Route path="/wiki/*" element={<WikiHome />}/>
+          <Route path="/noti/*" element={<NotiHome />}/>
         </Routes>
       </div>
     </>

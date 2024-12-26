@@ -21,7 +21,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 
-
 const ProjectTable = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);

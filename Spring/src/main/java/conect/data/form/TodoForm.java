@@ -12,7 +12,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class TodoForm {
-
     private int todo_pk_num; // 투두리스트 고유 식별자
     private String todo_title; // 투두리스트 제목
     private String todo_content; // 투두리스트 내용
@@ -34,7 +33,6 @@ public class TodoForm {
         entity.setTodoStarttime(form.getTodo_starttime());
         entity.setTodoEndtime(form.getTodo_endtime());
         entity.setTodoCategory(form.getTodo_category());
-
         return entity;
     }
 }

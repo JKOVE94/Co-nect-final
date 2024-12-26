@@ -7,15 +7,6 @@ const ProjToast = (props) => {
       case "create":
         return (
           <>
-            <Toast.Header>
-              <img
-                className="rounded me-2"
-                alt=""
-              />
-              <strong className="me-auto" style={{ fontSize: "1rem" }}>
-                프로젝트 등록 성공
-              </strong>
-            </Toast.Header>
             <Toast.Body style={{ fontSize: "1rem" }}>
               새로운 프로젝트가 성공적으로 등록되었습니다.
             </Toast.Body>
@@ -24,15 +15,6 @@ const ProjToast = (props) => {
       case "update":
         return (
           <>
-            <Toast.Header>
-              <img
-                className="rounded me-2"
-                alt=""
-              />
-              <strong className="me-auto" style={{ fontSize: "1rem" }}>
-                프로젝트 수정 성공
-              </strong>
-            </Toast.Header>
             <Toast.Body style={{ fontSize: "1rem" }}>
               프로젝트가 성공적으로 수정되었습니다.
             </Toast.Body>

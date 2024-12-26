@@ -41,7 +41,7 @@ public class FileDto {
             wikiDto.setWiki_boardtype(wikiEntity.isWikiBoardtype());
             wikiDto.setWiki_fk_user_num(wikiEntity.getUserEntity().getUserPkNum());
             wikiDto.setWiki_fk_proj_num(wikiEntity.getProjectEntity().getProjPkNum());
-            wikiDto.setUser_name(wikiEntity.getUserEntity().getUserName());  // WikiDto에서 user_name을 설정
+            wikiDto.setUser_name(wikiEntity.getUserEntity().getUserName()); // WikiDto에서 user_name을 설정
 
             dto.setWiki(wikiDto); // wiki 데이터 전체 가져옴
         }

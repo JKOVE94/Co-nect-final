@@ -23,14 +23,15 @@ const FavorCheck = ({ pknum, type, favorData }) => {
         if (type === "post" && data.post_pk_num === pknum) {
           setIsCheck(true);
           //즐겨찾기에 등록되어있다면 true
-        } else if(type==="proj" && data.proj_pk_num === pknum){
+        } else if (type === "proj" && data.proj_pk_num === pknum) {
           setIsCheck(true);
         }
       });
     } else {
-      axios.get(`/favorite/${type}/${num}/${pknum}`)
-      .then(res => setIsCheck(res.data))
-      .catch(err => setIsCheck(false));
+      axios
+        .get(`/favorite/${type}/${num}/${pknum}`)
+        .then((res) => setIsCheck(res.data))
+        .catch((err) => setIsCheck(false));
     }
   }, [num, pknum, type, favorData]);
 

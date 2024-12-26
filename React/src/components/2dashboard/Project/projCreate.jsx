@@ -190,11 +190,15 @@ const ProjCreate = () => {
                 required
                 placeholder="담당자를 입력하세요"
               /> */}
-              <ReactMention 
+              <ReactMention
                 value={formData.proj_members}
-                onChange={(e) => handleInputChange({ target: { name: "proj_members", value: e.target.value } })}
+                onChange={(e) =>
+                  handleInputChange({
+                    target: { name: "proj_members", value: e.target.value },
+                  })
+                }
                 text="담당자를 입력하세요"
-                />
+              />
             </Col>
           </FormGroup>
 

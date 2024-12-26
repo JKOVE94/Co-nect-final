@@ -22,7 +22,8 @@ public class ReclikesDto {
             reclikesDto.setReclike_fk_user_num(reclikesEntity.getUserEntity().getUserPkNum()); // 예시: 사용자 엔티티의 PK 값으로 수정
         }
         if (reclikesEntity.getRecommendationEntity() != null) {
-            reclikesDto.setReclike_fk_rec_num(reclikesEntity.getRecommendationEntity().getRecPkNum()); // 예시: 추천 엔티티의 PK 값으로 수정
+            reclikesDto.setReclike_fk_rec_num(reclikesEntity.getRecommendationEntity().getRecPkNum()); // 예시: 추천 엔티티의 PK
+                                                                                                       // 값으로 수정
         }
 
         return reclikesDto;
@@ -30,4 +31,3 @@ public class ReclikesDto {
 
     // Getters와 Setters 생략 (필요 시 추가하세요)
 }
-

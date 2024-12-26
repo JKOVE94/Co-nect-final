@@ -32,7 +32,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    //GCP Storage 세팅
+    // GCP Storage 세팅
     @Value("${spring.cloud.gcp.storage.credentials.location}")
     private String keyFileName;
 
@@ -42,8 +42,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     @Override
     public String saveImage(UserForm form) throws IOException {
         InputStream keyFile = null;
-        String imgUrl ="";
-        try{
+        String imgUrl = "";
+        try {
             keyFile = ResourceUtils.getURL(keyFileName).openStream();
 
             String fileName = "emp_pic/" + form.getUser_fk_comp_num() + "_" + form.getUser_pk_num();
@@ -64,20 +64,21 @@ public class ManageUserServiceImpl implements ManageUserService {
 
                 Blob blob = storage.create(blobInfo, form.getUser_picfile().getInputStream());
             }
-        }finally{
+        } finally {
             if (keyFile != null) {
                 keyFile.close();
             }
         }
         return imgUrl;
     }
+
     @Override
     public boolean deleteImage(int user_pk_num) {
         UserEntity user = userRepository.findById(user_pk_num).get();
         String projectId = "favorable-order-443405-t7";
         String bucketName = "co-nect";
         String objectName = "emp_pic/" + user.getCompanyEntity().getCompPkNum() + "_" + user.getUserPkNum();
-        System.out.println("objectName : "+objectName);
+        System.out.println("objectName : " + objectName);
         Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
         Blob blob = storage.get(bucketName, objectName);
         if (blob == null) {
@@ -92,13 +93,13 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     @Override
     public boolean insertUser(UserForm form) {
-        //유저를 등록하는 메소드
+        // 유저를 등록하는 메소드
         String imgUrl = null;
         try {
             imgUrl = saveImage(form);
             UserEntity entity = UserForm.toEntity(form);
             entity.setCompanyEntity(companyRepository.findById(form.getUser_fk_comp_num()).get());
-            entity.setUserPic(imgUrl); //이미지 경로 저장 (Google Cloude Storage)
+            entity.setUserPic(imgUrl); // 이미지 경로 저장 (Google Cloude Storage)
             userRepository.save(entity);
             return true;
         } catch (Exception e) {
@@ -107,10 +108,9 @@ public class ManageUserServiceImpl implements ManageUserService {
         }
     }
 
-
     @Override
     public List<UserDto> getUserAll() {
-        //모든 직원의 정보를 가져오는 메소드
+        // 모든 직원의 정보를 가져오는 메소드
         return userRepository.findAll().stream()
                 .map(UserDto::fromEntity)
                 .collect(Collectors.toList());
@@ -118,22 +118,22 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     @Override
     public UserDto getUserOne(int userno) {
-        //한명의 직원의 정보를 가져오는 메소드
+        // 한명의 직원의 정보를 가져오는 메소드
         return UserDto.fromEntity(userRepository.findById(userno).get());
     }
 
     @Override
     public List<UserDto> getLockedUserAll() {
-        //잠긴 계정의 정보를 가져오는 메소드
+        // 잠긴 계정의 정보를 가져오는 메소드
         return userRepository.findLockedUser().stream()
-                .map(UserDto :: fromEntity)
+                .map(UserDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Modifying
     @Override
     public boolean unlockUser(Integer[] usernos) {
-        //잠긴 계정을 풀어주는 메소드
+        // 잠긴 계정을 풀어주는 메소드
         try {
             for (int userno : usernos) {
                 UserEntity entity = userRepository.findById(userno).get();
@@ -141,8 +141,8 @@ public class ManageUserServiceImpl implements ManageUserService {
                 userRepository.save(entity);
             }
             return true;
-        }catch (Exception e){
-            System.out.println("unlockUser err :"+e);
+        } catch (Exception e) {
+            System.out.println("unlockUser err :" + e);
             return false;
         }
     }
@@ -152,9 +152,9 @@ public class ManageUserServiceImpl implements ManageUserService {
         String imgUrl = null;
         try {
             UserEntity entity = UserForm.toEntity(form);
-            if(form.getUser_picfile() != null){
+            if (form.getUser_picfile() != null) {
                 imgUrl = saveImage(form);
-                entity.setUserPic(imgUrl); //이미지 경로 저장 (Google Cloude Storage)
+                entity.setUserPic(imgUrl); // 이미지 경로 저장 (Google Cloude Storage)
             }
 
             entity.setCompanyEntity(companyRepository.findById(form.getUser_fk_comp_num()).get());
@@ -168,13 +168,13 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     @Override
     public boolean deleteUser(int user_pk_num) {
-        //유저를 삭제하는 메소드
+        // 유저를 삭제하는 메소드
         try {
-//            deleteImage(user_pk_num);
+            // deleteImage(user_pk_num);
             userRepository.deleteById(user_pk_num);
 
-        }catch (Exception e){
-            System.out.println("deleteUser err : "+e);
+        } catch (Exception e) {
+            System.out.println("deleteUser err : " + e);
         }
         return false;
     }

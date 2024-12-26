@@ -20,7 +20,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/board")
+@RequestMapping("{comp_pk_num}/board")
 public class PostController {
 
 	@Autowired

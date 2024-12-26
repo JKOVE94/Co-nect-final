@@ -6,7 +6,7 @@ import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
 import Search from "variables/Search/Search";
 import FavorCheck from "../Favorite/FavorCheck";
-import "../../../assets/css/freepost/freelist.css"
+import "../../../assets/css/freepost/freelist.css";
 
 const FreeList = () => {
   const [posts, setPosts] = useState([]);
@@ -23,17 +23,24 @@ const FreeList = () => {
 
   const navigate = useNavigate();
 
-  const fetchPosts = (page, block, sortField, sortDirection, searchType, searchText) => {
-   axios
-      .get('/board/free', {
-        params:{
-          page:page,
-          pageBlock:block,
-          sortField:sortField,
-          sortDirection:sortDirection,
-          searchType:searchType,
-          searchText:searchText
-        }
+  const fetchPosts = (
+    page,
+    block,
+    sortField,
+    sortDirection,
+    searchType,
+    searchText
+  ) => {
+    axios
+      .get("/board/free", {
+        params: {
+          page: page,
+          pageBlock: block,
+          sortField: sortField,
+          sortDirection: sortDirection,
+          searchType: searchType,
+          searchText: searchText,
+        },
       })
       .then((res) => {
         setPosts(res.data.posts);
@@ -63,12 +70,26 @@ const FreeList = () => {
   const handlePageBlockChange = (direction) => {
     const newPageBlock = pageBlock + direction;
     setPageBlock(newPageBlock);
-    fetchPosts(newPageBlock * pagesPerBlock, newPageBlock, sortField, sortDirection, searchType, searchText);
+    fetchPosts(
+      newPageBlock * pagesPerBlock,
+      newPageBlock,
+      sortField,
+      sortDirection,
+      searchType,
+      searchText
+    );
   };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    fetchPosts(pageNumber, Math.floor(pageNumber / pagesPerBlock), sortField, sortDirection, searchType, searchText);
+    fetchPosts(
+      pageNumber,
+      Math.floor(pageNumber / pagesPerBlock),
+      sortField,
+      sortDirection,
+      searchType,
+      searchText
+    );
   };
 
   const formatDate = (date) => {
@@ -77,7 +98,8 @@ const FreeList = () => {
 
   const handleSortChange = (field) => {
     // 정렬 필드 변경 시 방향을 토글 (기본: DESC)
-    const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
+    const newDirection =
+      sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
     setSortField(field);
     setSortDirection(newDirection);
   };
@@ -88,15 +110,15 @@ const FreeList = () => {
     if (e.keyCode === 13) handleSearch();
   };
   const handleChange = (e) => {
-    if(e.target.id==="type"){
+    if (e.target.id === "type") {
       setSearchType(e.target.value);
-    } else if(e.target.id==="search") {
+    } else if (e.target.id === "search") {
       setSearchText(e.target.value.trim());
     }
   };
 
   const handleSearch = async () => {
-    if(searchType === "" || searchType === null){
+    if (searchType === "" || searchType === null) {
       //사용자가 type을 선택하지 않았거나 입력값이 없을 경우 search 실행하지 않음
       return;
     } else {
@@ -119,25 +141,31 @@ const FreeList = () => {
   return (
     <Container fluid style={{ Height: "40em", marginTop: "1em" }}>
       <Card style={{ Height: "40em", overflowY: "auto" }}>
-        <CardHeader style={{display: 'flex', justifyContent: 'space-between'}}>
+        <CardHeader
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <h2>자유 게시판</h2>
-          <div style={{display: 'flex'}}>
+          <div style={{ display: "flex" }}>
             <button
               className="btn btn-secondary"
-              style={{marginTop:'0px', height:'43px'}}
+              style={{ marginTop: "0px", height: "43px" }}
               onClick={() => handleSortChange("postRegdate")}
             >
-              최신순 {sortField === "postRegdate" && (sortDirection === "DESC" ? "▼" : "▲")}
+              최신순{" "}
+              {sortField === "postRegdate" &&
+                (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
             <button
               className="btn btn-secondary"
-              style={{marginTop:'0px', height:'43px'}}
+              style={{ marginTop: "0px", height: "43px" }}
               onClick={() => handleSortChange("postView")}
             >
-              조회수순 {sortField === "postView" && (sortDirection === "DESC" ? "▼" : "▲")}
+              조회수순{" "}
+              {sortField === "postView" &&
+                (sortDirection === "DESC" ? "▼" : "▲")}
             </button>
-              <Search
-              type='post'
+            <Search
+              type="post"
               value={searchText}
               onChange={handleChange}
               onSearch={handleSearch}
@@ -149,7 +177,7 @@ const FreeList = () => {
           <table className="table" style={{ fontSize: "1.2rem" }}>
             <thead>
               <tr>
-                <th style={{width:"80px"}}></th>
+                <th style={{ width: "80px" }}></th>
                 <th>번호</th>
                 <th>제목</th>
                 <th>작성자</th>
@@ -161,16 +189,16 @@ const FreeList = () => {
               {posts.length > 0 ? (
                 posts.map((post, index) => (
                   <tr key={post.post_pk_num || `post-${index}`}>
-                    <td style={{display: 'flex', justifyContent: 'center'}}>
+                    <td style={{ display: "flex", justifyContent: "center" }}>
                       <FavorCheck
                         type="post"
                         pknum={post.post_pk_num}
                         favorData={favorData}
                       />
-                  </td>
+                    </td>
                     <td>{post.post_pk_num}</td>
                     <td>
-                      <Link to={`/main/free/detail/${post.post_pk_num}`} >
+                      <Link to={`/main/free/detail/${post.post_pk_num}`}>
                         {post.post_name}
                       </Link>
                     </td>
@@ -187,16 +215,16 @@ const FreeList = () => {
             </tbody>
           </table>
           <button
-                className="btn btn-primary"
-                onClick={() => navigate(`/main/free/create`)}
-              >
-                글쓰기
-              </button>
+            className="btn btn-primary"
+            onClick={() => navigate(`/main/free/create`)}
+          >
+            글쓰기
+          </button>
           <div
             style={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <button

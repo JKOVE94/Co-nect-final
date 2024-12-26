@@ -13,12 +13,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface FileRepository extends JpaRepository<FileEntity,Integer> {
+public interface FileRepository extends JpaRepository<FileEntity, Integer> {
 	// 페이징, 정렬 (Sort 포함되어 컨트롤러나 서비스에 전달)
 	Page<FileEntity> findAll(Pageable pageable);
-	
-	//검색 - file name
+
+	// 검색 - file name
 	Page<FileEntity> findByFileNameContains(String searchText, Pageable pageable);
-	
+
 	// 검색 - 작성자명 (WikiEntity와 연관된 userEntity 사용)
-    Page<FileEntity> findByWikiEntity_UserEntity_UserNameContains(String searchText, Pageable pageable);}
+	Page<FileEntity> findByWikiEntity_UserEntity_UserNameContains(String searchText, Pageable pageable);
+}

@@ -38,14 +38,14 @@ public class WikiDto {
         wikiDto.setWiki_fk_user_num(wiki.getUserEntity().getUserPkNum());
         wikiDto.setWiki_fk_proj_num(wiki.getProjectEntity().getProjPkNum());
         wikiDto.setUser_name(wiki.getUserEntity().getUserName());
-        
+
         // 파일이 존재하면 파일 이름을 설정, 없으면 null
         if (wiki.getFileEntity() != null) {
-        	wikiDto.setFile_name(wiki.getFileEntity().getFileName());
+            wikiDto.setFile_name(wiki.getFileEntity().getFileName());
         } else {
-        	wikiDto.setFile_name(null); // 파일이 없을 경우
+            wikiDto.setFile_name(null); // 파일이 없을 경우
         }
-        
+
         return wikiDto;
     }
 }

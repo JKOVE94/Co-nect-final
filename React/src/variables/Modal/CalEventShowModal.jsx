@@ -3,21 +3,24 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import style from '../../assets/css/2dashboard/calendar.module.css'
+import style from "../../assets/css/2dashboard/calendar.module.css";
 import ReactMention from "variables/mention/ReactMention";
 
-const CalEventShowModal = ({
-  isOpen,
-  onClose,
-  info
-}) => {
-  
+const CalEventShowModal = ({ isOpen, onClose, info }) => {
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
-        <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
-          <Col md='100%' style={{fontSize:'1.5rem'}}>일정 상세</Col>
-          <Button className={style.modalCloseBtn} variant="link" onClick={onClose}>
+        <Modal.Title
+          style={{ display: "flex", alignItems: "center", width: "100%" }}
+        >
+          <Col md="100%" style={{ fontSize: "1.5rem" }}>
+            일정 상세
+          </Col>
+          <Button
+            className={style.modalCloseBtn}
+            variant="link"
+            onClick={onClose}
+          >
             &times;
           </Button>
         </Modal.Title>
@@ -62,17 +65,11 @@ const CalEventShowModal = ({
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>공유자</Form.Label>
-          <ReactMention
-            id="shareUser"
-            disabled={true}
-            userList={info.sharer}
-          />
+          <ReactMention id="shareUser" disabled={true} userList={info.sharer} />
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>
-        <Container className={style.textinfo}>
-          공유된 일정입니다.
-        </Container>
+        <Container className={style.textinfo}>공유된 일정입니다.</Container>
       </Modal.Footer>
     </Modal>
   );

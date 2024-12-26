@@ -6,9 +6,8 @@ import FavorCheck from "../Favorite/FavorCheck";
 import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 
-
 const FreeDetail = () => {
-  const postPkNumInt = parseInt(useParams().postPkNum, 10); 
+  const postPkNumInt = parseInt(useParams().postPkNum, 10);
   const navigate = useNavigate();
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
@@ -23,39 +22,38 @@ const FreeDetail = () => {
       .then((res) => {
         setFavorList(res.data);
       })
-      .catch((err)=>{
+      .catch((err) => {
         setFavorList(false);
       });
   };
-  
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/board/free/${postPkNumInt}`); 
-        setPost(response.data); 
+        const response = await axios.get(`/board/free/${postPkNumInt}`);
+        setPost(response.data);
       } catch (err) {
-        setError(err.message); 
+        setError(err.message);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
-    
 
     fetchPost();
     handleFavorite();
-  },[postPkNumInt]);
+  }, [postPkNumInt]);
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/board/free/${postPkNumInt}`); 
-      navigate("/main/free", { state: { success: true } }); 
+      await axios.delete(`/board/free/${postPkNumInt}`);
+      navigate("/main/free", { state: { success: true } });
     } catch (err) {
-      setError("삭제 실패: " + err.message); 
+      setError("삭제 실패: " + err.message);
     }
   };
 
-  if (loading) return <div>Loading...</div>; 
-  if (error) return <div>Error: {error}</div>; 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <Container fluid style={{ Height: "40em", marginTop: "2em" }}>
@@ -71,7 +69,6 @@ const FreeDetail = () => {
             marginTop: "1em",
           }}
         >
-
           <div>
             {post ? (
               <table
@@ -86,7 +83,7 @@ const FreeDetail = () => {
                     <td style={{ width: "10%", textAlign: "left" }}>제 목</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {post.post_name}&nbsp;
-                      <FavorCheck 
+                      <FavorCheck
                         type="post"
                         pknum={post.post_pk_num}
                         favorList={favorList}
@@ -94,19 +91,25 @@ const FreeDetail = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>작 성 자</td>
+                    <td style={{ width: "10%", textAlign: "left" }}>
+                      작 성 자
+                    </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {post.user_name}
                     </td>
-                    </tr>
-                     <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>우선순위</td>
+                  </tr>
+                  <tr>
+                    <td style={{ width: "10%", textAlign: "left" }}>
+                      우선순위
+                    </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {post.post_import}
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}>작 성 일</td>
+                    <td style={{ width: "10%", textAlign: "left" }}>
+                      작 성 일
+                    </td>
                     <td style={{ width: "90%", textAlign: "left" }}>
                       {new Date(post.post_regdate).toISOString().split("T")[0]}
                     </td>
@@ -123,21 +126,21 @@ const FreeDetail = () => {
               <div>게시글을 찾을 수 없습니다.</div>
             )}
             <br />
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate(`/main/free/update/${postPkNumInt}`)}
-              >
-                수정
-              </button>
-              <button className="btn btn-primary" onClick={handleDelete}>
-                삭제
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/main/free")}
-              >
-                목록
-              </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate(`/main/free/update/${postPkNumInt}`)}
+            >
+              수정
+            </button>
+            <button className="btn btn-primary" onClick={handleDelete}>
+              삭제
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/main/free")}
+            >
+              목록
+            </button>
           </div>
           <br />
         </CardBody>

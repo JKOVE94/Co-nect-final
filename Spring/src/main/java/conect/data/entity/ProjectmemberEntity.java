@@ -11,7 +11,7 @@ import lombok.Setter;
 public class ProjectmemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int projmemPkNum; //프로젝트 멤버 번호 [PK, INT]
+    private int projmemPkNum; // 프로젝트 멤버 번호 [PK, INT]
 
     @ManyToOne
     @JoinColumn(name = "projmem_fk_user_num")
