@@ -84,42 +84,23 @@ function ChatList(props) {
     props.setListOrRoom(false);
   };
 
+  const getLastMessage = (chatRoomId) => {
+    // console.log("chatRoomId:", chatRoomId);
+    const roomMessages = messages.filter(
+      (message) => message.chatRoomId === chatRoomId
+    );
+    console.log("roomMessages:", roomMessages);
+    console.log("messages : " + messages);
+    if (roomMessages.length > 0) {
+      return roomMessages[roomMessages.length - 1];
+    }
+    return null;
+  };
+
   //GCS에 이미지가 없을 때 처리
   const handleImageError = (event) => {
     event.target.style.display = "none"; // 이미지가 로드되지 않았을 때 숨기기
   };
-
-  const [roomSummaries, setRoomSummaries] = useState([]);
-
-  useEffect(() => {
-    const fetchRoomSummaries = async () => {
-      try {
-        const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
-        const userPkNum = userInfo.user_pk_num;
-
-        // 사용자 정보가 없으면 요청을 보내지 않음
-        if (!userPkNum) {
-          console.error("User information not found.");
-          return;
-        }
-
-        const response = await axios.get(
-          "http://localhost:5002/api/chat/rooms/summary",
-          {
-            headers: {
-              Authorization: JSON.stringify(userInfo),
-            },
-          }
-        );
-        setRoomSummaries(response.data);
-      } catch (error) {
-        console.error("Error fetching room summaries:", error);
-      }
-    };
-
-    fetchRoomSummaries();
-    console.log(roomSummaries);
-  }, []);
 
   if (!isLoaded) {
     return <div>로딩중...</div>; // 로딩 중일 때 표시할 UI
@@ -165,7 +146,9 @@ function ChatList(props) {
               >
                 {proj.proj_title}
               </div>
-              <div className="chat-message">{}</div>
+              <div className="chat-message">
+                {getLastMessage(proj.proj_pk_num)}
+              </div>
             </div>
             {/* <div className="chat-time">{chat.time}</div>
             {chat.unread && <span className="unread-badge">{chat.unread}</span>} */}

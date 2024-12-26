@@ -32,53 +32,6 @@ router.get("/:chatRoomId/messages", async (req, res) => {
   }
 });
 
-router.get("/rooms/summary", async (req, res) => {
-  try {
-    const userInfo = JSON.parse(req.headers.authorization);
-    const userPkNum = userInfo.user_pk_num;
-
-    // 사용자가 참여하고 있는 채팅방 목록 가져오기
-    const chatRooms = await ChatRoom.find({
-      "participants.user": userPkNum,
-    })
-      .populate({
-        path: "lastMessage", // ChatRoom의 lastMessage 필드 채우기
-        select: "message createdAt", // ChatMessage에서 message와 createdAt 필드만 선택
-      })
-      .exec();
-
-    const roomSummaries = await Promise.all(
-      chatRooms.map(async (chatRoom) => {
-        // 안 읽은 메시지 개수 계산
-        const unreadCount = await ChatMessage.countDocuments({
-          chatRoomId: chatRoom._id,
-          createdAt: { $gt: chatRoom.participants.find(p => p.user.toString() === userPkNum).lastReadTime || 0 },
-        });
-
-        return {
-          chatRoomId: chatRoom._id,
-          type: chatRoom.type,
-          referenceId: chatRoom.referenceId, // 이부분은 1:1 채팅방에서 사용되는 chatRoomId를 생성하는데 쓰입니다.
-          title: chatRoom.title,
-          lastMessage: chatRoom.lastMessage
-            ? chatRoom.lastMessage.message
-            : null,
-          lastMessageTime: chatRoom.lastMessage
-            ? chatRoom.lastMessage.createdAt
-            : null,
-          unreadCount,
-        };
-      })
-    );
-
-    res.status(200).json(roomSummaries);
-  } catch (err) {
-    console.error("Error fetching room summaries:", err);
-    res.status(500).json({ message: "Error fetching room summaries" });
-  }
-});
-
-
 // AI 채팅 API 호출
 router.post("/ask-ai", async (req, res) => {
   try {
