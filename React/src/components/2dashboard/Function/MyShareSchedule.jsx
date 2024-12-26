@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import "../../../assets/css/2dashboard/function.css"
 import style from '../../../assets/css/2dashboard/calendar.module.css'
 import CalEventShowModal from "variables/Modal/CalEventShowModal";
+import ReactMention from "variables/mention/ReactMention";
 
 const MyShareSchedule = ({ events }) => {
   const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
@@ -35,9 +36,7 @@ const MyShareSchedule = ({ events }) => {
         shared:info.shared, //일정 공유된 사람 목록
       });
   
-      
-      setShowModalIsOpen(true);
-      
+      setShowModalIsOpen(true);    
   
     };
 
@@ -50,8 +49,8 @@ const MyShareSchedule = ({ events }) => {
           (<Card.Subtitle className={style.scheduleSub}>공유된 일정이 없습니다.</Card.Subtitle>) 
         : 
         data.map((d, iedex) => (
-          <li key={iedex} onClick={()=>handleEventClick(d)}>
-            <b>{d.title}</b><br/> 
+          <li key={iedex} onClick={()=>handleEventClick(d)} style={{cursor:'pointer'}} >
+            <b>{d.title}</b> <br/> 
             <small>{moment(d.start).format("MM월 DD일 HH:mm")} ~ {moment(d.end).format("MM월 DD일 HH:mm")}</small>
           </li>
         ))}
