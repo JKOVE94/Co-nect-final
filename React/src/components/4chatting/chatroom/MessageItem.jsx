@@ -51,11 +51,7 @@ function MessageItem({ message }) {
         {/* 작성자 이름 표시 */}
         <p className="message-text">{message.message}</p>
         <span className="message-time">
-          {new Date(message.createdAt).toLocaleDateString()}{" "}
-          {new Date(message.createdAt).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {new Date(message.createdAt).toLocaleString()}
         </span>
       </div>
     </div>

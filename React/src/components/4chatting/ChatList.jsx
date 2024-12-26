@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { es } from "date-fns/locale";
-import { useSocket } from "./SocketContext";
 
 function ChatList(props) {
   const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
@@ -14,8 +13,6 @@ function ChatList(props) {
   const [searchProject, setSearchProject] = useState({});
   const [searchUser, setSearchUser] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const { messages } = useSocket();
 
   const getAllUser = async () => {
     try {
@@ -165,7 +162,11 @@ function ChatList(props) {
               >
                 {proj.proj_title}
               </div>
+<<<<<<< HEAD
               <div className="chat-message">{}</div>
+=======
+              {/* <div className="chat-message">{chat.message}</div> */}
+>>>>>>> parent of 69283b5 (2024.12.26 관리자기능 권한 설정, 채팅 v0.8, AI v0.8 완료)
             </div>
             {/* <div className="chat-time">{chat.time}</div>
             {chat.unread && <span className="unread-badge">{chat.unread}</span>} */}

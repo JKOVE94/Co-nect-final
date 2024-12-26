@@ -192,7 +192,7 @@ const ProjList = (props) => {
                     (sortDirection === "DESC" ? "▼" : "▲")}
                 </th>
                 <th>참여 인원 </th>
-                <th>수정</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -209,19 +209,11 @@ const ProjList = (props) => {
                     <td>{proj.proj_created}</td>
                     <td>{proj.memberDtoList.length}</td>
                     <td>
-                      {props.userInfo.user_author == 3 ||
-                      (props.userInfo.user_author == 2 &&
-                        proj.proj_fk_user_num == props.userInfo.user_pk_num) ? (
-                        <ManagerProjDropdown
-                          projNum={proj.proj_pk_num}
-                          projTitle={proj.proj_title}
-                          projManager={proj.proj_fk_user_num}
-                          handleDelete={handleDelete}
-                          userInfo={props.userInfo}
-                        />
-                      ) : (
-                        <div>권한이 없습니다.</div>
-                      )}
+                      <ManagerProjDropdown
+                        projNum={proj.proj_pk_num}
+                        projTitle={proj.proj_title}
+                        handleDelete={handleDelete}
+                      />
                     </td>
                   </tr>
                 ))

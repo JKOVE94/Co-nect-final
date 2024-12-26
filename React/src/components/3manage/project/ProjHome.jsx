@@ -7,20 +7,17 @@ import ProjAddMember from "./ProjAddMember";
 import "./manageProject.css";
 
 const ProjHome = () => {
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
-  const compNum = userInfo.user_fk_comp_num;
-  // console.log("projHome userInfo: ", userInfo);
+  const compNum = JSON.parse(
+    sessionStorage.getItem("persist:userInfo")
+  ).user_fk_comp_num;
   return (
     <div>
       <Routes>
-        <Route
-          path="/"
-          element={<ProjList compNum={compNum} userInfo={userInfo} />}
-        />
+        <Route path="/" element={<ProjList compNum={compNum} />} />
         <Route path="/create" element={<ProjCreate compNum={compNum} />} />
         <Route
           path="/detail/:projPkNum"
-          element={<ProjDetail compNum={compNum} userInfo={userInfo} />}
+          element={<ProjDetail compNum={compNum} />}
         />
         <Route
           path="/update/:projPkNum"

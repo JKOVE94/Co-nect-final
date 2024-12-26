@@ -62,12 +62,10 @@ def generate_answer_with_gemini(context, question):
     projects 테이블의 "proj_pk_num"은 각 프로젝트의 고유 번호이며, tasks 테이블의 "task_fk_proj_num"과 연결됩니다.
     **이번 질문에서는 tasks 테이블의 task_fk_proj_num 값을 프로젝트 번호로 간주하고 답변해주세요.**
     tasks 테이블에서 task_fk_proj_num 컬럼 값이 존재하는 작업들만 사용하여, 각 프로젝트별 작업 수를 계산하고, 작업 수가 가장 많은 프로젝트 번호를 찾아주세요.
-    답면 문장의 길이가 100자 이하가 되도록 작성해주세요.
+    답면 문장의 길이가 200자 이하가 되도록 작성해주세요.
     답변시에는 컬럼명이 바로 노출되지 않도록 설정해줘. 
     최근에 생성된 업무, 프로젝트를 물어본다면 proj_created, task_created를 사용해서 찾아주고 언제 생성되었는지(proj_created or task_created), 그리고 프로젝트명(proj_title), 업무명(task_title)을 알려줘. 양식은 가장 최근에 생성된 [업무 or 프로젝트]는 [업무 or 프로젝트명]이고, [날짜]에 생성되었습니다. 
-    모든 문장에 '안녕하세요. 저는 업무 어시스턴트 코넥트입니다.'를 붙일필요는 없어. 처음 대화한경우에만 붙여줘.
-    사용자가 '나' 혹은 '내' 라고 질문하면, 사용자의 정보를 알려줘. 사용자의 정보는 user 테이블에 저장되어있어.
-    
+
     문맥:
     {context}
 
@@ -110,9 +108,6 @@ def get_answer(user_question, db_data):
     question_embedding = embedding_model.encode([user_question])[0]
 
     context_template = """
-    **나, 나자신, 내가**
-    {myself}
-    
     **사원, 직원:**
     {users}
 
@@ -148,12 +143,11 @@ def get_answer(user_question, db_data):
 
     # 업무 정보 (모든 업무)
     tasks_info = db_data["tasks"].to_markdown()
-    myself_info = db_data["myself"].to_markdown()
+
     context = context_template.format(
         users=users_info,
         projects=projects_info,
-        tasks=tasks_info,
-        myself=myself_info
+        tasks=tasks_info
     )
 
     print("생성된 context:\n", context)  # context 내용 확인 (디버깅용)

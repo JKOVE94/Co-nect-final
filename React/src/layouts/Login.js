@@ -90,8 +90,6 @@ const Login = (props) => {
       */
       let res = await axios.post("/conect/login", loginInfo);
       const responseData = res.data;
-      console.log("responseData : "+responseData);
-      console.log(responseData);
       await setData(responseData);
       // console.log(responseData);
       if (res.data.status === 1) {

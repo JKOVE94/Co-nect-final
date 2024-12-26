@@ -1,15 +1,13 @@
-import React, { useEffect, useRef, useState, useCallback, use } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
 import "./ChatRoom.css";
 import { useSocket } from "../SocketContext";
-import { set } from "date-fns";
 
 function ChatRoom(props) {
   const { type, no } = useParams();
-  const { joinRoom, messages, allMessagesLoaded } = useSocket();
-  const [isLoading, setIsLoading] = useState(true);
+  const { joinRoom, messages } = useSocket();
 
   let chatRoomTitle = "채팅방";
   if (props.roomInfo.type === "project") {
@@ -32,47 +30,6 @@ function ChatRoom(props) {
     }
   }, [props.roomInfo.no, props.roomInfo.type]);
 
-  const messageListRef = useRef(null); // ref 생성
-
-  const scrollToBottom = () => {
-    if (messageListRef.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-    }
-  };
-
-  useEffect(() => {
-    const observer = new MutationObserver(scrollToBottom);
-    if (messageListRef.current) {
-      observer.observe(messageListRef.current, {
-        childList: true,
-        subtree: true,
-      });
-    }
-
-    return () => {
-      if (messageListRef.current) {
-        observer.disconnect();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    // messages가 변경될 때마다 스크롤을 아래로 내립니다.
-    if (messageListRef.current) {
-      setTimeout(() => {
-        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-      }, 100);
-    }
-  }, [messages]);
-
-  // 스크롤을 가장 아래로 내리는 useEffect
-  useEffect(() => {
-    if (!isLoading && messageListRef.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
-    }
-  }, [isLoading]); // 의존성 배열에 isLoading 추가
-
-  console.log("isLoading:", isLoading);
   return (
     <div className="chat-room">
       <div className="chat-header">
@@ -85,7 +42,7 @@ function ChatRoom(props) {
         <h2 className="chat-title">{chatRoomTitle}</h2>
       </div>
       <div className="chat-body">
-        <div className="chat-content-box" ref={messageListRef}>
+        <div className="chat-content-box">
           <MessageList
             messages={messages}
             roomInfo={props.roomInfo}

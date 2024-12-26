@@ -33,7 +33,7 @@ const ProjDetail = (props) => {
         setLoading(false);
       }
     };
-    console.log(props.userInfo);
+
     fetchProj();
   }, [projPkNumInt]);
 
@@ -178,25 +178,15 @@ const ProjDetail = (props) => {
               <div>해당 프로젝트 정보를 찾을 수 없습니다.</div>
             )}
             <br />
-            {props.userInfo.user_author == 3 ||
-            (props.userInfo.user_author == 2 &&
-              proj.proj_fk_user_num == props.userInfo.user_pk_num) ? (
-              <>
-                <button
-                  className="btn btn-primary"
-                  onClick={() =>
-                    navigate(`/manage/proj/update/${projPkNumInt}`)
-                  }
-                >
-                  수정
-                </button>
-                <button className="btn btn-primary" onClick={handleDelete}>
-                  삭제
-                </button>
-              </>
-            ) : (
-              ""
-            )}
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate(`/manage/proj/update/${projPkNumInt}`)}
+            >
+              수정
+            </button>
+            <button className="btn btn-primary" onClick={handleDelete}>
+              삭제
+            </button>
             <button
               className="btn btn-primary"
               onClick={() => navigate("/manage/proj")}
