@@ -17,7 +17,9 @@ const setupSocket = (io) => {
       type,
       referenceId,
       user: userPkNum,
-    });
+      
+    }
+  );
 
     // userPkNum을 ObjectId로 변환
     const userObjectId = mongoose.Types.ObjectId.isValid(userPkNum)
@@ -113,7 +115,8 @@ const setupSocket = (io) => {
           // 4. AI 채팅방인 경우, AI 응답 생성 및 전송
         if (type == "ai") {
         // AI 응답을 기다린 후 메시지 전송
-        const aiResponse = await generateAiResponse(message);
+        console.log("sender : "+sender);
+        const aiResponse = await generateAiResponse(message, sender);
         console.log("AI response:", aiResponse); // AI 응답 확인
 
         let newAiMessage = new ChatMessage({
@@ -144,12 +147,12 @@ const setupSocket = (io) => {
           );
 
     // AI 응답 생성 함수
-    async function generateAiResponse(question) {
+    async function generateAiResponse(question,senderId) {
       try {
         console.log("Sending question to AI API:", question);
         console.log(`${process.env.AI_API_URL}${encodeURIComponent(question)}`);
         const response = await axios.get(
-          `${process.env.AI_API_URL}${encodeURIComponent(question)}`,
+          `${process.env.AI_API_URL}${encodeURIComponent(question)}&userPkNum=${senderId}`,
           {
             headers: {
               "Content-Type": "application/json",

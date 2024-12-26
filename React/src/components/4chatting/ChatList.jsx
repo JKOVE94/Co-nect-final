@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { es } from "date-fns/locale";
+import { useSocket } from "./SocketContext";
 
 function ChatList(props) {
   const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
@@ -13,6 +14,8 @@ function ChatList(props) {
   const [searchProject, setSearchProject] = useState({});
   const [searchUser, setSearchUser] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const { messages } = useSocket();
 
   const getAllUser = async () => {
     try {
@@ -81,6 +84,19 @@ function ChatList(props) {
     props.setListOrRoom(false);
   };
 
+  const getLastMessage = (chatRoomId) => {
+    // console.log("chatRoomId:", chatRoomId);
+    const roomMessages = messages.filter(
+      (message) => message.chatRoomId === chatRoomId
+    );
+    console.log("roomMessages:", roomMessages);
+    console.log("messages : " + messages);
+    if (roomMessages.length > 0) {
+      return roomMessages[roomMessages.length - 1];
+    }
+    return null;
+  };
+
   //GCS에 이미지가 없을 때 처리
   const handleImageError = (event) => {
     event.target.style.display = "none"; // 이미지가 로드되지 않았을 때 숨기기
@@ -130,7 +146,9 @@ function ChatList(props) {
               >
                 {proj.proj_title}
               </div>
-              {/* <div className="chat-message">{chat.message}</div> */}
+              <div className="chat-message">
+                {getLastMessage(proj.proj_pk_num)}
+              </div>
             </div>
             {/* <div className="chat-time">{chat.time}</div>
             {chat.unread && <span className="unread-badge">{chat.unread}</span>} */}

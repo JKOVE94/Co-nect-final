@@ -22,7 +22,8 @@ import ErrPage from "components/2dashboard/ErrPage";
 import TreeAndGantt from "variables/TreeTable_Gantt/TreeAndGantt";
 import Function from "components/2dashboard/Function/Function";
 import FreeHome from "components/2dashboard/Free/FreeHome";
-
+import ChatOffcanvas from "components/4chatting/ChatOffcanvas";
+import ChatOffcnavasSet from "components/4chatting/ChatOffcnavasSet";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -64,7 +65,7 @@ const Dashboard = (props) => {
         {isProjReadPath ? "" : <Navbar />}
         {/* 조건부 렌더링으로 헤더 선택 */}
         {isProjReadPath ? <BinHeader /> : <Header />}
-        
+        <ChatOffcanvas /> {/* 채팅 기능 관련 컴포넌트 */}
         <Routes>
           <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
@@ -76,6 +77,8 @@ const Dashboard = (props) => {
           <Route path="/err" element={<ErrPage />} />
         </Routes>
       </div>
+      <ChatOffcanvas/>
+      <ChatOffcnavasSet/>
     </>
   );
 };

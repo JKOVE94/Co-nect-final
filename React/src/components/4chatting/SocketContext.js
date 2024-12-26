@@ -19,6 +19,7 @@ export const SocketProvider = ({ children }) => {
   const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
   const userPkNum = userInfo ? userInfo.user_pk_num : null;
   const socketRef = useRef();
+  const [allMessagesLoaded, setAllMessagesLoaded] = useState(false);
 
   useEffect(() => {
     if (userPkNum) {
@@ -39,6 +40,7 @@ export const SocketProvider = ({ children }) => {
 
     socket.on("loadMessages", (newMessages) => {
       setMessages(newMessages);
+      setAllMessagesLoaded(true);
     });
 
     socket.on("newMessage", (newMessage) => {
@@ -94,7 +96,7 @@ export const SocketProvider = ({ children }) => {
     }
   };
 
-  const value = { sendMessage, joinRoom, messages }; // socket 제거, messages 추가
+  const value = { sendMessage, joinRoom, messages,allMessagesLoaded }; // socket 제거, messages 추가
 
   return (
     <SocketContext.Provider value={value}>{children}</SocketContext.Provider>

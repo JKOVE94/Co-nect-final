@@ -21,7 +21,6 @@ const ManagerProjDropdown = (props) => {
   return (
     <Dropdown>
       <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components" />
-
       <Dropdown.Menu>
         <Dropdown.Item as={Link} to={`/manage/proj/update/${props.projNum}`}>
           수정

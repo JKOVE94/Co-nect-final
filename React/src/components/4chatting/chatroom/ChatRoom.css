@@ -145,6 +145,7 @@
   display: flex;
   position: relative;
   flex-direction: column;
+  padding: 0 1em;
   height: 80vh;
 
   overflow-y: auto; /* 내용이 넘칠 경우 스크롤 생성 */
@@ -168,7 +169,11 @@
 }
 
 .message-sender {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 500;
+  margin-bottom: 0.3em;
+}
+
+.message-text {
   margin-bottom: 0.3em;
 }
