@@ -88,6 +88,8 @@ const handleDownload = async () => {
     document.body.appendChild(link);
     link.click();
     link.remove();
+
+    toast.success("파일 다운로드가 완료되었습니다!"); // 다운로드 성공 Toast
     toggleModal(); // 모달 닫기
   } catch (error) {
     console.error("파일 다운로드 중 오류:", error);
@@ -160,6 +162,10 @@ const handleDownload = async () => {
 
   return (
     <Container fluid style={{ marginTop: "1em" }}>
+      <ToastContainer 
+      autoClose={2000} // 2초 뒤에 자동으로 닫힘
+      hideProgressBar={true} // 모든 Toast에서 Progress bar 숨김
+      />
       <Card style={{ height: "45em", position: "relative" }}>
         <CardHeader>
           <h2>파일 게시판</h2>

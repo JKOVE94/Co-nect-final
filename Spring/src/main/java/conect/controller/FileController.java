@@ -14,9 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.FileDto;
 import conect.data.entity.FileEntity;
+import conect.data.entity.UserEntity;
 import conect.data.entity.WikiEntity;
 import conect.data.form.FileForm;
 import conect.data.repository.FileRepository;
+import conect.data.repository.UserRepository;
 import conect.data.repository.WikiRepository;
 import conect.service.board.file.FileService;
 import conect.service.board.wiki.WikiService;
@@ -45,6 +47,9 @@ public class FileController {
     
     @Autowired
     private WikiRepository wikiRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     // 모든 게시글 조회
     @GetMapping
@@ -131,6 +136,9 @@ public class FileController {
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("파일 크기가 10MB를 초과합니다.");
             }
         
+            String userName = userRepository.findById(userNum)
+                    .map(UserEntity::getUserName)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
             // int wikiPkNum = wikiService.addWikiEntity(wikiTitle, wikiContent, userNum, projNum, wikiNotice);
             // WikiEntity 생성
             int wikiPkNum = wikiService.addWikiEntity(wikiTitle, wikiContent, userNum, projNum, wikiNotice);

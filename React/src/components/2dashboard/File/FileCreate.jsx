@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
-import { toast, ToastContainer } from "react-toastify"; // Import Toast components
-import "react-toastify/dist/ReactToastify.css"; // Import Toast CSS
+import { toast, ToastContainer } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css";
 
 const FileCreate = () => {
   const writer = useSelector((state) => state.userData);
@@ -13,7 +13,7 @@ const FileCreate = () => {
   const [formData, setFormData] = useState({
     wiki_title: "",
     wiki_content: "",
-    wiki_fk_user_num: writer?.userNum || 1,
+    wiki_fk_user_num: 1,
     wiki_fk_proj_num: 1,
     wiki_isnotice: false,
     file: null,
@@ -21,6 +21,16 @@ const FileCreate = () => {
     file_size: 0,
     file_type: "",
   });
+
+  // Redux 상태가 업데이트되면 formData도 업데이트
+  useEffect(() => {
+    if (writer?.user_pk_num) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        wiki_fk_user_num: writer.user_pk_num,
+      }));
+    }
+  }, [writer]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -64,9 +74,12 @@ const FileCreate = () => {
       const response = await axios.post("/file", data);
 
       console.log("서버 응답:", response.data);
+      console.log("Redux에서 가져온 상태 (writer):", writer);
+
+
       if (response.data != null) {
-        toast.success("파일이 성공적으로 업로드되었습니다!", { autoClose: 2000 }); // 2-second success toast
-        setTimeout(() => navigate(`/main/file/detail/${response.data}`), 2000); // Redirect after 2 seconds
+        toast.success("파일이 성공적으로 업로드되었습니다!", { autoClose: 2000 }); 
+        setTimeout(() => navigate(`/main/file/detail/${response.data}`), 2000);
       } else {
         throw new Error("저장된 파일 ID가 반환되지 않았습니다.");
       }
