@@ -172,7 +172,10 @@ const handleNextPage = () => {
                 notices.map((notice, index) => (
                   <tr key={notice.noti_pk_num || `notice-${index}`}>
                     <td>{notice.noti_pk_num}</td>
-                    <td>
+                    <td style={{
+                        textAlign: 'left',        // 왼쪽 정렬
+                        paddingLeft: '50px'       // 왼쪽 여백
+                    }}>
                       {notice.noti_import === 1 && (
                         <span style={{ marginRight: "0.5em" }}>
                           <i className="bi bi-pin-angle-fill" style={{ color: "red" }}></i>
@@ -181,7 +184,7 @@ const handleNextPage = () => {
                       <Link
                         to={`/main/noti/notidetail/${notice.noti_pk_num}`}
                         style={{
-                          fontWeight: notice.noti_import === 1 ? "bold" : "normal",
+                          fontWeight: notice.noti_import === 1 ? "bold" : "normal"
                         }}
                       >
                         {notice.noti_title}

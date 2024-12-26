@@ -81,11 +81,14 @@ const NotiDetail = () => {
        </CardHeader>
        <CardBody style={{ fontSize: "1.2rem", marginTop: "1em"}}>
          {noti ? (
-           <table className="table" style={{ border: "1px solid lightgray" }}>
+           <table className="table" style={{ border: "1px solid lightgray"}}>
              <tbody>
                <tr>
                  <td style={{ width: "10%" }}>제목</td>
-                 <td>
+                 <td style={{ 
+                   textAlign: 'left',
+                   paddingLeft: '100px'
+                 }}>
                  {noti.noti_import === 1 && (
                        <span style={{ marginRight: "0.5em" }}>
                          <i className="bi bi-pin-angle-fill" style={{ color: "red" }}></i>
@@ -96,30 +99,41 @@ const NotiDetail = () => {
                </tr>
                <tr>
                  <td>프로젝트 명</td>
-                 <td>{noti.projName}</td>
+                 <td style={{ 
+                   textAlign: 'left',
+                   paddingLeft: '100px'
+                 }}>{noti.projName}</td>
                </tr>
                <tr>
                  <td>작성자</td>
-                 <td>{noti.userName}</td>
+                 <td style={{ 
+                   textAlign: 'left',
+                   paddingLeft: '100px'
+                 }}>{noti.userName}</td>
                </tr>
                <tr>
                  <td>등록일</td>
-                 <td>{noti.noti_regdate}</td>
+                 <td style={{ 
+                   textAlign: 'left',
+                   paddingLeft: '100px'
+                 }}>{noti.noti_regdate}</td>
                </tr>
                <tr>
                  <td>수정일</td>
-                 <td>{noti.noti_modedate}</td>
+                 <td style={{ 
+                   textAlign: 'left',
+                   paddingLeft: '100px'
+                 }}>{noti.noti_modedate}</td>
                </tr>
                <tr>
                  <td>내용</td>
                  <td style={{ 
+                     textAlign: 'left',
+                     paddingLeft: '100px',
                      whiteSpace: 'pre-wrap',     // 줄바꿈 보존
                      wordBreak: 'break-all',     // 긴 텍스트 줄바꿈
                      minHeight: '200px',         // 최소 높이 설정
-                     verticalAlign: 'top',       // 내용 상단 정렬
-                     padding: '15px',             // 여백 추가
-                     textAlign: 'left',        // 왼쪽 정렬
-                     paddingLeft: '100px'       // 왼쪽 여백
+                     verticalAlign: 'top'        // 내용 상단 정렬
                   }}>{noti.noti_content}</td>
                </tr>
              </tbody>
