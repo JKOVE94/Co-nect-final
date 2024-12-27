@@ -25,7 +25,8 @@ import FreeHome from "components/2dashboard/Free/FreeHome";
 import WikiHome from "components/2dashboard/Wiki/WikiHome";
 import NotiHome from "components/2dashboard/Noti/NotiHome";
 import FileHome from "components/2dashboard/File/FileHome";
-
+import ChatOffcanvas from "components/4chatting/ChatOffcanvas";
+import ChatOffcnavasSet from "components/4chatting/ChatOffcnavasSet";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -67,6 +68,7 @@ const Dashboard = (props) => {
         {isProjReadPath ? "" : <Navbar />}
         {/* 조건부 렌더링으로 헤더 선택 */}
         {isProjReadPath ? <BinHeader /> : <Header />}
+        <ChatOffcanvas /> {/* 채팅 기능 관련 컴포넌트 */}
         <Routes>
           <Route path="/" element={<MainComponent />} />
           <Route path="/proj/projread/:id" element={<ProjStatus />} />
@@ -81,6 +83,8 @@ const Dashboard = (props) => {
           <Route path="/file/*" element={<FileHome />}/>
         </Routes>
       </div>
+      <ChatOffcanvas/>
+      <ChatOffcnavasSet/>
     </>
   );
 };

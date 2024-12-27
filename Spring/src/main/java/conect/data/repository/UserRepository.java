@@ -13,4 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity,Integer> {
 
     @Query("SELECT u FROM UserEntity u WHERE u.companyEntity.compPkNum = ?1")
     List<UserEntity> findUserByCompany(int compno);
+
+    @Query("SELECT u FROM UserEntity u WHERE u.companyEntity.compPkNum = ?2 AND u.userPkNum = ?1")
+    UserEntity findUserByUserPkNumAndCompPkNum(int userPkNum, int compPkNum);
 }

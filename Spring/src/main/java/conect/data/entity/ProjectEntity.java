@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class ProjectEntity {
     private LocalDate projStartdate; // 프로젝트 시작일 [DATETIME]
     private LocalDate projEnddate; // 프로젝트 종료일 [DATETIME]
     private String projStatus; // 프로젝트 상태 [VARCHAR] (예정, 진행 중, 완료)
+    private LocalDate projCreated; // 프로젝트 등록일 [DATETIME]
     private LocalDate projUpdated; // 프로젝트 정보 최종 수정 일시 [DATETIME]
 
     @ManyToOne
@@ -31,13 +33,10 @@ public class ProjectEntity {
     @JsonIgnore
     private CompanyEntity companyEntity;
 
-    @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "proj_fk_user_num")
     @JsonBackReference
-    private List<TaskEntity> taskEntities;
-
-    @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
-    @JsonBackReference
-    private List<FavoritesEntity> favoritesEntities;
+    private UserEntity userEntity;
 
     @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
     @JsonBackReference

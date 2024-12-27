@@ -20,7 +20,7 @@ import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
-import MNavbar from "components/2dashboard/Navbars/MNavbar.js";
+import Navbar from "components/2dashboard/Navbars/Navbar.js";
 import Footer from "components/2dashboard/Footers/Footer.js";
 import MSidebar from "components/2dashboard/Sidebar/MSidebar.js";
 import Header from "components/2dashboard/Headers/Header.js";
@@ -33,6 +33,8 @@ import UserInfo from "components/3manage/user/UserInfo";
 import UserAdd from "components/3manage/user/UserAdd";
 import UserUnlock from "components/3manage/user/UserUnlock";
 import CompanyHome from "components/3manage/company/CompanyHome";
+import ProjHome from "components/3manage/project/ProjHome";
+import ChatOffcanvas from "components/4chatting/ChatOffcanvas";
 
 const Dashboard = (props) => {
   const mainContent = React.useRef(null);
@@ -62,14 +64,17 @@ const Dashboard = (props) => {
           imgAlt: "...",
         }}
       />
+        
       <div className="main-content" ref={mainContent}>
-        <MNavbar />
+        <Navbar />
         <Header />
         <Container fluid style={{overflow:"scroll", marginTop:"1em"}}>
+        <ChatOffcanvas placement="end" name="end" />
           <Routes>
             <Route path="company/*" element={<CompanyHome />}/>          
             <Route path="user/*" element={<UserHome />}/>          
-       </Routes>
+            <Route path="proj/*" element={<ProjHome />}/>          
+         </Routes>
         </Container>
       </div>
     </>

@@ -88,8 +88,10 @@ const Login = (props) => {
       status; //로그인 상태 번호로 표시 1 성공, 2 : 정보 불일치, 3 : 잠긴 계정
       user_trynum; //유저가 로그인 시도 횟수
       */
-      let res = await axios.post("/login", loginInfo);
+      let res = await axios.post("/conect/login", loginInfo);
       const responseData = res.data;
+      console.log("responseData : "+responseData);
+      console.log(responseData);
       await setData(responseData);
       // console.log(responseData);
       if (res.data.status === 1) {

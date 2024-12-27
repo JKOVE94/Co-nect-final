@@ -11,34 +11,37 @@ const ResourceSlice = createSlice({
   initialState: {
     //공유자원 정의
     user_pk_num: 0,
+    user_id: "",
     user_name: "",
     user_mail: "",
     user_pic: "",
-    user_rank: "",
-    user_fk_dpart_num: 0,
-    user_fk_acc_authornum: 0,
+    user_lastlogin: "",
+    user_author: 0,
+    user_istemppw: 0,
     user_fk_comp_num: 0,
   },
   reducers: {
     //리듀서 정의, 각 함수는 state와 action을 인자로 받는다.
     LOGIN: (state, action) => {
       state.user_pk_num = action.payload.user_pk_num;
+      state.user_id = action.payload.user_id;
       state.user_name = action.payload.user_name;
       state.user_mail = action.payload.user_mail;
       state.user_pic = action.payload.user_pic;
-      state.user_rank = action.payload.user_rank;
-      state.user_fk_dpart_num = action.payload.user_fk_dpart_num;
-      state.user_fk_acc_authornum = action.payload.user_fk_acc_authornum;
+      state.user_lastlogin = action.payload.user_lastlogin;
+      state.user_author = action.payload.user_author;
+      state.user_istemppw = action.payload.user_istemppw;
       state.user_fk_comp_num = action.payload.user_fk_comp_num;
     },
     LOGOUT: (state) => {
       state.user_pk_num = 0;
+      state.user_id = "";
       state.user_name = "";
       state.user_mail = "";
       state.user_pic = "";
-      state.user_rank = "";
-      state.user_fk_dpart_num = 0;
-      state.user_fk_acc_authornum = 0;
+      state.user_lastlogin = "";
+      state.user_author = 0;
+      state.user_istemppw = 0;
       state.user_fk_comp_num = 0;
     },
   },

@@ -57,12 +57,13 @@
     "date-fns": "^4.1.0",
     "dhtmlx-gantt": "^9.0.3",
     "dhx-suite": "^9.0.0",
+    "http-proxy-middleware": "^3.0.3",
     "jqwidgets-scripts": "^20.0.0",
     "latest": "^0.2.0",
     "moment": "2.29.4",
     "nouislider": "15.4.0",
     "react": "18.2.0",
-    "react-bootstrap": "^2.10.6",
+    "react-bootstrap": "^2.10.7",
     "react-chartjs-2": "2.11.2",
     "react-copy-to-clipboard": "5.1.0",
     "react-datetime": "3.2.0",
@@ -78,7 +79,10 @@
     "reactstrap": "^8.10.0",
     "redux-persist": "^6.0.0",
     "rsuite": "^5.74.2",
-    "sass": "1.69.5"
+    "sass": "1.69.5",
+    "socket.io-client": "^4.8.1",
+    "socketio": "^1.0.0",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
@@ -93,6 +97,5 @@
     "svgo": "3.0.2",
     "fsevents": "2.3.2",
     "chokidar": "3.5.3"
-  },
-  "proxy": "http://localhost:8080"
+  }
 }

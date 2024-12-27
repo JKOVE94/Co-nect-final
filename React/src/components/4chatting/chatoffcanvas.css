@@ -1,0 +1,23 @@
+.offcanvasbtn {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 1.3em;
+  right: 2em;
+  margin: 20px;
+  z-index: 1000;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.messagebtn {
+  padding-bottom: 0.2em;
+}

@@ -83,6 +83,22 @@ function ModalFormat(props) {
             </Modal.Footer>
           </>
         );
+      case "updateFail":
+        return (
+          <>
+            <Modal.Header closeButton>
+              <Modal.Title>사원 정보 수정실패</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              알 수 없는 에러 발생. 관리자에게 문의해주세요.{" "}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={props.handleCloseM}>
+                확인
+              </Button>
+            </Modal.Footer>
+          </>
+        );
     }
   };
   return (

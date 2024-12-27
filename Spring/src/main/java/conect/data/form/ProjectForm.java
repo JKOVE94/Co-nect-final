@@ -16,6 +16,7 @@ public class ProjectForm {
     private LocalDate proj_startdate; // 프로젝트 시작일
     private LocalDate proj_enddate; // 프로젝트 종료일
     private String proj_status; // 프로젝트 상태
+    private LocalDate proj_created; // 프로젝트 등록일
     private LocalDate proj_updated; // 프로젝트 정보 최종 수정 일시
     private int proj_fk_comp_num; // 회사 엔티티 번호
     private int proj_fk_user_num; // 사용자 엔티티 번호
@@ -28,6 +29,7 @@ public class ProjectForm {
         entity.setProjStartdate(form.getProj_startdate());
         entity.setProjEnddate(form.getProj_enddate());
         entity.setProjStatus(form.getProj_status());
+        entity.setProjCreated(form.getProj_created());
         entity.setProjUpdated(form.getProj_updated());
         return entity;
     }
