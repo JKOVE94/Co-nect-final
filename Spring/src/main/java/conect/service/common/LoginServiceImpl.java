@@ -58,6 +58,9 @@ public class LoginServiceImpl implements LoginService {
 
                             String token = jwtUtil.generateToken(user.getUserId());
 
+<<<<<<< HEAD
+>>>>>>> parent of 2e3f2cb (12271600)
+=======
 >>>>>>> parent of 2e3f2cb (12271600)
                             loginDto.setStatus(1);
                             loginDto.setToken(token);
@@ -68,19 +71,29 @@ public class LoginServiceImpl implements LoginService {
                             loginDto.setUser_pic(user.getUserPic());
                             loginDto.setUser_pictype(user.getUserPic());
 <<<<<<< HEAD
+<<<<<<< HEAD
                             loginDto.setUser_fk_acc_authornum(user.getUserAuthor());
                             loginDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
 =======
+=======
+>>>>>>> parent of 2e3f2cb (12271600)
                             loginDto.setUser_author(user.getUserAuthor());
                             loginDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
                             loginDto.setUser_locked(false);
 
+<<<<<<< HEAD
+>>>>>>> parent of 2e3f2cb (12271600)
+=======
 >>>>>>> parent of 2e3f2cb (12271600)
                         } else {
                             handleFailedLogin(user);
                             loginDto.setStatus(2);
                             loginDto.setUser_trynum(user.getUserTrynum());
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                            loginDto.setUser_locked(user.getUserLocked());
+>>>>>>> parent of 2e3f2cb (12271600)
 =======
                             loginDto.setUser_locked(user.getUserLocked());
 >>>>>>> parent of 2e3f2cb (12271600)
@@ -89,6 +102,10 @@ public class LoginServiceImpl implements LoginService {
                         loginDto.setStatus(3);
                         loginDto.setUser_trynum(user.getUserTrynum());
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                        loginDto.setUser_locked(true);
+>>>>>>> parent of 2e3f2cb (12271600)
 =======
                         loginDto.setUser_locked(true);
 >>>>>>> parent of 2e3f2cb (12271600)
@@ -108,7 +125,11 @@ public class LoginServiceImpl implements LoginService {
     private void handleFailedLogin(UserEntity user) {
         user.setUserTrynum(user.getUserTrynum() + 1);
 <<<<<<< HEAD
+<<<<<<< HEAD
         if(user.getUserTrynum() == 6) {
+=======
+        if(user.getUserTrynum() >= 5) {
+>>>>>>> parent of 2e3f2cb (12271600)
 =======
         if(user.getUserTrynum() >= 5) {
 >>>>>>> parent of 2e3f2cb (12271600)

@@ -52,7 +52,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 <<<<<<< HEAD
+<<<<<<< HEAD
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-production-domain.com")); // 허용 도메인 설정
+=======
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-production-domain.com","chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff/index.html")); // 허용 도메인 설정
+>>>>>>> parent of 2e3f2cb (12271600)
 =======
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-production-domain.com","chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff/index.html")); // 허용 도메인 설정
 >>>>>>> parent of 2e3f2cb (12271600)

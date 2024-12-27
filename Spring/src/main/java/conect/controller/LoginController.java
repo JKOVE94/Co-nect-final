@@ -24,8 +24,11 @@ public class LoginController {
         switch (loginDto.getStatus()) {
             case 1: // 로그인 성공
 <<<<<<< HEAD
+<<<<<<< HEAD
                 String token = jwtUtil.generateToken(loginDto.getUser_id());
                 loginDto.setToken(token);
+=======
+>>>>>>> parent of 2e3f2cb (12271600)
 =======
 >>>>>>> parent of 2e3f2cb (12271600)
                 return ResponseEntity.ok(loginDto);

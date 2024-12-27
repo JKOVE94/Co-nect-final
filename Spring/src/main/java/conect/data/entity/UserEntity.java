@@ -27,7 +27,10 @@ public class UserEntity {
     private Boolean userIstemppw; //임시 비밀번호 여부 [TINYINT] (false 0, true 1)
     private int userTrynum; //사용자 로그인 시도 횟수 [INT] (로그인 실패 시 증가)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 2e3f2cb (12271600)
     @Column(name = "user_Locked")
 >>>>>>> parent of 2e3f2cb (12271600)
     private Boolean userLocked; //사용자 계정 잠김 여부 [TINYINT] (false 0, true 1)

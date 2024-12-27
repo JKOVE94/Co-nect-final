@@ -85,6 +85,7 @@ const Login = (props) => {
       const responseData = res.data;
       setData(responseData);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
       if (responseData.status === 1) {
         sessionStorage.setItem("token", responseData.token);
@@ -111,6 +112,8 @@ const Login = (props) => {
         setErrType(responseData.status);
         handleShowM();
 =======
+=======
+>>>>>>> parent of 2e3f2cb (12271600)
   
       switch (responseData.status) {
         case 1: // 로그인 성공
