@@ -1,5 +1,6 @@
 package conect.controller;
 import conect.data.dto.TaskDto;
+import conect.data.dto.UserDto;
 import conect.data.form.TaskForm;
 import conect.service.board.proj.ProjServiceImpl;
 
@@ -8,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/board")
@@ -24,6 +27,11 @@ public class TaskController {
     public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable("task_fk_proj_num") int task_fk_proj_num) {
         System.out.println("task_fk_proj_num : " + task_fk_proj_num);
         return taskService.getAllTask(task_fk_proj_num);
+    }
+    
+    @GetMapping("/task/{taskPkNum}")
+    public TaskDto getTaskByNum(@PathVariable("taskPkNum")int taskPkNum){
+    	return taskService.getTaskByNum(taskPkNum);
     }
     
     @GetMapping("/task/proj/{projectNum}/user/{userNum}")
@@ -38,19 +46,49 @@ public class TaskController {
         return taskService.getAllTaskWithUser(user_pk_num);
     }
 
+//    @PostMapping("/task/insert")
+//    public void insertTask(@RequestBody TaskForm form) {
+//        taskService.insertTask(form);
+//    }
+
     @PostMapping("/task/insert")
-    public void insertTask(@RequestBody TaskForm form) {
-        taskService.insertTask(form);
+    public ResponseEntity<?> insertTask(@RequestBody TaskForm form) {
+        try {
+            taskService.insertTask(form);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace(); 
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+    
+   
 
     @PutMapping("/task/update/{task_pk_num}")
     public void updateTask(@RequestBody TaskForm form) {
         taskService.updateTask(form);
     }
+   
+//    @DeleteMapping("/task/delete/{task_pk_num}")
+//    public void deleteTask(@PathVariable int task_pk_num) {
+//        taskService.deleteTask(task_pk_num);
+//    }
+   
     @DeleteMapping("/task/delete/{task_pk_num}")
-    public void deleteTask(@PathVariable int task_pk_num) {
-        taskService.deleteTask(task_pk_num);
+    public ResponseEntity<?> deleteTask(@PathVariable("task_pk_num") int task_pk_num) {
+        try {
+            taskService.deleteTask(task_pk_num); // 내부에서 권한 검사 수행
+            return ResponseEntity.noContent().build();
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("태스크를 찾을 수 없습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
+        }
     }
+   
+    
     
     
     @GetMapping("/tasklist/proj/{projectNum}")
@@ -93,9 +131,23 @@ public class TaskController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        
+        
     }
-
-
+    
+    @GetMapping("/task/{taskPkNum}/related")
+    public ResponseEntity<List<TaskDto>> getRelatedTasks(
+        @PathVariable("taskPkNum") int taskPkNum,
+        @RequestParam("taskGroup") int taskGroup,
+        @RequestParam("taskDepth") int taskDepth
+    ) {
+        try {
+            List<TaskDto> relatedTasks = taskService.getRelatedTasks(taskPkNum);
+            return new ResponseEntity<>(relatedTasks, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }
