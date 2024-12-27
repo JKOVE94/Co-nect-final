@@ -16,6 +16,8 @@ const TaskDepthContainer = ({ task }) => {
   const [relatedTasks, setRelatedTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
+
 
   useEffect(() => {
     const fetchRelatedTasks = async () => {
@@ -27,7 +29,7 @@ const TaskDepthContainer = ({ task }) => {
       try {
         setLoading(true);
         const response = await axiosInstance.get(
-          `/board/task/${task.taskPkNum}/related`,
+          `/conect/${compNum}/board/task/${task.taskPkNum}/related`,
           {
             params: {
               taskGroup: task.taskGroup,

@@ -38,11 +38,12 @@ const ProjectSelect = () => {
 
   const user_pk_num = useSelector((state) => state.userData.user_pk_num);
   const user_author = useSelector((state) => state.userData.user_author);
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
   const navigate = useNavigate();
 
   const fetchData = useCallback(() => {
     axiosInstance
-      .get(`/proj/ProjSel/${user_pk_num}`)
+      .get(`/conect/${compNum}/proj/ProjSel/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
       })

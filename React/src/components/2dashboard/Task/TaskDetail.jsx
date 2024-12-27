@@ -20,11 +20,13 @@ const TaskDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
+
 
   useEffect(() => {
     const fetchTask = async () => {
       try {
-        const response = await axiosInstance.get(`/board/task/${taskPkNum}`);
+        const response = await axiosInstance.get(`/conect/${compNum}/board/task/${taskPkNum}`);
         setTask(response.data);
       } catch (err) {
         setError(err.message);

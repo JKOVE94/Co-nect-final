@@ -27,6 +27,8 @@ const TaskList = () => {
   const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
   const { projectNum } = useParams();
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
+
 
   const fetchTasks = useCallback(
     (page, block, sortField, sortDirection) => {
@@ -41,7 +43,7 @@ const TaskList = () => {
       setError(null);
       axiosInstance
         .get(
-          `/board/tasklist/proj/${projectNum}?page=${
+          `/conect/${compNum}/board/tasklist/proj/${projectNum}?page=${
             page - 1
           }&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchText=${searchText}`
         )

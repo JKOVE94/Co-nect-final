@@ -17,6 +17,8 @@ import {
 export default function Tasktable({ projectNum }) {
   const [tasks, setTasks] = useState([]);
   const userNum = useSelector((state) => state.userData?.user_pk_num);
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
+  
   const navigate = useNavigate();
 
   const showList = useCallback(() => {
@@ -26,7 +28,7 @@ export default function Tasktable({ projectNum }) {
     }
 
     axiosInstance
-      .get(`/board/task/proj/${projectNum}/user/${userNum}`)
+      .get(`/conect/${compNum}/board/task/proj/${projectNum}/user/${userNum}`)
       .then((res) => {
         const sortData = res.data
           .sort((a, b) => new Date(b.taskStartdate) - new Date(a.taskStartdate))

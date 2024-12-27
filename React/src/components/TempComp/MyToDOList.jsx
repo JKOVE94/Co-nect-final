@@ -31,6 +31,8 @@ const MyToDoList = () => {
   const [todoList, setTodoList] = useState([]);
 
   const user_pk_num = useSelector((state) => state.userData.user_pk_num);
+    const compNum = useSelector((state) => state.userData.user_fk_comp_num);
+  
 
   const fetchData = useCallback(() => {
     if (!user_pk_num) {
@@ -43,7 +45,7 @@ const MyToDoList = () => {
     setError(null);
 
     axiosInstance
-      .get(`/proj/user/${user_pk_num}`)
+      .get(`/conect/${compNum}/proj/user/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
         updateTodoList(res.data.todos);

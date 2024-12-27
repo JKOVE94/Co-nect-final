@@ -6,6 +6,8 @@ import axiosInstance from '../../../api/axiosInstance';
 const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
   const [taskHistory, setTaskHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
+
 
   useEffect(() => {
     if (isOpen) {
@@ -16,7 +18,7 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
   const fetchTaskHistory = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`/board/task/history/${taskPkNum}`);
+      const response = await axiosInstance.get(`/conect/${compNum}/board/task/history/${taskPkNum}`);
       setTaskHistory(response.data);
     } catch (error) {
       console.error('태스크 수정 이력을 불러오는 데 실패했습니다:', error);
