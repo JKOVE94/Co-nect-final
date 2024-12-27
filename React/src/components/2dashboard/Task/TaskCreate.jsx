@@ -116,8 +116,9 @@ const TaskCreate = () => {
             },
           }
       );
-
-      navigate(`/main/task/tasklist/${projectNum}`);
+      if (response.status === 201) {
+        navigate(`/main/task/tasklist/${projectNum}`);
+      }
     } catch (error) {
       console.error("Error creating task:", error);
     }
