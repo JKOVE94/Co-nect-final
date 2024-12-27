@@ -3,8 +3,8 @@ package conect.data.dto;
 import conect.data.entity.RecommendationEntity;
 import lombok.Getter;
 import lombok.Setter;
+import java.time.LocalDateTime;
 
-import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -12,10 +12,12 @@ public class RecommendationDto {
     private int rec_pk_num; // 건의 번호
     private String rec_content; // 건의 내용
     private String rec_title; // 건의 제목
-    private LocalDate rec_regdate; // 건의 등록일
+    private LocalDateTime rec_regdate; // 건의 등록일
     private int rec_view; // 건의 조회수
     private int rec_fk_user_num; // 사용자 엔티티 번호
     private int rec_fk_proj_num; // 프로젝트 엔티티 번호
+    private Integer rec_likes; // 건의사항 좋아요 수
+    private Integer reply; // 건의사항 댓글 수
 
     // Getters와 Setters
 
@@ -34,6 +36,8 @@ public class RecommendationDto {
         if (recommendationEntity.getProjectEntity() != null) {
             recommendationDto.setRec_fk_proj_num(recommendationEntity.getProjectEntity().getProjPkNum()); // 예시: 프로젝트 엔티티의 PK 값으로 수정
         }
+        recommendationDto.setRec_likes(recommendationEntity.getReclikesEntities().size());
+        recommendationDto.setReply(recommendationEntity.getReplyEntities().size());
 
         return recommendationDto;
     }

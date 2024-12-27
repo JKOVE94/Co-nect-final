@@ -1,107 +1,127 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
+import { Form, Modal, Button, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import style from '../../assets/css/2dashboard/calendar.module.css'
 import ReactMention from "variables/mention/ReactMention";
+import axiosInstance from "api/axiosInstance";
 
 const CalEventEditModal = ({
   isOpen,
   onClose,
   info,
   getEvent,
-  handleToast
+  handleToast,
+  handleError
 }) => {
-  const num = useSelector((state) => state.userData.user_pk_num);
+  const num = useSelector((state) => state.userData.user_pk_num); //사번
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+  
   const [data, setData] = useState({});
   const [read, setRead] = useState(); //수정 가능 여부
+  const [users, setUsers] = useState([]);
+  const [allDay, setAllDay] = useState();
 
   useEffect(() => {
     setData({
       todo_fk_user_num: num,
       todo_title: info.title || "",
       todo_content: info.content || "",
-      todo_start: info.start || "",
-      todo_end: info.end || "",
-      todo_tagcol: info.tagcol || "#000000",
-      shareUser:info.shared || ""
+      todo_startdate: info.startdate || "",
+      todo_enddate: info.enddate || "",
+      todo_starttime : info.all? "" : info.starttime,
+      todo_endtime : info.all? "" : info.endtime,
+      todo_category: info.category || "",
+      share_user:info.shared || ""
     });
     setRead(true);
+    setUsers(info.shared);
+    setAllDay(info.all);
   }, [isOpen, onClose, info, getEvent, handleToast, num]);
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.id]: e.target.value });
   };
 
-  const handleUpdateForm = () => {
+  const handleUpdateForm = (e) => {
+    e.preventDefault();
     setRead(false);
+    setAllDay(false);
   };
 
   const handleMention = (mention) => {
-    let str = mention.join(",");
-    setData({...data,shareUser:str});
+    setData({...data,share_user:mention});
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(!e.target.checkValidity()){
+      return;
+    }
+    handleUpdate();
   }
 
   const handleUpdate = () => {
-    axios
-      .put("/function/schedule/" + info.id, data)
+    axiosInstance
+      .put(`/${compNum}/function/schedule/` + info.id, data)
       .then((res) => {
         if (res.data) {
           handleToast("update", true);
           getEvent();
         }
+        handleError("",false);
       })
-      .catch((err) => navigator(`/error`));
+      .catch((err) => handleError("일정 등록에 실패하였습니다. 다시 시도해주세요.",true));
     onClose();
   };
 
-  const handleDelete = () => {
-    axios
-      .delete("/function/schedule/" + info.id)
+  const handleDelete = (e) => {
+    e.preventDefault();
+    axiosInstance
+      .delete(`/${compNum}/function/schedule/` + info.id)
       .then((res) => {
         if (res.data) {
           handleToast("del", true);
           getEvent();
         }
+        handleError("",false)
       })
-      .catch((err) => navigator(`/error`));
+      .catch((err) => handleError(err.response.data,true));
     onClose();
   };
+  
+  const handleCheck = (e) => {
+    setAllDay(e.target.checked);
+    if(e.target.checked){
+      setData({...data, todo_starttime:null, todo_endtime:null})
+    }
+  }
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
         <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
           <Col md='100%' style={{fontSize:'1.5rem'}}>일정 수정</Col>
-          <Col md={5}>
-            <Form.Control
-              value={data.todo_tagcol}
-              type="color"
-              id="todo_tagcol"
-              onChange={handleChange}
-              style={{width:'45px'}}
-              disabled={read}
-            />
-          </Col>
           <Button className={style.modalCloseBtn} variant="link" onClick={onClose}>
             &times;
           </Button>
         </Modal.Title>
       </Modal.Header>
+      <form onSubmit={handleSubmit}>
       <Modal.Body>
         <Form.Group className="mb-2">
-          <Form.Label>제목</Form.Label>
+          <Form.Label>제목<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
           <Form.Control
             type="text"
             id="todo_title"
             value={data.todo_title}
             onChange={handleChange}
             disabled={read}
+            required={true}
           />
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>내용</Form.Label>
+          <Form.Label>내용<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
           <Form.Control
             as="textarea"
             rows={10}
@@ -109,35 +129,80 @@ const CalEventEditModal = ({
             value={data.todo_content}
             onChange={handleChange}
             disabled={read}
+            required={true}
           />
         </Form.Group>
-        <Form.Group className="mb-2">
-          <Form.Label>시작일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            id="todo_start"
-            value={data.todo_start}
-            onChange={handleChange}
-            disabled={read}
-          />
+        <Form.Group className="mb-2" >
+          <Form.Label>시작일<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_startdate"
+                value={data.todo_startdate}
+                onChange={handleChange}
+                disabled={read}
+                required={true}
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_starttime"
+                value={data.todo_starttime}
+                hidden={allDay}
+                onChange={handleChange}
+                disabled={read}
+              />
+            </Col>
+          </div>
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>종료일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            value={data.todo_end}
-            id="todo_end"
-            onChange={handleChange}
-            disabled={read}
-          />
+          <Form.Label>종료일<small style={{color:'gray', marginLeft:'0.5rem'}}>필수</small></Form.Label>
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_enddate"
+                value={data.todo_enddate}
+                onChange={handleChange}
+                disabled={read}
+                required={true}
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_endtime"
+                value={data.todo_endtime}
+                onChange={handleChange}
+                hidden={allDay}
+                disabled={read}
+              />
+            </Col>
+          </div>
+        </Form.Group>
+        <Form.Group className="mb-2 justify-content-start align-items-center" hidden={read}>
+          <Form.Label>종일</Form.Label>
+          <input type="checkbox" onClick={handleCheck}  className={style.check}/>
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>참석자</Form.Label>
+          <Form.Label>카테고리</Form.Label>
+          <Form.Select className="form-control" id="todo_category" value={data.todo_category} disabled={read} onChange={handleChange}>
+            <option hidden>--카테고리 선택--</option>
+            <option value="회의">회의</option>
+            <option value="출장">출장</option>
+            <option value="개인일정">개인일정</option>
+            <option value="기타">기타</option>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>참여자</Form.Label>
           <ReactMention
             id="shareUser"
             disabled={read}
             onMention={handleMention}
-            userList={info.shared}
+            userList={users}
           />
         </Form.Group>
       </Modal.Body>
@@ -146,11 +211,12 @@ const CalEventEditModal = ({
           {read ? (
             <Button onClick={handleUpdateForm}>수정</Button>
           ) : (
-            <Button onClick={handleUpdate}>수정확인</Button>
+            <Button type="submit">수정확인</Button>
           )}
           <Button onClick={handleDelete}>삭제</Button>
         </>
       </Modal.Footer>
+      </form>
     </Modal>
   );
 };

@@ -1,84 +1,101 @@
 import MyCalendar from "./MyCalendar";
 import MySchedule from "./MySchedule";
-import axios from "axios";
+import CalendarToast from "variables/Toast/CalendarToast";
+import MyShareSchedule from "./MyShareSchedule";
+import ScheduleCategory from "./ScheduleCategory";
+import axiosInstance from "api/axiosInstance";
+import Error from "./Error";
+
 import { Card, CardBody, Container, Row, Col } from "reactstrap";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import CalendarToast from "variables/Toast/CalendarToast";
+
 import "../../../assets/css/2dashboard/function.css";
 import style from "../../../assets/css/2dashboard/calendar.module.css";
-import MyShareSchedule from "./MyShareSchedule";
+
+import moment from "moment";
+
 
 const Function = () => {
-  const num = useSelector((state) => state.userData.user_pk_num);
+  
+  const userNum = useSelector((state) => state.userData.user_pk_num); //사번
+  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+    
   //toast
   const [toastType, setToastType] = useState("");
   const [toastIsOpen, setToastIsOpen] = useState(false);
   //calendar event(일정)
   const [events, setEvents] = useState([{}]);
+  const [allEvents, setAllEvents] = useState([{}]);
+  //에러
+  const [error, setError] = useState();
+  const [errorIsOpen, setErrorIsOpen] = useState(false);
 
   const handleToast = (text, open) => {
     setToastType(text);
     setToastIsOpen(open);
   };
 
+  const handleError = (error, errorIsOpen)=>{
+    setError(error);
+    setErrorIsOpen(errorIsOpen);
+  }
+
   const handleGetEvent = async () => {
     //캘린더에 표시될 이벤트 불러오기
-    axios
-      .get("/function/schedule/" + num)
+    axiosInstance
+      .get(`/${compNum}/function/schedule/${userNum}`)
       .then((res) => {
-        let projEvent = res.data.proj.map((data) => ({
-          id: data.proj_pk_num,
-          title: data.proj_name,
-          start: data.proj_startdate,
-          end: data.proj_enddate,
-          content: data.proj_desc,
-          starttime: data.proj_startdate,
-          endtime: data.proj_enddate,
-          groupId: 0,
-          color: data.proj_tagcol,
-          editable: false,
-        }));
-
         let todoEvent = res.data.map((data) => ({
           id: data.todo_pk_num, //일정 pk num
           title: data.todo_title, //일정 제목
+          start: data.todo_starttime? // 일정 시작
+            moment(data.todo_startdate + ' ' + data.todo_starttime, 'YYYY-MM-DD HH:mm:ss').toISOString():
+            moment(data.todo_startdate).endOf('day').toISOString(), 
+          end : data.todo_endtime? // 일정 종료
+            moment(data.todo_enddate + ' ' + data.todo_endtime, 'YYYY-MM-DD HH:mm:ss').toISOString():
+            moment(data.todo_enddate).endOf('day').toISOString(), 
           content: data.todo_content, //일정 내용
-          start: data.todo_start, //일정 시작일
-          end: data.todo_end, //일정 종료일
-          starttime: data.todo_start,
-          endtime: data.todo_end,
-          color: data.todo_tagcol, //일정 색깔
-          sharer: data.todo_fk_user_num, //일정 작성자(공유자)
-          shared: data.shareUser, //일정 공유된 사람목록
-          allDay: true,
-          //일정 작성자만 수정 가능하게 설정
-          editable: data.todo_fk_user_num === num ? true : false,
+          category : data.todo_category, //일정 카테고리
+          sharer: data.todo_fk_user_num, //일정 작성자
+          shared: data.share_user, //일정 참여자 목록
+          all:data.todo_starttime===null ? true:false,
+          backgroundColor : data.todo_category === "회의" ? "#53A0EC" : 
+            data.todo_category === "출장" ? "#FFCC66" :
+            data.todo_category === "개인일정" ? "#FF9999" :
+            data.todo_category === "기타" ? "#9966FF" : "#FFF"
         }));
         setEvents([...todoEvent]);
+        setAllEvents([...todoEvent]);
+        handleError("",false);
       })
       .catch((err) => {
-        console.log(err);
+        handleError("일정을 불러올 수 없습니다.",true);
       });
   };
 
   useEffect(() => {
     handleGetEvent();
-  }, [num]);
+  }, []);
 
   return (
     <>
       <Container fluid className={style.calendar}>
         <Row className="mx-0 align-items-start justify-content-center">
-          <Col md={4}>
+          <Col md={3} >
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
-                <MySchedule events={events} />
+                <MySchedule events={allEvents} />
               </CardBody>
             </Card>
             <Card className={style.card2}>
               <CardBody className={style.cardbody}>
-                <MyShareSchedule events={events} />
+                <MyShareSchedule events={allEvents} />
+              </CardBody>
+            </Card>
+            <Card className={style.card2}>
+              <CardBody className={style.cardbody}>
+                <ScheduleCategory events={allEvents} setEvents={setEvents}/>
               </CardBody>
             </Card>
           </Col>
@@ -92,15 +109,8 @@ const Function = () => {
                   events={events}
                   handleGetEvent={handleGetEvent}
                   handleToast={handleToast}
+                  handleError={handleError}
                 />
-              </CardBody>
-            </Card>
-          </Col>
-
-          <Col md={4} style={{ marginTop: "2rem" }}>
-            <Card className={style.card2}>
-              <CardBody className={style.cardbody}>
-                <MySchedule events={events} />
               </CardBody>
             </Card>
           </Col>
@@ -113,6 +123,9 @@ const Function = () => {
           />
         </div>
       </Container>
+      <Error err={error} isOpen={errorIsOpen} onClose={()=>{
+          setErrorIsOpen(false);
+      }}/>
     </>
   );
 };

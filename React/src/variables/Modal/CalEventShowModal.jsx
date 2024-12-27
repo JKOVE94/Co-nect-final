@@ -1,26 +1,20 @@
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 import { Form, Modal, Button, Row, Col, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import style from "../../assets/css/2dashboard/calendar.module.css";
+import style from '../../assets/css/2dashboard/calendar.module.css'
 import ReactMention from "variables/mention/ReactMention";
 
-const CalEventShowModal = ({ isOpen, onClose, info }) => {
+const CalEventShowModal = ({
+  isOpen,
+  onClose,
+  info
+}) => {
+
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header>
-        <Modal.Title
-          style={{ display: "flex", alignItems: "center", width: "100%" }}
-        >
-          <Col md="100%" style={{ fontSize: "1.5rem" }}>
-            일정 상세
-          </Col>
-          <Button
-            className={style.modalCloseBtn}
-            variant="link"
-            onClick={onClose}
-          >
+        <Modal.Title style={{ display: "flex", alignItems: "center", width:'100%' }}>
+          <Col md='100%' style={{fontSize:'1.5rem'}}>일정 상세</Col>
+          <Button className={style.modalCloseBtn} variant="link" onClick={onClose}>
             &times;
           </Button>
         </Modal.Title>
@@ -45,31 +39,71 @@ const CalEventShowModal = ({ isOpen, onClose, info }) => {
             disabled
           />
         </Form.Group>
-        <Form.Group className="mb-2">
+        <Form.Group className="mb-2" >
           <Form.Label>시작일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            id="todo_start"
-            value={info.start}
-            disabled
-          />
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_startdate"
+                value={info.startdate}
+                disabled
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_starttime"
+                value={info.starttime}
+                disabled
+              />
+            </Col>
+          </div>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>종료일</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            value={info.end}
-            id="todo_end"
-            disabled
-          />
+          <div style={{ display: "flex", justifyContent: "flex-start"}}>
+            <Col md={6} style={{padding:"0"}}>
+              <Form.Control
+                type="date"
+                id="todo_enddate"
+                value={info.enddate}
+                disabled
+              />
+            </Col>
+            <Col md={5}>
+              <Form.Control
+                type="time"
+                id="todo_endtime"
+                value={info.endtime}
+                disabled
+              />
+            </Col>
+          </div>
         </Form.Group>
         <Form.Group className="mb-2">
-          <Form.Label>공유자</Form.Label>
-          <ReactMention id="shareUser" disabled={true} userList={info.sharer} />
+          <Form.Label>카테고리</Form.Label>
+          <Form.Select className="form-control" id="todo_category" value={info.category} disabled>
+            <option hidden>--카테고리 선택--</option>
+            <option value="회의">회의</option>
+            <option value="출장">출장</option>
+            <option value="개인일정">개인일정</option>
+            <option value="기타">기타</option>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>참여자</Form.Label>
+          <ReactMention
+            id="shareUser"
+            disabled={true}
+            userList={info.shared && [...info.shared, info.sharer]}
+          />
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>
-        <Container className={style.textinfo}>공유된 일정입니다.</Container>
+        <Container className={style.textinfo}>
+          공유된 일정입니다.
+        </Container>
       </Modal.Footer>
     </Modal>
   );

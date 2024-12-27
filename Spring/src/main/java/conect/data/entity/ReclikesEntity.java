@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "reclikes")
 public class ReclikesEntity {
     @Id
-    private int reclikePkNum; // 건의 좋아요 번호 [PK, INT]
+    private int reclikePkNum; //건의 좋아요 번호 [PK, INT]
 
     @ManyToOne
     @JoinColumn(name = "reclike_fk_user_num")
@@ -20,3 +20,5 @@ public class ReclikesEntity {
     @JoinColumn(name = "reclike_fk_rec_num")
     private RecommendationEntity recommendationEntity;
 }
+
+

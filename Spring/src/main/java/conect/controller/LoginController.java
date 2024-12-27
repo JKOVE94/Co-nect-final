@@ -1,13 +1,18 @@
 package conect.controller;
 
 import conect.data.dto.LoginDto;
-import conect.data.dto.UserDto;
 import conect.data.form.LoginForm;
 import conect.service.common.LoginService;
+import conect.data.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class LoginController {
@@ -16,38 +21,19 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public Object Login(@RequestBody LoginForm form) {
-        int isLogin = loginService.checkLogin(form);
-        /*
-         * 로그인 상태를 숫자로 정의
-         * 1 : 로그인 성공
-         * 2 : 정보 불일치
-         * 3 : 잠긴 계정
-         */
-        if (isLogin == 1) {
-            LoginDto userInfoDto = new LoginDto();
-            UserDto dto = loginService.getUserInfo(form.getUser_pk_num());
-            userInfoDto.setStatus(1); // 로그인 상태 담기
-            userInfoDto.setUser_pk_num(dto.getUser_pk_num()); // 사번 담기
-            userInfoDto.setUser_id(dto.getUser_id()); // 아이디 담기
-            userInfoDto.setUser_name(dto.getUser_name()); // 이름 담기
-            userInfoDto.setUser_mail(dto.getUser_mail()); // 이메일 담기
-            userInfoDto.setUser_pic(dto.getUser_pic()); // 사진 담기
-            userInfoDto.setUser_lastlogin(dto.getUser_lastlogin()); // 마지막 로그인 일시 담기
-            userInfoDto.setUser_author(dto.getUser_author()); // 권한 담기
-            userInfoDto.setUser_istemppw(dto.isUser_istemppw()); // 임시 비밀번호 여부 담기
-            userInfoDto.setUser_fk_comp_num(dto.getUser_fk_comp_num()); // 회사 번호 담기
-            return userInfoDto;
-        } else if (isLogin == 2) {
-            LoginDto userInfoDto = new LoginDto(); // 정보 초기화
-            userInfoDto.setStatus(2); // 로그인 상태 담기
-            userInfoDto.setUser_trynum(loginService.getTryNum(form.getUser_pk_num())); // 로그인 시도횟수 담기
-            return userInfoDto;
-        } else {
-            LoginDto userInfoDto = new LoginDto(); // 정보 초기화
-            userInfoDto.setStatus(3); // 로그인 상태 담기
-            userInfoDto.setUser_trynum(loginService.getTryNum(form.getUser_pk_num())); // 로그인 시도횟수 담기
-            return userInfoDto;
+
+    public ResponseEntity<LoginDto> login(@RequestBody LoginForm form) {
+        LoginDto loginDto = loginService.checkLogin(form);
+
+        switch (loginDto.getStatus()) {
+            case 1: // 로그인 성공
+                return ResponseEntity.ok(loginDto);
+            case 2: // 정보 불일치
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginDto);
+            case 3: // 잠긴 계정
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(loginDto);
+            default:
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(loginDto);
         }
     }
 }

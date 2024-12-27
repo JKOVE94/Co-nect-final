@@ -20,20 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Integer> {
 
 	// 캘린더 - 로그인한 유저가 참여한 project list 반환
-	@Query(value = "SELECT proj_pk_num, proj_name, proj_desc, proj_startdate, proj_enddate, proj_status, proj_temp,"
-			+ "proj_members, proj_created, proj_updated, proj_import, proj_tag, proj_tagcol, proj_fk_user_num, proj_fk_dpart_num, proj_fk_comp_num, proj_icon, proj_progress "
-			+ " FROM project WHERE proj_members REGEXP :pattern", nativeQuery = true)
+	@Query(value = "SELECT p FROM project p WHERE proj_members REGEXP :pattern", nativeQuery = true)
 	List<ProjectEntity> findByProjMembersContaining(@Param("pattern") String pattern);
 
-	// 프로젝트 목록 회사 num 기준으로 조회
-	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm WHERE p.companyEntity.compPkNum = ?1")
-	List<ProjectEntity> findByProjCompNum(int compNum);
-
-	//프로젝트 목록 status에 따라 조회
+	// 프로젝트 목록 status에 따라 조회
 	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm WHERE p.companyEntity.compPkNum = ?1 AND p.projStatus = ?2")
 	List<ProjectEntity> findByProjCompNumAndProjStatus(int compNum, String projStatus);
 
-	//------------------------- 2024.12.18 -------------------------
+	// ------------------------- 2024.12.18 -------------------------
 
 	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm WHERE p.companyEntity.compPkNum = ?1")
 	Page<ProjectEntity> findByProjCompNumWithPaging(int compNum, Pageable pageable);
@@ -54,5 +48,22 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Integer>
 
 	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm WHERE p.companyEntity.compPkNum=?1 AND ( pm.userEntity.userPkNum = ?2 OR p.userEntity.userPkNum = ?2)")
 	List<ProjectEntity> findByProjCompNumAndUserPkNum(int compNum, int userNum);
+
+	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm LEFT JOIN FETCH pm.userEntity WHERE p.projPkNum = :projPkNum")
+	Optional<ProjectEntity> findByIdWithUser(@Param("projPkNum") int projPkNum);
+
+	@Query("SELECT DISTINCT p FROM ProjectEntity p JOIN p.projectmemberEntities pm WHERE pm.userEntity.userPkNum = :userPkNum")
+	List<ProjectEntity> getProjByTaskFkUserNum(@Param("userPkNum") int userPkNum);
+
+	// // 페이징, 정렬 (Sort 포함되어 컨트롤러나 서비스에 전달)
+	// Page<ProjectEntity> findAlltwo(Pageable pageable);
+
+	// 프로젝트 목록 회사 num 기준으로 조회
+	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm WHERE p.companyEntity.compPkNum = ?1")
+	List<ProjectEntity> findByProjCompNum(int compNum);
+
+	// 검색용
+	// List<ProjectEntity> findByProjStatusContainsAndProjNameContains(String
+	// status, String searchText);
 
 }

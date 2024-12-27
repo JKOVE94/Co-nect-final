@@ -10,10 +10,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter
 @Setter
 public class TodoDto {
-
     private int todo_pk_num; // 투두리스트 고유 식별자
     private String todo_title; // 투두리스트 제목
     private String todo_content; // 투두리스트 내용

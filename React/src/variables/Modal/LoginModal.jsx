@@ -12,8 +12,16 @@ function ModalFormat(props) {
       case 3:
         return (
           <>
-            <Modal.Header closeButton>
+            <Modal.Header>
               <Modal.Title>잠긴 계정</Modal.Title>
+              <Button 
+                variant="link" 
+                className="close" 
+                onClick={props.handleCloseM}
+                style={{ position: 'absolute', right: '1rem', top: '1rem' }}
+              >
+                <i className="bi bi-x-lg"></i>
+              </Button>
             </Modal.Header>
             <Modal.Body>
               로그인 실패 횟수가 5회 초과했습니다. <br />
@@ -26,20 +34,20 @@ function ModalFormat(props) {
             </Modal.Footer>
           </>
         );
+      default:
+        return null;
     }
   };
 
   return (
-    <>
-      <Modal
-        show={props.showM}
-        onHide={props.handleCloseM}
-        backdrop="static"
-        keyboard={false}
-      >
-        <TypeText />
-      </Modal>
-    </>
+    <Modal
+      show={props.showM}
+      onHide={props.handleCloseM}
+      backdrop="static"
+      keyboard={false}
+    >
+      <TypeText />
+    </Modal>
   );
 }
 

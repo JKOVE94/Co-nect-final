@@ -1,16 +1,32 @@
-const { default: MyToDoList } = require("./TempComp/MyToDOList")
-const { default: Projtable } = require("./TempComp/ProjTable")
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import MyToDoList from "./TempComp/MyToDOList";
+
+import Tasktable from "./TempComp/Tasktable";
+import { PROJSEL } from "../Redux/Reducer/projDataReducer";
 
 const MainComponent = () => {
+  const user_pk_num = useSelector((state) => state.userData.user_pk_num);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const projectNum = searchParams.get("proj");
+  
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    if (projectNum) {
+      dispatch(PROJSEL({ proj_pk_num: projectNum }));
+    }
+  }, [dispatch, projectNum]);
+  
 
-    return(
-        <>
+  return (
+    <>
+      <Tasktable projectNum={projectNum} />
+      <MyToDoList user_pk_num={user_pk_num} />
+    </>
+  );
+};
 
-        <Projtable/>
-        <MyToDoList/>
-
-        </>
-    )
-}
-
-export default MainComponent
+export default MainComponent;

@@ -1,15 +1,21 @@
 package conect.controller;
+
 import conect.data.dto.TaskDto;
+import conect.data.dto.TaskHistoryDto;
 import conect.data.form.TaskForm;
 import conect.data.form.TaskSearchForm;
 import conect.service.board.proj.ProjServiceImpl;
 
 import conect.service.board.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("{comp_pk_num}/task")
@@ -17,10 +23,21 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @GetMapping("/proj/{task_fk_proj_num}")
-    public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable int task_fk_proj_num) {
+    @GetMapping("/task/proj/{task_fk_proj_num}")
+    public List<TaskDto> getTaskByTaskFkProjNum(@PathVariable("task_fk_proj_num") int task_fk_proj_num) {
         System.out.println("task_fk_proj_num : " + task_fk_proj_num);
         return taskService.getAllTask(task_fk_proj_num);
+    }
+
+    @GetMapping("/task/{taskPkNum}")
+    public TaskDto getTaskByNum(@PathVariable("taskPkNum") int taskPkNum) {
+        return taskService.getTaskByNum(taskPkNum);
+    }
+
+    @GetMapping("/task/proj/{projectNum}/user/{userNum}")
+    public List<TaskDto> getTaskByProjectAndUser(@PathVariable("projectNum") int projectNum,
+            @PathVariable("userNum") int userNum) {
+        return taskService.getAllTaskByProjectAndUser(projectNum, userNum);
     }
 
     @GetMapping("/user/{user_pk_num}")
@@ -35,20 +52,78 @@ public class TaskController {
 
     @PutMapping("/update/{task_pk_num}")
     public void updateTask(@RequestBody TaskForm form) {
-        System.out.println("task_pk_num : " + form.getTask_pk_num());
-        System.out.println("task_title : " + form.getTask_title());
         taskService.updateTask(form);
     }
+
     @DeleteMapping("/delete/{task_pk_num}")
     public void deleteTask(@PathVariable int task_pk_num) {
         taskService.deleteTask(task_pk_num);
     }
 
-    @PostMapping("/search")
-    public List<TaskDto> getTaskBySearching(@RequestBody TaskSearchForm form) {
-        return taskService.getTaskBySearching(form.getProjectNum(), form.getSearchType(), form.getSearchValue());
+    @GetMapping("/tasklist/proj/{projectNum}")
+    public ResponseEntity<Map<String, Object>> getTasksByProject(
+            @PathVariable("projectNum") int projectNum,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock,
+            @RequestParam(name = "sortField", defaultValue = "taskCreated") String sortField,
+            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection,
+            @RequestParam(name = "searchText", defaultValue = "") String searchText) {
+        try {
+            int pageSize = 10;
+            int blockSize = 5;
+
+            // 프로젝트 번호를 포함하여 서비스 메서드 호출
+            Page<TaskDto> taskPage = taskService.getListByProject(projectNum, page, pageSize, sortField, sortDirection,
+                    searchText);
+
+            int totalPages = taskPage.getTotalPages();
+            int totalBlocks = (int) Math.ceil((double) totalPages / blockSize);
+            int blockStart = pageBlock * blockSize;
+            int blockEnd = Math.min(blockStart + blockSize, totalPages);
+            boolean hasPreviousBlock = pageBlock > 0;
+            boolean hasNextBlock = pageBlock < totalBlocks - 1;
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("tasks", taskPage.getContent());
+            response.put("currentPage", taskPage.getNumber());
+            response.put("totalItems", taskPage.getTotalElements());
+            response.put("totalPages", totalPages);
+            response.put("currentBlock", pageBlock);
+            response.put("totalBlocks", totalBlocks);
+            response.put("blockStart", blockStart);
+            response.put("blockEnd", blockEnd - 1);
+            response.put("hasPreviousBlock", hasPreviousBlock);
+            response.put("hasNextBlock", hasNextBlock);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 
-}
+    @GetMapping("/task/{taskPkNum}/related")
+    public ResponseEntity<List<TaskDto>> getRelatedTasks(
+            @PathVariable("taskPkNum") int taskPkNum,
+            @RequestParam("taskGroup") int taskGroup,
+            @RequestParam("taskDepth") int taskDepth) {
+        try {
+            List<TaskDto> relatedTasks = taskService.getRelatedTasks(taskPkNum);
+            return new ResponseEntity<>(relatedTasks, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @GetMapping("/task/history/{taskPkNum}")
+    public ResponseEntity<List<TaskHistoryDto>> getTaskHistory(@PathVariable("taskPkNum") int taskPkNum) {
+        try {
+            List<TaskHistoryDto> taskHistory = taskService.getTaskHistoryByTaskNum(taskPkNum);
+            return new ResponseEntity<>(taskHistory, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+}

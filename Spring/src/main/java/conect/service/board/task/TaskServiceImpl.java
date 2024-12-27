@@ -1,12 +1,21 @@
 package conect.service.board.task;
 
+import conect.data.dto.PostDto;
 import conect.data.dto.TaskDto;
+import conect.data.dto.TaskHistoryDto;
+import conect.data.entity.PostEntity;
 import conect.data.entity.TaskEntity;
+import conect.data.entity.TaskHistoryEntity;
 import conect.data.form.TaskForm;
 import conect.data.repository.ProjectRepository;
+import conect.data.repository.TaskHistoryRepository;
 import conect.data.repository.TaskRepository;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +33,19 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private TaskHistoryRepository taskHistoryRepository;
+
     @Override
     public List<TaskDto> getAllTask(int task_fk_proj_num) {
         return taskRepository.getTaskByTaskFkProjNum(task_fk_proj_num).stream()
+                .map(TaskDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskDto> getAllTaskByProjectAndUser(int projectNum, int userNum) {
+        return taskRepository.getTaskByProjectNumAndUserNum(projectNum, userNum).stream()
                 .map(TaskDto::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -41,40 +60,39 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void insertTask(TaskForm form) {
         TaskEntity taskEntity = TaskForm.toEntity(form);
-        taskEntity.setProjectEntity(projectRepository.findById(form.getTask_fk_proj_num()).get());
-        taskEntity.setUserEntity(userRepository.findById(form.getTask_fk_user_num()).get());
+        taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow());
+        taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow());
         taskRepository.save(taskEntity);
     }
 
     @Override
     public void updateTask(TaskForm form) {
-        TaskEntity taskEntity = taskRepository.findById(form.getTask_pk_num()).orElseThrow();
-        taskEntity.setTaskTitle(form.getTask_title());
-        taskEntity.setTaskContent(form.getTask_content());
-        taskEntity.setTaskStartdate(form.getTask_startdate());
-        taskEntity.setTaskDeadline(form.getTask_deadline());
-        taskEntity.setTaskDuration(form.getTask_duration());
-        taskEntity.setTaskProgress(form.getTask_progress());
-        taskEntity.setTaskStatus(form.getTask_status());
-        taskEntity.setTaskPriority(form.getTask_priority());
-        taskEntity.setTaskDepth(form.getTask_depth());
-        taskEntity.setTaskGroup(form.getTask_group());
-        taskEntity.setTaskColor(form.getTask_color());
-        taskEntity.setProjectEntity(projectRepository.findById(form.getTask_fk_proj_num()).get());
-        taskEntity.setUserEntity(userRepository.findById(form.getTask_fk_user_num()).get());
+        TaskEntity taskEntity = taskRepository.findById(form.getTaskPkNum()).orElseThrow();
+        taskEntity.setTaskTitle(form.getTaskTitle());
+        taskEntity.setTaskContent(form.getTaskContent());
+        taskEntity.setTaskStartdate(form.getTaskStartdate());
+        taskEntity.setTaskDeadline(form.getTaskDeadline());
+        taskEntity.setTaskDuration(form.getTaskDuration());
+        taskEntity.setTaskProgress(form.getTaskProgress());
+        taskEntity.setTaskStatus(form.getTaskStatus());
+        taskEntity.setTaskPriority(form.getTaskPriority());
+        taskEntity.setTaskCreated(form.getTaskCreated());
+        taskEntity.setTaskDepth(form.getTaskDepth());
+        taskEntity.setTaskGroup(form.getTaskGroup());
+        taskEntity.setTaskTagcol(form.getTaskTagcol());
+        taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow());
+        taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow());
         taskRepository.save(taskEntity);
     }
 
     @Override
     public void deleteTask(int task_pk_num) {
-
         List<Integer> childlist = taskRepository.findChildTask(task_pk_num);
         if (childlist.size() > 0) {
-            childlist.forEach(taskNum -> {
-                taskRepository.deleteById(taskNum);
-            });
+            childlist.forEach(taskRepository::deleteById);
             taskRepository.deleteById(task_pk_num);
-        } else taskRepository.deleteById(task_pk_num);
+        } else
+            taskRepository.deleteById(task_pk_num);
     }
 
     @Override
@@ -98,4 +116,53 @@ public class TaskServiceImpl implements TaskService {
         }
         return null;
     }
+
+    // 페이징, 정렬, 검색
+    @Override
+    public Page<TaskDto> getListByProject(int projPkNum, int page, int pageSize, String sortField, String sortDirection,
+            String searchText) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+        Page<TaskEntity> taskPage;
+
+        if (searchText != null && !searchText.isEmpty()) {
+            taskPage = taskRepository.findByProjectEntity_ProjPkNumAndTitleOrContent(projPkNum, searchText, pageable);
+        } else {
+            taskPage = taskRepository.findByProjectEntity_ProjPkNum(projPkNum, pageable);
+        }
+
+        return taskPage.map(TaskDto::fromEntity);
+    }
+
+    @Override
+    public TaskDto getTaskByNum(int taskPkNum) {
+        return taskRepository.findById(taskPkNum)
+                .map(TaskDto::fromEntity)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskPkNum));
+    }
+
+    @Override
+    public List<TaskDto> getRelatedTasks(int taskPkNum) {
+        TaskEntity task = taskRepository.findById(taskPkNum).orElseThrow(() -> new RuntimeException("Task not found"));
+        Integer taskGroup = task.getTaskGroup();
+        Integer taskDepth = task.getTaskDepth();
+
+        // 상위 태스크인 경우 하위 태스크를 찾고, 하위 태스크인 경우 상위 태스크를 찾음
+        Integer targetDepth = (taskDepth == 0) ? 1 : 0;
+
+        return taskRepository.findRelatedTasks(taskGroup, targetDepth).stream()
+                .map(TaskDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskHistoryDto> getTaskHistoryByTaskNum(int taskPkNum) {
+        List<TaskHistoryEntity> entities = taskHistoryRepository
+                .findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
+        return entities.stream()
+                .map(TaskHistoryDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 }

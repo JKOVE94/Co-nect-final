@@ -1,13 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-//createSlice를 사용하면 보일러플레이트코드를 생략할 수 있다.
 
-import storage from "redux-persist/lib/storage/session";
-import { persistReducer } from "redux-persist";
-
-//reducer 파일
-//createSlice : 리듀서와 액션을 생성, 초기 상태 정의, 함수 관리, 불변성 관리
+// 리덕스 툴킷의 createSlice를 사용하여 상태 관리
 const ResourceSlice = createSlice({
-  name: "userInfo", //Slice의 이름
+  name: "userData", // Store 설정의 whitelist와 일치하도록 변경
   initialState: {
     //공유자원 정의
     user_pk_num: 0,
@@ -21,7 +16,7 @@ const ResourceSlice = createSlice({
     user_fk_comp_num: 0,
   },
   reducers: {
-    //리듀서 정의, 각 함수는 state와 action을 인자로 받는다.
+    // 로그인 시 상태 업데이트
     LOGIN: (state, action) => {
       state.user_pk_num = action.payload.user_pk_num;
       state.user_id = action.payload.user_id;
@@ -32,7 +27,10 @@ const ResourceSlice = createSlice({
       state.user_author = action.payload.user_author;
       state.user_istemppw = action.payload.user_istemppw;
       state.user_fk_comp_num = action.payload.user_fk_comp_num;
+      state.user_author = action.payload.user_author;
+      state.user_fk_acc_authornum = action.payload. user_fk_acc_authornum;
     },
+    // 로그아웃 시 상태 초기화
     LOGOUT: (state) => {
       state.user_pk_num = 0;
       state.user_id = "";
@@ -43,16 +41,12 @@ const ResourceSlice = createSlice({
       state.user_author = 0;
       state.user_istemppw = 0;
       state.user_fk_comp_num = 0;
+      state.user_author = "";
+      state.user_fk_acc_authornum = "";
     },
   },
 });
 
-const persistConfig = {
-  timeout: 2000, //Set the timeout function to 2 seconds
-  key: "userInfo",
-  storage,
-};
-
-//Action, Reducer 내보내기
-export const { LOGIN, LOGOUT } = ResourceSlice.actions; //slice라는 의미처럼 Action를 각각 쪼개서 보내준다.
-export default persistReducer(persistConfig, ResourceSlice.reducer);
+// Action과 Reducer 내보내기
+export const { LOGIN, LOGOUT } = ResourceSlice.actions;
+export default ResourceSlice.reducer; // persistReducer를 제거하고 기본 reducer를 export

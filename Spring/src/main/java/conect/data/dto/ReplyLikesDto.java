@@ -11,6 +11,7 @@ public class ReplyLikesDto {
     private int user_fk_num; // 사용자 엔티티 번호
     private int reply_fk_num; // 댓글 엔티티 번호
 
+
     public static ReplyLikesDto fromEntity(ReplyLikesEntity replyLikesEntity) {
         ReplyLikesDto replyLikesDto = new ReplyLikesDto();
         replyLikesDto.setReplylike_pk_num(replyLikesEntity.getReplylikePkNum());
@@ -22,7 +23,6 @@ public class ReplyLikesDto {
         if (replyLikesEntity.getReplyEntity() != null) {
             replyLikesDto.setReply_fk_num(replyLikesEntity.getReplyEntity().getReplyPkNum()); // 예시: 댓글 엔티티의 PK 값으로 수정
         }
-
         return replyLikesDto;
     }
 }

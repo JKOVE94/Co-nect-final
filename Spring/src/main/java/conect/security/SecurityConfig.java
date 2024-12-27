@@ -1,59 +1,74 @@
 package conect.security;
 
+import conect.filter.JwtAuthenticationFilter;
+import conect.data.util.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        //명시적으로 Security 구성 - Chain method형식으로 설정 가능
-        // 커스텀 로그인페이지 설정
-        httpSecurity
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/")
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll())
-                .csrf(csrf-> csrf.disable());
+    private final JwtUtil jwtUtil;
+    private final UserSecurityService userSecurityService;
 
-        return httpSecurity.build();
+    public SecurityConfig(JwtUtil jwtUtil, UserSecurityService userSecurityService) {
+        this.jwtUtil = jwtUtil;
+        this.userSecurityService = userSecurityService;
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        //사용자 세부 정보를 관리하는 서비스 정의
-        // UserDetailsService : 유저의 정보를 가져오는 인터페이스. 사용자 세부 정보를 관리하는 서비스 정의
-        // UserDetails : 사용자의 정보를 담는 인터페이스
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("123"))
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user);
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정
+            .csrf(csrf -> csrf.disable()) // CSRF 비활성화
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용
+                .requestMatchers("/login", "/validate-token").permitAll() // 인증 없이 접근 가능 경로
+                .anyRequest().authenticated() // 나머지 요청은 인증 필요
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 관리 설정
+            .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userSecurityService), UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
+
+        return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-production-domain.com","chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff/index.html")); // 허용 도메인 설정
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용 HTTP 메서드 설정
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); // 허용 헤더 설정
+        configuration.setExposedHeaders(Arrays.asList("Authorization")); // 클라이언트에서 접근 가능한 헤더 설정
+        configuration.setAllowCredentials(true); // 쿠키 기반 인증 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager(); // AuthenticationManager 반환
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); //BCrypt 비밀번호 인코더를 사용해 빈을 생성
+        return new BCryptPasswordEncoder(); // 비밀번호 암호화 방식 정의 (BCrypt)
     }
-
 }

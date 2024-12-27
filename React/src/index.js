@@ -14,6 +14,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Dashboard from "layouts/Dashboard";
 import Manage from "layouts/Manage";
 import Login from "layouts/Login";
+import ProjectSelect from "layouts/ProjectSelect";
 import Store from "./Redux/Store";
 import ProjHeaders from "components/2dashboard/Headers/ProjHeaders";
 
@@ -27,6 +28,7 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/ProjSel/:id" element={<ProjectSelect />} />
           <Route path="/main/*" element={<Dashboard />} />
           <Route path="/manage/*" element={<Manage />} />
           <Route path="proj/projread/:id" element={<ProjHeaders />} />

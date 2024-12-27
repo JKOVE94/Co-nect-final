@@ -9,8 +9,6 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 
-
-
 public interface ProjService {
 	List<TaskDto> getAllTask(int task_fk_proj_num);
 
@@ -22,11 +20,13 @@ public interface ProjService {
 	List<ProjectDto> getListAll();
 
 	ProjectDto getProjById(int projPkNum);
-	
+
 	List<ProjectDto> getAllProjects();
-	
+
+	List<ProjectDto> getUserProjectData(int userPkNum);
+
 	// 페이징
-	//public Page<ProjectDto> getList(int page, int pageSize);
+	// public Page<ProjectDto> getList(int page, int pageSize);
 
 	// 프로젝트 생성
 	int addProject(ProjectForm form);

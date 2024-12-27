@@ -1,15 +1,21 @@
 package conect.data.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import conect.data.entity.ShareEntity;
 
-public interface ShareRepository extends JpaRepository<ShareEntity, Integer> {
-	@Modifying
-	@Query("UPDATE ShareEntity s SET s.shareUser = :shareUser WHERE s.todoEntity.todoPkNum = :todoId")
-	void saveByTodo(@Param("shareUser") String shareUser, @Param("todoId") int todoId);
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ShareRepository extends JpaRepository<ShareEntity,Integer> {
+	
+	//로그인한 사용자에게 공유된 todo list 반환
+	List<ShareEntity> findByShareUser(int userNum);
+	
+	//일정에 연결된 공유 엔티티 삭제
+	void deleteByTodoEntity_TodoPkNum(int todoNum);
+	
+	//로그인한 사용자와 일정에 해당하는 엔티티 반환
+	ShareEntity findByShareUserAndTodoEntity_TodoPkNum(int userNum, int todoNum);
+	
 
 }

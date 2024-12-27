@@ -10,5 +10,7 @@ public class CoNectApplication {
     public static void main(String[] args) {
         SpringApplication.run(CoNectApplication.class, args);
     }
+    
+    
 
 }

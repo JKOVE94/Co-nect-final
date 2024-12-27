@@ -1,17 +1,18 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Form, FormControl } from "react-bootstrap";
 import { Mention } from "react-mentions";
 import { MentionsInput } from "react-mentions";
-import { Input } from "reactstrap";
 import style from "../../assets/css/mention.module.css";
+import { useSelector } from "react-redux";
+import axiosInstance from "api/axiosInstance";
 
 const ReactMention = ({ onMention, text, disabled, userList }) => {
   //onMention : 멘션 선택 시 동작, text : placeholder, disabled : boolean값
   //userList : 멘션 렌더링 시 default 값 (문자열)
 
-  const [user, setUser] = useState([]); //전체 사원 목록
+  const compNum = useSelector((state) =>  state.userData.user_fk_comp_num); // 회사번호
+  const [users, setUsers] = useState([]); //전체 사원 목록
   const [data, setData] = useState(""); //멘션 input 입력값
+  const [error, setError] = useState();
 
   useEffect(() => { 
     //최초 렌더링 시 전체 사원 목록 가져오기기
@@ -20,32 +21,29 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
 
   useEffect(() => {
     //userList값을 받은 경우, 멘션 input에 값 입력되어 렌더링
-    //ex) userList : "1,3,5" -> 김일번, 김삼번, 김오번
-
-    if (userList) {
-      const list = userList.split(",");
-      const selectedUsers = list.map((id) => {
-        const userObj = user.find((user) => user.id === parseInt(id));
+    if(userList){
+      const selectedUsers = userList.map((id) => {
+        const userObj = users.find((user) => user.id === parseInt(id));
         return userObj ? `@[${userObj.display}](${id})` : "";
       });
 
       setData(selectedUsers.join(" "));
     }
-  }, [userList, user]);
+     
+  }, [userList, users]);
 
   const getUserData = () => {
-    axios
-      .get("/mention")
+    axiosInstance
+      .get(`/mention/${compNum}`)
       .then((res) => {
         const userData = res.data.map((data) => ({
           id: data.user_pk_num,
-          jik: data.user_rank,
-          buser: data.dpartName,
+          email: data.user_mail,
           display: data.user_name,
         }));
-        setUser(userData);
+        setUsers(userData);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => setError(err));
   };
 
   const handleChange = (e, newValue, newPlainTextValue, mentions) => {
@@ -61,7 +59,7 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
 
   const findById = (search) => {
     //pk num으로 검색 가능
-    return user.filter((user) => {
+    return users.filter((user) => {
       return (
         user.display.includes(search) || user.id.toString().includes(search)
       );
@@ -70,6 +68,7 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
 
   return (
     <div>
+      {users && 
       <MentionsInput
         value={data}
         onChange={handleChange}
@@ -98,15 +97,16 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
             >
               <div>
                 {suggestion.display}
-                <small>({suggestion.id})</small>
               </div>
               <div>
-                {suggestion.buser}/{suggestion.jik}
+                <small>{suggestion.email}</small>
               </div>
             </div>
           )}
         />
       </MentionsInput>
+      }
+      {error && <span style={{color:'red'}}>{error.response.data}</span>}
     </div>
   );
 };

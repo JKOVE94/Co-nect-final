@@ -1,46 +1,32 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useState, useEffect } from "react";
 import "assets/landing/css/login.css";
 import ConectTextLogo from "assets/img/logo/ConectTextLogo";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 import LoginToast from "variables/Toast/LoginToast";
 import { useDispatch } from "react-redux";
 import { LOGIN } from "../Redux/Reducer/userDataReducer";
-import { SET_DPARTINFO } from "../Redux/Reducer/departDataReducer";
-import LoginModal from "variables/Modal/LoginModal";
-
-//이 컴포넌트는 메인 페이지를 세팅하는 컴포넌트입니다.
+import LoginModal from "../variables/Modal/LoginModal";
+import axios from "axios";
 
 const Login = (props) => {
   const dispatch = useDispatch();
-  const [isFirst, setIsFirst] = useState(true); //첫 렌더링 여부
-  const [isSignIn, setIsSignIn] = useState(null); //로그인/문의 토글용
+  const navigate = useNavigate();
+  const [isFirst, setIsFirst] = useState(true);
+  const [isSignIn, setIsSignIn] = useState(null);
   const [loginInfo, setLoginInfo] = useState({
     comp_pk_num: "",
-    user_pk_num: "",
+    user_id: "",
     user_pw: "",
+    user_pk_num: "",
   });
-  const [errType, setErrType] = useState(0); //로그인 실패시 에러타입 설정
-  const [data, setData] = useState({}); //로그인 성공시 데이터 저장
-  const navigate = useNavigate();
+  const [errType, setErrType] = useState(0);
+  const [data, setData] = useState({});
+  const [isReversed, setIsReversed] = useState(false);
+
+  const [showA, setShowA] = useState(false);
+  const [showM, setShowM] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggle = () => {
     setIsSignIn((prev) => !prev);
@@ -52,31 +38,41 @@ const Login = (props) => {
       setIsSignIn(true);
     }, 200);
 
-    // 클린업 함수: 컴포넌트 언마운트 시 타이머 정리
     return () => clearTimeout(timer);
-  }, []); // 빈 배열로 수정
+  }, []);
+
+  useEffect(() => {
+    if (showA) {
+      const timer = setTimeout(() => {
+        setShowA(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showA]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLoginInfo({
-      ...loginInfo,
+    setLoginInfo((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
-  //부트스트랩 토스트 토글용
-  const [showA, setShowA] = useState(false);
   const toggleShowA = () => {
     setShowA(true);
-    setTimeout(() => {
-      setShowA(false);
-    }, 3000);
   };
 
-  //부트스트래  모달 토글용
-  const [showM, setShowM] = useState(false);
-  const handleShowM = () => setShowM(true); //모달을 열어주는 함수
-  const handleCloseM = () => setShowM(false); //모달을 닫는 함수
+  const handleShowM = () => setShowM(true);
+  const handleCloseM = () => setShowM(false);
+
+  const validateInputs = () => {
+    if (!loginInfo.comp_pk_num || !loginInfo.user_id || !loginInfo.user_pw) {
+      setErrType(5);
+      toggleShowA();
+      return false;
+    }
+    return true;
+  };
 
   const login = async (e) => {
     e.preventDefault();
@@ -108,19 +104,67 @@ const Login = (props) => {
         setErrType(res.data.status);
         handleShowM();
 
-        //잠긴계정 => modal로 잠긴계정 안내
+    if (!validateInputs()) return;
+  
+    setIsLoading(true);
+  
+    try {
+      const res = await axios.post("/login", loginInfo);
+      const responseData = res.data;
+      setData(responseData);
+  
+      switch (responseData.status) {
+        case 1: // 로그인 성공
+          sessionStorage.setItem("token", responseData.token);
+          dispatch(
+            LOGIN({
+              user_pk_num: responseData.user_pk_num,
+              user_id: responseData.user_id,
+              user_name: responseData.user_name,
+              user_mail: responseData.user_mail,
+              user_pic: responseData.user_pic,
+              user_fk_comp_num: responseData.user_fk_comp_num,
+              user_author: responseData.user_author,
+            })
+          );
+          setIsReversed(true);
+          setTimeout(() => {
+            navigate(`/ProjSel/${responseData.user_pk_num}`);
+          }, 1000);
+          break;
+        case 2: // 정보 불일치
+          setErrType(2);
+          toggleShowA();
+          break;
+        case 3: // 잠긴 계정
+          setErrType(3);
+          handleShowM();
+          break;
+        default:
+          setErrType(4);
+          toggleShowA();
       }
     } catch (error) {
-      //로그인 실패에 대한 정보도 상태정보에 담겨있기 때문에 해당 에러는 서버와의 연결문제
       console.error("로그인 실패:", error);
+      if (error.response && error.response.status === 403) {
+        // 403 Forbidden 에러 처리 (잠긴 계정)
+        setErrType(3);
+        handleShowM();
+      } else {
+        setErrType(4);
+        toggleShowA();
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <>
       <div
         className={`login-container ${
           isFirst ? "" : isSignIn ? "sign-in" : "sign-up"
-        }`}
+        } ${isReversed ? "reverse" : ""}`}
       >
         <div className="row">
           <div className="col align-items-center flex-col sign-up">
@@ -138,7 +182,6 @@ const Login = (props) => {
           </div>
           <div className="col align-items-center flex-col sign-in">
             <ConectTextLogo />
-            {/* <h3 style={{ color: "#255260" }}>어서오세요. 코난2조 입니다.</h3> */}
             <form onSubmit={(e) => login(e)}>
               <div className="form-wrapper align-items-center">
                 <div className="form sign-in">
@@ -156,10 +199,10 @@ const Login = (props) => {
                   <div className="input-group">
                     <i className="bx bxs-user"></i>
                     <input
-                      type="number"
-                      placeholder="사번"
-                      name="user_pk_num"
-                      value={loginInfo.user_pk_num}
+                      type="text"
+                      placeholder="아이디"
+                      name="user_id"
+                      value={loginInfo.user_id}
                       onChange={(e) => handleChange(e)}
                       required
                     />
@@ -174,10 +217,10 @@ const Login = (props) => {
                       onChange={(e) => handleChange(e)}
                       required
                     />
-                    <button type="submit" className="button">
-                      로그인
-                    </button>
                   </div>
+                  <button type="submit" className="button" disabled={isLoading}>
+                    {isLoading ? "로그인 중..." : "로그인"}
+                  </button>
                   <p>
                     <b onClick={() => toggle()} className="pointer">
                       비밀번호를 잊으셨나요?
@@ -203,12 +246,14 @@ const Login = (props) => {
           </div>
         </div>
       </div>
-      <LoginToast
-        showA={showA}
-        toggleShowA={toggleShowA}
-        type={errType}
-        data={data}
-      />
+      {showA && (
+        <LoginToast
+          showA={showA}
+          toggleShowA={toggleShowA}
+          type={errType}
+          data={data}
+        />
+      )}
       <LoginModal
         handleCloseM={handleCloseM}
         handleShowM={handleShowM}

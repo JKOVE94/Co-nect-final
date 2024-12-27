@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class TodoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int todoPkNum; // 투두리스트 고유 식별자 [PK, INT, INCREMENT]
+    private int todoPkNum; //투두리스트 고유 식별자 [PK, INT, INCREMENT]
     private String todoTitle; // 투두리스트 제목 [VARCHAR]
     private String todoContent; //투두리스트 내용 [VARCHAR]
     private LocalDate todoStartdate; //투두리스트 시작일 [DATETIME]
@@ -35,6 +35,5 @@ public class TodoEntity {
     
     @OneToMany(mappedBy = "todoEntity")
     private List<ShareEntity> shareEntities;
-
 
 }

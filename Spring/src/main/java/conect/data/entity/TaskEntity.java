@@ -29,15 +29,45 @@ public class TaskEntity {
     private String taskColor; // 업무 태그 [VARCHAR]
     private String taskPriority; // 우선순위 [ENUM] (낮음, 보통, 높음)
 
-    @ManyToOne
-    @JoinColumn(name = "task_fk_proj_num")
-    private ProjectEntity projectEntity;
+    @Column(name = "task_title", nullable = false)
+    private String taskTitle;
+
+    @Column(name = "task_content", columnDefinition = "TEXT")
+    private String taskContent;
+
+    @Column(name = "task_startdate")
+    private LocalDate taskStartdate;
+
+    @Column(name = "task_deadline")
+    private LocalDate taskDeadline;
+
+    @Column(name = "task_duration")
+    private Integer taskDuration;
+
+    @Column(name = "task_progress")
+    private Integer taskProgress;
+
+    @Column(name = "task_status")
+    private String taskStatus;
+
+    @Column(name = "task_priority")
+    private String taskPriority;
+
+    @Column(name = "task_created")
+    private LocalDate taskCreated;
+
+    @Column(name = "task_depth")
+    private Integer taskDepth;
+
+    @Column(name = "task_group")
+    private Integer taskGroup;
+
+    @Column(name = "task_tagcol")
+    private String taskTagcol;
 
     @ManyToOne
     @JoinColumn(name = "task_fk_user_num")
     private UserEntity userEntity;
-
-
 
     @OneToMany(mappedBy = "taskEntity", orphanRemoval = true)
     private List<TaskhistoryEntity> taskhistoryEntities;

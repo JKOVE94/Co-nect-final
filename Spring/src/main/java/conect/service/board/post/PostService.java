@@ -27,7 +27,7 @@ public interface PostService {
 	// 삭제
 	void deletePost(int postPkNum);
 
-	// 페이징
+	// 페이징 
 	public Page<PostDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
 
 }
