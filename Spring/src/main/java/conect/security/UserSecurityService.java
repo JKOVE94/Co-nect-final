@@ -30,7 +30,25 @@ public class UserSecurityService implements UserDetailsService {
                 user.getUserPkNum(),
                 user.getUserPw(),
                 !user.getUserLocked(),
-                Collections.singletonList(authority)
+                Collections.singletonList(authority),
+                user.getRefreshToken()
+        );
+    }
+
+    public UserDetails loadUserByRefreshToken(String refreshToken) {
+        UserEntity user = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with refresh token"));
+
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getUserAuthor());
+
+        return new UserSecurityDetails(
+                String.valueOf(user.getCompanyEntity().getCompPkNum()),
+                user.getUserId(),
+                user.getUserPkNum(),
+                user.getUserPw(),
+                !user.getUserLocked(),
+                Collections.singletonList(authority),
+                refreshToken
         );
     }
 }
