@@ -35,6 +35,9 @@
 .sub{
   font-size : 0.8rem;
 }
+.badge:hover{
+  cursor: pointer;
+}
 /*share schedule*/
 .ul{
   list-style-type: none;

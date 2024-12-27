@@ -44,7 +44,7 @@ const MySchedule = ({ events }) => {
     <>
       <Card.Title className={style.title}>오늘의 일정</Card.Title>
       <Card.Body className="d-flex align-items-center justify-content-center">
-      <Col md={1} style={{padding:'0', color:'white'}}><Badge bg="secondary" onClick={handlePrev}>{index>0?"<":""}</Badge></Col>
+      <Col md={1} style={{padding:'0', color:'white'}}><Badge bg="secondary" className={style.badge} onClick={handlePrev}>{index>0?"<":""}</Badge></Col>
         {todoList.length === 0 ? (
           <Card.Subtitle className={style.scheduleSub}>오늘의 일정이 없습니다.</Card.Subtitle>
         ) : (
@@ -73,7 +73,7 @@ const MySchedule = ({ events }) => {
           </Carousel>
           </Col>
         )}
-        <Col md={1} style={{padding:'0', color:'white'}} ><Badge big bg="secondary" onClick={handleNext}>{index<todoList.length-1?">":""}</Badge></Col>
+        <Col md={1} style={{padding:'0', color:'white'}} ><Badge big bg="secondary" className={style.badge} onClick={handleNext}>{index<todoList.length-1?">":""}</Badge></Col>
       </Card.Body>
     </>
   );
