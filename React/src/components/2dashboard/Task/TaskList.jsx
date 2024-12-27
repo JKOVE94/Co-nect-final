@@ -15,7 +15,7 @@ import {
   Col,
 } from "reactstrap";
 
-const TaskList = () => {
+const TaskList = (props) => {
   const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
   const info = JSON.parse(sessionStorage.getItem("persist:root"));
   const projInfo = info.projData.proj_pk_num;
@@ -30,7 +30,7 @@ const TaskList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
-  const { projectNum } = useParams();
+  // const { projectNum } = useParams();
 
   const fetchTasks = useCallback(
     (page, block, sortField, sortDirection) => {
@@ -45,7 +45,7 @@ const TaskList = () => {
       setError(null);
       axiosInstance
         .get(
-          `/conect/${compNum}/task/tasklist/proj/${projectNum}?page=${
+          `/conect/${compNum}/task/tasklist/proj/${props.projPkNum}?page=${
             page - 1
           }&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchText=${searchText}`
         )
@@ -66,15 +66,15 @@ const TaskList = () => {
           setLoading(false);
         });
     },
-    [projectNum, searchText]
+    [props.projPkNum, searchText, props.projectNum]
   );
 
   useEffect(() => {
-    // console.log("useEffect 실행, projectNum:", projectNum);
-    if (projectNum) {
+    console.log("useEffect 실행, projectNum:", props.projPkNum);
+    if (props.projPkNum) {
       fetchTasks(1, 0, sortField, sortDirection);
     }
-  }, [projectNum, sortField, sortDirection, fetchTasks]);
+  }, [props.projPkNum, sortField, sortDirection, fetchTasks]);
 
   const pagesPerBlock = 5;
   const startPageOfBlock = pageBlock * pagesPerBlock + 1;

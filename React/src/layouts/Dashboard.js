@@ -24,6 +24,7 @@ import TaskList from "components/2dashboard/Task/TaskList";
 import TaskDetail from "components/2dashboard/Task/TaskDetail";
 import RecHome from "components/2dashboard/recommendation/RecHome";
 import TaskCreate from "components/2dashboard/Task/TaskCreate";
+import TaskHome from "components/2dashboard/Task/TaskHome";
 
 
 const Dashboard = (props) => {
@@ -126,9 +127,7 @@ const Dashboard = (props) => {
           <Route path="/" element={<MainComponent projPkNum={projPkNum}/>} />
           <Route path="/proj/projread/:id" element={<ProjStatus projPkNum={projPkNum}/>} />
           <Route path="/proj/*" element={<ProjectHome projPkNum={projPkNum}/>} />
-          <Route path="/task/:projectNum" element={<TaskList projPkNum={projPkNum}/>} />
-          <Route path="/task/detail/:taskPkNum" element={<TaskDetail projPkNum={projPkNum}/>} />
-          <Route path="/task/create" element={<TaskCreate projPkNum={projPkNum}/>} />
+          <Route path="/task/*" element={<TaskHome projPkNum={projPkNum}/>} />
           <Route path="/projfavorite" element={<ProjFavorite projPkNum={projPkNum}/>} />
           <Route path="/freefavorite" element={<FreeFavorite projPkNum={projPkNum}/>} />
           <Route path="/function" element={<Function projPkNum={projPkNum}/>} />

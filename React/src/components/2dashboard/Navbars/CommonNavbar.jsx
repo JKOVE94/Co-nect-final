@@ -62,18 +62,23 @@ const CommonNavbar = (props) => {
               </NavLink>
             </NavItem>
           </SubMenu>
+          */}
           <SubMenu
             label="프로젝트"
             icon={
               <i className="fa fa-briefcase text-info text-sm opacity-10" />
             }
+            defaultOpen={true}
           >
             <NavItem>
-              <NavLink to="/main/proj/projlist" tag={NavLinkRRD}>
-                프로젝트 목록
+              <NavLink to={`/main/task/${proj}`} tag={NavLinkRRD}>
+                업무 목록
+              </NavLink>
+              <NavLink to={`/main/task/${proj}`} tag={NavLinkRRD}>
+                간트차트
               </NavLink>
             </NavItem>
-          </SubMenu> */}
+          </SubMenu>
           <SubMenu
             label="게시판"
             icon={
