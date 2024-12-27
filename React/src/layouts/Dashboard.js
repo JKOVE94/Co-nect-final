@@ -17,6 +17,9 @@ import axiosInstance from "../api/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT } from "../Redux/Reducer/userDataReducer";
 import TaskList from "components/2dashboard/Task/TaskList";
+import TaskCreate from "../components/2dashboard/Task/TaskCreate";
+import TaskEdit from "../components/2dashboard/Task/TaskEdit";
+import TaskDetail from "../components/2dashboard/Task/TaskDetail";
 
 const Dashboard = (props) => {
   const mainContent = useRef(null);
@@ -98,31 +101,35 @@ const Dashboard = (props) => {
   }
 
   return (
-    <>
-      <Sidebar
-        {...props}
-        routes={routes}
-        logo={{
-          innerLink: "/admin/index",
-          imgSrc: require("../assets/img/brand/argon-react.png"),
-          imgAlt: "...",
-        }}
-      />
-      <div className="main-content" ref={mainContent}>
-        {!isProjReadPath && <Navbar />}
-        {isProjReadPath ? <BinHeader /> : <Header />}
-        <Routes>
-          <Route path="/" element={<MainComponent />} />
-          <Route path="/proj/projread/:id" element={<ProjStatus />} />
-          <Route path="/proj/*" element={<ProjectHome />} />
-          <Route path="/task/:projectNum" element={<TaskList />} />
-          <Route path="/projfavorite" element={<ProjFavorite />} />
-          <Route path="/freefavorite" element={<FreeFavorite />} />
-          <Route path="/function" element={<Function />} />
-          <Route path="/err" element={<ErrPage />} />
-        </Routes>
-      </div>
-    </>
+      <>
+        <Sidebar
+            {...props}
+            routes={routes}
+            logo={{
+              innerLink: "/admin/index",
+              imgSrc: require("../assets/img/brand/argon-react.png"),
+              imgAlt: "...",
+            }}
+        />
+        <div className="main-content" ref={mainContent}>
+          {!isProjReadPath && <Navbar />}
+          {isProjReadPath ? <BinHeader /> : <Header />}
+          <Routes>
+            <Route path="/" element={<MainComponent />} />
+            <Route path="/proj/projread/:id" element={<ProjStatus />} />
+            <Route path="/proj/*" element={<ProjectHome />} />
+            <Route path="/task/:projectNum" element={<TaskList />} />
+            <Route path="/taskcreate/:projectNum" element={<TaskCreate />} />
+            <Route path="/main/task/tasklist/:projectNum" element={<TaskList />} />
+            <Route path="/taskedit/:projectNum/:taskId" element={<TaskEdit />} />
+            <Route path="/task/detail/:taskPkNum" element={<TaskDetail />} />
+            <Route path="/projfavorite" element={<ProjFavorite />} />
+            <Route path="/freefavorite" element={<FreeFavorite />} />
+            <Route path="/function" element={<Function />} />
+            <Route path="/err" element={<ErrPage />} />
+          </Routes>
+        </div>
+      </>
   );
 };
 
