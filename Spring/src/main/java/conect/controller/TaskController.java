@@ -69,24 +69,24 @@ public class TaskController {
         taskService.updateTask(form);
     }
    
-//    @DeleteMapping("/task/delete/{task_pk_num}")
-//    public void deleteTask(@PathVariable int task_pk_num) {
-//        taskService.deleteTask(task_pk_num);
-//    }
-   
     @DeleteMapping("/task/delete/{task_pk_num}")
-    public ResponseEntity<?> deleteTask(@PathVariable("task_pk_num") int task_pk_num) {
-        try {
-            taskService.deleteTask(task_pk_num); // 내부에서 권한 검사 수행
-            return ResponseEntity.noContent().build();
-        } catch (AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("태스크를 찾을 수 없습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
-        }
+    public void deleteTask(@PathVariable("task_pk_num") int task_pk_num) {
+        taskService.deleteTask(task_pk_num);
     }
+   
+    // @DeleteMapping("/task/delete/{task_pk_num}")
+    // public ResponseEntity<?> deleteTask(@PathVariable("task_pk_num") int task_pk_num) {
+    //     try {
+    //         taskService.deleteTask(task_pk_num); // 내부에서 권한 검사 수행
+    //         return ResponseEntity.noContent().build();
+    //     } catch (AccessDeniedException e) {
+    //         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
+    //     } catch (NoSuchElementException e) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("태스크를 찾을 수 없습니다.");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류 발생");
+    //     }
+    // }
    
     
     
