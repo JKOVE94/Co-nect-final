@@ -24,6 +24,7 @@ public class WikiForm {
     private MultipartFile fileInput;
     private String file_name; // 파일명 추가
     private String file_path; // 파일 경로
+    private String fileStatus;
     
     public static WikiEntity toEntity(WikiForm form) {
         WikiEntity entity = new WikiEntity();

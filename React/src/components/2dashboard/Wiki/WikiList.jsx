@@ -1,8 +1,8 @@
-import axios from "axios"; // Axios를 사용하여 HTTP 요청을 보냄
+import axios from "axios";
 import React, { useState, useEffect } from "react"; // React 훅 사용
-import { Link, useNavigate } from "react-router-dom"; // React Router의 Link와 useNavigate 사용
+import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅을 위한 라이브러리
-import { Card, CardBody, CardHeader, Container } from "reactstrap"; // 부트스트랩 스타일링을 위한 컴포넌트
+import { Card, CardBody, CardHeader, Container } from "reactstrap";
 
 const WikiList = () => {
   // 상태 정의
@@ -15,12 +15,21 @@ const WikiList = () => {
   const [sortDirection, setSortDirection] = useState("DESC"); // 정렬 방향 (기본값: 내림차순)
   const [searchType, setSearchType] = useState(""); // 검색 분류 (제목, 작성자)
   const [searchText, setSearchText] = useState(""); // 검색어
-
-  const navigate = useNavigate(); // 페이지 이동을 위한 navigate 훅
+  const compPkNum = 1;
+  const navigate = useNavigate(); 
 
   // 게시글 데이터를 가져오는 함수
-  const fetchWikis = (page,block,sortField,sortDirection,searchType,searchText) => {
-    axios.get(`/wiki/wikilist?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchType=${searchType}&searchText=${searchText}`,
+  const fetchWikis = (
+    page,
+    block,
+    sortField,
+    sortDirection,
+    searchType,
+    searchText
+  ) => {
+    axios
+      .get(
+        `/${compPkNum}/wiki/wikilist?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchType=${searchType}&searchText=${searchText}`
       )
       .then((res) => {
         console.log(res.data);

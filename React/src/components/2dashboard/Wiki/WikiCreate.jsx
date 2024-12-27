@@ -27,6 +27,7 @@ const WikiCreate = () => {
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
   const [modalMessage, setModalMessage] = useState(""); // 모달 메시지 상태 추가
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 목록 이동 확인 모달 상태
+  const compPkNum = 1; // 테스트 compNum
 
   // 프로젝트 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
@@ -90,7 +91,8 @@ const WikiCreate = () => {
     setFormData((prevData) => ({
       ...prevData,
       fileInput: null,
-    }));
+    })
+    );
     setFileName("");
   };
 
@@ -113,15 +115,14 @@ const WikiCreate = () => {
 
     try {
       // 문서와 선택적 파일 데이터를 함께 서버에 전송
-      const response = await axios.post("/wiki/wikiadd", formData, {
+      const response = await axios.post(`/${compPkNum}/wiki/wikiadd`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       // 서버로부터 반환된 wikiPkNum으로 상세 페이지 이동
       const wikiPkNum = response.data; // 서버 응답에서 문서 ID 추출
-      alert("문서 등록 성공");
-
+      
       // 상세 페이지로 이동
       navigate(`/main/wiki/wikidetail/${wikiPkNum}`, {
         state: { actionType: "create" },
@@ -370,7 +371,7 @@ const WikiCreate = () => {
         <ModalBody style={{ textAlign: "center" }}>{modalMessage}</ModalBody>
 
         <ModalFooter style={{ justifyContent: "center" }}>
-          <Button color="primary" onClick={() => setShowModal(false)}>
+          <Button color="secondary" onClick={() => setShowModal(false)}>
             닫기
           </Button>
         </ModalFooter>

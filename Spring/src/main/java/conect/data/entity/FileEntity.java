@@ -1,5 +1,7 @@
 package conect.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +19,8 @@ public class FileEntity {
     private int fileSize; //파일 크기 [INT]
     private String fileType; //파일 타입 [VARCHAR]
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JsonBackReference
     @JoinColumn(name = "file_fk_wiki_num")
     private WikiEntity wikiEntity;
 

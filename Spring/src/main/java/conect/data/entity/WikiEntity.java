@@ -5,12 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Setter
@@ -29,7 +25,8 @@ public class WikiEntity {
     private int wikiView; //조회수 [INT]
     private boolean wikiBoardtype; //게시판 종류 [INT] (1, 2)
 
-    @OneToOne(mappedBy = "wikiEntity")
+    @OneToOne(mappedBy = "wikiEntity", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JsonBackReference
     private FileEntity fileEntity;
 
     @ManyToOne

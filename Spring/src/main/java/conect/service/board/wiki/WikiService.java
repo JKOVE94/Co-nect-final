@@ -1,33 +1,37 @@
 package conect.service.board.wiki;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.WikiDto;
-import conect.data.entity.FileEntity;
 import conect.data.entity.WikiEntity;
 import conect.data.form.WikiForm;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface WikiService {
 
-	String saveFile(WikiForm form) throws IOException;
+	String saveFile(WikiForm form) throws Exception;
+
+	// 전체 목록 불러오기
+	List<WikiDto> getListAll();
 	
 	// 페이징, 정렬, 검색
 	Page<WikiDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
 	
-	WikiDto getWikiById(int wikiPkNum);
+	WikiDto getPostView(Integer wikiPkNum, HttpServletRequest request, HttpServletResponse response);
 	
 	// 문서 생성
-	int addWiki(WikiForm form) throws Exception;
+	int addWiki(WikiForm form)  throws Exception ;
 
 	// 문서 수정
-	void editWiki(int filePkNum, MultipartFile file, int wikiPkNum, WikiForm form) throws Exception;
+	void editWiki(int wikiPkNum, WikiForm form) throws Exception;
 	
-	void deleteFile(FileEntity fileEntity);
+	//void handleFileOperations(WikiForm form, WikiEntity savedEntity) throws Exception;
 	
-	//void deleteWiki(int wikiPkNum);
+	void deleteFile(int filePkNum);
+	
+	void deleteWiki(int wikiPkNum);
 
 }

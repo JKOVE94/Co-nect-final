@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Modal, ModalBody, ModalFooter } from "react-bootstrap";
+import { Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useNavigate, useParams } from "react-router";
 import {
   Input,
@@ -20,7 +20,8 @@ const WikiUpdate = () => {
   const { wikiPkNum } = useParams();
   const [showModal, setShowModal] = useState(false); 
   const [modalMessage, setModalMessage] = useState(""); 
-
+  const [showConfirmModal, setShowConfirmModal] = useState(false); // 목록 이동 확인 모달 상태
+  const compPkNum = 1;
   const [formData, setFormData] = useState({
     wiki_title: "", 
     wiki_fk_proj_num: "", 
@@ -42,7 +43,7 @@ const WikiUpdate = () => {
   useEffect(() => {
     const fetchWikiData = async () => {
       try {
-        const response = await axios.get(`/wiki/wikidetail/${wikiPkNum}`);
+        const response = await axios.get(`/${compPkNum}/wiki/wikidetail/${wikiPkNum}`);
         const wikiData = response.data;
 
         const regdate = new Date(wikiData.wiki_regdate)
@@ -97,19 +98,22 @@ const WikiUpdate = () => {
     }
   };
 
-  // 파일 제거 핸들러
   const handleFileRemove = () => {
+    // 실제 삭제 API 호출하지 않고, 상태만 업데이트
     setFileState({
       originalFile: null,
       newFile: null,
-      fileName: ""
+      fileName: "",
+      filePath: "",
     });
+  
     setFormData(prev => ({
       ...prev,
       fileInput: null,
-      fileName: ""
+      fileName: "",
+      fileStatus: "DELETE"
     }));
-
+  
     // 파일 input 초기화
     const fileInput = document.getElementById("fileInput");
     if (fileInput) {
@@ -120,7 +124,7 @@ const WikiUpdate = () => {
   // 파일 선택 시 처리 (모달 표시)
   const handleFileClick = () => {
     if (fileState.fileName) {
-      setModalMessage(`이미 선택된 파일이 있습니다. 한 개의 파일만 선택해주세요.`);
+      setModalMessage(`등록된 파일이 있습니다. 한 개의 파일만 선택해주세요.`);
       setShowModal(true);
     } else {
       document.getElementById("fileInput").click(); // 파일 선택 창 열기
@@ -131,23 +135,30 @@ const WikiUpdate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
+    
     // 기본 폼 데이터 추가
     Object.keys(formData).forEach(key => {
       if (key !== 'fileInput' && key !== 'fileName') {
         data.append(key, formData[key] !== null ? String(formData[key]) : "");
       }
     });
-    // 파일 관련 데이터 추가
-    if (fileState.newFile) {
-      data.append('fileInput', fileState.newFile);
-      data.append('fileName', fileState.fileName);
-    } else if (fileState.originalFile) {
-      data.append('originalFileName', fileState.originalFile);
-    }
-    // 파일 삭제 여부 플래그 추가
-    data.append('fileDeleted', (!fileState.newFile && !fileState.originalFile) ? 'true' : 'false');
+  
+   // 파일 처리 상태
+  if (fileState.newFile) {
+    // 새 파일 업로드
+    data.append('fileInput', fileState.newFile);
+    data.append('fileStatus', 'REPLACE');
+  } else if (fileState.originalFile && fileState.fileName) {
+    // 기존 파일 유지
+    data.append('fileStatus', 'KEEP');
+    data.append('originalFileName', fileState.originalFile);
+  } else {
+    // 파일 삭제
+    data.append('fileStatus', 'DELETE');
+  }
+  
     try {
-      const response = await axios.put(`/wiki/wikiedit/${wikiPkNum}`, data, {
+      const response = await axios.put(`/${compPkNum}/wiki/wikiedit/${wikiPkNum}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -160,8 +171,20 @@ const WikiUpdate = () => {
     }
   };
 
-  const handleCancel = () => {
-    navigate("/main/wiki/wikilist");
+  // 목록 버튼 클릭 시 모달 표시
+  const handleListClick = () => {
+    setShowConfirmModal(true); // 목록 이동 확인 모달 열기
+  };
+
+  // 모달에서 확인 버튼 클릭 시 목록으로 이동
+  const handleConfirmList = () => {
+    setShowConfirmModal(false); // 모달 닫기
+    navigate("/main/wiki/wikilist"); // 목록 페이지로 이동
+  };
+
+  // 모달에서 취소 버튼 클릭 시 모달 닫기
+  const handleCancelList = () => {
+    setShowConfirmModal(false);
   };
 
   return (
@@ -238,7 +261,7 @@ const WikiUpdate = () => {
               </p>
             )}
             {!fileState.fileName && (
-              <p style={{ fontSize: "12px", color: "#888", textAlign: "right"}}>
+              <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
                 (한 번에 하나의 파일만 업로드할 수 있습니다.<br />
                 여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
               </p>
@@ -249,38 +272,63 @@ const WikiUpdate = () => {
                   수정
                 </Button>
               </Col>
-              <Col sm={1.5} className="text-center">
-                <Button style={{ backgroundColor: "#696969", borderColor: "#696969", color: "white" }} block onClick={handleCancel}>
+              <Col
+                sm={1.5}
+                className="text-center"
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
+                <Button
+                  style={{
+                    backgroundColor: "#696969",
+                    borderColor: "#696969",
+                    color: "white",
+                  }}
+                  block
+                  onClick={handleListClick}
+                >
                   목록
                 </Button>
               </Col>
+              {/* 목록 이동 확인 모달 */}
+              <Modal
+                isOpen={showConfirmModal}
+                toggle={() => setShowConfirmModal(false)}
+                style={{
+                  maxWidth: "500px",
+                  margin: "auto", // 자동으로 중앙 정렬
+                  top: "35%", // Modal을 화면 중앙에서 적당히 아래로 위치
+                }}
+              >
+                <ModalBody style={{ textAlign: "center" }}>
+                  작업 중인 내용이 사라집니다. <br />
+                  그래도 목록으로 이동하시겠습니까?
+                </ModalBody>
+                <ModalFooter style={{ justifyContent: "center" }}>
+                  <Button color="primary" onClick={handleConfirmList}>
+                    확인
+                  </Button>
+                  <Button color="danger" onClick={handleCancelList}>
+                    취소
+                  </Button>
+                </ModalFooter>
+              </Modal>
             </Row>
           </div>
         </form>
       </CardBody>
 
-      {/* 모달 컴포넌트 수정 */}
-      <Modal
-  show={showModal}
-  onHide={() => setShowModal(false)}
-  style={{
-    position: "fixed", // fixed 위치 지정 (스크롤에 영향을 받지 않음)
-    top: "80%", // 화면 상단에서 50% 위치
-    left: "50%", // 화면 왼쪽에서 50% 위치
-    transform: "translate(-50%, -50%)", // 정확한 중앙 정렬
-    width: "100%", // 너비를 100%로 설정하여 중앙에서 크기 지정
-    zIndex: 1050, // 모달이 다른 콘텐츠 위에 보이도록 설정
-  }}
->
-  <Modal.Body style={{ textAlign: "center" }}>
-    {modalMessage}
-  </Modal.Body>
-  <Modal.Footer style={{ justifyContent: "center" }}>
-    <Button variant="primary" onClick={() => setShowModal(false)}>
-      닫기
-    </Button>
-  </Modal.Footer>
-</Modal>
+      <Modal isOpen={showModal} onHide={() => setShowModal(false)} style={{
+          maxWidth: "500px",
+          margin: "auto", 
+          top: "35%", 
+        }}>
+        <ModalBody style={{ textAlign: "center" }}>{modalMessage}</ModalBody>
+        <ModalFooter style={{ justifyContent: "center" }}>
+          <Button variant="primary" onClick={() => setShowModal(false)}>
+            닫기
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Card>
   );
 };
