@@ -48,13 +48,12 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast, handleError 
     e.preventDefault();
     if(!e.target.checkValidity()){
       return;
-    } else {
-      if(data.todo_category === null || !data.todo_category){
-        setData({...data, todo_category:'기타'});
-      }
+    }
+    if(data.todo_category == null){
+      setData({...data, todo_category:'기타'});
     }
 
-    //handleClick();
+    handleClick();
   }
 
   const handleCheck = (e) => {
