@@ -48,8 +48,13 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast, handleError 
     e.preventDefault();
     if(!e.target.checkValidity()){
       return;
+    } else {
+      if(data.todo_category === null || !data.todo_category){
+        setData({...data, todo_category:'기타'});
+      }
     }
-    handleClick();
+
+    //handleClick();
   }
 
   const handleCheck = (e) => {
@@ -132,7 +137,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast, handleError 
         </Form.Group>
         <Form.Group className="mb-2 d-flex justify-content-start align-items-center">
           <Form.Label>종일</Form.Label>
-          <input type="checkbox" onClick={handleCheck} checked={allDay} className={style.check}/>
+          <input type="checkbox" onClick={handleCheck} className={style.check}/>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>카테고리</Form.Label>
