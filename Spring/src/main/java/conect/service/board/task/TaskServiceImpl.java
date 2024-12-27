@@ -2,6 +2,7 @@ package conect.service.board.task;
 
 import conect.data.dto.PostDto;
 import conect.data.dto.TaskDto;
+import conect.data.dto.UserDto;
 import conect.data.entity.PostEntity;
 import conect.data.entity.TaskEntity;
 import conect.data.form.TaskForm;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,13 +53,25 @@ public class TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }
 
+    
     @Override
     public void insertTask(TaskForm form) {
         TaskEntity taskEntity = TaskForm.toEntity(form);
-        taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow());
-        taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow());
+        taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow(() -> new RuntimeException("Project not found")));
+        taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow(() -> new RuntimeException("User not found")));
+
+        // taskCreated 설정 (현재 날짜로)
+        taskEntity.setTaskCreated(LocalDate.now());
+
+        // taskDepth 설정 (기본값 0)
+        taskEntity.setTaskDepth(0);
+
         taskRepository.save(taskEntity);
     }
+    
+
+    
+    
 
     @Override
     public void updateTask(TaskForm form) {
@@ -89,6 +103,10 @@ public class TaskServiceImpl implements TaskService {
         else taskRepository.deleteById(task_pk_num);
     }
     
+    
+    
+    
+    
  // 페이징, 정렬, 검색
     @Override
     public Page<TaskDto> getListByProject(int projPkNum, int page, int pageSize, String sortField, String sortDirection, String searchText) {
@@ -105,6 +123,28 @@ public class TaskServiceImpl implements TaskService {
 
         return taskPage.map(TaskDto::fromEntity);
     }
+    
+    @Override
+    public TaskDto getTaskByNum(int taskPkNum) {
+        return taskRepository.findById(taskPkNum)
+                .map(TaskDto::fromEntity)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskPkNum));
+    }
+    
+    @Override
+    public List<TaskDto> getRelatedTasks(int taskPkNum) {
+        TaskEntity task = taskRepository.findById(taskPkNum).orElseThrow(() -> new RuntimeException("Task not found"));
+        Integer taskGroup = task.getTaskGroup();
+        Integer taskDepth = task.getTaskDepth();
+        
+        // 상위 태스크인 경우 하위 태스크를 찾고, 하위 태스크인 경우 상위 태스크를 찾음
+        Integer targetDepth = (taskDepth == 0) ? 1 : 0;
+        
+        return taskRepository.findRelatedTasks(taskGroup, targetDepth).stream()
+                .map(TaskDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 
 
 
