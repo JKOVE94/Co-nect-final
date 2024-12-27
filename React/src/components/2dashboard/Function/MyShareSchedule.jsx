@@ -15,7 +15,7 @@ const MyShareSchedule = ({ events }) => {
   const [modalContent, setModalContent] = useState({}); //modal 내용
 
   useEffect(()=>{
-    const shareData = events.filter((event) => event.sharer !== num && moment(event.end).endOf("day") > moment(new Date()).endOf("day"));
+    const shareData = events.filter((event) => event.sharer !== num && moment(event.end).endOf("day") >= moment(new Date()).endOf("day"));
     setData(shareData);
   },[events, num])
 
