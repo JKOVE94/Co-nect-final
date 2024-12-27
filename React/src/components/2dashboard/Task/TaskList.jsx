@@ -134,7 +134,7 @@ const TaskList = () => {
 
 
   const handleEditTask = (taskId) => {
-    navigate(`/main/taskedit/`); // projectNum 추가
+    navigate(`/main/taskedit/${projectNum}/${taskId}`);
   };
 
   const handleDeleteClick = (taskId) => {
@@ -144,10 +144,11 @@ const TaskList = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axiosInstance.delete(`/board/task/${selectedTaskId}`);
+
+      await axiosInstance.delete(`/board/task/delete/${selectedTaskId}`);
+
       setDeleteModal(false);
       setSelectedTaskId(null);
-      // Refresh the task list
       fetchTasks(currentPage, pageBlock, sortField, sortDirection);
     } catch (error) {
       console.error("Delete task error:", error);
@@ -161,7 +162,7 @@ const TaskList = () => {
   };
 
   const handleCreateTask = () => {
-    navigate(`/main/taskcreate`);
+    navigate(`/main/taskcreate/${projectNum}`);
   };
 
   return (
@@ -251,7 +252,7 @@ const TaskList = () => {
                                   </DropdownToggle>
                                   <DropdownMenu right>
                                     <DropdownItem
-                                        onClick={() => handleEditTask(task.taskId)}
+                                        onClick={() => handleEditTask(task.taskPkNum)}
                                     >
                                       수정
                                     </DropdownItem>
