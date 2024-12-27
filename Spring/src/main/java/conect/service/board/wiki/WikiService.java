@@ -34,4 +34,6 @@ public interface WikiService {
 	
 	void deleteWiki(int wikiPkNum);
 
+	int addWikiEntity(String wikiTitle, String wikiContent, Integer userNum, Integer projNum, boolean wikiNotice);
+
 }

@@ -36,6 +36,7 @@ import com.google.cloud.storage.StorageOptions;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -379,6 +380,21 @@ public class WikiServiceImpl implements WikiService {
 		} catch (RuntimeException e) {
 			System.out.println("문서 삭제 중 오류 발생: " + e.getMessage());
 		}
+	}
+	@Override
+	public int addWikiEntity(String wikiTitle, String wikiContent, Integer userNum, Integer projNum, boolean wikiNotice) {
+		// WikiEntity 저장
+		WikiEntity wikiEntity = new WikiEntity();
+		wikiEntity.setWikiTitle(wikiTitle);
+		wikiEntity.setWikiContent(wikiContent);
+		wikiEntity.setWikiBoardtype(false);  // false로 설정 (파일 게시판)
+		wikiEntity.setWikiView(0); // 초기 조회수
+		wikiEntity.setWikiRegdate(LocalDate.now()); // 작성일
+		wikiEntity.setUserEntity(userRepository.findById(userNum).get());
+		wikiEntity.setProjectEntity(projRepository.findById(projNum).get());
+		wikiEntity.setWikiIsnotice(wikiNotice);
+
+		return wrepository.save(wikiEntity).getWikiPkNum();
 	}
 
 }
