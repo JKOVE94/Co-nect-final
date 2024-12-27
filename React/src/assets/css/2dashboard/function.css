@@ -18,21 +18,11 @@
     color : black;
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-  color: black;
-  font-size: 20px; 
-  font-weight: bold;
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  color: darkgray;
-}
-
 .fc-scrollgrid-section {
   position: sticky; /* 헤더를 고정 */
   top: 0;
   z-index: 10; /* 헤더가 스크롤 콘텐츠 위로 올라오도록 설정 */
   background: white; /* 헤더 배경색 */
 }
+
+
