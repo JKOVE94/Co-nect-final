@@ -7,29 +7,53 @@ import { Container } from "react-bootstrap";
 import Error from "./Error";
 import { useState } from "react";
 
-const RecHome = () => {
-
+const RecHome = (props) => {
   //에러
   const [error, setError] = useState();
   const [errorIsOpen, setErrorIsOpen] = useState(false);
-  
-  const handleError = (error, errorIsOpen)=>{
+
+  const handleError = (error, errorIsOpen) => {
     setError(error);
     setErrorIsOpen(errorIsOpen);
-  }
+  };
 
-  return(
-    <Container fluid style={{ marginTop: "1em", overflowY:"auto", height:"80vh" }}>
+  return (
+    <Container
+      fluid
+      style={{ marginTop: "1em", overflowY: "auto", height: "80vh" }}
+    >
       <Routes>
-        <Route path="/" element={<RecList handleError={handleError}/>} />
-        <Route path="/create" element={<RecCreate handleError={handleError}/>} />
-        <Route path="/detail/:recPkNum" element={<RecDetail handleError={handleError}/>} />
-        <Route path="/update/:recPkNum" element={<RecUpdate handleError={handleError}/>} />
+        <Route
+          path="/"
+          element={
+            <RecList handleError={handleError} projPkNum={props.projPkNum} />
+          }
+        />
+        <Route
+          path="/create"
+          element={
+            <RecCreate handleError={handleError} projPkNum={props.projPkNum} />
+          }
+        />
+        <Route
+          path="/detail/:recPkNum"
+          element={
+            <RecDetail handleError={handleError} projPkNum={props.projPkNum} />
+          }
+        />
+        <Route
+          path="/update/:recPkNum"
+          element={<RecUpdate handleError={handleError} />}
+        />
       </Routes>
-      <Error error={error} isOpen={errorIsOpen} onClose={()=>{
+      <Error
+        error={error}
+        isOpen={errorIsOpen}
+        onClose={() => {
           setErrorIsOpen(false);
-      }}/>
+        }}
+      />
     </Container>
   );
-}
+};
 export default RecHome;

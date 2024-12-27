@@ -50,7 +50,7 @@ export const SocketProvider = ({ children }) => {
         const updatedMessages = Array.isArray(prevMessages)
           ? [...prevMessages, newMessage]
           : [newMessage];
-        console.log("updatedMessages:", updatedMessages);
+        // console.log("updatedMessages:", updatedMessages);
         return updatedMessages;
       });
     });
@@ -66,13 +66,13 @@ export const SocketProvider = ({ children }) => {
   const socket = socketRef.current;
   if (socket && message) {
     // message가 빈 문자열이 아닌 경우에만 sendMessage 이벤트 전송
-    console.log("Sending sendMessage event:", {
-      chatRoomId,
-      sender: userPkNum,
-      message, // message 속성이  undefined가 아닌지 확인
-      type,
-      referenceId,
-    });
+    // console.log("Sending sendMessage event:", {
+    //   chatRoomId,
+    //   sender: userPkNum,
+    //   message, // message 속성이  undefined가 아닌지 확인
+    //   type,
+    //   referenceId,
+    // });
     socket.emit("sendMessage", {
       chatRoomId,
       sender: userPkNum,

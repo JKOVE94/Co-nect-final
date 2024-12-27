@@ -29,7 +29,7 @@ public class UserSecurityService implements UserDetailsService {
                 user.getUserId(),
                 user.getUserPkNum(),
                 user.getUserPw(),
-                !user.getUserLocked(),
+                !user.isUserLocked(),
                 Collections.singletonList(authority)
         );
     }

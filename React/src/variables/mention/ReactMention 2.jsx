@@ -13,7 +13,7 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
   const [user, setUser] = useState([]); //전체 사원 목록
   const [data, setData] = useState(""); //멘션 input 입력값
 
-  useEffect(() => { 
+  useEffect(() => {
     //최초 렌더링 시 전체 사원 목록 가져오기기
     getUserData();
   }, []);
@@ -45,7 +45,7 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
         }));
         setUser(userData);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   const handleChange = (e, newValue, newPlainTextValue, mentions) => {
@@ -79,7 +79,7 @@ const ReactMention = ({ onMention, text, disabled, userList }) => {
         classNames={style}
       >
         <Mention
-          className={style.mentions__mention} 
+          className={style.mentions__mention}
           appendSpaceOnAdd={true}
           trigger="@" //input 박스에 @ 입력 시 멘션 기능 활성화
           data={(search) => findById(search)}

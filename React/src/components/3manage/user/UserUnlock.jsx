@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 import ManageUserToast from "variables/Toast/ManageUserToast";
+import axiosInstance from "api/axiosInstance";
 
 const UserUnlock = (props) => {
   const [userInfos, setUserInfos] = useState([]);
@@ -11,7 +12,7 @@ const UserUnlock = (props) => {
   const [AllNumber, setAllNumber] = useState([]);
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`/conect/${props.compNum}/manage/user/locked`)
       .then((res) => {
         setUserInfos(res.data);
@@ -38,13 +39,13 @@ const UserUnlock = (props) => {
   };
 
   const handlePermit = async () => {
-    await axios
+    await axiosInstance
       .put(`/conect/${props.compNum}/manage/user/locked`, checkedNumber)
       .then((res) => {
         if (res.data === true) {
           setType("unlocked"); //토스트 타입
           toggleShowA(); //토스트 보이고 자동으로 사라지는 함수
-          axios
+          axiosInstance
             .get(`/conect/${props.compNum}/manage/user/locked`)
             .then((res) => {
               setUserInfos(res.data);

@@ -5,16 +5,10 @@ import axiosInstance from "api/axiosInstance";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Form,
-  FormGroup,
-} from "react-bootstrap";
+import { Card, CardBody, CardTitle, Form, FormGroup } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-const RecDetail = ({handleError}) => {
+const RecDetail = ({ handleError, projPkNum }) => {
   const userNum = useSelector((state) => state.userData.user_pk_num); //사원번호
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
 
@@ -27,7 +21,7 @@ const RecDetail = ({handleError}) => {
   const [type, setType] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const { projPkNum } = useParams(); // 프로젝트 번호
+  // const { projPkNum } = useParams(); // 프로젝트 번호
   const { recPkNum } = useParams(); // 건의사항 번호
 
   useEffect(() => {
@@ -35,28 +29,29 @@ const RecDetail = ({handleError}) => {
   }, []);
 
   const getData = async () => {
-
     if (updatedData) {
       setData(updatedData);
     } else {
       axiosInstance
-        .get(`/${compNum}/rec/${projPkNum}/${recPkNum}`)
+        .get(`/conect/${compNum}/rec/${projPkNum}/${recPkNum}`)
         .then((res) => {
           setData(res.data);
         })
-        .catch((err) => handleError("게시글을 불러올 수 없습니다.",true));
+        .catch((err) => handleError("게시글을 불러올 수 없습니다.", true));
     }
   };
 
   const handleDelete = () => {
     axiosInstance
-      .delete(`/${compNum}/rec/${data.rec_pk_num}`)
+      .delete(`/conect/${compNum}/rec/${data.rec_pk_num}`)
       .then((res) => {
         if (res.data) {
           navigate("../");
         }
       })
-      .catch((err) => handleError("게시글 삭제에 실패했습니다. 다시 시도해주세요.",true));
+      .catch((err) =>
+        handleError("게시글 삭제에 실패했습니다. 다시 시도해주세요.", true)
+      );
   };
 
   return (
@@ -128,9 +123,12 @@ const RecDetail = ({handleError}) => {
               disabled={true}
             />
           </FormGroup>
-          <div className="d-flex justify-content-between" style={{marginTop:'1em'}}>
+          <div
+            className="d-flex justify-content-between"
+            style={{ marginTop: "1em" }}
+          >
             <div className="d-flex align-items-center">
-              <Reclike recPkNum={recPkNum} likes={data.rec_likes}/> 
+              <Reclike recPkNum={recPkNum} likes={data.rec_likes} />
             </div>
             <button
               className="btn btn-primary"

@@ -9,6 +9,7 @@ import "assets/css/3manage/userinfo.css";
 import ManageUserModal from "variables/Modal/ManageUserModal";
 import ManagerUserDropdown from "variables/Dropdown/ManagerUserDropdown";
 import ManageUserToast from "variables/Toast/ManageUserToast";
+import axiosInstance from "api/axiosInstance";
 
 const UserInfo = (props) => {
   const [users, setUsers] = useState([]);
@@ -44,7 +45,9 @@ const UserInfo = (props) => {
   }, [departDataOrigin]);
 
   const handleFetch = async () => {
-    const response = await axios.get(`/conect/${props.compNum}/manage/user`);
+    const response = await axiosInstance.get(
+      `/conect/${props.compNum}/manage/user`
+    );
     setUsers(response.data);
   };
 
@@ -67,7 +70,7 @@ const UserInfo = (props) => {
   };
 
   const handleResetPermit = async (id) => {
-    const response = await axios.put(
+    const response = await axiosInstance.put(
       `/conect/${props.compNum}/manage/user/reset/${id}`
     );
     await handleFetch(); //부모 컴포넌트에서 데이터를 다시 불러오도록 하는 함수

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
+import axiosInstance from "api/axiosInstance";
 
 const ProjCreate = (props) => {
   // Redux에서 로그인한 유저 정보 가져오기
@@ -39,9 +40,9 @@ const ProjCreate = (props) => {
       proj_created: new Date().toISOString(), // 현재 시간 추가
     };
 
-    console.log("Form data before submitting:", formToSubmit);
+    // console.log("Form data before submitting:", formToSubmit);
 
-    axios
+    axiosInstance
       .post(`/conect/${props.compNum}/manage/proj`, formToSubmit)
       .then((response) => {
         if (response.data !== 0) {

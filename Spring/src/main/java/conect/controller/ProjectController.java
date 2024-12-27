@@ -5,6 +5,7 @@ import conect.data.form.ProjectForm;
 import conect.service.board.proj.ProjService;
 import conect.service.board.proj.ProjServiceImpl;
 
+import conect.service.manage.proj.ManageProjService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -18,15 +19,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("{compNum}/proj")
 public class ProjectController {
-	@Autowired
-	private ProjServiceImpl projServiceImpl;
 
-	@Autowired
+	private ProjServiceImpl projServiceImpl;
 	private ProjService projService;
+	private ManageProjService manageProjService;
+
+	public ProjectController(ProjServiceImpl projServiceImpl, ProjService projService, ManageProjService manageProjService) {
+		this.projServiceImpl = projServiceImpl;
+		this.projService = projService;
+		this.manageProjService = manageProjService;
+	}
+
 
 	// 프로젝트 목록 조회
 	@GetMapping("/projlist")
@@ -79,9 +87,10 @@ public class ProjectController {
 		return projServiceImpl.getListAll();
 	}
 
+	// 2024.12.27 대현 로직 수정
 	@GetMapping("/ProjSel/{user_pk_num}")
-	public List<ProjectDto> getUserProject(@PathVariable("user_pk_num") int user_pk_num) {
-		return projServiceImpl.getUserProjectData(user_pk_num);
+	public List<ProjectDto> getUserProject(@PathVariable("compNum") int compNum,  @PathVariable("user_pk_num") int user_pk_num) {
+		return manageProjService.getProjectListWithUser(compNum, user_pk_num);
 	}
 
 	@GetMapping("/projdetail/{projPkNum}")

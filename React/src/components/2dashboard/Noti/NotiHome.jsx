@@ -4,7 +4,7 @@ import NotiCreate from "./NotiCreate";
 import NotiDetail from "./NotiiDetail.jsx";
 import NotiUpdate from "./NotiUpdate";
 
-const NotiHome = () => {
+const NotiHome = (props) => {
   const navigate = useNavigate();
   const navigateToNotiList = () => {
     navigate("/main/noti");
@@ -13,7 +13,10 @@ const NotiHome = () => {
     <div>
       <Routes>
         {/* /main/noti/notilist */}
-        <Route path="/notilist" element={<NotiList />} />
+        <Route
+          path="/notilist"
+          element={<NotiList projPkNum={props.projPkNum} />}
+        />
         <Route path="/notiadd" element={<NotiCreate />} />
         <Route path="/notidetail/:notiPkNum" element={<NotiDetail />} />
         <Route path="/notiedit/:notiPkNum" element={<NotiUpdate />} />

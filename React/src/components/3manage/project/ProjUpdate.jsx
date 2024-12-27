@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import axiosInstance from "api/axiosInstance";
 
 const ProjUpdate = (props) => {
   const { projPkNum } = useParams(); // URL에서 'projPkNum'을 추출하고 숫자로 변환
@@ -20,7 +21,7 @@ const ProjUpdate = (props) => {
     // 기존 게시글 데이터 가져오기
     const fetchproj = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           `/conect/${props.compNum}/manage/proj/${projPkNum}`
         );
         setProj(response.data);

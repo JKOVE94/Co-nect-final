@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import { toast, ToastContainer } from "react-toastify"; // Toastify import
 import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
+import axiosInstance from "../../../api/axiosInstance";
 
 const FileDetail = () => {
   const filePkNumInt = parseInt(useParams().filePkNum, 10);
@@ -29,7 +30,9 @@ const FileDetail = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/conect/file/${filePkNumInt}`);
+        const response = await axiosInstance.get(
+          `/conect/file/${filePkNumInt}`
+        );
         setPost(response.data);
       } catch (err) {
         setError("게시글을 불러오는 중 오류가 발생했습니다.");
@@ -52,7 +55,7 @@ const FileDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/conect/file/${filePkNumInt}`);
+      await axiosInstance.delete(`/conect/file/${filePkNumInt}`);
       toggleDeleteModal();
       toast.success("파일이 성공적으로 삭제되었습니다.");
       setTimeout(() => navigate("/main/file"), 2000); // 삭제 후 목록으로 이동
@@ -67,9 +70,12 @@ const FileDetail = () => {
   const handleDownload = async () => {
     const { filePkNumInt, fileName } = selectedFile;
     try {
-      const response = await axios.get(`/file/download/${filePkNumInt}`, {
-        responseType: "blob",
-      });
+      const response = await axiosInstance.get(
+        `/file/download/${filePkNumInt}`,
+        {
+          responseType: "blob",
+        }
+      );
 
       // 브라우저에서 다운로드 처리
       const url = window.URL.createObjectURL(new Blob([response.data]));

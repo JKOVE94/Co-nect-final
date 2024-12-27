@@ -13,10 +13,9 @@ import {
   Table,
 } from "react-bootstrap";
 
-
-const RecList = ({handleError}) => {
+const RecList = ({ handleError, projPkNum }) => {
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
-  const { projPkNum } = useParams(); //프로젝트 번호
+  // const { projPkNum } = useParams(); //프로젝트 번호
 
   const [datas, setDatas] = useState({}); //건의사항 게시글
   const [mostLike, setMostLike] = useState({}); //최상단에 위치할 글 (좋아요 수가 가장 많은 글)
@@ -33,7 +32,7 @@ const RecList = ({handleError}) => {
   const getData = async () => {
     setLoading(true);
     axiosInstance
-      .get(`/${compNum}/rec/${projPkNum}`, {
+      .get(`/conect/${compNum}/rec/${projPkNum}`, {
         params: {
           sortField: sortField, //정렬컬럼
           sortDirection: sortDirection, //정렬기준
@@ -46,18 +45,18 @@ const RecList = ({handleError}) => {
         setLoading(false); //로딩완료
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setLoading(false);
-        handleError("건의사항 목록을 불러올 수 없습니다.",true)
+        handleError("건의사항 목록을 불러올 수 없습니다.", true);
       });
   };
 
   //최상단에 위치할 글 (좋아요 수가 가장 많은 글)
   const getMostLike = async () => {
     axiosInstance
-      .get(`/${compNum}/rec/${projPkNum}/mostlike`)
+      .get(`/conect/${compNum}/rec/${projPkNum}/mostlike`)
       .then((res) => setMostLike(res.data.content[0]))
-      .catch((err) => handleError("추천 게시글을 불러올 수 없습니다.",true));
+      .catch((err) => handleError("추천 게시글을 불러올 수 없습니다.", true));
   };
 
   //페이지 변경
@@ -80,7 +79,7 @@ const RecList = ({handleError}) => {
   useEffect(() => {
     getMostLike();
     getData();
-  }, [sortField, sortDirection, currentPage]);
+  }, [sortField, sortDirection, currentPage, projPkNum]);
 
   return (
     <>
@@ -92,7 +91,7 @@ const RecList = ({handleError}) => {
         </CardHeader>
         <CardBody style={{ height: "40em", overflowY: "auto" }}>
           {loading ? (
-            <div style={{textAlign:'center'}}>로딩 중 ...</div>
+            <div style={{ textAlign: "center" }}>로딩 중 ...</div>
           ) : (
             <Table>
               <thead>
@@ -151,7 +150,12 @@ const RecList = ({handleError}) => {
                       <tr key={index}>
                         <td> {data.rec_pk_num} </td>
                         <td>
-                          <Link to={{pathname:`./detail/${data.rec_pk_num}`, state:{data: data}}}>
+                          <Link
+                            to={{
+                              pathname: `./detail/${data.rec_pk_num}`,
+                              state: { data: data },
+                            }}
+                          >
                             {data.rec_title} [{data.reply}]
                           </Link>
                         </td>
@@ -181,32 +185,32 @@ const RecList = ({handleError}) => {
           </div>
           {/* 페이징 */}
           <div>
-          <Pagination className="justify-content-center">
-            <button
-              className={`btn btn-link`}
-              onClick={() => handlePageChange(currentPage)}
-              disabled={currentPage === 0}
-            >
-              &laquo; 이전
-            </button>
-            {[...Array(datas.totalPages)].map((num, index) => (
+            <Pagination className="justify-content-center">
               <button
                 className={`btn btn-link`}
-                key={index}
-                onClick={() => handlePageChange(index + 1)}
-                disabled={currentPage === index}
+                onClick={() => handlePageChange(currentPage)}
+                disabled={currentPage === 0}
               >
-                {index + 1}
+                &laquo; 이전
               </button>
-            ))}
-            <button
-              className={`btn btn-link`}
-              onClick={() => handlePageChange(currentPage + 2)}
-              disabled={currentPage === datas.totalPages - 1}
-            >
-              다음 &raquo;
-            </button>
-          </Pagination>
+              {[...Array(datas.totalPages)].map((num, index) => (
+                <button
+                  className={`btn btn-link`}
+                  key={index}
+                  onClick={() => handlePageChange(index + 1)}
+                  disabled={currentPage === index}
+                >
+                  {index + 1}
+                </button>
+              ))}
+              <button
+                className={`btn btn-link`}
+                onClick={() => handlePageChange(currentPage + 2)}
+                disabled={currentPage === datas.totalPages - 1}
+              >
+                다음 &raquo;
+              </button>
+            </Pagination>
           </div>
         </CardBody>
       </Card>

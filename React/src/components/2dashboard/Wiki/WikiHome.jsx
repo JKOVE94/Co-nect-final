@@ -4,7 +4,7 @@ import WikiCreate from "./WikiCreate";
 import WikiUpdate from "./WikiUpdate";
 import WikiDetail from "./WikiDetail.jsx";
 
-const WikiHome = () => {
+const WikiHome = (props) => {
   const navigate = useNavigate();
   const navigateToWikiList = () => {
     navigate("/main/wiki");
@@ -13,7 +13,10 @@ const WikiHome = () => {
     <div>
       <Routes>
         {/* /main/wiki/wikilist */}
-        <Route path="/wikilist" element={<WikiList />} />
+        <Route
+          path="/wikilist"
+          element={<WikiList projPkNum={props.projPkNum} />}
+        />
         <Route path="/wikiadd" element={<WikiCreate />} />
         <Route path="/wikidetail/:wikiPkNum" element={<WikiDetail />} />
         <Route path="/wikiedit/:wikiPkNum" element={<WikiUpdate />} />

@@ -21,6 +21,6 @@ public class TasklogEntity {
     private TaskEntity taskEntity;
 
     @OneToMany(mappedBy = "tasklogEntity", orphanRemoval = true)
-    private List<TaskhistoryEntity> taskhistoryEntities;
+    private List<TaskHistoryEntity> taskhistoryEntities;
 
 }

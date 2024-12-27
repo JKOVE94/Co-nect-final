@@ -20,7 +20,7 @@ function ManageUserModal(props) {
     const response = await axios.delete(
       `/${props.compNum}/manage/proj/${props.projPkNumInt}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     if (response.data) {
       props.handleCloseM(); //모달을 닫아줍
       props.fetchProjs();

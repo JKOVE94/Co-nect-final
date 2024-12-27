@@ -10,8 +10,13 @@ import {
   Row,
 } from "react-bootstrap";
 
-const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent, handleError }) => {
-
+const RecReplyCreate = ({
+  recPkNum,
+  getData,
+  onHide,
+  replyParent,
+  handleError,
+}) => {
   const num = useSelector((state) => state.userData.user_pk_num); //사번
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
 
@@ -30,7 +35,10 @@ const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent, handleError })
 
   const handleClick = async () => {
     try {
-      const response = await axiosInstance.post(`/${compNum}/rec/reply`, data);
+      const response = await axiosInstance.post(
+        `/conect/${compNum}/rec/reply`,
+        data
+      );
       if (response.data) {
         setText(""); // 입력 필드 초기화
       }
@@ -42,11 +50,12 @@ const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent, handleError })
 
   return (
     <FormGroup hidden={onHide}>
-      <Row className="align-items-center justify-content-start" style={{ height: "auto" }}>
-        <Col md={'auto'}>
-        댓글쓰기
-        </Col>
-        <Col md={9} >
+      <Row
+        className="align-items-center justify-content-start"
+        style={{ height: "auto" }}
+      >
+        <Col md={"auto"}>댓글쓰기</Col>
+        <Col md={9}>
           <FormControl
             type="text"
             id="reply_content"
@@ -58,7 +67,7 @@ const RecReplyCreate = ({ recPkNum, getData, onHide, replyParent, handleError })
             }}
           />
         </Col>
-        <Col md={'auto'}>
+        <Col md={"auto"}>
           <Button onClick={handleClick}>입력</Button>
         </Col>
       </Row>

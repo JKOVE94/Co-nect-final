@@ -16,6 +16,10 @@ import {
 } from "reactstrap";
 
 const TaskList = () => {
+  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const projInfo = info.projData.proj_pk_num;
+  const compNum = userInfo.user_fk_comp_num;
   const [tasks, setTasks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -30,23 +34,23 @@ const TaskList = () => {
 
   const fetchTasks = useCallback(
     (page, block, sortField, sortDirection) => {
-      console.log("fetchTasks 호출:", {
-        page,
-        block,
-        sortField,
-        sortDirection,
-        searchText,
-      });
+      // console.log("fetchTasks 호출:", {
+      //   page,
+      //   block,
+      //   sortField,
+      //   sortDirection,
+      //   searchText,
+      // });
       setLoading(true);
       setError(null);
       axiosInstance
         .get(
-          `/board/tasklist/proj/${projectNum}?page=${
+          `/conect/${compNum}/task/tasklist/proj/${projectNum}?page=${
             page - 1
           }&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchText=${searchText}`
         )
         .then((res) => {
-          console.log("API 응답:", res.data);
+          // console.log("API 응답:", res.data);
           setTasks(sortTasks(res.data.tasks));
           setCurrentPage(res.data.currentPage + 1);
           setTotalPages(res.data.totalPages);
@@ -66,7 +70,7 @@ const TaskList = () => {
   );
 
   useEffect(() => {
-    console.log("useEffect 실행, projectNum:", projectNum);
+    // console.log("useEffect 실행, projectNum:", projectNum);
     if (projectNum) {
       fetchTasks(1, 0, sortField, sortDirection);
     }

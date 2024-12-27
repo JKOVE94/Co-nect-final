@@ -16,6 +16,7 @@ import {
 import FileSearch from "variables/Search/FileSearch";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../../../api/axiosInstance";
 
 const FileList = () => {
   const [files, setFiles] = useState([]);
@@ -40,7 +41,7 @@ const FileList = () => {
     searchType,
     searchText
   ) => {
-    axios
+    axiosInstance
       .get("/conect/file", {
         params: {
           page,
@@ -80,9 +81,12 @@ const FileList = () => {
 
     const { filePkNum, fileName } = selectedFile;
     try {
-      const response = await axios.get(`/conect/file/download/${filePkNum}`, {
-        responseType: "blob",
-      });
+      const response = await axiosInstance.get(
+        `/conect/file/download/${filePkNum}`,
+        {
+          responseType: "blob",
+        }
+      );
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");

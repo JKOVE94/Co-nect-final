@@ -3,8 +3,11 @@ import React, { useState, useEffect } from "react"; // React 훅 사용
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns"; // 날짜 포맷팅을 위한 라이브러리
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import axiosInstance from "../../../api/axiosInstance";
 
-const WikiList = () => {
+const WikiList = (props) => {
+  //props.projPkNum => 동적인 처리를 위한 props
+
   // 상태 정의
   const [wikis, setWikis] = useState([]); // 게시글 목록
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
@@ -27,12 +30,12 @@ const WikiList = () => {
     searchType,
     searchText
   ) => {
-    axios
+    axiosInstance
       .get(
         `/conect/${compPkNum}/wiki/wikilist?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchType=${searchType}&searchText=${searchText}`
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data && res.data.wikis) {
           const allWikis = res.data.wikis || [];
           const noticeWikis = allWikis.filter((wiki) => wiki.wiki_isnotice); // 공지사항 필터링

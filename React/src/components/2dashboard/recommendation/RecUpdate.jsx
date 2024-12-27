@@ -13,7 +13,7 @@ import {
   Row,
 } from "react-bootstrap";
 
-const RecUpdate = ({handleError}) => {
+const RecUpdate = ({ handleError }) => {
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
 
   const navigate = useNavigate();
@@ -30,17 +30,19 @@ const RecUpdate = ({handleError}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleClick();
-  }
+  };
 
   const handleClick = (e) => {
     axiosInstance
-      .put(`/${compNum}/rec/${data.rec_pk_num}`, data)
+      .put(`/conect/${compNum}/rec/${data.rec_pk_num}`, data)
       .then((res) =>
         navigate(`../detail/${res.data.rec_pk_num}`, {
           state: { data: res.data },
         })
       )
-      .catch((err) => handleError("게시글 수정에 실패하였습니다. 다시 시도해주세요.",true));
+      .catch((err) =>
+        handleError("게시글 수정에 실패하였습니다. 다시 시도해주세요.", true)
+      );
   };
 
   return (
@@ -56,48 +58,48 @@ const RecUpdate = ({handleError}) => {
           <h2>건의사항 수정</h2>
         </CardTitle>
         <CardBody style={{ height: "40em", overflowY: "auto" }}>
-        <form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Form.Label>제목</Form.Label>
-            <Form.Control
-              id="rec_title"
-              value={data.rec_title}
-              onChange={handleChange}
-              required={true}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Label>내용</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={8}
-              id="rec_content"
-              value={data.rec_content}
-              onChange={handleChange}
-              required={true}
-            />
-          </FormGroup>
-          <div className="d-flex justify-content-end">
-            <button
-              style={{marginTop:'1em'}}
-              className="btn btn-primary"
-              type="submit"
-            >
-              수정완료
-            </button>
-            <button
-              style={{marginTop:'1em'}}
-              className="btn btn-primary"
-              onClick={(e) => {
-                e.preventDefault();
-                setType("return");
-                setModalIsOpen(true);
-              }}
-            >
-              목록보기
-            </button>
-          </div>
-        </form>
+          <form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Form.Label>제목</Form.Label>
+              <Form.Control
+                id="rec_title"
+                value={data.rec_title}
+                onChange={handleChange}
+                required={true}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Form.Label>내용</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={8}
+                id="rec_content"
+                value={data.rec_content}
+                onChange={handleChange}
+                required={true}
+              />
+            </FormGroup>
+            <div className="d-flex justify-content-end">
+              <button
+                style={{ marginTop: "1em" }}
+                className="btn btn-primary"
+                type="submit"
+              >
+                수정완료
+              </button>
+              <button
+                style={{ marginTop: "1em" }}
+                className="btn btn-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setType("return");
+                  setModalIsOpen(true);
+                }}
+              >
+                목록보기
+              </button>
+            </div>
+          </form>
         </CardBody>
       </Card>
       <RecModal

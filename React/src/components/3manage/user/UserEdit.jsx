@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "assets/css/3manage/useradd.css";
 import ManageUserAddModal from "../../../variables/Modal/ManageUserAddModal";
+import axiosInstance from "api/axiosInstance";
 
 const UserAdd = () => {
   const nav = useNavigate();
@@ -55,7 +56,7 @@ const UserAdd = () => {
     }
 
     try {
-      const response = await axios.put(
+      const response = await axiosInstance.put(
         `/conect/${compNum}/manage/user/${userPkNum}`,
         data,
         {
@@ -82,7 +83,7 @@ const UserAdd = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           `/conect/${compNum}/manage/user/${userPkNum}`
         );
         setFormData(response.data);

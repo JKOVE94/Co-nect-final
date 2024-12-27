@@ -101,8 +101,8 @@ const TreeAndGantt = (props) => {
 
   // 업데이트 데이터가 변경될 때 실행되는 함수 => 데이터 타입 변경
   useEffect(() => {
-    console.log("updatedData");
-    console.log(updatedData);
+    // console.log("updatedData");
+    // console.log(updatedData);
 
     //만약 updateData가 있고 gantt라는 키가 있다면
     if (updatedData && Object.keys(updatedData).includes("gantt")) {

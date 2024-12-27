@@ -16,6 +16,7 @@ import {
 import { Checkbox } from "rsuite"; // 체크박스 컴포넌트
 import ConfirmModal from "./ConfirmModal";
 import NotiToast, { showToast } from "../../../variables/Toast/NotiToast";
+import axiosInstance from "../../../api/axiosInstance";
 
 const NotiUpdate = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const NotiUpdate = () => {
   useEffect(() => {
     const fetchNotiData = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           `/conect/main/${compPkNum}/notice/${notiPkNum}`,
           {
             params: {
@@ -95,7 +96,7 @@ const NotiUpdate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(
+      await axiosInstance.put(
         `/conect/main/${compPkNum}/notice/update/${notiPkNum}`,
         formData
       );

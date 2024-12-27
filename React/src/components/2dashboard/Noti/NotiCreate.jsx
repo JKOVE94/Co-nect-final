@@ -16,6 +16,7 @@ import {
 import { Checkbox } from "rsuite";
 import ConfirmModal from "./ConfirmModal";
 import NotiToast, { showToast } from "../../../variables/Toast/NotiToast";
+import axiosInstance from "../../../api/axiosInstance";
 
 const NoticeCreate = () => {
   const navigate = useNavigate();
@@ -53,10 +54,13 @@ const NoticeCreate = () => {
   // 폼 제출 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("전송할 데이터:", formData);
+    // console.log("전송할 데이터:", formData);
 
     try {
-      await axios.post(`/conect/main/${compPkNum}/notice/insert`, formData);
+      await axiosInstance.post(
+        `/conect/main/${compPkNum}/notice/insert`,
+        formData
+      );
       // 등록 성공 시 리스트 페이지로 리다이렉트
       showToast.create(); //토스트 창 생성(문서가 등록되었습니다.)
       setTimeout(() => {

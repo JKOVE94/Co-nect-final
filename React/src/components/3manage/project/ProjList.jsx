@@ -8,6 +8,7 @@ import SearchProject from "variables/Search/SearchProject";
 import "../../../assets/css/freepost/freelist.css";
 import ManagerProjDropdown from "variables/Dropdown/ManagerProjDropdown";
 import ManageProjModal from "variables/Modal/ManageProjModal";
+import axiosInstance from "api/axiosInstance";
 
 const ProjList = (props) => {
   const [projs, setProjs] = useState([]);
@@ -33,7 +34,7 @@ const ProjList = (props) => {
     searchType,
     searchText
   ) => {
-    axios
+    axiosInstance
       .get(`/conect/${props.compNum}/manage/proj`, {
         params: {
           page: page,

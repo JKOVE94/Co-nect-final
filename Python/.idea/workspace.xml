@@ -5,44 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../React/src/assets/css/mention.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/MyShareSchedule.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventEditModal.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../React/src/variables/mention/ReactMention.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/MentionsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/RecEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/vote.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/mention/MentionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/mention/MentionServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../React/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../React/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/assets/css/2dashboard/calendar.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/assets/css/2dashboard/calendar.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Favorite/FavorCheck.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Favorite/FavorCheck.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/Function.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/Function.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/MyCalendar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Function/MyCalendar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Project/projCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Project/projCreate.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Project/projList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Project/projList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventAddModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventAddModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventShowModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/variables/Modal/CalEventShowModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/FunctionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/FunctionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/TaskController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/ShareDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/ShareDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TodoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TodoDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/UserDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/UserDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/ShareEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/ShareEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TodoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TodoEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/form/TodoForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/form/TodoForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/ShareRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/ShareRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TodoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TodoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/schedule/ScheduleService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/schedule/ScheduleServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/todo/TodoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/function/todo/TodoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package 2.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package 3.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package 4.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package-lock 2.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package-lock 3.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package-lock 4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecCreate.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecDetail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReply.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReply.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyCreate.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplylike.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplylike.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecUpdate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecUpdate.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/Reclike.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/Reclike.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/layouts/ProjectSelect.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/layouts/ProjectSelect.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/setupProxy.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../React/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TaskHistoryEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TaskHistoryEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/security/UserSecurityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/security/UserSecurityService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,20 +45,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.embaded.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;daehyeon2&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/jkove/Documents/GitHub/Co-nect-final/Python&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.embaded.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "Refactoring",
+    "last_opened_file_path": "/Users/jkove/Documents/GitHub/Co-nect-final/Python",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/services" />
@@ -135,6 +113,7 @@
       <updated>1734773064946</updated>
       <workItem from="1734773066002" duration="4643000" />
       <workItem from="1734831621818" duration="47449000" />
+      <workItem from="1735284123228" duration="1414000" />
     </task>
     <servers />
   </component>

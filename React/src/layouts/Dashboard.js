@@ -33,6 +33,7 @@ const Dashboard = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userData);
   const [isLoading, setIsLoading] = useState(true);
+  const [projPkNum, setProjPkNum] = useState(sessionStorage.getItem("persist:proj_pk_num"));
 
   const handleLogout = () => {
     sessionStorage.removeItem("token");
@@ -45,7 +46,7 @@ const Dashboard = (props) => {
     if (!token) return false;
 
     try {
-      const response = await axiosInstance.post("/validate-token", { token });
+      const response = await axiosInstance.post("/conect/validate-token", { token });
       return response.data.isValid;
     } catch (error) {
       console.error("토큰 검증 실패:", error);
@@ -56,7 +57,7 @@ const Dashboard = (props) => {
   const refreshToken = async () => {
     const token = sessionStorage.getItem("token");
     try {
-      const response = await axiosInstance.post("/refresh-token", { token });
+      const response = await axiosInstance.post("/conect/refresh-token", { token });
       const newToken = response.data.token;
       sessionStorage.setItem("token", newToken);
       return true;
@@ -115,26 +116,26 @@ const Dashboard = (props) => {
           imgSrc: require("../assets/img/brand/argon-react.png"),
           imgAlt: "...",
         }}
+        setProjPkNum={setProjPkNum}
       />
       <div className="main-content" ref={mainContent}>
         {!isProjReadPath && <Navbar />}
         {isProjReadPath ? <BinHeader /> : <Header />}
         <ChatOffcanvas /> {/* 채팅 기능 관련 컴포넌트 */}
         <Routes>
-          <Route path="/" element={<MainComponent />} />
-          <Route path="/proj/projread/:id" element={<ProjStatus />} />
-          <Route path="/proj/*" element={<ProjectHome />} />
-          <Route path="/task/:projectNum" element={<TaskList />} />
-          <Route path="/task/detail/:taskPkNum" element={<TaskDetail />} />
-          <Route path="/task/create" element={<TaskCreate />} />
-          <Route path="/projfavorite" element={<ProjFavorite />} />
-          <Route path="/freefavorite" element={<FreeFavorite />} />
-          <Route path="/function" element={<Function />} />
-          <Route path="/err" element={<ErrPage />} />
-          <Route path="/wiki/*" element={<WikiHome />}/>
-          <Route path="/noti/*" element={<NotiHome />}/>
-          <Route path="/file/*" element={<FileHome />}/>
-          <Route path="/rec/:projPkNum/*" element={<RecHome />} />
+          <Route path="/" element={<MainComponent projPkNum={projPkNum}/>} />
+          <Route path="/proj/projread/:id" element={<ProjStatus projPkNum={projPkNum}/>} />
+          <Route path="/proj/*" element={<ProjectHome projPkNum={projPkNum}/>} />
+          <Route path="/task/:projectNum" element={<TaskList projPkNum={projPkNum}/>} />
+          <Route path="/task/detail/:taskPkNum" element={<TaskDetail projPkNum={projPkNum}/>} />
+          <Route path="/task/create" element={<TaskCreate projPkNum={projPkNum}/>} />
+          <Route path="/projfavorite" element={<ProjFavorite projPkNum={projPkNum}/>} />
+          <Route path="/freefavorite" element={<FreeFavorite projPkNum={projPkNum}/>} />
+          <Route path="/function" element={<Function projPkNum={projPkNum}/>} />
+          <Route path="/wiki/*" element={<WikiHome projPkNum={projPkNum}/>}/>
+          <Route path="/noti/*" element={<NotiHome projPkNum={projPkNum}/>}/>
+          <Route path="/file/*" element={<FileHome projPkNum={projPkNum}/>}/>
+          <Route path="/rec/:projPkNum/*" element={<RecHome projPkNum={projPkNum}/>} />
 
         </Routes>
       </div>

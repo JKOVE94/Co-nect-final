@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "assets/landing/css/login.css";
 import ConectTextLogo from "assets/img/logo/ConectTextLogo";
-
 import { useNavigate } from "react-router-dom";
 import LoginToast from "variables/Toast/LoginToast";
 import { useDispatch } from "react-redux";
@@ -76,43 +75,15 @@ const Login = (props) => {
 
   const login = async (e) => {
     e.preventDefault();
-    try {
-      /*
-      res에 담기는 정보
-      comp_pk_num; //회사번호
-      user_pk_num; //사번
-      status; //로그인 상태 번호로 표시 1 성공, 2 : 정보 불일치, 3 : 잠긴 계정
-      user_trynum; //유저가 로그인 시도 횟수
-      */
-      let res = await axios.post("/conect/login", loginInfo);
-      const responseData = res.data;
-      console.log("responseData : "+responseData);
-      console.log(responseData);
-      await setData(responseData);
-      // console.log(responseData);
-      if (res.data.status === 1) {
-        //로그인 성공
-        dispatch(LOGIN(responseData));
-        navigate("/main");
-      } else if (res.data.status === 2) {
-        //로그인 실패(정보 불일치)
-        setErrType(res.data.status);
-        toggleShowA();
-        //정보 불일치 => toast로 실패 알림 / 로그인 시도횟수 안내
-      } else if (res.data.status === 3) {
-        //잠긴계정
-        setErrType(res.data.status);
-        handleShowM();
-
     if (!validateInputs()) return;
-  
+
     setIsLoading(true);
-  
+
     try {
-      const res = await axios.post("/login", loginInfo);
+      const res = await axios.post("/conect/login", loginInfo);
       const responseData = res.data;
       setData(responseData);
-  
+
       switch (responseData.status) {
         case 1: // 로그인 성공
           sessionStorage.setItem("token", responseData.token);

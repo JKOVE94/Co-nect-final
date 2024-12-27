@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, Container, CardBody } from "reactstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import arrowBlack from "assets/img/ect/arrow_black.png";
+import axiosInstance from "api/axiosInstance";
 
 const ProjAddMember = (props) => {
   const nav = useNavigate();
@@ -55,7 +56,9 @@ const ProjAddMember = (props) => {
 
   const handleAllUserFetch = async () => {
     try {
-      const response = await axios.get(`/conect/${props.compNum}/manage/user`);
+      const response = await axiosInstance.get(
+        `/conect/${props.compNum}/manage/user`
+      );
       setAllUser(response.data);
       // console.log("All user:", response.data);
     } catch (error) {
@@ -65,7 +68,7 @@ const ProjAddMember = (props) => {
 
   const handleMemberFetch = async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `/conect/${props.compNum}/manage/projmem/${projPkNum}`
       );
       setProjmem(response.data);
@@ -77,7 +80,7 @@ const ProjAddMember = (props) => {
 
   const handleUpdateMember = async () => {
     try {
-      const response = await axios.put(
+      const response = await axiosInstance.put(
         `/conect/${props.compNum}/manage/projmem`,
         {
           projmem_fk_proj_num: projPkNum,
@@ -103,7 +106,7 @@ const ProjAddMember = (props) => {
     } else {
       setChecked([...checked, usernum]);
     }
-    console.log(checked);
+    // console.log(checked);
   };
 
   const handleMemClick = (usernum) => {
@@ -112,13 +115,13 @@ const ProjAddMember = (props) => {
     } else {
       setProjmemChecked([...projmemChecked, usernum]);
     }
-    console.log(projmemChecked);
+    // console.log(projmemChecked);
   };
 
   //-------- 검색 기능 ------------
   const searchUser = (e) => {
     const searchValue = e.target.value;
-    console.log(searchValue);
+    // console.log(searchValue);
     const filtered = filteredUsers.filter((user) =>
       user.user_name.includes(searchValue)
     );

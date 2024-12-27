@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import axiosInstance from "api/axiosInstance";
 
 const CompanyEdit = (props) => {
   const nav = useNavigate();
@@ -18,7 +19,7 @@ const CompanyEdit = (props) => {
   };
 
   const fetchUpdate = async (compinfo) => {
-    await axios.put(`/conect/${props.compNum}/manage/comp`, compinfo);
+    await axiosInstance.put(`/conect/${props.compNum}/manage/comp`, compinfo);
   };
 
   return (

@@ -1,6 +1,7 @@
 // src/components/chatting/chatroom/MessageItem.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "api/axiosInstance"; // axiosInstance 직접 import
 
 function MessageItem({ message }) {
   const [users, setUsers] = useState({});
@@ -11,7 +12,9 @@ function MessageItem({ message }) {
 
   const getAllUsers = async () => {
     try {
-      const response = await axios.get(`/conect/${compPkNum}/manage/user`);
+      const response = await axiosInstance.get(
+        `/conect/${compPkNum}/manage/user`
+      );
       setUsers(response.data);
       setIsLoaded(true);
     } catch (error) {
@@ -28,8 +31,8 @@ function MessageItem({ message }) {
   }, [compPkNum]);
 
   useEffect(() => {
-    console.log("user:");
-    console.log(users);
+    // console.log("user:");
+    // console.log(users);
   }, [users]);
 
   const findUsername = (userPkNum) => {

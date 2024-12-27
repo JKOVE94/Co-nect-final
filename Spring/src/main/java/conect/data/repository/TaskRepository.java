@@ -18,8 +18,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Integer> {
     @Query("SELECT t FROM TaskEntity t WHERE t.userEntity.userPkNum = :task_fk_user_num")
     List<TaskEntity> getTaskByTaskFkUserNum(@Param("task_fk_user_num") int task_fk_user_num);
 
-    @Query("SELECT t.taskPkNum FROM TaskEntity t WHERE t.taskGroup = :task_pk_num")
-    List<Integer> findChildTask(@Param("task_pk_num") int task_pk_num);
+//    @Query("SELECT t.taskPkNum FROM TaskEntity t WHERE t.taskGroup = :task_pk_num")
+//    List<Integer> findChildTask(@Param("task_pk_num") int task_pk_num);
 
     @Query("SELECT t FROM TaskEntity t WHERE t.projectEntity.projPkNum = :projectNum AND t.userEntity.userPkNum = :userNum")
     List<TaskEntity> getTaskByProjectNumAndUserNum(@Param("projectNum") int projectNum, @Param("userNum") int userNum);

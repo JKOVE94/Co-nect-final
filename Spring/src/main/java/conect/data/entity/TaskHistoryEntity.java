@@ -39,5 +39,8 @@ public class TaskHistoryEntity {
     @JoinColumn(name = "taskhis_fk_task_num")
     private TaskEntity taskEntity;
 
+    @ManyToOne
+    @JoinColumn(name = "taskhis_fk_tasklog_num")
+    private TasklogEntity tasklogEntity; // Add this property
    
 }

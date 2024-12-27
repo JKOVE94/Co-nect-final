@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "assets/css/3manage/useradd.css";
 import ManageUserAddModal from "../../../variables/Modal/ManageUserAddModal";
+import axiosInstance from "api/axiosInstance";
 
 const ErrorBoundary = ({ children }) => {
   const [hasError, setHasError] = useState(false);
@@ -76,7 +77,7 @@ const UserAdd = (props) => {
     }
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `/conect/${props.compNum}/manage/user`,
         data,
         {

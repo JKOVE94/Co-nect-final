@@ -4,8 +4,9 @@ import { Link, useNavigate } from "react-router-dom"; // React Router의 Link와
 import { format } from "date-fns"; // 날짜 포맷팅을 위한 라이브러리
 import { Card, CardBody, CardHeader, Container } from "reactstrap"; // 부트스트랩 스타일링을 위한 컴포넌트
 import { Button } from "react-bootstrap";
+import axiosInstance from "../../../api/axiosInstance";
 
-const NotiList = () => {
+const NotiList = (props) => {
   // 상태 정의
   const [notices, setNotices] = useState([]); // 공지 목록
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
@@ -31,8 +32,8 @@ const NotiList = () => {
     searchText
   ) => {
     const validPage = page >= 0 ? page : 0; // 유효하지 않은 값 방지
-    axios
-      .get(`/conect/main/${compPkNum}/notice/list/${projNum}`, {
+    axiosInstance
+      .get(`/conect/main/${compPkNum}/notice/list/${props.projPkNum}`, {
         params: {
           page: validPage,
           size: 7, // 한 페이지에 표시할 공지 게시글 수
@@ -43,7 +44,7 @@ const NotiList = () => {
         },
       })
       .then((res) => {
-        console.log("서버 응답:", res.data);
+        // console.log("서버 응답:", res.data);
         setNotices(res.data.content);
         setTotalPages(res.data.totalPages);
         setCurrentPage(res.data.number);
@@ -57,7 +58,14 @@ const NotiList = () => {
   // 컴포넌트가 마운트될 때 게시글을 가져옴
   useEffect(() => {
     fetchNotices(currentPage, sortField, sortDirection, searchType, searchText);
-  }, [currentPage, sortField, sortDirection, searchType, searchText]); // 정렬 필드나 방향, 검색 조건이 변경될 때마다 게시글을 다시 가져옴
+  }, [
+    currentPage,
+    sortField,
+    sortDirection,
+    searchType,
+    searchText,
+    props.projPkNum,
+  ]); // 정렬 필드나 방향, 검색 조건이 변경될 때마다 게시글을 다시 가져옴
 
   // 검색 처리 함수
   const handleSearch = () => {
@@ -220,9 +228,9 @@ const NotiList = () => {
       <Button
         color="primary"
         style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
+          position: "relative",
+          top: "6vh",
+          right: "-70vw",
           zIndex: 1000,
         }}
         onClick={() => navigate("/main/noti/notiadd")}

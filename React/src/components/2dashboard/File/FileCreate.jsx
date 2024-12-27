@@ -5,6 +5,7 @@ import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../../../api/axiosInstance";
 
 const FileCreate = () => {
   const writer = useSelector((state) => state.userData);
@@ -76,7 +77,7 @@ const FileCreate = () => {
     });
 
     try {
-      const response = await axios.post("/conect/file", data);
+      const response = await axiosInstance.post("/conect/file", data);
 
       if (response.data) {
         toast.success("파일이 성공적으로 업로드되었습니다!", {

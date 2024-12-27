@@ -60,28 +60,28 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void insertTask(TaskForm form) {
         TaskEntity taskEntity = TaskForm.toEntity(form);
-        taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow());
-        taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow());
+        taskEntity.setProjectEntity(projectRepository.findById(form.getTask_fk_proj_num()).orElseThrow());
+        taskEntity.setUserEntity(userRepository.findById(form.getTask_fk_user_num()).orElseThrow());
         taskRepository.save(taskEntity);
     }
 
     @Override
     public void updateTask(TaskForm form) {
-        TaskEntity taskEntity = taskRepository.findById(form.getTaskPkNum()).orElseThrow();
-        taskEntity.setTaskTitle(form.getTaskTitle());
-        taskEntity.setTaskContent(form.getTaskContent());
-        taskEntity.setTaskStartdate(form.getTaskStartdate());
-        taskEntity.setTaskDeadline(form.getTaskDeadline());
-        taskEntity.setTaskDuration(form.getTaskDuration());
-        taskEntity.setTaskProgress(form.getTaskProgress());
-        taskEntity.setTaskStatus(form.getTaskStatus());
-        taskEntity.setTaskPriority(form.getTaskPriority());
-        taskEntity.setTaskCreated(form.getTaskCreated());
-        taskEntity.setTaskDepth(form.getTaskDepth());
-        taskEntity.setTaskGroup(form.getTaskGroup());
-        taskEntity.setTaskTagcol(form.getTaskTagcol());
-        taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow());
-        taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow());
+        TaskEntity taskEntity = taskRepository.findById(form.getTask_pk_num()).orElseThrow();
+        taskEntity.setTaskTitle(form.getTask_title());
+        taskEntity.setTaskContent(form.getTask_content());
+        taskEntity.setTaskStartdate(form.getTask_startdate());
+        taskEntity.setTaskDeadline(form.getTask_deadline());
+        taskEntity.setTaskDuration(form.getTask_duration());
+        taskEntity.setTaskProgress(form.getTask_progress());
+        taskEntity.setTaskStatus(form.getTask_status());
+        taskEntity.setTaskPriority(form.getTask_priority());
+        taskEntity.setTaskCreated(form.getTask_created());
+        taskEntity.setTaskDepth(form.getTask_depth());
+        taskEntity.setTaskGroup(form.getTask_group());
+        taskEntity.setTaskTagcol(form.getTask_color());
+        taskEntity.setProjectEntity(projectRepository.findById(form.getTask_fk_proj_num()).orElseThrow());
+        taskEntity.setUserEntity(userRepository.findById(form.getTask_fk_user_num()).orElseThrow());
         taskRepository.save(taskEntity);
     }
 

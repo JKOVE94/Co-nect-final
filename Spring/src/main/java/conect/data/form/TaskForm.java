@@ -43,7 +43,7 @@ public class TaskForm {
         entity.setTaskCreated(form.getTask_created());
         entity.setTaskDepth(form.getTask_depth());
         entity.setTaskGroup(form.getTask_group());
-        entity.setTaskColor(form.getTask_color());
+        entity.setTaskTagcol(form.getTask_color());
         entity.setTaskPriority(form.getTask_priority());
         return entity;
     }

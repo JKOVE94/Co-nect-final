@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../../../api/axiosInstance";
 
 const FileUpdate = () => {
   const { filePkNum } = useParams();
@@ -19,7 +20,7 @@ const FileUpdate = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/conect/file/${filePkNum}`);
+        const response = await axiosInstance.get(`/conect/file/${filePkNum}`);
         setFile({
           wiki_title: response.data.wiki.wiki_title || "",
           wiki_content: response.data.wiki.wiki_content || "",
@@ -55,9 +56,13 @@ const FileUpdate = () => {
         formData.append("file", newFile);
       }
 
-      const response = await axios.put(`/conect/file/${filePkNum}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axiosInstance.put(
+        `/conect/file/${filePkNum}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       if (response.status === 200) {
         toast.success("수정이 완료되었습니다!");

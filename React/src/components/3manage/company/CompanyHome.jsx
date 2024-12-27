@@ -4,6 +4,7 @@ import CompanyInfo from "./CompanyInfo";
 import "./Company.css";
 import CompanyEdit from "./CompanyEdit";
 import axios from "axios";
+import axiosInstance from "api/axiosInstance";
 
 const CompanyHome = () => {
   const [compinfo, setCompinfo] = useState({});
@@ -18,7 +19,9 @@ const CompanyHome = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/conect/${compNum}/manage/comp`);
+      const response = await axiosInstance.get(
+        `/conect/${compNum}/manage/comp`
+      );
       // console.log(response.data);
       setCompinfo(response.data);
     } catch (error) {

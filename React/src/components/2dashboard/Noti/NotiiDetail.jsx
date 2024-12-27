@@ -5,6 +5,7 @@ import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
 import ConfirmModal from "./ConfirmModal";
 import NotiToast, { showToast } from "../../../variables/Toast/NotiToast";
+import axiosInstance from "../../../api/axiosInstance";
 
 const NotiDetail = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const NotiDetail = () => {
   useEffect(() => {
     const fetchNoti = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           `/conect/main/${compPkNum}/notice/${notiPkNum}`
         );
         setNoti(response.data);

@@ -14,6 +14,7 @@ import {
   CardHeader,
 } from "reactstrap";
 import { Checkbox } from "rsuite";
+import axiosInstance from "../../../api/axiosInstance";
 
 const WikiUpdate = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const WikiUpdate = () => {
   useEffect(() => {
     const fetchWikiData = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           `/conect/${compPkNum}/wiki/wikidetail/${wikiPkNum}`
         );
         const wikiData = response.data;
@@ -159,7 +160,7 @@ const WikiUpdate = () => {
     }
 
     try {
-      const response = await axios.put(
+      const response = await axiosInstance.put(
         `/conect/${compPkNum}/wiki/wikiedit/${wikiPkNum}`,
         data,
         {

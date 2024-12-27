@@ -18,6 +18,7 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { Checkbox } from "rsuite";
+import axiosInstance from "../../../api/axiosInstance";
 
 const WikiCreate = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const WikiCreate = () => {
     const { name, value, files } = e.target;
     if (name === "fileInput") {
       setFileName(files[0].name);
-      console.log(fileName);
+      // console.log(fileName);
       setFormData((prevFormData) => ({
         ...prevFormData,
         [name]: files[0],
@@ -109,12 +110,12 @@ const WikiCreate = () => {
     }
 
     // 로그로 데이터를 확인
-    console.log("전송할 데이터:", formData);
-    console.log("전송할 파일:", formData.fileInput);
+    // console.log("전송할 데이터:", formData);
+    // console.log("전송할 파일:", formData.fileInput);
 
     try {
       // 문서와 선택적 파일 데이터를 함께 서버에 전송
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `/conect/${compPkNum}/wiki/wikiadd`,
         formData,
         {

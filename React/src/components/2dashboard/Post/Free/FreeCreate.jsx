@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const FreeCreate = () => {
   // Redux에서 로그인한 유저 정보 가져오기 (로그인된 사용자의 정보)
-  const writer = useSelector((state) => state.userData); 
+  const writer = useSelector((state) => state.userData);
   const navigate = useNavigate(); // 페이지 이동을 위한 navigate 훅
 
   // 폼 데이터 초기화
@@ -34,17 +34,17 @@ const FreeCreate = () => {
     // 폼 제출을 위한 데이터 처리 (기본값 설정)
     const formToSubmit = {
       ...formData,
-      post_fk_user_num: formData.post_fk_user_num || "1",  // 값이 없으면 "1"로 설정
-      post_fk_comp_num: formData.post_fk_comp_num || "1",  // 값이 없으면 "1"로 설정
-      regdate: new Date().toISOString(),  // 현재 시간 추가
-      post_kind: "1",    // 기본값
+      post_fk_user_num: formData.post_fk_user_num || "1", // 값이 없으면 "1"로 설정
+      post_fk_comp_num: formData.post_fk_comp_num || "1", // 값이 없으면 "1"로 설정
+      regdate: new Date().toISOString(), // 현재 시간 추가
+      post_kind: "1", // 기본값
       post_fk_dpart_num: "1", // 기본값
-      post_tag: "red",   // 기본값
+      post_tag: "red", // 기본값
     };
 
     // 제출 데이터 확인용 로그
-    console.log('Form data before submitting:', formToSubmit);
-    
+    // console.log('Form data before submitting:', formToSubmit);
+
     // axios를 사용하여 서버로 POST 요청 (게시글 생성)
     axios
       .post("/board/free", formToSubmit)
@@ -58,13 +58,15 @@ const FreeCreate = () => {
       })
       .catch((error) => {
         console.error("게시글 저장 중 오류:", error);
-        alert("저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status);
+        alert(
+          "저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status
+        );
       });
   };
 
   // 목록으로 돌아가기
   const handleBackToList = () => {
-    navigate('/main/free'); // 게시글 목록 페이지로 이동
+    navigate("/main/free"); // 게시글 목록 페이지로 이동
   };
 
   return (
@@ -74,7 +76,9 @@ const FreeCreate = () => {
           <h2>새 게시글 작성</h2> {/* 카드 헤더 - 게시글 작성 */}
         </CardHeader>
         <CardBody style={{ maxHeight: "40em", overflowY: "auto" }}>
-          <form onSubmit={handleSubmit}> {/* 폼 제출 시 handleSubmit 호출 */}
+          <form onSubmit={handleSubmit}>
+            {" "}
+            {/* 폼 제출 시 handleSubmit 호출 */}
             <div className="form-group">
               <label htmlFor="post_name">제목:</label>
               <input
@@ -127,9 +131,24 @@ const FreeCreate = () => {
                 required
               ></textarea>
             </div>
-            <button onClick={handleSubmit} type="submit" className="btn btn-primary">게시글 저장</button>
-            <button type="button" className="btn btn-secondary" onClick={handleBackToList}>목록</button>
-            <button type="button" className="btn btn-secondary">임시저장</button> {/* 임시저장 기능 미구현 */}
+            <button
+              onClick={handleSubmit}
+              type="submit"
+              className="btn btn-primary"
+            >
+              게시글 저장
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleBackToList}
+            >
+              목록
+            </button>
+            <button type="button" className="btn btn-secondary">
+              임시저장
+            </button>{" "}
+            {/* 임시저장 기능 미구현 */}
           </form>
         </CardBody>
       </Card>

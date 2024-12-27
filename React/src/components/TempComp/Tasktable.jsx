@@ -14,19 +14,24 @@ import {
   CardHeader,
 } from "reactstrap";
 
-export default function Tasktable({ projectNum }) {
+export default function Tasktable(props) {
+  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
+  const compNum = userInfo.user_fk_comp_num;
   const [tasks, setTasks] = useState([]);
-  const userNum = useSelector((state) => state.userData?.user_pk_num);
+  console.log(props.projPkNum);
   const navigate = useNavigate();
+  const [userNum, setUserNum] = useState(userInfo.user_pk_num);
 
   const showList = useCallback(() => {
-    if (!projectNum || !userNum) {
+    if (!props.projPkNum || !userNum) {
       console.log("프로젝트 번호 또는 사용자 번호가 유효하지 않습니다.");
       return;
     }
 
     axiosInstance
-      .get(`/board/task/proj/${projectNum}/user/${userNum}`)
+      .get(
+        `/conect/${compNum}/task/task/proj/${props.projPkNum}/user/${userNum}`
+      )
       .then((res) => {
         const sortData = res.data
           .sort((a, b) => new Date(b.taskStartdate) - new Date(a.taskStartdate))
@@ -36,17 +41,16 @@ export default function Tasktable({ projectNum }) {
       .catch((error) => {
         console.error("showList 오류:", error);
       });
-  }, [projectNum, userNum]);
+  }, [props.projPkNum, userNum]);
 
   useEffect(() => {
-    if (projectNum && userNum) {
+    if (props.projPkNum && userNum) {
       showList();
     }
-  }, [projectNum, userNum, showList]);
-
+  }, [props.projPkNum, userNum, showList]);
 
   const gotoTaskLists = () => {
-    navigate(`/main/task/${projectNum}`);
+    navigate(`/main/task/${props.projPkNum}`);
   };
 
   // 기한 날짜 yyyy-mm-dd 양식 설정

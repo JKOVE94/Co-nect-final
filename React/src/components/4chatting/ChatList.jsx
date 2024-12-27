@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { es } from "date-fns/locale";
 import { useSocket } from "./SocketContext";
+import axiosInstance from "api/axiosInstance"; // axiosInstance 직접 import
 
 function ChatList(props) {
   const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
@@ -19,7 +20,9 @@ function ChatList(props) {
 
   const getAllUser = async () => {
     try {
-      const response = await axios.get(`/conect/${compPkNum}/manage/user`);
+      const response = await axiosInstance.get(
+        `/conect/${compPkNum}/manage/user`
+      );
       setUserList(response.data);
     } catch (error) {
       console.error(error);
@@ -28,7 +31,7 @@ function ChatList(props) {
 
   const getAllProject = async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `/conect/${compPkNum}/manage/chatproj/${userPkNum}`
       );
       setProjectList(response.data);
@@ -89,8 +92,8 @@ function ChatList(props) {
     const roomMessages = messages.filter(
       (message) => message.chatRoomId === chatRoomId
     );
-    console.log("roomMessages:", roomMessages);
-    console.log("messages : " + messages);
+    // console.log("roomMessages:", roomMessages);
+    // console.log("messages : " + messages);
     if (roomMessages.length > 0) {
       return roomMessages[roomMessages.length - 1];
     }
@@ -135,7 +138,7 @@ function ChatList(props) {
         </div>
         <h4 className="chat-section-title">프로젝트</h4>
         {searchProject.map((proj) => (
-          <div className="chat-item" key={proj.project_pk_num}>
+          <div className="chat-item" key={proj.proj_pk_num}>
             <div className={`chat-icon user`}>👥</div>
             <div className="chat-content">
               <div

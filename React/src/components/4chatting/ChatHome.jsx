@@ -13,14 +13,6 @@ const ChatHome = () => {
     title: "",
   });
 
-  useEffect(() => {
-    console.log(roomInfo);
-  }, [roomInfo]);
-
-  useEffect(() => {
-    console.log(listOrRoom);
-  }, [listOrRoom]);
-
   return (
     <>
       <SocketProvider>

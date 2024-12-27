@@ -2,18 +2,13 @@ import axiosInstance from "api/axiosInstance";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Form,
-} from "react-bootstrap";
+import { Card, CardBody, CardTitle, Form } from "react-bootstrap";
 
-const RecCreate = ({handleError}) => {
+const RecCreate = ({ handleError, projPkNum }) => {
   const userNum = useSelector((state) => state.userData.user_pk_num); //사번
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
 
-  const { projPkNum } = useParams(); //프로젝트번호
+  // const { projPkNum } = useParams(); //프로젝트번호
 
   const [data, setData] = useState([]); //전송 데이터
   const navigate = useNavigate();
@@ -30,22 +25,24 @@ const RecCreate = ({handleError}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleClick();
-  }
+  };
 
   const handleClick = () => {
     axiosInstance
-      .post(`/${compNum}/rec/`, data)
+      .post(`/conect/${compNum}/rec/`, data)
       .then((res) => {
         if (res.data) {
           navigate(`/main/rec/${projPkNum}`);
         }
       })
-      .catch((err) => handleError("게시글 등록에 실패했습니다. 다시 시도해주세요.",true));
+      .catch((err) =>
+        handleError("게시글 등록에 실패했습니다. 다시 시도해주세요.", true)
+      );
   };
 
   return (
     <>
-      <Card >
+      <Card>
         <CardTitle
           style={{
             display: "flex",
@@ -55,38 +52,42 @@ const RecCreate = ({handleError}) => {
         >
           <h2>건의사항 등록</h2>
         </CardTitle>
-        <CardBody style={{overflowY: "auto" }}>
-        <form onSubmit={handleSubmit}>
-          <Form.Group>
-            <Form.Label>제목</Form.Label>
-            <Form.Control
-              type="text"
-              id="rec_title"
-              placeholder="제목을 작성하세요."
-              onChange={handleChange}
-              required={true}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>내용</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={8}
-              id="rec_content"
-              placeholder="내용을 작성하세요."
-              onChange={handleChange}
-              required={true}
-            />
-          </Form.Group>
-          <div className="d-flex justify-content-end">
-          <button
-            style={{marginTop:'1em', paddingLeft:'1.5em', paddingRight:'1.5em'}}
-            className="btn btn-primary"
-            type="submit"
-          >
-            등록
-          </button>
-          </div>
+        <CardBody style={{ overflowY: "auto" }}>
+          <form onSubmit={handleSubmit}>
+            <Form.Group>
+              <Form.Label>제목</Form.Label>
+              <Form.Control
+                type="text"
+                id="rec_title"
+                placeholder="제목을 작성하세요."
+                onChange={handleChange}
+                required={true}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>내용</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={8}
+                id="rec_content"
+                placeholder="내용을 작성하세요."
+                onChange={handleChange}
+                required={true}
+              />
+            </Form.Group>
+            <div className="d-flex justify-content-end">
+              <button
+                style={{
+                  marginTop: "1em",
+                  paddingLeft: "1.5em",
+                  paddingRight: "1.5em",
+                }}
+                className="btn btn-primary"
+                type="submit"
+              >
+                등록
+              </button>
+            </div>
           </form>
         </CardBody>
       </Card>

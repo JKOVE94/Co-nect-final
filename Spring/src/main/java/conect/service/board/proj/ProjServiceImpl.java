@@ -60,21 +60,6 @@ public class ProjServiceImpl implements ProjService {
 		return entities.stream().map(ProjectDto::fromEntity).collect(Collectors.toList());
 	}
 
-	/*
-	 * // 페이징, 정렬
-	 * public Page<ProjectDto> getList(int page, int pageSize) {
-	 * // 정렬 정보 생성
-	 * 
-	 * // Pageable 객체 생성 (페이지와 정렬 정보 포함)
-	 * Pageable pageable = PageRequest.of(page, pageSize);
-	 * 
-	 * // Repository를 통해 데이터를 조회
-	 * Page<ProjectEntity> postPage = this.prepository.findAll(pageable);
-	 * // ProjectEntity -> dto 변환
-	 * return postPage.map(ProjectDto::fromEntity);
-	 * }
-	 */
-
 	public List<ProjectDto> getListAll() {
 		return prepository.findAll().stream().map(ProjectDto::fromEntity).toList();
 	}
@@ -91,65 +76,48 @@ public class ProjServiceImpl implements ProjService {
 		// DTO (ProjectForm) -> Entity (ProjectEntity)
 		ProjectEntity entity = ProjectForm.toEntity(form);
 
-		// proj_created가 null인 경우 현재 날짜로 설정
-		if (entity.getProjStartdate() == null) {
-			entity.setProjStartdate(LocalDate.now());
-		}
 
-		// 회사 설정
-		CompanyEntity compEntity = compRepository.findById(form.getProj_fk_comp_num())
-				.orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
-		entity.setCompanyEntity(compEntity);
-
-		// Entity 저장
-		ProjectEntity savedEntity = prepository.save(entity);
-
-		// ProjectmemberEntity 생성 및 저장
+		// 부서, 담당자, 회사 설정
 		UserEntity userEntity = userRepository.findById(form.getProj_fk_user_num())
 				.orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+		CompanyEntity compEntity = compRepository.findById(form.getProj_fk_comp_num())
+				.orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
 
-		ProjectmemberEntity projectMember = new ProjectmemberEntity();
-		projectMember.setProjectEntity(savedEntity);
-		projectMember.setUserEntity(userEntity);
-		projectmemberRepository.save(projectMember);
+		entity.setCompanyEntity(compEntity);
+
+		// Entity 저장 후, 저장된 엔티티 반환
+		ProjectEntity savedEntity = prepository.save(entity);
 
 		// 저장된 엔티티의 Primary Key 반환
 		return savedEntity.getProjPkNum();
 	}
 
-	@Transactional
 	public void editProject(int projPkNum, ProjectForm form) {
 		// 프로젝트 번호로 기존 프로젝트 조회
-		ProjectEntity entity = prepository.findById(projPkNum)
+		ProjectEntity entity = prepository.findById(form.getProj_pk_num())
 				.orElseThrow(() -> new RuntimeException("프로젝트가 존재하지 않습니다."));
 
-		// 기존 필드 업데이트
-		entity.setProjTitle(form.getProj_title());
-		entity.setProjStartdate(form.getProj_startdate());
-		entity.setProjEnddate(form.getProj_enddate());
-		entity.setProjStatus(form.getProj_status());
-		entity.setProjContent(form.getProj_content());
-		entity.setProjUpdated(LocalDate.now());
+		// 기존 proj_created 값은 그대로 유지하고, 나머지 필드를 수정
+		ProjectEntity updatedEntity = ProjectForm.toEntity(form);
 
-		// 회사 설정
-		CompanyEntity compEntity = compRepository.findById(form.getProj_fk_comp_num())
-				.orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
-		entity.setCompanyEntity(compEntity);
 
-		// 프로젝트 멤버 업데이트
+
+		entity.setProjStartdate(updatedEntity.getProjStartdate());
+		entity.setProjEnddate(updatedEntity.getProjEnddate());
+
+		entity.setProjStatus(updatedEntity.getProjStatus());
+
+		entity.setProjUpdated(LocalDate.now()); // 프로젝트 수정 날짜 설정
+
+		// 부서, 담당자, 회사 설정
 		UserEntity userEntity = userRepository.findById(form.getProj_fk_user_num())
 				.orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+		CompanyEntity compEntity = compRepository.findById(form.getProj_fk_comp_num())
+				.orElseThrow(() -> new RuntimeException("회사가 존재하지 않습니다."));
 
-		// 기존 프로젝트 멤버 찾기 또는 새로 생성
-		ProjectmemberEntity projectMember = projectmemberRepository.findByProjectEntity(entity)
-				.orElse(new ProjectmemberEntity());
+		entity.setCompanyEntity(compEntity);
 
-		projectMember.setProjectEntity(entity);
-		projectMember.setUserEntity(userEntity);
-		projectmemberRepository.save(projectMember);
-
-		// 수정된 Entity 저장
-		prepository.save(entity);
+		prepository.save(entity); // 수정된 Entity 저장
 	}
 
 	@Override
@@ -164,6 +132,13 @@ public class ProjServiceImpl implements ProjService {
 		return taskRepository.getTaskByTaskFkUserNum(user_pk_num).stream()
 				.map(TaskDto::fromEntity)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ProjectDto> getScheduleAll(int usernum) {
+		String pattern = "(?<=,|^)" + usernum + "(?=,|$)";
+		return prepository.findByProjMembersContaining(pattern)
+				.stream().map(ProjectDto::fromEntity).toList();
 	}
 
 	@Override

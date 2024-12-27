@@ -10,6 +10,10 @@ import axiosInstance from "../api/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 
 const ProjectSelect = () => {
+  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
+  const compNum = userInfo.user_fk_comp_num;
+  
+
   const settings = {
     dots: true,
     infinite: true,
@@ -36,6 +40,7 @@ const ProjectSelect = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  sessionStorage.setItem("persist:proj_pk_num", data.proj_pk_num);
   const user_pk_num = useSelector((state) => state.userData.user_pk_num);
   const user_author = useSelector((state) => state.userData.user_author);
   const navigate = useNavigate();
@@ -51,7 +56,7 @@ const ProjectSelect = () => {
     setError(null);
 
     axiosInstance
-      .get(`/proj/ProjSel/${user_pk_num}`)
+      .get(`/conect/${compNum}/proj/ProjSel/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
       })
@@ -73,6 +78,10 @@ const ProjectSelect = () => {
     fetchData();
   }, [fetchData]);
 
+  const handleSession = (proj_pk_num) => {
+    sessionStorage.setItem("persist:proj_pk_num", proj_pk_num);
+  }
+
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("ko-KR", options);
@@ -90,6 +99,7 @@ const ProjectSelect = () => {
         <Link
           to={`/main?proj=${proj.proj_pk_num}&user=${user_pk_num}`}
           style={{ textDecoration: "none", color: "inherit" }}
+          onClick={() => {handleSession(proj.proj_pk_num)}}
         >
           <CardBody className="p-5">
             <Row style={{ maxHeight: "3rem" }}>
@@ -176,7 +186,7 @@ const ProjectSelect = () => {
               <h3 className="font-weight-bold">
                 현재 진행중인 프로젝트가 없습니다
               </h3>
-              {user_author === "1" ? (
+              {user_author !== "1" ? (
                 <>
                   <p className="text-muted">새 프로젝트를 시작해보세요!</p>
                   <Link to="/create-project" className="btn btn-primary mt-3">

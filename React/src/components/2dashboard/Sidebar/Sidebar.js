@@ -88,7 +88,7 @@ const Sidebar = (props) => {
        <Link to="/main"> <Logo /></Link> {/* 로고 */}
         <Collapse navbar isOpen={collapseOpen}>
           <Nav navbar>
-            <CommonNavbar /> {/* 공통 메뉴 */}
+            <CommonNavbar setProjPkNum={props.setProjPkNum}/> {/* 공통 메뉴 */}
           </Nav>
           <hr className="my-3" />  {/* 구분선 */}
         </Collapse>

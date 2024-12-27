@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import ProjHeader from "../2dashboard/Headers/ProjHeaders";
+import axiosInstance from "../../api/axiosInstance";
 import {
   Card,
   CardBody,
@@ -22,8 +23,8 @@ const ProjStatus = () => {
   const fetchProjectData = useCallback(() => {
     setLoading(true);
     setError(null);
-    axios
-      .get(`/proj/projread/${id}`)
+    axiosInstance
+      .get(`/conect/proj/projread/${id}`)
       .then((res) => {
         setProj(res.data);
       })

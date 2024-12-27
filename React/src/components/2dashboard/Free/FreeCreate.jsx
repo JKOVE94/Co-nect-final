@@ -39,7 +39,7 @@ const FreeCreate = () => {
       post_tag: "red", // 기본값
     };
 
-    console.log("Form data before submitting:", formToSubmit);
+    // console.log("Form data before submitting:", formToSubmit);
 
     axios
       .post("/board/free", formToSubmit)

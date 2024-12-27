@@ -19,7 +19,9 @@ import {
 import moment from "moment";
 import axiosInstance from "../../api/axiosInstance"; // axiosInstance 직접 import
 
-const MyToDoList = () => {
+const MyToDoList = (props) => {
+  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
+  const compNum = userInfo.user_fk_comp_num;
   const [data, setData] = useState({
     tasks: [],
     projects: [],
@@ -43,7 +45,7 @@ const MyToDoList = () => {
     setError(null);
 
     axiosInstance
-      .get(`/proj/user/${user_pk_num}`)
+      .get(`/conect/${compNum}/proj/user/${user_pk_num}`)
       .then((res) => {
         setData(res.data);
         updateTodoList(res.data.todos);
@@ -55,7 +57,7 @@ const MyToDoList = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [user_pk_num]);
+  }, [user_pk_num, props.projPkNum]);
 
   const updateTodoList = useCallback((todos) => {
     const today = moment().startOf("day");

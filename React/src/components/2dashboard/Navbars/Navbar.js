@@ -56,8 +56,8 @@ const UserNavbar = (props) => {
 
   return (
     <>
-      <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
-        <Container fluid>
+      <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main" >
+        <Container fluid style={{position:"fixed", top: "3vh", right: "1vw"}}>
           <Link
             className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
             to="/"
@@ -65,18 +65,6 @@ const UserNavbar = (props) => {
             {/* Link 컴포넌트 내부에는 좌측 상단에 뜨는 이름을 설정 가능 */}
           </Link>
           {/* 검색창 */}
-          <Form className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
-            <FormGroup className="mb-0">
-              <InputGroup className="input-group-alternative">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="fas fa-search" />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input placeholder="Search" type="text" />
-              </InputGroup>
-            </FormGroup>
-          </Form>
           <Nav className="align-items-center d-none d-md-flex" navbar>
             <UncontrolledDropdown nav>
               <DropdownToggle className="pr-0" nav>
@@ -84,8 +72,8 @@ const UserNavbar = (props) => {
                   {/* 사용자 사진 */}
                   <span className="avatar avatar-sm rounded-circle">
                     <img
-                      alt="..."
-                      src={require("assets/img/theme/team-4-800x800.jpg")}
+                      src={userData.user_pic}
+                      style={{width: "100%", height: "100%"}}
                     />
                   </span>
                   {/* 사용자 이름 */}

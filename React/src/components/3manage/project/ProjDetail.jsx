@@ -6,6 +6,7 @@ import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import ManageProjModal from "variables/Modal/ManageProjModal";
+import axiosInstance from "api/axiosInstance";
 
 const ProjDetail = (props) => {
   const projPkNumInt = parseInt(useParams().projPkNum, 10);
@@ -22,10 +23,10 @@ const ProjDetail = (props) => {
   useEffect(() => {
     const fetchProj = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           `/conect/${props.compNum}/manage/proj/${projPkNumInt}`
         );
-        console.log(response.data);
+        // console.log(response.data);
         setProj(response.data);
       } catch (err) {
         setError(err.message);
@@ -33,7 +34,7 @@ const ProjDetail = (props) => {
         setLoading(false);
       }
     };
-    console.log(props.userInfo);
+    // console.log(props.userInfo);
     fetchProj();
   }, [projPkNumInt]);
 
