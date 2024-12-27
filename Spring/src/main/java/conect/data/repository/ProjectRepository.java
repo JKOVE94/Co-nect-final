@@ -52,7 +52,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Integer>
 	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm WHERE p.companyEntity.compPkNum=?1 AND p.projPkNum = ?2")
 	ProjectEntity findByProjCompNumAndProjPkNum(int compNum, int projNum);
 
-	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm WHERE p.companyEntity.compPkNum=?1 AND pm.userEntity.userPkNum = ?2")
+	@Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.projectmemberEntities pm WHERE p.companyEntity.compPkNum=?1 AND ( pm.userEntity.userPkNum = ?2 OR p.userEntity.userPkNum = ?2)")
 	List<ProjectEntity> findByProjCompNumAndUserPkNum(int compNum, int userNum);
 
 }

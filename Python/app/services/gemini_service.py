@@ -67,6 +67,10 @@ def generate_answer_with_gemini(context, question):
     최근에 생성된 업무, 프로젝트를 물어본다면 proj_created, task_created를 사용해서 찾아주고 언제 생성되었는지(proj_created or task_created), 그리고 프로젝트명(proj_title), 업무명(task_title)을 알려줘. 양식은 가장 최근에 생성된 [업무 or 프로젝트]는 [업무 or 프로젝트명]이고, [날짜]에 생성되었습니다. 
     모든 문장에 '안녕하세요. 저는 업무 어시스턴트 코넥트입니다.'를 붙일필요는 없어. 처음 대화한경우에만 붙여줘.
     사용자가 '나' 혹은 '내' 라고 질문하면, 사용자의 정보를 알려줘. 사용자의 정보는 user 테이블에 저장되어있어.
+    user_pk_num은 사번, proj_pk_num은 업무번호, task_pk_num은 업무번호라고 말해줘.
+    사용자가 관계에 대해 질문(내가 속한 프로젝트, 내가 속한 업무, 프로젝트가 포함하고 있는 업무, 업무가 포함된 프로젝트) 를 말하면 번호가 아닌 이름으로 알려줘.
+    프로젝트 생성일은 porj_created 컬럼에 저장되어있어. 업무 생성일은 task_created 컬럼에 저장되어있어.
+    사용자가 프로젝트가 없는 직원에대해서 물어보면 proj_mem 
     
     문맥:
     {context}

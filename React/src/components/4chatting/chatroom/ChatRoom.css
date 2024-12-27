@@ -71,6 +71,7 @@
 
 .you-message {
   justify-content: flex-start;
+  width: 100%;
 }
 
 .me-message {
@@ -176,4 +177,6 @@
 
 .message-text {
   margin-bottom: 0.3em;
+  width: 100%;
+  word-wrap: break-word;
 }

@@ -19,8 +19,8 @@ def get_db_connection():
 @router.get("/ask")
 async def ask_gemini(userPkNum: str, question: str, db_connection=Depends(get_db_connection)):
     # 데이터베이스에서 데이터 가져오기
-    myself_df = pd.read_sql_query(("SELECT * FROM user WHERE user_pk_num = %s"), db_connection, params=(userPkNum,))
-    users_df = pd.read_sql_query("SELECT * FROM user", db_connection)
+    myself_df = pd.read_sql_query(("SELECT user_pk_num, user_name, user_mail, user_lastlogin, user_fk_comp_num FROM user u WHERE user_pk_num = %s"), db_connection, params=(userPkNum,))
+    users_df = pd.read_sql_query("SELECT user_pk_num, user_name, user_mail, user_lastlogin, user_fk_comp_num FROM user", db_connection)
     projects_df = pd.read_sql_query("SELECT * FROM project", db_connection)
     projectmembers_df = pd.read_sql_query("SELECT * FROM projectmember", db_connection)
     tasks_df = pd.read_sql_query("""
