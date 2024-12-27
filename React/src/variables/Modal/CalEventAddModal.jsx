@@ -11,11 +11,16 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast, handleError 
   const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
   
   const [data, setData] = useState(); //전달할 데이터
-  const [timeZon, setTimeZon] = useState();
+  const [allDay, setAllDay] = useState();
 
   useEffect(()=>{
     setData((pre) => ({ ...pre, todo_fk_user_num: num}));
+    setAllDay(false);
   },[num])
+
+  useEffect(()=>{
+    setAllDay(false);
+  },[isOpen])
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.id]: e.target.value});
@@ -48,7 +53,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast, handleError 
   }
 
   const handleCheck = (e) => {
-    setTimeZon(e.target.checked);
+    setAllDay(e.target.checked);
     if(e.target.checked){
       setData({...data, todo_starttime:null, todo_endtime:null})
     }
@@ -99,7 +104,7 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast, handleError 
                 type="time"
                 id="todo_starttime"
                 onChange={handleChange}
-                hidden={timeZon}
+                hidden={allDay}
               />
             </Col>
           </div>
@@ -120,14 +125,14 @@ const CalEventAddModal = ({ isOpen, onClose, getEvent, handleToast, handleError 
                 type="time"
                 id="todo_endtime"
                 onChange={handleChange}
-                hidden={timeZon}
+                hidden={allDay}
               />
             </Col>
           </div>
         </Form.Group>
         <Form.Group className="mb-2 d-flex justify-content-start align-items-center">
           <Form.Label>종일</Form.Label>
-          <input type="checkbox" onClick={handleCheck} className={style.check}/>
+          <input type="checkbox" onClick={handleCheck} checked={allDay} className={style.check}/>
         </Form.Group>
         <Form.Group className="mb-2">
           <Form.Label>카테고리</Form.Label>
