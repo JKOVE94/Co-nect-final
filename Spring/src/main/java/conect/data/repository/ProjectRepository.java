@@ -1,5 +1,6 @@
 package conect.data.repository;
 
+import conect.data.dto.UserDto;
 import conect.data.entity.PostEntity;
 import conect.data.entity.ProjectEntity;
 import conect.data.entity.TaskEntity;

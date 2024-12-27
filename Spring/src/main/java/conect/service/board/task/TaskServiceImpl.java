@@ -2,13 +2,11 @@ package conect.service.board.task;
 
 import conect.data.dto.PostDto;
 import conect.data.dto.TaskDto;
-import conect.data.dto.TaskHistoryDto;
+import conect.data.dto.UserDto;
 import conect.data.entity.PostEntity;
 import conect.data.entity.TaskEntity;
-import conect.data.entity.TaskHistoryEntity;
 import conect.data.form.TaskForm;
 import conect.data.repository.ProjectRepository;
-import conect.data.repository.TaskHistoryRepository;
 import conect.data.repository.TaskRepository;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,9 +31,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
-    
-    @Autowired
-    private TaskHistoryRepository taskHistoryRepository;
 
     @Override
     public List<TaskDto> getAllTask(int task_fk_proj_num) {
@@ -57,13 +53,25 @@ public class TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }
 
+    
     @Override
     public void insertTask(TaskForm form) {
         TaskEntity taskEntity = TaskForm.toEntity(form);
-        taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow());
-        taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow());
+        taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow(() -> new RuntimeException("Project not found")));
+        taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow(() -> new RuntimeException("User not found")));
+
+        // taskCreated 설정 (현재 날짜로)
+        taskEntity.setTaskCreated(LocalDate.now());
+
+        // taskDepth 설정 (기본값 0)
+        taskEntity.setTaskDepth(0);
+
         taskRepository.save(taskEntity);
     }
+    
+
+    
+    
 
     @Override
     public void updateTask(TaskForm form) {
@@ -94,6 +102,10 @@ public class TaskServiceImpl implements TaskService {
         }
         else taskRepository.deleteById(task_pk_num);
     }
+    
+    
+    
+    
     
  // 페이징, 정렬, 검색
     @Override
@@ -132,17 +144,6 @@ public class TaskServiceImpl implements TaskService {
                 .map(TaskDto::fromEntity)
                 .collect(Collectors.toList());
     }
-   
-    @Override
-    public List<TaskHistoryDto> getTaskHistoryByTaskNum(int taskPkNum) {
-        List<TaskHistoryEntity> entities = taskHistoryRepository.findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
-        return entities.stream()
-                .map(TaskHistoryDto::fromEntity)
-                .collect(Collectors.toList());
-    }
-    
-
-
 
 
 

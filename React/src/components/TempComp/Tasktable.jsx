@@ -120,9 +120,7 @@ export default function Tasktable({ projectNum }) {
                       <td style={{ fontSize: "1rem" }}>
                         {dateForm(task.taskDeadline)}
                       </td>
-                      <td style={{ fontSize: "1rem" }}>
-                        {task.taskPriority || "미지정"}
-                      </td>
+                      <td style={{ fontSize: "1rem" }}>{task.taskPriority}</td>
                       <td
                         style={{
                           display: "flex",
@@ -132,9 +130,9 @@ export default function Tasktable({ projectNum }) {
                         }}
                       >
                         <Progress
-                          value={Number(task.taskProgress)}
+                          value={task.taskProgress}
                           max={100}
-                          style={{ height: "8px", width: "100%" }}
+                          style={{ height: "8px" }}
                         />
                         <div
                           style={{

@@ -204,15 +204,7 @@ const MyToDoList = () => {
                           <CardSubtitle className={style.sub}>
                             {todo.start} ~ {todo.end}
                           </CardSubtitle>
-                          <CardText
-                            className={style.item}
-                            style={{
-                              maxHeight: "9rem",
-                              overflowY: "auto",
-                              msOverflowStyle: "none",
-                              scrollbarWidth: "none",
-                            }}
-                          >
+                          <CardText className={style.item}>
                             {todo.todo_content}
                           </CardText>
                         </div>

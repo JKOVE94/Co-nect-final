@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import LoginToast from "variables/Toast/LoginToast";
 import { useDispatch } from "react-redux";
 import { LOGIN } from "../Redux/Reducer/userDataReducer";
-import LoginModal from "../variables/Modal/LoginModal";
+import LoginModal from "variables/Modal/LoginModal";
 import axios from "axios";
 
 const Login = (props) => {
@@ -81,50 +81,39 @@ const Login = (props) => {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("/login", loginInfo);
+      const res = await axios.post("/login", loginInfo); // axiosInstance 대신 axios 사용
       const responseData = res.data;
       setData(responseData);
 
-      switch (responseData.status) {
-        case 1: // 로그인 성공
-          dispatch(
-            LOGIN({
-              user_pk_num: responseData.user_pk_num,
-              user_id: responseData.user_id,
-              user_name: responseData.user_name,
-              user_mail: responseData.user_mail,
-              user_pic: responseData.user_pic,
-              user_fk_comp_num: responseData.user_fk_comp_num,
-              user_author: responseData.user_author,
-            })
-          );
-          setIsReversed(true);
-          setTimeout(() => {
-            navigate(`/ProjSel/${responseData.user_pk_num}`);
-          }, 1000);
-          break;
-        case 2: // 정보 불일치
-          setErrType(2);
-          toggleShowA();
-          break;
-        case 3: // 잠긴 계정
-          setErrType(3);
-          handleShowM();
-          break;
-        default:
-          setErrType(4);
-          toggleShowA();
+      if (responseData.status === 1) {
+        sessionStorage.setItem("token", responseData.token);
+
+        dispatch(
+          LOGIN({
+            user_pk_num: responseData.user_pk_num,
+            user_id: responseData.user_id,
+            user_name: responseData.user_name,
+            user_mail: responseData.user_mail,
+            user_pic: responseData.user_pic,
+            user_fk_comp_num: responseData.user_fk_comp_num,
+          })
+        );
+
+        setIsReversed(true);
+        setTimeout(() => {
+          navigate(`/ProjSel/${responseData.user_pk_num}`);
+        }, 1000);
+      } else if (responseData.status === 2) {
+        setErrType(responseData.status);
+        toggleShowA();
+      } else if (responseData.status === 3) {
+        setErrType(responseData.status);
+        handleShowM();
       }
     } catch (error) {
       console.error("로그인 실패:", error);
-      if (error.response && error.response.status === 403) {
-        // 403 Forbidden 에러 처리 (잠긴 계정)
-        setErrType(3);
-        handleShowM();
-      } else {
-        setErrType(4);
-        toggleShowA();
-      }
+      setErrType(4);
+      toggleShowA();
     } finally {
       setIsLoading(false);
     }

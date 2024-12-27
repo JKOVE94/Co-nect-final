@@ -29,6 +29,7 @@ public class ProjectEntity {
 
     @ManyToOne
     @JoinColumn(name = "proj_fk_comp_num")
+    @JsonIgnore
     private CompanyEntity companyEntity;
 
     @ManyToOne

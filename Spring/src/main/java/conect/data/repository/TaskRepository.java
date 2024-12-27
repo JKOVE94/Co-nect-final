@@ -32,8 +32,4 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Integer> {
     @Query("SELECT t FROM TaskEntity t WHERE t.taskGroup = :taskGroup AND t.taskDepth = :taskDepth")
     List<TaskEntity> findRelatedTasks(@Param("taskGroup") int taskGroup, @Param("taskDepth") int taskDepth);
 
-
-    
-
-
-}
+   }
