@@ -23,6 +23,7 @@ public class WikiDto {
     private int wiki_fk_proj_num; // 프로젝트 고유번호
     private String user_name;
     private String file_name; // 파일명 추가
+    private String file_path; // 파일 경로
 
     // Getters and Setters
 
@@ -39,11 +40,13 @@ public class WikiDto {
         wikiDto.setWiki_fk_proj_num(wiki.getProjectEntity().getProjPkNum());
         wikiDto.setUser_name(wiki.getUserEntity().getUserName());
 
-        // 파일이 존재하면 파일 이름을 설정, 없으면 null
+        // 파일이 존재하면 파일 설정, 없으면 null
         if (wiki.getFileEntity() != null) {
             wikiDto.setFile_name(wiki.getFileEntity().getFileName());
+            wikiDto.setFile_path(wiki.getFileEntity().getFilePath());
         } else {
             wikiDto.setFile_name(null); // 파일이 없을 경우
+            wikiDto.setFile_path(null);
         }
 
         return wikiDto;

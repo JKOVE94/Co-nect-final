@@ -28,4 +28,5 @@ public class FileForm {
         entity.setWikiEntity(form.getWikiEntity()); // WikiEntity 연결
         return entity;
     }
+
 }

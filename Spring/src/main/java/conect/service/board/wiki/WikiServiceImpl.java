@@ -11,6 +11,10 @@ import conect.data.repository.ProjectRepository;
 import conect.data.repository.UserRepository;
 import conect.data.repository.WikiRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +36,6 @@ import com.google.cloud.storage.StorageOptions;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +62,7 @@ public class WikiServiceImpl implements WikiService {
     private String bucketName;
 
 	@Override
-	public String saveFile(WikiForm form) throws IOException {
+	public String saveFile(WikiForm form) throws Exception {
 		InputStream keyFile = null;
 		String fileUrl = "";
 		System.out.println("keyFileName : "+keyFileName);
@@ -71,23 +74,34 @@ public class WikiServiceImpl implements WikiService {
 			String fileName = "file/" + form.getFileInput().getOriginalFilename();
 			String ext = form.getFileInput().getContentType(); // 파일 유형
 
+			 System.out.println("File name: " + fileName);
+		        System.out.println("File type (content type): " + ext);
+			
 			Storage storage = StorageOptions.newBuilder()
 					.setCredentials(GoogleCredentials.fromStream(keyFile)).build()
 					.getService();
+			
+			System.out.println(storage);
+			
 			// Google Cloud Storage에 저장된 주소. 해당 주소로 파일에 바로 접근 가능
 			fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + fileName;
 
 			if (form.getFileInput().isEmpty()) {
 				fileUrl = null;
+				System.out.println(fileUrl);
 			} else {
 				BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName).setContentType(ext).build();
+				System.out.println(blobInfo);
 				Blob blob = storage.create(blobInfo, form.getFileInput().getInputStream());
+				System.out.println(blob.getMediaLink());
 			}
 		} finally {
 			if (keyFile != null) {
 				keyFile.close();
+				System.out.println(keyFile);
 			}
 		}
+		System.out.println("=fileUrl====" + fileUrl);
 		return fileUrl;
 	}
 
@@ -127,6 +141,83 @@ public class WikiServiceImpl implements WikiService {
 	            .map(WikiDto::fromEntity)
 	            .orElseThrow(() -> new EntityNotFoundException("문서를 찾을 수 없습니다. ID: " + wikiPkNum));
 	}
+	
+	// 부분 조회 (조회수 증가 포함)
+    @Override
+    public WikiDto getPostView(Integer wikiPkNum, HttpServletRequest request, HttpServletResponse response) {
+    	 // 세션에서 조회 기록 확인
+        HttpSession session = request.getSession();
+        String sessionKey = "viewedPost_" + wikiPkNum;
+        Boolean hasViewedInSession = (Boolean) session.getAttribute(sessionKey);
+    	
+    	// 쿠키 확인
+        Cookie[] cookies = request.getCookies();
+        boolean hasViewedInCookie = false; // 게시물 확인 여부
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("viewedPost_" + wikiPkNum)) {
+                	hasViewedInCookie  = true;
+                    break;
+                }
+            }
+        }
+
+
+        // 조회수 증가
+        // 조회수 확인되었을 때 실행되는 로직
+        if ((hasViewedInSession == null || !hasViewedInSession) && !hasViewedInCookie) {
+            incrementViewCount(wikiPkNum);
+            
+            // 세션에 조회 기록 저장
+            session.setAttribute(sessionKey, true);
+
+            // 새로운 쿠키 생성
+            Cookie newCookie = new Cookie("viewedPost_" + wikiPkNum, "true"); 
+            // 쿠키 이름 : 확인된게시물_게시물PkNum => 특정 파일을 사용자가 조회했는지 쿠키로 저장합니다. 
+            // 해당 게시물을 1일 이내 다시 조회하면 저장된 쿠키를 확인하고 조회수 증가 X
+            newCookie.setMaxAge(86400); // 쿠키 유효 기간 : 1일
+            newCookie.setHttpOnly(true);
+            newCookie.setPath("/"); // 모든 경로에서 쿠키 유효
+            response.addCookie(newCookie);
+        }
+        
+        // 부분 조회 로직
+        WikiEntity wikiEntity = wrepository.findById(wikiPkNum)
+                .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다."));
+
+        WikiDto wikiDto = WikiDto.fromEntity(wikiEntity);
+
+        if (wikiEntity.getFileEntity() != null) {
+            FileEntity fileEntity = wikiEntity.getFileEntity();
+            wikiDto.setWiki_regdate(wikiEntity.getWikiRegdate());
+            wikiDto.setWiki_view(wikiEntity.getWikiView());
+            if (wikiEntity.getUserEntity() != null) {
+            	wikiDto.setUser_name(wikiEntity.getUserEntity().getUserName());
+            }
+        }
+
+        return wikiDto;
+    }
+    
+
+    // 조회수 증가 로직
+    @Transactional
+    public void incrementViewCount(Integer wikiPkNum) {
+    	 WikiEntity wikiEntity = wrepository.findById(wikiPkNum)
+                 .orElseThrow(() -> new RuntimeException("문서가 존재하지 않습니다."));
+        
+        if (wikiEntity != null) { // wikiEntity가 비어있지 않을 때 조회수 증가
+            wikiEntity.setWikiView(wikiEntity.getWikiView() + 1);
+            wrepository.save(wikiEntity);
+        }
+    }
+    
+	 // 위키 번호로 파일 정보 조회
+    public FileEntity getWikiFileByWikiNum(int wikiPkNum) {
+        return fileRepository.findByWikiEntityWikiPkNum(wikiPkNum)
+                           .orElse(null);
+    }
 
 	// 문서 생성 메서드
 	@Transactional
@@ -167,29 +258,103 @@ public class WikiServiceImpl implements WikiService {
 		return savedEntity.getWikiPkNum();
 	}
 
-	// 문서 수정 메서드
-	public void editWiki(int wikiPkNum, WikiForm form) {
-		// 프로젝트 번호로 기존 프로젝트 조회
-		WikiEntity entity = wrepository.findById(form.getWiki_pk_num())
-				.orElseThrow(() -> new RuntimeException("문서가 존재하지 않습니다."));
+	@Transactional
+	public void editWiki(int wikiPkNum, WikiForm form) throws Exception {
+	    try {
+	        // 문서 조회
+	        WikiEntity entity = wrepository.findById(wikiPkNum)
+	                .orElseThrow(() -> new RuntimeException("문서가 존재하지 않습니다."));
 
-		WikiEntity updatedEntity = WikiForm.toEntity(form);
-		updatedEntity.setWikiRegdate(entity.getWikiRegdate()); // 기존 작성일 유지
+	        // 연관 엔티티 조회
+	        ProjectEntity projEntity = projRepository.findById(form.getWiki_fk_proj_num())
+	                .orElseThrow(() -> new RuntimeException("프로젝트가 존재하지 않습니다."));
+	        UserEntity userEntity = userRepository.findById(form.getWiki_fk_user_num())
+	                .orElseThrow(() -> new RuntimeException("작성자가 존재하지 않습니다."));
 
-		entity.setWikiTitle(updatedEntity.getWikiTitle());
-		entity.setWikiContent(updatedEntity.getWikiContent());
-		entity.setWikiIsnotice(updatedEntity.isWikiIsnotice());
+	        // 문서 정보 업데이트
+	        entity.setWikiTitle(form.getWiki_title());
+	        entity.setWikiContent(form.getWiki_content());
+	        entity.setWikiIsnotice(form.isWiki_isnotice());
+	        entity.setProjectEntity(projEntity);
+	        entity.setUserEntity(userEntity);
 
-		// 프로젝트, 작성자 설정
-		ProjectEntity projEntity = projRepository.findById(form.getWiki_fk_proj_num())
-				.orElseThrow(() -> new RuntimeException("프로젝트가 존재하지 않습니다."));
-		UserEntity userEntity = userRepository.findById(form.getWiki_fk_user_num())
-				.orElseThrow(() -> new RuntimeException("작성자가 존재하지 않습니다."));
+	        // 파일 처리
+	        FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
+	        String fileStatus = form.getFileStatus();
 
-		entity.setProjectEntity(projEntity);
-		entity.setUserEntity(userEntity);
+	        if ("DELETE".equals(fileStatus) && existingFile != null) {
+	            // 기존 파일 삭제
+	            fileRepository.delete(existingFile);
+	            fileRepository.flush();
+	            System.out.println("기존 파일 삭제 완료.");
+	        } else if ("REPLACE".equals(fileStatus)) {
+	            // 기존 파일 삭제 및 새 파일 저장
+	            if (existingFile != null) {
+	                fileRepository.delete(existingFile);
+	                fileRepository.flush();
+	                System.out.println("기존 파일 삭제 완료.");
+	            }
+	            String fileUrl = saveFile(form);
+	            System.out.println("새 파일 저장 완료. 파일 URL: " + fileUrl);
+	            
+	            FileEntity newFileEntity = new FileEntity();
+	            newFileEntity.setFileName(form.getFileInput().getOriginalFilename());
+	            newFileEntity.setFilePath(fileUrl);
+	            newFileEntity.setFileSize((int) form.getFileInput().getSize());
+	            
+	            String fileType = form.getFileInput().getContentType();
+	            if (fileType != null && fileType.length() > 50) {
+	                fileType = fileType.substring(0, 50);
+	            }
+	            newFileEntity.setFileType(fileType);
+	            newFileEntity.setWikiEntity(entity);
+	            fileRepository.save(newFileEntity);
+	            fileRepository.flush();
+                System.out.println("새 파일 엔티티 저장 완료: " + newFileEntity);
+	        }
 
-		wrepository.save(entity); // 수정된 Entity 저장
+	        // 문서 저장
+	        wrepository.save(entity);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new Exception("문서 수정 중 오류 발생: " + e.getMessage());
+	    }
+	}
+
+	/*
+	@Transactional
+	public void handleFileOperations(WikiForm form, WikiEntity savedEntity) throws Exception {
+	    String fileStatus = form.getFileStatus();
+
+	    // 기존 파일 삭제
+	    if ("DELETE".equals(fileStatus) || "REPLACE".equals(fileStatus)) {
+	        FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(savedEntity.getWikiPkNum()).orElse(null);
+	        if (existingFile != null) {
+	            fileRepository.delete(existingFile);
+	            fileRepository.flush();
+	        }
+	    }
+
+	    // 새 파일 추가
+	    if ("REPLACE".equals(fileStatus) && form.getFileInput() != null && !form.getFileInput().isEmpty()) {
+	        String fileUrl = saveFile(form); // 파일 저장 로직
+	        FileEntity newFileEntity = new FileEntity();
+	        newFileEntity.setFileName(form.getFileInput().getOriginalFilename());
+	        newFileEntity.setFilePath(fileUrl);
+	        newFileEntity.setFileSize((int) form.getFileInput().getSize());
+	        newFileEntity.setWikiEntity(savedEntity);
+	        fileRepository.save(newFileEntity);
+	        fileRepository.flush();
+	    }
+	}
+*/
+	
+	// 파일 삭제
+	public void deleteFile(int filePkNum) {
+	    FileEntity file = fileRepository.findById(filePkNum)
+	            .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다."));
+
+	    fileRepository.delete(file); // FileEntity만 삭제
 	}
 
 	// 문서 삭제
@@ -197,25 +362,23 @@ public class WikiServiceImpl implements WikiService {
 		try {
 			WikiEntity entity = wrepository.findById(wikiPkNum)
 					.orElseThrow(() -> new RuntimeException("문서를 찾을 수 없습니다. ID: " + wikiPkNum));
+			FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
+			if (existingFile != null) {
+	            // 파일 시스템에서 파일 삭제 (옵션)
+	            File file = new File(existingFile.getFilePath());
+	            if (file.exists()) {
+	                file.delete();
+	            }
+	            // 데이터베이스에서 파일 삭제
+	            fileRepository.delete(existingFile);
+	            System.out.println("파일 삭제 완료: " + existingFile.getFileName());
+	        }
+			
 			wrepository.delete(entity);
+			System.out.println("문서 삭제 완료: " + entity.getWikiTitle());
 		} catch (RuntimeException e) {
 			System.out.println("문서 삭제 중 오류 발생: " + e.getMessage());
 		}
-	}
-	@Override
-	public int addWikiEntity(String wikiTitle, String wikiContent, Integer userNum, Integer projNum, boolean wikiNotice) {
-		   // WikiEntity 저장
-        WikiEntity wikiEntity = new WikiEntity();
-        wikiEntity.setWikiTitle(wikiTitle);
-        wikiEntity.setWikiContent(wikiContent);
-        wikiEntity.setWikiBoardtype(false);  // false로 설정 (파일 게시판)
-        wikiEntity.setWikiView(0); // 초기 조회수
-        wikiEntity.setWikiRegdate(LocalDate.now()); // 작성일
-        wikiEntity.setUserEntity(userRepository.findById(userNum).get());
-        wikiEntity.setProjectEntity(projRepository.findById(projNum).get());
-        wikiEntity.setWikiIsnotice(wikiNotice);
-        
-		return wrepository.save(wikiEntity).getWikiPkNum();
 	}
 
 }

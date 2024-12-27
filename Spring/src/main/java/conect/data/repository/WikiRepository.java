@@ -26,5 +26,4 @@ public interface WikiRepository extends JpaRepository<WikiEntity, Integer> {
 
     @Query("SELECT w FROM WikiEntity w LEFT JOIN FETCH w.fileEntity WHERE w.wikiPkNum = :wikiPkNum")
     Optional<WikiEntity> findByIdWithFile(@Param("wikiPkNum") int wikiPkNum);
-
 }

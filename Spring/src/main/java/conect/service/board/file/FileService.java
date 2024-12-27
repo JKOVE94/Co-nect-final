@@ -17,22 +17,24 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface FileService {
 	// 파일 저장 메소드
 	public String saveFile(FileForm form, MultipartFile file) throws IOException;
-	
+
 	// 삽입
 	FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException;
-	
+
 	// 전체 조회
 	public List<FileDto> getPostAll();
-	
+
 	// 부분 조회
-    public FileDto getPostView(Integer filePkNum, HttpServletRequest request, HttpServletResponse response);
+	public FileDto getPostView(Integer filePkNum, HttpServletRequest request, HttpServletResponse response);
 
 	// 수정
-	public FileDto updatePost(int filePkNum, MultipartFile file, String wikiTitle, String wikiContent, boolean wikiIsnotice);
+	public FileDto updatePost(int filePkNum, MultipartFile file, String wikiTitle, String wikiContent,
+			boolean wikiIsnotice);
 
 	// 삭제
 	void deletePost(int filePkNum);
 
 	// 페이징, 정렬
-    public Page<FileDto> getList(int page, int pageSize, String sortField, String sortDirection,String searchType, String searchText);
+	public Page<FileDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType,
+			String searchText);
 }

@@ -1,7 +1,7 @@
 package conect.data.repository;
 
 import conect.data.entity.FileEntity;
-import conect.data.entity.PostEntity;
+import conect.data.entity.WikiEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,4 +22,9 @@ public interface FileRepository extends JpaRepository<FileEntity, Integer> {
 
 	// 검색 - 작성자명 (WikiEntity와 연관된 userEntity 사용)
 	Page<FileEntity> findByWikiEntity_UserEntity_UserNameContains(String searchText, Pageable pageable);
+
+	Optional<FileEntity> findByWikiEntity(WikiEntity wikiEntity);
+
+	Optional<FileEntity> findByWikiEntityWikiPkNum(int wikiPkNum);
+
 }

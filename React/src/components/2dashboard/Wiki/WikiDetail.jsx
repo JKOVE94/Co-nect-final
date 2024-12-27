@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Card, CardBody, CardHeader, Container } from "reactstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
 import WikiToast from "variables/Toast/WikiToast";
+import { useSelector } from "react-redux";
 
 const WikiDetail = () => {
   // 현재 URL의 state를 확인하기 위해 useLocation 사용
   const location = useLocation();
-
+  const compPkNum = 1;
   // 상태 값 정의 (type: 게시글 상태 관리, post: 게시글 데이터 저장)
   const [type, setType] = useState(0); // 0: 기본값, "create": 등록, "update": 수정
   const { wikiPkNum } = useParams();
@@ -15,6 +25,22 @@ const WikiDetail = () => {
   const [wiki, setWiki] = useState({}); // 게시글 데이터 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
+  const [modalOpen, setModalOpen] = useState(false); // 삭제 모달 여부
+
+  const toggleModal = () => setModalOpen(!modalOpen);
+
+  // 현재 로그인된 사용자의 이름 (localStorage 예시)
+  const currentUser = useSelector((state) => state.userData?.user_name); // 리덕스 상태에서 로그인된 사용자 이름 가져오기
+  const canUser = wiki.user_name === currentUser;
+
+  // 토스트 알림 상태 및 토글 함수
+  const [showA, setShowA] = useState(false);
+  const toggleShowA = () => {
+    setShowA(true); // 토스트 표시
+    setTimeout(() => {
+      setShowA(false); // 3초 후 토스트 숨기기
+    }, 3000);
+  };
 
   // 화면 로드 시 실행되는 useEffect
   useEffect(() => {
@@ -31,31 +57,43 @@ const WikiDetail = () => {
     // 게시글 데이터 fetch 함수 정의
     const fetchWiki = async () => {
       try {
-        const response = await axios.get(`/wiki/wikidetail/${wikiPkNum}`);
+        const response = await axios.get(
+          `/${compPkNum}/wiki/wikidetail/${wikiPkNum}`
+        );
         setWiki(response.data); // 성공 시 게시글 데이터 저장
+        console.log(response.data); // wiki 객체 구조 확인
       } catch (err) {
         setError(err.message); // 에러 발생 시 에러 메시지 설정
       } finally {
         setLoading(false); // 로딩 상태 해제
       }
     };
-
     fetchWiki(); // 게시글 데이터 요청 함수 호출
   }, [wikiPkNum, location.state]);
 
-  // 토스트 알림 상태 및 토글 함수
-  const [showA, setShowA] = useState(false);
-  const toggleShowA = () => {
-    setShowA(true); // 토스트 표시
-    setTimeout(() => {
-      setShowA(false); // 3초 후 토스트 숨기기
-    }, 3000);
+  const handleFileDownload = async (filePath, fileName) => {
+    try {
+      const response = await axios.get(filePath, {
+        responseType: "blob", // 바이너리 데이터로 파일 다운로드
+      });
+
+      // 브라우저에서 파일 다운로드
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName); // 파일 이름 설정
+      document.body.appendChild(link);
+      link.click(); // 클릭 이벤트 트리거로 다운로드 실행
+      link.parentNode.removeChild(link); // 다운로드 후 링크 제거
+    } catch (error) {
+      console.error("파일 다운로드 실패:", error);
+    }
   };
 
   // 게시글 삭제 처리 함수
   const handleDelete = async () => {
     try {
-      await axios.delete(`/wiki/wikidelete/${wikiPkNum}`); // 게시글 삭제 요청
+      await axios.delete(`/${compPkNum}/wiki/wikidelete/${wikiPkNum}`); // 게시글 삭제 요청
       navigate("/main/wiki/wikilist", { state: { success: true } }); // 삭제 후 목록 페이지로 이동
     } catch (err) {
       setError("삭제 실패: " + err.message); // 삭제 실패 시 에러 메시지 설정
@@ -128,9 +166,22 @@ const WikiDetail = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td style={{ width: "10%", textAlign: "left" }}> 파일</td>
+                    <td style={{ width: "10%", textAlign: "left" }}>파 일</td>
                     <td style={{ width: "90%", textAlign: "left" }}>
-                      {wiki.wiki_fk_file_num} {/* 파일명 / 번호로 파일명 불러오자요*/}
+                      {wiki.file_name && wiki.file_path ? (
+                        <span>
+                          <a
+                            href={wiki.file_path}
+                            onClick={() =>
+                              handleFileDownload(wiki.file_path, wiki.file_name)
+                            }
+                          >
+                            {wiki.file_name}
+                          </a>
+                        </span>
+                      ) : (
+                        <span>첨부된 파일이 없습니다.</span>
+                      )}
                     </td>
                   </tr>
                   <tr>
@@ -147,29 +198,55 @@ const WikiDetail = () => {
             <br />
 
             {/* 버튼 섹션 */}
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>  
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate(`/main/wiki/wikiedit/${wikiPkNum}`)}
-            >
-              수정 {/* 수정 버튼 */}
-            </button>
-            <button className="btn btn-primary" onClick={handleDelete}>
-              삭제 {/* 삭제 버튼 */}
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate("/main/wiki/wikilist")}
-            >
-              목록 {/* 목록으로 돌아가기 버튼 */}
-            </button>
-          </div>  
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              {canUser && (
+                <Button
+                  color="primary"
+                  onClick={() => navigate(`/main/wiki/wikiedit/${wikiPkNum}`)}
+                >
+                  수정
+                </Button>
+              )}
+              {canUser && (
+                <Button color="danger" onClick={toggleModal}>
+                  삭제
+                </Button>
+              )}
+              <Button
+                color="secondary"
+                onClick={() => navigate("/main/wiki/wikilist")}
+              >
+                목록 {/* 목록으로 돌아가기 버튼 */}
+              </Button>
+            </div>
           </div>
           <br />
         </CardBody>
       </Card>
       {/* 토스트 컴포넌트 */}
       <WikiToast type={type} showA={showA} toggleShowA={toggleShowA} />
+      {/* 삭제 확인 모달 */}
+      <Modal
+        isOpen={modalOpen}
+        toggle={toggleModal}
+        style={{
+          maxWidth: "500px",
+          margin: "auto",
+          top: "35%",
+        }}
+      >
+        <ModalBody style={{ textAlign: "center" }}>
+          정말 삭제하시겠습니까?
+        </ModalBody>
+        <ModalFooter style={{ justifyContent: "center" }}>
+          <Button color="danger" onClick={handleDelete}>
+            삭제
+          </Button>
+          <Button color="secondary" onClick={toggleModal}>
+            취소
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Container>
   );
 };
