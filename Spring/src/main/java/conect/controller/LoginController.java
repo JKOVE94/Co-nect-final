@@ -17,17 +17,17 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-
     @PostMapping("/login")
     public ResponseEntity<LoginDto> login(@RequestBody LoginForm form) {
         LoginDto loginDto = loginService.checkLogin(form);
         
         switch (loginDto.getStatus()) {
             case 1: // 로그인 성공
+<<<<<<< HEAD
                 String token = jwtUtil.generateToken(loginDto.getUser_id());
                 loginDto.setToken(token);
+=======
+>>>>>>> parent of 2e3f2cb (12271600)
                 return ResponseEntity.ok(loginDto);
             case 2: // 정보 불일치
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginDto);

@@ -77,8 +77,138 @@ const ProjectSelect = () => {
     return new Date(dateString).toLocaleDateString("ko-KR", options);
   };
 
+<<<<<<< HEAD
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>에러: {error}</div>;
+=======
+  const renderProjectCard = (proj) => (
+    <Col style={{ marginLeft: "1.5rem" }}>
+      <Card
+        style={{
+          height: "35rem",
+          width: "90%",
+          boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Link
+          to={`/main?proj=${proj.proj_pk_num}&user=${user_pk_num}`}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <CardBody className="p-5">
+            <Row style={{ maxHeight: "3rem" }}>
+              <Col className="col-auto">
+                <div className="icon icon-shape bg-primary text-white rounded-circle shadow">
+                  <i className="fas fa-clipboard-list" />
+                </div>
+              </Col>
+              <Col style={{ position: "relative", right: "2rem" }}>
+                <CardTitle
+                  tag="h5"
+                  className="text-uppercase text-muted mb-0"
+                ></CardTitle>
+                <span className="h3 font-weight-bold mb-0">
+                  {proj.proj_title}
+                </span>
+              </Col>
+            </Row>
+            <hr
+              style={{
+                backgroundColor: "#43A09F",
+                opacity: "0.5",
+                width: "100%",
+              }}
+            />
+            <div className="project-details">
+              <div className="detail-box mb-4">
+                <h4 className="font-weight-bold text-primary mb-3">
+                  프로젝트 설명
+                </h4>
+                <p
+                  style={{
+                    maxHeight: "100px",
+                    overflowY: "auto",
+                    padding: "10px",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "5px",
+                  }}
+                >
+                  {proj.proj_content}
+                </p>
+              </div>
+              <div className="detail-box mb-3 pt-3">
+                <div className="d-flex align-items-center mb-2">
+                  <i className="fas fa-calendar-alt text-success mr-2"></i>
+                  <span className="font-weight-bold">프로젝트 시작일</span>
+                </div>
+                <p className="ml-4">{formatDate(proj.proj_startdate)}</p>
+              </div>
+              <div className="detail-box mb-4 pt-3">
+                <div className="d-flex align-items-center mb-2">
+                  <i className="fas fa-calendar-alt text-danger mr-2"></i>
+                  <span className="font-weight-bold">프로젝트 마감일</span>
+                </div>
+                <p className="ml-4">{formatDate(proj.proj_enddate)}</p>
+              </div>
+            </div>
+          </CardBody>
+        </Link>
+      </Card>
+    </Col>
+  );
+
+  const renderContent = () => {
+    if (loading) return <div>로딩 중...</div>;
+    if (error) return <div>에러: {error}</div>;
+
+    if (data.length === 0) {
+      return (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "35rem", zIndex: "20" }}
+        >
+          <Card
+            style={{
+              height: "20rem",
+              width: "90%",
+              maxWidth: "400px",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+            }}
+          >
+            <CardBody className="text-center">
+              <i className="fas fa-folder-open fa-3x text-muted mb-3"></i>
+              <h3 className="font-weight-bold">
+                현재 진행중인 프로젝트가 없습니다
+              </h3>
+              {user_author === "1" ? (
+                <>
+                  <p className="text-muted">새 프로젝트를 시작해보세요!</p>
+                  <Link to="/create-project" className="btn btn-primary mt-3">
+                    프로젝트 생성하기
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <p className="text-muted">프로필 설정창을 확인하세요!</p>
+                  <Link to="/profile-settings" className="btn btn-primary mt-3">
+                    프로필 설정하기
+                  </Link>
+                </>
+              )}
+            </CardBody>
+          </Card>
+        </div>
+      );
+    }
+
+    return (
+      <Slider {...settings} style={{ zIndex: "8", width: "90%" }}>
+        {data.map((proj, index) => (
+          <div key={index}>{renderProjectCard(proj)}</div>
+        ))}
+      </Slider>
+    );
+  };
+>>>>>>> parent of 2e3f2cb (12271600)
 
   return (
     <div

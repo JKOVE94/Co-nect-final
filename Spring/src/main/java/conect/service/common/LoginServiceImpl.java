@@ -41,6 +41,7 @@ public class LoginServiceImpl implements LoginService {
                 Optional<UserEntity> userOptional = userRepository.findByUserId(form.getUser_id());
                 if (userOptional.isPresent()) {
                     UserEntity user = userOptional.get();
+<<<<<<< HEAD
                     if (!user.getUserLocked()) {
                         if (user.getUserPw().equals(form.getUser_pw())) {
                             user.setUserTrynum(0);
@@ -48,6 +49,16 @@ public class LoginServiceImpl implements LoginService {
                             
                             String token = jwtUtil.generateToken(user.getUserId());
                             
+=======
+                    if (user.getUserLocked() == null || !user.getUserLocked()) {
+                        if (user.getUserPw().equals(form.getUser_pw())) {
+                            user.setUserTrynum(0);
+                            user.setUserLocked(false);
+                            userRepository.save(user);
+
+                            String token = jwtUtil.generateToken(user.getUserId());
+
+>>>>>>> parent of 2e3f2cb (12271600)
                             loginDto.setStatus(1);
                             loginDto.setToken(token);
                             loginDto.setUser_pk_num(user.getUserPkNum());
@@ -56,16 +67,31 @@ public class LoginServiceImpl implements LoginService {
                             loginDto.setUser_mail(user.getUserMail());
                             loginDto.setUser_pic(user.getUserPic());
                             loginDto.setUser_pictype(user.getUserPic());
+<<<<<<< HEAD
                             loginDto.setUser_fk_acc_authornum(user.getUserAuthor());
                             loginDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
+=======
+                            loginDto.setUser_author(user.getUserAuthor());
+                            loginDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
+                            loginDto.setUser_locked(false);
+
+>>>>>>> parent of 2e3f2cb (12271600)
                         } else {
                             handleFailedLogin(user);
                             loginDto.setStatus(2);
                             loginDto.setUser_trynum(user.getUserTrynum());
+<<<<<<< HEAD
+=======
+                            loginDto.setUser_locked(user.getUserLocked());
+>>>>>>> parent of 2e3f2cb (12271600)
                         }
                     } else {
                         loginDto.setStatus(3);
                         loginDto.setUser_trynum(user.getUserTrynum());
+<<<<<<< HEAD
+=======
+                        loginDto.setUser_locked(true);
+>>>>>>> parent of 2e3f2cb (12271600)
                     }
                 } else {
                     loginDto.setStatus(2);
@@ -81,7 +107,11 @@ public class LoginServiceImpl implements LoginService {
 
     private void handleFailedLogin(UserEntity user) {
         user.setUserTrynum(user.getUserTrynum() + 1);
+<<<<<<< HEAD
         if(user.getUserTrynum() == 6) {
+=======
+        if(user.getUserTrynum() >= 5) {
+>>>>>>> parent of 2e3f2cb (12271600)
             user.setUserLocked(true);
             user.setUserTrynum(0);
         }
