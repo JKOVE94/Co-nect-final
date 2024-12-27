@@ -3,35 +3,41 @@ package conect.data.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "taskhistory")
-public class TaskhistoryEntity {
+public class TaskHistoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int taskhistoryPkNum; // 업무 이력 고유 식별자 [PK, INT, INCREMENT]
-    private String taskhisBeforevalue; // 업무 이력 변경 전 값 [VARCHAR]
-    private String taskhisAftervalue; // 업무 이력 변경 후 값 [VARCHAR]
-    private String taskhisType; // 업무 이력 유형 [VARCHAR]
-    private LocalDateTime taskhisUpdated; // 업무 이력 정보 최종 수정 일시 [DATETIME]
+    @Column(name = "taskhis_pk_num")
+    private int taskhisPkNum;
+
+    @Column(name = "taskhis_beforevalue")
+    private String taskhisBeforevalue;
+
+    @Column(name = "taskhis_aftervalue")
+    private String taskhisAftervalue;
+
+    @Column(name = "taskhis_updated")
+    private LocalDateTime taskhisUpdated;
+
+    @Column(name = "taskhis_type")
+    private String taskhisType;
 
     @ManyToOne
-    @JoinColumn(name = "taskhistory_fk_task_num")
-    private TaskEntity taskEntity;
-
-    @ManyToOne
-    @JoinColumn(name = "taskhistory_fk_user_num")
-    private UserEntity userEntity;
-
-    @ManyToOne
-    @JoinColumn(name = "taskhistory_fk_comp_num")
+    @JoinColumn(name = "taskhis_fk_comp_num")
     private CompanyEntity companyEntity;
 
     @ManyToOne
-    @JoinColumn(name = "taskhistory_fk_tasklog_num")
-    private TasklogEntity tasklogEntity;
+    @JoinColumn(name = "taskhis_fk_user_num")
+    private UserEntity userEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "taskhis_fk_task_num")
+    private TaskEntity taskEntity;
+
+   
 }
