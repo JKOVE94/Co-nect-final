@@ -18,32 +18,34 @@ import { Checkbox } from "rsuite";
 const WikiUpdate = () => {
   const navigate = useNavigate();
   const { wikiPkNum } = useParams();
-  const [showModal, setShowModal] = useState(false); 
-  const [modalMessage, setModalMessage] = useState(""); 
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 목록 이동 확인 모달 상태
   const compPkNum = 1;
   const [formData, setFormData] = useState({
-    wiki_title: "", 
-    wiki_fk_proj_num: "", 
-    wiki_fk_user_num: "", 
-    wiki_regdate: "", 
-    wiki_isnotice: false, 
-    wiki_content: "", 
-    user_name: "", 
+    wiki_title: "",
+    wiki_fk_proj_num: "",
+    wiki_fk_user_num: "",
+    wiki_regdate: "",
+    wiki_isnotice: false,
+    wiki_content: "",
+    user_name: "",
     wiki_boardtype: true,
   });
 
   // 파일 상태 초기화
   const [fileState, setFileState] = useState({
-    originalFile: null,  // 기존 파일 정보
-    newFile: null,       // 새로 선택된 파일
-    fileName: ""         // 현재 표시할 파일 이름
+    originalFile: null, // 기존 파일 정보
+    newFile: null, // 새로 선택된 파일
+    fileName: "", // 현재 표시할 파일 이름
   });
 
   useEffect(() => {
     const fetchWikiData = async () => {
       try {
-        const response = await axios.get(`/${compPkNum}/wiki/wikidetail/${wikiPkNum}`);
+        const response = await axios.get(
+          `/conect/${compPkNum}/wiki/wikidetail/${wikiPkNum}`
+        );
         const wikiData = response.data;
 
         const regdate = new Date(wikiData.wiki_regdate)
@@ -60,10 +62,9 @@ const WikiUpdate = () => {
           setFileState({
             originalFile: wikiData.file_name,
             newFile: null,
-            fileName: wikiData.file_name
+            fileName: wikiData.file_name,
           });
         }
-
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
       }
@@ -74,8 +75,8 @@ const WikiUpdate = () => {
 
   const handleEditChange = (e) => {
     const { name, value, type, files } = e.target;
-  
-    if (type === 'file') {
+
+    if (type === "file") {
       // 파일 입력 처리
       const file = files[0];
       if (file) {
@@ -106,14 +107,14 @@ const WikiUpdate = () => {
       fileName: "",
       filePath: "",
     });
-  
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
       fileInput: null,
       fileName: "",
-      fileStatus: "DELETE"
+      fileStatus: "DELETE",
     }));
-  
+
     // 파일 input 초기화
     const fileInput = document.getElementById("fileInput");
     if (fileInput) {
@@ -135,34 +136,38 @@ const WikiUpdate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
-    
+
     // 기본 폼 데이터 추가
-    Object.keys(formData).forEach(key => {
-      if (key !== 'fileInput' && key !== 'fileName') {
+    Object.keys(formData).forEach((key) => {
+      if (key !== "fileInput" && key !== "fileName") {
         data.append(key, formData[key] !== null ? String(formData[key]) : "");
       }
     });
-  
-   // 파일 처리 상태
-  if (fileState.newFile) {
-    // 새 파일 업로드
-    data.append('fileInput', fileState.newFile);
-    data.append('fileStatus', 'REPLACE');
-  } else if (fileState.originalFile && fileState.fileName) {
-    // 기존 파일 유지
-    data.append('fileStatus', 'KEEP');
-    data.append('originalFileName', fileState.originalFile);
-  } else {
-    // 파일 삭제
-    data.append('fileStatus', 'DELETE');
-  }
-  
+
+    // 파일 처리 상태
+    if (fileState.newFile) {
+      // 새 파일 업로드
+      data.append("fileInput", fileState.newFile);
+      data.append("fileStatus", "REPLACE");
+    } else if (fileState.originalFile && fileState.fileName) {
+      // 기존 파일 유지
+      data.append("fileStatus", "KEEP");
+      data.append("originalFileName", fileState.originalFile);
+    } else {
+      // 파일 삭제
+      data.append("fileStatus", "DELETE");
+    }
+
     try {
-      const response = await axios.put(`/${compPkNum}/wiki/wikiedit/${wikiPkNum}`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.put(
+        `/conect/${compPkNum}/wiki/wikiedit/${wikiPkNum}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       navigate(`/main/wiki/wikidetail/${wikiPkNum}`, {
         state: { actionType: "update" },
       });
@@ -188,7 +193,10 @@ const WikiUpdate = () => {
   };
 
   return (
-    <Card className="shadow rounded" style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}>
+    <Card
+      className="shadow rounded"
+      style={{ marginTop: "20px", marginLeft: "15px", marginRight: "15px" }}
+    >
       <CardHeader className="border-1">
         <h2 className="mb-0">문서 수정</h2>
       </CardHeader>
@@ -197,31 +205,70 @@ const WikiUpdate = () => {
         <form onSubmit={handleSubmit}>
           {/* 제목 입력 */}
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-            <Label for="wiki_title" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+            <Label
+              for="wiki_title"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               제목
             </Label>
             <Col sm={10}>
-              <Input type="text" name="wiki_title" id="wiki_title" value={formData.wiki_title} onChange={handleEditChange} required />
+              <Input
+                type="text"
+                name="wiki_title"
+                id="wiki_title"
+                value={formData.wiki_title}
+                onChange={handleEditChange}
+                required
+              />
             </Col>
           </FormGroup>
 
           {/* 내용 입력 */}
           <FormGroup row style={{ height: "10%", marginBottom: "12px" }}>
-            <Label for="wiki_content" sm={2} style={{ fontSize: "14px", fontWeight: "bold" }}>
+            <Label
+              for="wiki_content"
+              sm={2}
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
               내용
             </Label>
             <Col sm={10}>
-              <Input type="textarea" name="wiki_content" id="wiki_content" value={formData.wiki_content} onChange={handleEditChange} required placeholder="입력하세요" />
+              <Input
+                type="textarea"
+                name="wiki_content"
+                id="wiki_content"
+                value={formData.wiki_content}
+                onChange={handleEditChange}
+                required
+                placeholder="입력하세요"
+              />
             </Col>
           </FormGroup>
 
           {/* 파일 선택 */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "12px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: "12px",
+            }}
+          >
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Label check style={{ fontSize: "14px", fontWeight: "bold" }}>
                 중요 여부
               </Label>
-              <Checkbox name="wiki_isnotice" checked={formData.wiki_isnotice} onChange={() => setFormData(prev => ({ ...prev, wiki_isnotice: !prev.wiki_isnotice }))} />
+              <Checkbox
+                name="wiki_isnotice"
+                checked={formData.wiki_isnotice}
+                onChange={() =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    wiki_isnotice: !prev.wiki_isnotice,
+                  }))
+                }
+              />
             </div>
             <div>
               <Button
@@ -246,7 +293,9 @@ const WikiUpdate = () => {
               />
             </div>
             {fileState.fileName && (
-              <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
+              <p
+                style={{ fontSize: "12px", color: "#888", textAlign: "right" }}
+              >
                 선택된 파일: {fileState.fileName}
                 <span
                   style={{
@@ -261,14 +310,27 @@ const WikiUpdate = () => {
               </p>
             )}
             {!fileState.fileName && (
-              <p style={{ fontSize: "12px", color: "#888", textAlign: "right" }}>
-                (한 번에 하나의 파일만 업로드할 수 있습니다.<br />
-                여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서 등록해주세요.)
+              <p
+                style={{ fontSize: "12px", color: "#888", textAlign: "right" }}
+              >
+                (한 번에 하나의 파일만 업로드할 수 있습니다.
+                <br />
+                여러 파일을 업로드하려면 압축파일(.zip)으로 묶어서
+                등록해주세요.)
               </p>
             )}
             <Row form style={{ display: "flex", justifyContent: "flex-end" }}>
               <Col sm={1.5} className="text-center">
-                <Button className="btn btn-primary" style={{ backgroundColor: "#007bff", borderColor: "#007bff", color: "white" }} block type="submit">
+                <Button
+                  className="btn btn-primary"
+                  style={{
+                    backgroundColor: "#007bff",
+                    borderColor: "#007bff",
+                    color: "white",
+                  }}
+                  block
+                  type="submit"
+                >
                   수정
                 </Button>
               </Col>
@@ -317,11 +379,15 @@ const WikiUpdate = () => {
         </form>
       </CardBody>
 
-      <Modal isOpen={showModal} onHide={() => setShowModal(false)} style={{
+      <Modal
+        isOpen={showModal}
+        onHide={() => setShowModal(false)}
+        style={{
           maxWidth: "500px",
-          margin: "auto", 
-          top: "35%", 
-        }}>
+          margin: "auto",
+          top: "35%",
+        }}
+      >
         <ModalBody style={{ textAlign: "center" }}>{modalMessage}</ModalBody>
         <ModalFooter style={{ justifyContent: "center" }}>
           <Button variant="primary" onClick={() => setShowModal(false)}>
@@ -332,6 +398,5 @@ const WikiUpdate = () => {
     </Card>
   );
 };
-
 
 export default WikiUpdate;

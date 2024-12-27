@@ -32,9 +32,16 @@ const FileList = () => {
 
   const navigate = useNavigate();
 
-  const fetchFiles = (page, block, sortField, sortDirection, searchType, searchText) => {
+  const fetchFiles = (
+    page,
+    block,
+    sortField,
+    sortDirection,
+    searchType,
+    searchText
+  ) => {
     axios
-      .get("/file", {
+      .get("/conect/file", {
         params: {
           page,
           pageBlock: block,
@@ -73,7 +80,7 @@ const FileList = () => {
 
     const { filePkNum, fileName } = selectedFile;
     try {
-      const response = await axios.get(`/file/download/${filePkNum}`, {
+      const response = await axios.get(`/conect/file/download/${filePkNum}`, {
         responseType: "blob",
       });
 
@@ -120,10 +127,18 @@ const FileList = () => {
   const formatDate = (date) => format(new Date(date), "yyyy-MM-dd");
 
   const handleSortChange = (field) => {
-    const newDirection = sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
+    const newDirection =
+      sortField === field && sortDirection === "DESC" ? "ASC" : "DESC";
     setSortField(field);
     setSortDirection(newDirection);
-    fetchFiles(currentPage, pageBlock, field, newDirection, searchType, searchText);
+    fetchFiles(
+      currentPage,
+      pageBlock,
+      field,
+      newDirection,
+      searchType,
+      searchText
+    );
   };
 
   const handleKeyDown = (e) => {
@@ -189,7 +204,9 @@ const FileList = () => {
                   <tr
                     key={file.file_pk_num}
                     style={{
-                      backgroundColor: file.wiki.wiki_isnotice ? "#f0f0f0" : "transparent",
+                      backgroundColor: file.wiki.wiki_isnotice
+                        ? "#f0f0f0"
+                        : "transparent",
                     }}
                   >
                     <td>{file.file_pk_num}</td>
@@ -210,8 +227,17 @@ const FileList = () => {
                       </Link>
                       <span
                         title="파일 다운로드"
-                        style={{ cursor: "pointer", marginLeft: "0.5em", color: "blue" }}
-                        onClick={() => toggleModal({ filePkNum: file.file_pk_num, fileName: file.file_name })}
+                        style={{
+                          cursor: "pointer",
+                          marginLeft: "0.5em",
+                          color: "blue",
+                        }}
+                        onClick={() =>
+                          toggleModal({
+                            filePkNum: file.file_pk_num,
+                            fileName: file.file_name,
+                          })
+                        }
                       >
                         📥
                       </span>
@@ -228,7 +254,13 @@ const FileList = () => {
               )}
             </tbody>
           </table>
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "1em" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "1em",
+            }}
+          >
             <button
               className={`btn btn-link ${pageBlock === 0 ? "disabled" : ""}`}
               onClick={() => pageBlock > 0 && handlePageBlockChange(-1)}
@@ -240,7 +272,9 @@ const FileList = () => {
             {pageButtons.map((pageNumber) => (
               <button
                 key={pageNumber}
-                className={`btn btn-link ${currentPage === pageNumber ? "active" : ""}`}
+                className={`btn btn-link ${
+                  currentPage === pageNumber ? "active" : ""
+                }`}
                 onClick={() => handlePageChange(pageNumber)}
               >
                 {pageNumber + 1}
@@ -248,8 +282,12 @@ const FileList = () => {
             ))}
 
             <button
-              className={`btn btn-link ${pageBlock + 1 >= totalBlocks ? "disabled" : ""}`}
-              onClick={() => pageBlock + 1 < totalBlocks && handlePageBlockChange(1)}
+              className={`btn btn-link ${
+                pageBlock + 1 >= totalBlocks ? "disabled" : ""
+              }`}
+              onClick={() =>
+                pageBlock + 1 < totalBlocks && handlePageBlockChange(1)
+              }
               disabled={pageBlock + 1 >= totalBlocks}
             >
               다음 &raquo;

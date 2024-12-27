@@ -48,7 +48,9 @@ const FileCreate = () => {
 
     const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
     if (file.size > maxFileSize) {
-      toast.error("파일 크기는 10MB를 초과할 수 없습니다.", { autoClose: 3000 });
+      toast.error("파일 크기는 10MB를 초과할 수 없습니다.", {
+        autoClose: 3000,
+      });
       return;
     }
 
@@ -74,10 +76,12 @@ const FileCreate = () => {
     });
 
     try {
-      const response = await axios.post("/file", data);
+      const response = await axios.post("/conect/file", data);
 
       if (response.data) {
-        toast.success("파일이 성공적으로 업로드되었습니다!", { autoClose: 2000 });
+        toast.success("파일이 성공적으로 업로드되었습니다!", {
+          autoClose: 2000,
+        });
         setTimeout(() => navigate(`/main/file/detail/${response.data}`), 2000);
       } else {
         throw new Error("저장된 파일 ID가 반환되지 않았습니다.");
@@ -149,10 +153,8 @@ const FileCreate = () => {
                 <div style={{ marginTop: "1em" }}>
                   <strong>선택한 파일:</strong> {formData.file_name}
                   <br />
-                  <strong>크기:</strong> {(
-                    formData.file_size /
-                    (1024 * 1024)
-                  ).toFixed(2)} MB
+                  <strong>크기:</strong>{" "}
+                  {(formData.file_size / (1024 * 1024)).toFixed(2)} MB
                   <br />
                   {formData.file_type.startsWith("image/") && (
                     <img
@@ -178,7 +180,8 @@ const FileCreate = () => {
                   name="wiki_isnotice"
                   checked={formData.wiki_isnotice}
                   onChange={handleChange}
-                /> 중요 파일
+                />{" "}
+                중요 파일
               </label>
             </div>
             <div style={{ marginTop: "1.5em", textAlign: "right" }}>
@@ -186,7 +189,9 @@ const FileCreate = () => {
                 type="submit"
                 className="btn btn-primary"
                 disabled={
-                  !formData.file || !formData.wiki_title || !formData.wiki_content
+                  !formData.file ||
+                  !formData.wiki_title ||
+                  !formData.wiki_content
                 }
                 style={{ marginRight: "1em" }}
               >

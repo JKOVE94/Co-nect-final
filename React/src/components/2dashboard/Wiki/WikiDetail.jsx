@@ -58,7 +58,7 @@ const WikiDetail = () => {
     const fetchWiki = async () => {
       try {
         const response = await axios.get(
-          `/${compPkNum}/wiki/wikidetail/${wikiPkNum}`
+          `/conect/${compPkNum}/wiki/wikidetail/${wikiPkNum}`
         );
         setWiki(response.data); // 성공 시 게시글 데이터 저장
         console.log(response.data); // wiki 객체 구조 확인
@@ -93,7 +93,7 @@ const WikiDetail = () => {
   // 게시글 삭제 처리 함수
   const handleDelete = async () => {
     try {
-      await axios.delete(`/${compPkNum}/wiki/wikidelete/${wikiPkNum}`); // 게시글 삭제 요청
+      await axios.delete(`/conect/${compPkNum}/wiki/wikidelete/${wikiPkNum}`); // 게시글 삭제 요청
       navigate("/main/wiki/wikilist", { state: { success: true } }); // 삭제 후 목록 페이지로 이동
     } catch (err) {
       setError("삭제 실패: " + err.message); // 삭제 실패 시 에러 메시지 설정

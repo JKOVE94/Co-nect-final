@@ -14,8 +14,6 @@ const CompanyHome = () => {
 
   useEffect(() => {
     fetchData();
-    console.log("-----------------");
-    console.log(userInfo);
   }, []);
 
   const fetchData = async () => {
@@ -41,7 +39,7 @@ const CompanyHome = () => {
             />
           }
         />
-        {userInfo.user_author === 3 ? (
+        {userInfo.user_author == 3 ? (
           <Route
             path="/edit/:compNum"
             element={

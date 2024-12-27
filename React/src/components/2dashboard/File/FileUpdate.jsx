@@ -19,7 +19,7 @@ const FileUpdate = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/file/${filePkNum}`);
+        const response = await axios.get(`/conect/file/${filePkNum}`);
         setFile({
           wiki_title: response.data.wiki.wiki_title || "",
           wiki_content: response.data.wiki.wiki_content || "",
@@ -55,7 +55,7 @@ const FileUpdate = () => {
         formData.append("file", newFile);
       }
 
-      const response = await axios.put(`/file/${filePkNum}`, formData, {
+      const response = await axios.put(`/conect/file/${filePkNum}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -75,7 +75,11 @@ const FileUpdate = () => {
 
   return (
     <Container fluid style={{ marginTop: "2em" }}>
-      <ToastContainer position="bottom-center" autoClose={3000} hideProgressBar />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar
+      />
       <Card>
         <CardHeader>
           <h2>파일 수정</h2>
@@ -120,8 +124,18 @@ const FileUpdate = () => {
                 onChange={handleFileChange}
               />
             </div>
-            <div style={{ marginTop: "2em", display: "flex", justifyContent: "flex-end", gap: "1em" }}>
-              <label htmlFor="wiki_isnotice" style={{ display: "flex", alignItems: "center" }}>
+            <div
+              style={{
+                marginTop: "2em",
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "1em",
+              }}
+            >
+              <label
+                htmlFor="wiki_isnotice"
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 <input
                   type="checkbox"
                   id="wiki_isnotice"
@@ -135,7 +149,11 @@ const FileUpdate = () => {
               <button type="submit" className="btn btn-primary">
                 수정
               </button>
-              <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleCancel}
+              >
                 목록
               </button>
             </div>

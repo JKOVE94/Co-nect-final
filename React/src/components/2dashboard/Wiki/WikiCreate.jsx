@@ -115,7 +115,7 @@ const WikiCreate = () => {
     try {
       // 문서와 선택적 파일 데이터를 함께 서버에 전송
       const response = await axios.post(
-        `/${compPkNum}/wiki/wikiadd`,
+        `/conect/${compPkNum}/wiki/wikiadd`,
         formData,
         {
           headers: {

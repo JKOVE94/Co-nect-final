@@ -23,10 +23,16 @@ const NotiList = () => {
   const pagesPerBlock = 5; // 한 블록당 페이지 수
 
   // 게시글 데이터를 가져오는 함수
-  const fetchNotices = (page, sortField, sortDirection, searchType, searchText) => {
+  const fetchNotices = (
+    page,
+    sortField,
+    sortDirection,
+    searchType,
+    searchText
+  ) => {
     const validPage = page >= 0 ? page : 0; // 유효하지 않은 값 방지
     axios
-      .get(`/main/${compPkNum}/notice/list/${projNum}`, {
+      .get(`/conect/main/${compPkNum}/notice/list/${projNum}`, {
         params: {
           page: validPage,
           size: 7, // 한 페이지에 표시할 공지 게시글 수
@@ -64,26 +70,26 @@ const NotiList = () => {
   const getPageNumbers = () => {
     const startPage = Math.floor(currentPage / pagesPerBlock) * pagesPerBlock; // 현재 블록의 시작 페이지 계산
     const endPage = Math.min(startPage + pagesPerBlock, totalPages); // 현재 블록의 마지막 페이지 계산
-    return Array.from({length: endPage - startPage}, (_, i) => startPage + i);
+    return Array.from({ length: endPage - startPage }, (_, i) => startPage + i);
   };
 
-// 이전 페이지로 이동
-const handlePrevPage = () => {
-  if (currentPage > 0) {
-    const prevPage = currentPage - 1;
-    setCurrentPage(prevPage);
-    fetchNotices(prevPage, sortField, sortDirection, searchType, searchText);
-  }
-};
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      const prevPage = currentPage - 1;
+      setCurrentPage(prevPage);
+      fetchNotices(prevPage, sortField, sortDirection, searchType, searchText);
+    }
+  };
 
-// 다음 페이지로 이동
-const handleNextPage = () => {
-  if (currentPage < totalPages - 1) {
-    const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
-    fetchNotices(nextPage, sortField, sortDirection, searchType, searchText);
-  }
-};
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      fetchNotices(nextPage, sortField, sortDirection, searchType, searchText);
+    }
+  };
 
   // 페이지 이동 함수
   const handlePageChange = (pageNumber) => {
@@ -172,19 +178,25 @@ const handleNextPage = () => {
                 notices.map((notice, index) => (
                   <tr key={notice.noti_pk_num || `notice-${index}`}>
                     <td>{notice.noti_pk_num}</td>
-                    <td style={{
-                        textAlign: 'left',        // 왼쪽 정렬
-                        paddingLeft: '50px'       // 왼쪽 여백
-                    }}>
+                    <td
+                      style={{
+                        textAlign: "left", // 왼쪽 정렬
+                        paddingLeft: "50px", // 왼쪽 여백
+                      }}
+                    >
                       {notice.noti_import === 1 && (
                         <span style={{ marginRight: "0.5em" }}>
-                          <i className="bi bi-pin-angle-fill" style={{ color: "red" }}></i>
+                          <i
+                            className="bi bi-pin-angle-fill"
+                            style={{ color: "red" }}
+                          ></i>
                         </span>
                       )}
                       <Link
                         to={`/main/noti/notidetail/${notice.noti_pk_num}`}
                         style={{
-                          fontWeight: notice.noti_import === 1 ? "bold" : "normal"
+                          fontWeight:
+                            notice.noti_import === 1 ? "bold" : "normal",
                         }}
                       >
                         {notice.noti_title}
@@ -204,7 +216,7 @@ const handleNextPage = () => {
           </table>
         </CardBody>
       </Card>
-      
+
       <Button
         color="primary"
         style={{
@@ -219,19 +231,28 @@ const handleNextPage = () => {
       </Button>
 
       {/* 페이지네이션 */}
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "1em" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "1em",
+        }}
+      >
         <button
           className="btn btn-link"
           onClick={handlePrevPage}
-          disabled={currentPage === 0}  // 첫 페이지일 때만 비활성화
+          disabled={currentPage === 0} // 첫 페이지일 때만 비활성화
         >
           &laquo; 이전
         </button>
-        
+
         {getPageNumbers().map((pageNumber) => (
           <button
             key={pageNumber}
-            className={`btn btn-link ${currentPage === pageNumber ? "active" : ""}`}
+            className={`btn btn-link ${
+              currentPage === pageNumber ? "active" : ""
+            }`}
             onClick={() => handlePageChange(pageNumber)}
             style={{
               margin: "0 0.5em",
@@ -243,11 +264,11 @@ const handleNextPage = () => {
             {pageNumber + 1}
           </button>
         ))}
-        
+
         <button
           className="btn btn-link"
           onClick={handleNextPage}
-          disabled={currentPage === totalPages - 1}// 마지막 페이지일때만 비활성화
+          disabled={currentPage === totalPages - 1} // 마지막 페이지일때만 비활성화
         >
           다음 &raquo;
         </button>

@@ -16,7 +16,7 @@ const WikiList = () => {
   const [searchType, setSearchType] = useState(""); // 검색 분류 (제목, 작성자)
   const [searchText, setSearchText] = useState(""); // 검색어
   const compPkNum = 1;
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   // 게시글 데이터를 가져오는 함수
   const fetchWikis = (
@@ -29,7 +29,7 @@ const WikiList = () => {
   ) => {
     axios
       .get(
-        `/${compPkNum}/wiki/wikilist?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchType=${searchType}&searchText=${searchText}`
+        `/conect/${compPkNum}/wiki/wikilist?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchType=${searchType}&searchText=${searchText}`
       )
       .then((res) => {
         console.log(res.data);
@@ -204,18 +204,20 @@ const WikiList = () => {
               {wikis.length > 0 ? (
                 // 공지글을 먼저 배치하도록 wikis 배열을 정렬
                 wikis
-                .sort((a, b) => {
-                  // 먼저 공지글 정렬
-                  if (a.wiki_isnotice !== b.wiki_isnotice) {
-                    return b.wiki_isnotice - a.wiki_isnotice;
-                  }
-                  // 날짜 정렬 (최신순, 과거순)
-                  if (sortDirection === "ASC") {
-                    return new Date(a.wiki_regdate) - new Date(b.wiki_regdate); // 과거순
-                  } else {
-                    return new Date(b.wiki_pk_num) - new Date(a.wiki_pk_num); // 최신순
-                  }
-                })
+                  .sort((a, b) => {
+                    // 먼저 공지글 정렬
+                    if (a.wiki_isnotice !== b.wiki_isnotice) {
+                      return b.wiki_isnotice - a.wiki_isnotice;
+                    }
+                    // 날짜 정렬 (최신순, 과거순)
+                    if (sortDirection === "ASC") {
+                      return (
+                        new Date(a.wiki_regdate) - new Date(b.wiki_regdate)
+                      ); // 과거순
+                    } else {
+                      return new Date(b.wiki_pk_num) - new Date(a.wiki_pk_num); // 최신순
+                    }
+                  })
                   .map((wiki, index) => (
                     <tr
                       key={wiki.wiki_pk_num || `wiki-${index}`}

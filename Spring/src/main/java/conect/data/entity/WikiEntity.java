@@ -41,7 +41,4 @@ public class WikiEntity {
     @JoinColumn(name = "wiki_fk_proj_num")
     @JsonIgnore
     private ProjectEntity projectEntity;
-
-    @OneToOne(mappedBy = "wikiEntity")
-    private FileEntity fileEntity;
 }

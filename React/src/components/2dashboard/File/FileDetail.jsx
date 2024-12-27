@@ -21,17 +21,15 @@ const FileDetail = () => {
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null); // 선택된 파일 정보 
-
+  const [selectedFile, setSelectedFile] = useState(null); // 선택된 파일 정보
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
-
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/file/${filePkNumInt}`);
+        const response = await axios.get(`/conect/file/${filePkNumInt}`);
         setPost(response.data);
       } catch (err) {
         setError("게시글을 불러오는 중 오류가 발생했습니다.");
@@ -54,15 +52,14 @@ const FileDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/file/${filePkNumInt}`);
+      await axios.delete(`/conect/file/${filePkNumInt}`);
       toggleDeleteModal();
       toast.success("파일이 성공적으로 삭제되었습니다.");
       setTimeout(() => navigate("/main/file"), 2000); // 삭제 후 목록으로 이동
     } catch (err) {
       toggleDeleteModal();
       toast.error(
-        "삭제 실패: " +
-          (err.response ? err.response.data : err.message)
+        "삭제 실패: " + (err.response ? err.response.data : err.message)
       );
     }
   };
@@ -117,7 +114,10 @@ const FileDetail = () => {
             {/* 제목 */}
             <div>
               <h5 style={{ fontWeight: "bold" }}>
-                <i className="fas fa-heading" style={{ marginRight: "0.5em" }}></i>
+                <i
+                  className="fas fa-heading"
+                  style={{ marginRight: "0.5em" }}
+                ></i>
                 제목
               </h5>
               <p
@@ -134,42 +134,68 @@ const FileDetail = () => {
             </div>
 
             {/* 작성자와 작성일 */}
-<div
-  style={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  }}
->
-  <div style={{ flex: "1", textAlign: "left" }}>
-    <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
-      <i className="fas fa-user" style={{ marginRight: "0.5em" }}></i>
-      작성자
-    </h5>
-    <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
-      {post.wiki.user_name || "작성자 없음"}
-    </p>
-  </div>
-  <div style={{ flex: "1", textAlign: "left" }}>
-    <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
-      <i className="fas fa-calendar-alt" style={{ marginRight: "0.5em" }}></i>
-      작성일
-    </h5>
-    <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
-      {post.wiki?.wiki_regdate || "알 수 없음"}
-    </p>
-  </div>
-  <div style={{ flex: "1", textAlign: "left" }}>
-    <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
-      <i className="fas fa-eye" style={{ marginRight: "0.5em" }}></i>
-      조회수
-    </h5>
-    <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
-      {post.wiki?.wiki_view || 0}
-    </p>
-  </div>
-</div>
-
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ flex: "1", textAlign: "left" }}>
+                <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
+                  <i
+                    className="fas fa-user"
+                    style={{ marginRight: "0.5em" }}
+                  ></i>
+                  작성자
+                </h5>
+                <p
+                  style={{
+                    margin: "0",
+                    padding: "0.5em 0",
+                    fontSize: "1.1rem",
+                  }}
+                >
+                  {post.wiki.user_name || "작성자 없음"}
+                </p>
+              </div>
+              <div style={{ flex: "1", textAlign: "left" }}>
+                <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
+                  <i
+                    className="fas fa-calendar-alt"
+                    style={{ marginRight: "0.5em" }}
+                  ></i>
+                  작성일
+                </h5>
+                <p
+                  style={{
+                    margin: "0",
+                    padding: "0.5em 0",
+                    fontSize: "1.1rem",
+                  }}
+                >
+                  {post.wiki?.wiki_regdate || "알 수 없음"}
+                </p>
+              </div>
+              <div style={{ flex: "1", textAlign: "left" }}>
+                <h5 style={{ fontWeight: "bold", color: "#343a40" }}>
+                  <i
+                    className="fas fa-eye"
+                    style={{ marginRight: "0.5em" }}
+                  ></i>
+                  조회수
+                </h5>
+                <p
+                  style={{
+                    margin: "0",
+                    padding: "0.5em 0",
+                    fontSize: "1.1rem",
+                  }}
+                >
+                  {post.wiki?.wiki_view || 0}
+                </p>
+              </div>
+            </div>
 
             {/* 파일 */}
             <div>
@@ -185,15 +211,23 @@ const FileDetail = () => {
                     gap: "0.5em",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "1em" }}>
-                    <p style={{ margin: "0", fontSize: "1.1rem" }}>{post.file_name}</p>
-                    <Button
-                    color="success"
-                    onClick={toggleDownloadModal}
-                    style={{ fontSize: "1rem" }}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "1em",
+                    }}
                   >
-                    다운로드
-                  </Button>
+                    <p style={{ margin: "0", fontSize: "1.1rem" }}>
+                      {post.file_name}
+                    </p>
+                    <Button
+                      color="success"
+                      onClick={toggleDownloadModal}
+                      style={{ fontSize: "1rem" }}
+                    >
+                      다운로드
+                    </Button>
                   </div>
                   <div style={{ display: "flex", gap: "2em" }}>
                     <p style={{ margin: "0", fontSize: "1.1rem" }}>
@@ -208,7 +242,13 @@ const FileDetail = () => {
                   </div>
                 </div>
               ) : (
-                <p style={{ margin: "0", padding: "0.5em 0", fontSize: "1.1rem" }}>
+                <p
+                  style={{
+                    margin: "0",
+                    padding: "0.5em 0",
+                    fontSize: "1.1rem",
+                  }}
+                >
                   파일 없음
                 </p>
               )}
@@ -223,7 +263,10 @@ const FileDetail = () => {
                   marginBottom: "0.5em",
                 }}
               >
-                <i className="fas fa-align-left" style={{ marginRight: "0.5em" }}></i>
+                <i
+                  className="fas fa-align-left"
+                  style={{ marginRight: "0.5em" }}
+                ></i>
                 내용
               </h5>
               <div
@@ -266,7 +309,11 @@ const FileDetail = () => {
       </Card>
 
       {/* 삭제 확인 모달 */}
-      <Modal isOpen={isDeleteModalOpen} toggle={toggleDeleteModal} backdrop="static">
+      <Modal
+        isOpen={isDeleteModalOpen}
+        toggle={toggleDeleteModal}
+        backdrop="static"
+      >
         <ModalHeader toggle={toggleDeleteModal}>삭제 확인</ModalHeader>
         <ModalBody>정말로 이 파일을 삭제하시겠습니까?</ModalBody>
         <ModalFooter>
@@ -284,7 +331,11 @@ const FileDetail = () => {
         </ModalFooter>
       </Modal>
 
-      <Modal isOpen={isDownloadModalOpen} toggle={toggleDownloadModal} backdrop="static">
+      <Modal
+        isOpen={isDownloadModalOpen}
+        toggle={toggleDownloadModal}
+        backdrop="static"
+      >
         <ModalHeader toggle={toggleDownloadModal}>파일 다운로드</ModalHeader>
         <ModalBody>
           {selectedFile?.fileName
