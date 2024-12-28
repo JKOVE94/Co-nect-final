@@ -1,7 +1,7 @@
 import React, { useState, useEffect, use } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./Chatting.css"; // CSS 파일 import
-import ChatList from "./\bChatList";
+import ChatList from "./ChatList";
 import ChatRoom from "./chatroom/ChatRoom";
 import { SocketProvider } from "./SocketContext";
 
