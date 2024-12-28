@@ -13,6 +13,7 @@ import {
 } from "reactstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../../api/axiosInstance";
+import { format } from "date-fns";
 
 const TaskCreate = () => {
   const navigate = useNavigate();
@@ -67,9 +68,22 @@ const TaskCreate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/board/task/insert", formData);
+      // taskCreated를 현재 날짜로 설정
+      const dataToSend = {
+        ...formData,
+        taskCreated: format(new Date(), "yyyy-MM-dd"),
+      };
+
+      const response = await axiosInstance.post(
+        "/board/task/insert",
+        dataToSend,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.status === 201) {
-        // Check for success status code
         navigate(`/main/task/tasklist/${projectNum}`);
       }
     } catch (error) {
