@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n\nvar globalThis = require('../internals/global-this');\nvar navigator = globalThis.navigator;\nvar userAgent = navigator && navigator.userAgent;\nmodule.exports = userAgent ? String(userAgent) : '';","map":null,"metadata":{},"sourceType":"script","externalDependencies":[]}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"'use strict';\n\nvar bind = require('function-bind');\nvar $apply = require('./functionApply');\nvar actualApply = require('./actualApply');\n\n/** @type {import('./applyBind')} */\nmodule.exports = function applyBind() {\n  return actualApply(bind, $apply, arguments);\n};","map":null,"metadata":{},"sourceType":"script","externalDependencies":[]}

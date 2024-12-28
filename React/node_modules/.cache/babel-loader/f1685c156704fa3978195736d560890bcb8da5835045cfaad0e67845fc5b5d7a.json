@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { queueMicroTask } from './queueMicroTask';\nvar queueResizeObserver = function (cb) {\n  queueMicroTask(function ResizeObserver() {\n    requestAnimationFrame(cb);\n  });\n};\nexport { queueResizeObserver };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

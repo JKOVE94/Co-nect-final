@@ -1,0 +1,1 @@
+{"ast":null,"code":"export function getRoundingMethod(method) {\n  return number => {\n    const round = method ? Math[method] : Math.trunc;\n    const result = round(number);\n    // Prevent negative zero\n    return result === 0 ? 0 : result;\n  };\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

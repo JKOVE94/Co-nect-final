@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { resizeObservers } from '../utils/resizeObservers';\nvar hasSkippedObservations = function () {\n  return resizeObservers.some(function (ro) {\n    return ro.skippedTargets.length > 0;\n  });\n};\nexport { hasSkippedObservations };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

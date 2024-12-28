@@ -2,7 +2,6 @@ package conect.security;
 
 import conect.filter.JwtAuthenticationFilter;
 import conect.data.util.JwtUtil;
-import conect.service.common.LoginService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,7 +18,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 @Configuration
@@ -27,34 +25,25 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final UserSecurityService userSecurityService;
 
-    public SecurityConfig(JwtUtil jwtUtil) {
+    public SecurityConfig(JwtUtil jwtUtil, UserSecurityService userSecurityService) {
         this.jwtUtil = jwtUtil;
+        this.userSecurityService = userSecurityService;
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(LoginService loginService, UserSecurityService userSecurityService) {
-        return new JwtAuthenticationFilter(jwtUtil, userSecurityService, loginService);
-    }
-
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정
+            .csrf(csrf -> csrf.disable()) // CSRF 비활성화
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/login", "/validate-token", "/refresh-token", "/logout").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용
+                .requestMatchers("/login", "/validate-token").permitAll() // 인증 없이 접근 가능 경로
+                .anyRequest().authenticated() // 나머지 요청은 인증 필요
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling(exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                })
-            );
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 관리 설정
+            .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userSecurityService), UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
 
         return http.build();
     }
@@ -62,12 +51,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-production-domain.com","http://localhost:8080"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://your-production-domain.com","chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff/index.html")); // 허용 도메인 설정
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용 HTTP 메서드 설정
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); // 허용 헤더 설정
+        configuration.setExposedHeaders(Arrays.asList("Authorization")); // 클라이언트에서 접근 가능한 헤더 설정
+        configuration.setAllowCredentials(true); // 쿠키 기반 인증 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -76,11 +64,11 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+        return authenticationConfiguration.getAuthenticationManager(); // AuthenticationManager 반환
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // 비밀번호 암호화 방식 정의 (BCrypt)
     }
 }

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { resizeObservers } from '../utils/resizeObservers';\nvar hasActiveObservations = function () {\n  return resizeObservers.some(function (ro) {\n    return ro.activeTargets.length > 0;\n  });\n};\nexport { hasActiveObservations };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

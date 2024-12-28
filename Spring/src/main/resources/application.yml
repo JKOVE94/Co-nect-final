@@ -35,8 +35,7 @@ spring:
 
 jwt:
   secret: dGhpc2lzYXZlcnlzZWN1cmVzZWNyZXRrZXl0aGlzaXNhdmVyeXNlY3VyZXNlY3JldGtleQ== # Base64로 인코딩된 키
-  access-token-expiration-time: 3600000
-  refresh-token-expiration-time: 86400000
+  expiration-time: 3600000  # 1시간 (밀리초 단위)
 
 springdoc:
   swagger-ui:

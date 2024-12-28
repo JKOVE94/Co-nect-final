@@ -77,16 +77,17 @@ const Login = (props) => {
   const login = async (e) => {
     e.preventDefault();
     if (!validateInputs()) return;
-
+  
     setIsLoading(true);
-
+  
     try {
       const res = await axios.post("/login", loginInfo);
       const responseData = res.data;
       setData(responseData);
-
+  
       switch (responseData.status) {
         case 1: // 로그인 성공
+          sessionStorage.setItem("token", responseData.token);
           dispatch(
             LOGIN({
               user_pk_num: responseData.user_pk_num,

@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var freeze = function (obj) {\n  return Object.freeze(obj);\n};","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

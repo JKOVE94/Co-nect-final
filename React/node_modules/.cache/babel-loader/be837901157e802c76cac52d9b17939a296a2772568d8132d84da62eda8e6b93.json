@@ -1,0 +1,1 @@
+{"ast":null,"code":"let defaultOptions = {};\nexport function getDefaultOptions() {\n  return defaultOptions;\n}\nexport function setDefaultOptions(newOptions) {\n  defaultOptions = newOptions;\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

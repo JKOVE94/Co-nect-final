@@ -1,0 +1,1 @@
+{"ast":null,"code":"export { enUS as defaultLocale } from \"../locale/en-US.js\";","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

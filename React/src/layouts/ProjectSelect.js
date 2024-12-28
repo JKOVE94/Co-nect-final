@@ -42,6 +42,15 @@ const ProjectSelect = () => {
   const navigate = useNavigate();
 
   const fetchData = useCallback(() => {
+    if (!user_pk_num) {
+      setError("사용자 정보를 찾을 수 없습니다.");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
     axiosInstance
       .get(`/conect/${compNum}/proj/ProjSel/${user_pk_num}`)
       .then((res) => {
@@ -90,20 +99,13 @@ const ProjectSelect = () => {
                   <i className="fas fa-clipboard-list" />
                 </div>
               </Col>
-              <Col
-                style={{ position: "relative", right: "2rem", width: "120%" }}
-              >
+              <Col style={{ position: "relative", right: "2rem" }}>
                 <CardTitle
                   tag="h5"
                   className="text-uppercase text-muted mb-0"
                 ></CardTitle>
-                <span
-                  className="h3 font-weight-bold mb-0"
-                  style={{ width: "10rem" }}
-                >
-                  {proj.proj_title.length > 8
-                    ? proj.proj_title.slice(0, 8) + "..."
-                    : proj.proj_title}
+                <span className="h3 font-weight-bold mb-0">
+                  {proj.proj_title}
                 </span>
               </Col>
             </Row>

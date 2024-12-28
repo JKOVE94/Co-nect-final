@@ -12,18 +12,14 @@ public class UserSecurityDetails implements UserDetails {
     private final String password;
     private final boolean isAccountNonLocked;
     private final Collection<? extends GrantedAuthority> authorities;
-    private final String refreshToken;
 
-    public UserSecurityDetails(String compPkNum, String userId, int userPkNum, String password, 
-                               boolean isAccountNonLocked, Collection<? extends GrantedAuthority> authorities,
-                               String refreshToken) {
+    public UserSecurityDetails(String compPkNum, String userId, int userPkNum, String password, boolean isAccountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         this.compPkNum = compPkNum;
         this.userId = userId;
         this.userPkNum = userPkNum;
         this.password = password;
         this.isAccountNonLocked = isAccountNonLocked;
         this.authorities = authorities;
-        this.refreshToken = refreshToken;
     }
 
     @Override
@@ -51,10 +47,6 @@ public class UserSecurityDetails implements UserDetails {
 
     public int getUserPkNum() {
         return userPkNum;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
     }
 
     @Override

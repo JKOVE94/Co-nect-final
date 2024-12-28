@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { normalizeDates } from \"./normalizeDates.js\";\nexport function normalizeInterval(context, interval) {\n  const [start, end] = normalizeDates(context, interval.start, interval.end);\n  return {\n    start,\n    end\n  };\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
