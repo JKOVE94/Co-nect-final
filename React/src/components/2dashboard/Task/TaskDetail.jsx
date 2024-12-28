@@ -32,7 +32,7 @@ const TaskDetail = () => {
     const fetchTask = async () => {
       try {
         const response = await axiosInstance.get(
-          `/conect/${compNum}/board/task/${taskPkNum}`
+          `/conect/${compNum}/task/task/${taskPkNum}`
         );
         setTask(response.data);
       } catch (err) {
@@ -47,7 +47,7 @@ const TaskDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`/board/task/${taskPkNum}`);
+      await axiosInstance.delete(`/conect/${compNum}/task/task/${taskPkNum}`);
       navigate("/main/tasklist", { state: { success: true } });
     } catch (err) {
       setError("삭제 실패: " + err.message);
