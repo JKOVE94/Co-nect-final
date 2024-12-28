@@ -14,7 +14,12 @@ import {
 } from "react-bootstrap";
 
 const RecUpdate = ({ handleError }) => {
-  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userNum = userInfo.user_pk_num; //사번
+  const compNum = userInfo.user_fk_comp_num; //회사번호
 
   const navigate = useNavigate();
   const location = useLocation();

@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/gemini_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/gemini_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskList.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecCreate.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecDetail.jsx" afterDir="false" />
@@ -17,10 +18,9 @@
       <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecUpdate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecUpdate.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/Reclike.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/Reclike.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../React/src/layouts/ProjectSelect.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/layouts/ProjectSelect.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/setupProxy.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../React/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskHistoryDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskHistoryDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TaskHistoryEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TaskHistoryEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/security/UserSecurityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/security/UserSecurityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TaskHistoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TaskHistoryRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +56,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -113,7 +114,7 @@
       <updated>1734773064946</updated>
       <workItem from="1734773066002" duration="4643000" />
       <workItem from="1734831621818" duration="47449000" />
-      <workItem from="1735284123228" duration="1414000" />
+      <workItem from="1735284123228" duration="6101000" />
     </task>
     <servers />
   </component>

@@ -34,9 +34,15 @@ const Dashboard = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userData);
   const [isLoading, setIsLoading] = useState(true);
-  const [projPkNum, setProjPkNum] = useState(sessionStorage.getItem("persist:proj_pk_num"));
+  const userInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).userData;
+  const projInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).projData;  
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const [projPkNum, setProjPkNum] = useState(JSON.parse(projInfoFromRoot).proj_pk_num);
 
   const handleLogout = () => {
+    sessionStorage.removeItem("persist:proj_pk_num");
+    sessionStorage.removeItem("persist:root");
+    sessionStorage.removeItem("persist:userInfo");
     sessionStorage.removeItem("token");
     dispatch(LOGOUT());
     navigate("/login");

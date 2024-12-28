@@ -15,7 +15,6 @@ EMBEDDING_MODEL_NAME = 'all-mpnet-base-v2'
 embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
 EMBEDDING_DIR = "app/services/embeddings"
 
-
 # 임베딩 생성 함수
 def create_embeddings(data, text_columns):
     """데이터프레임의 텍스트 컬럼들을 결합하여 임베딩을 생성합니다."""
@@ -70,7 +69,8 @@ def generate_answer_with_gemini(context, question):
     user_pk_num은 사번, proj_pk_num은 업무번호, task_pk_num은 업무번호라고 말해줘.
     사용자가 관계에 대해 질문(내가 속한 프로젝트, 내가 속한 업무, 프로젝트가 포함하고 있는 업무, 업무가 포함된 프로젝트) 를 말하면 번호가 아닌 이름으로 알려줘.
     프로젝트 생성일은 porj_created 컬럼에 저장되어있어. 업무 생성일은 task_created 컬럼에 저장되어있어.
-    사용자가 프로젝트가 없는 직원에대해서 물어보면 proj_mem 
+    그리고 컬럼과 관련된 정보를 알려줄때는 컬럼명을 노출하지 않도록 주의해줘.
+    데이터가 없는 경우에는 '잘 모르겠어요' 이라고 답해줘.
     
     문맥:
     {context}

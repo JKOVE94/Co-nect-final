@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const Reclike = ({ recPkNum, likes, handleError }) => {
-  const userNum = useSelector((state) => state.userData.user_pk_num); //사원번호
-  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userNum = userInfo.user_pk_num; //사번
+  const compNum = userInfo.user_fk_comp_num; //회사번호사번호
 
   //로그인한 사용자가 좋아요한 게시글인지 확인인
   const [isCheck, setIsCheck] = useState(false);

@@ -5,10 +5,10 @@ import conect.data.dto.TaskDto;
 import conect.data.dto.TaskHistoryDto;
 import conect.data.entity.PostEntity;
 import conect.data.entity.TaskEntity;
-import conect.data.entity.TaskHistoryEntity;
+import conect.data.entity.TaskhistoryEntity;
 import conect.data.form.TaskForm;
 import conect.data.repository.ProjectRepository;
-import conect.data.repository.TaskHistoryRepository;
+import conect.data.repository.TaskhistoryRepository;
 import conect.data.repository.TaskRepository;
 import conect.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
 
     @Autowired
-    private TaskHistoryRepository taskHistoryRepository;
+    private TaskhistoryRepository taskHistoryRepository;
 
     @Override
     public List<TaskDto> getAllTask(int task_fk_proj_num) {
@@ -158,11 +158,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskHistoryDto> getTaskHistoryByTaskNum(int taskPkNum) {
-        List<TaskHistoryEntity> entities = taskHistoryRepository
-                .findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
-        return entities.stream()
-                .map(TaskHistoryDto::fromEntity)
-                .collect(Collectors.toList());
+//        List<TaskhistoryEntity> entities = taskHistoryRepository
+//                .findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
+//        return entities.stream()
+//                .map(TaskHistoryDto::fromEntity)
+//                .collect(Collectors.toList());
+        return null;
     }
 
 }

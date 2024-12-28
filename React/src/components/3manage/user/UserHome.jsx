@@ -5,8 +5,13 @@ import UserEdit from "./UserEdit";
 import UserUnlock from "./UserUnlock";
 
 const UserHome = () => {
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
-  const compNum = userInfo.user_fk_comp_num;
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userPkNum = userInfo.user_pk_num; //사번
+  const compNum = userInfo.user_fk_comp_num; //회사번호
 
   return (
     <>

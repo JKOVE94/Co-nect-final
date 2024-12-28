@@ -20,8 +20,11 @@ import moment from "moment";
 import axiosInstance from "../../api/axiosInstance"; // axiosInstance 직접 import
 
 const MyToDoList = (props) => {
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
-  const compNum = userInfo.user_fk_comp_num;
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compNum = userInfo.user_fk_comp_num; //회사번호
   const [data, setData] = useState({
     tasks: [],
     projects: [],
@@ -32,7 +35,7 @@ const MyToDoList = (props) => {
   const [error, setError] = useState(null);
   const [todoList, setTodoList] = useState([]);
 
-  const user_pk_num = useSelector((state) => state.userData.user_pk_num);
+  const user_pk_num = userInfo.user_pk_num; //사번
 
   const fetchData = useCallback(() => {
     if (!user_pk_num) {

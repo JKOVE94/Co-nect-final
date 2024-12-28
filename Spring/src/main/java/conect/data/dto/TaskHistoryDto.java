@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
 
-import conect.data.entity.TaskHistoryEntity;
+import conect.data.entity.TaskhistoryEntity;
 
 @Getter
 @Setter
@@ -19,9 +19,9 @@ public class TaskHistoryDto {
     private int taskhisFkTaskNum;
     private String userName;  // 유저 이름을 저장할 필드 추가
 
-    public static TaskHistoryDto fromEntity(TaskHistoryEntity entity) {
+    public static TaskHistoryDto fromEntity(TaskhistoryEntity entity) {
         TaskHistoryDto dto = new TaskHistoryDto();
-        dto.setTaskhisPkNum(entity.getTaskhisPkNum());
+        dto.setTaskhisPkNum(entity.getTaskhistoryPkNum());
         dto.setTaskhisBeforevalue(entity.getTaskhisBeforevalue());
         dto.setTaskhisAftervalue(entity.getTaskhisAftervalue());
         dto.setTaskhisUpdated(entity.getTaskhisUpdated());

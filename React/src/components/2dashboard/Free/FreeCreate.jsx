@@ -6,7 +6,10 @@ import { useSelector } from "react-redux";
 
 const FreeCreate = () => {
   // Redux에서 로그인한 유저 정보 가져오기
-  const writer = useSelector((state) => state.userData);
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const writer = JSON.parse(userInfoFromRoot);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

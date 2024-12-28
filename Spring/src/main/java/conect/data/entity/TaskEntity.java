@@ -62,7 +62,7 @@ public class TaskEntity {
     private UserEntity userEntity;
 
     @OneToMany(mappedBy = "taskEntity", orphanRemoval = true)
-    private List<TaskHistoryEntity> taskhistoryEntities;
+    private List<TaskhistoryEntity> taskhistoryEntities;
 
     @OneToMany(mappedBy = "taskEntity", orphanRemoval = true)
     private List<TasklogEntity> tasklogEntities;

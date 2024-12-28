@@ -5,6 +5,7 @@ import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axiosInstance from "api/axiosInstance";
 
 /*
 상위 컴포넌트에는 하단의 코드가 있어야 합니다.
@@ -16,8 +17,8 @@ import { useSelector } from "react-redux";
 
 function ManageUserModal(props) {
   const handleDeletePermit = () => {
-    axios
-      .delete(`/${props.compNum}/manage/user/${props.datas.user_pk_num}`)
+    axiosInstance
+      .delete(`/conect/${props.compNum}/manage/user/${props.datas.user_pk_num}`)
       .then(() => {
         props.handleFetch(); //부모 컴포넌트에서 데이터를 다시 불러오도록 하는 함수
       })
@@ -40,7 +41,7 @@ function ManageUserModal(props) {
               <Button variant="secondary" onClick={props.handleCloseM}>
                 취소
               </Button>
-              <Button variant="primary" onClick={props.handleDeletePermit}>
+              <Button variant="primary" onClick={handleDeletePermit}>
                 확인
               </Button>
             </Modal.Footer>

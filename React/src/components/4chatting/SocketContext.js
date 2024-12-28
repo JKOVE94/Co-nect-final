@@ -16,7 +16,11 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }) => {
   const [messages, setMessages] = useState([]); // messages의 초기값을 빈 배열([])로 변경
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
   const userPkNum = userInfo ? userInfo.user_pk_num : null;
   const socketRef = useRef();
   const [allMessagesLoaded, setAllMessagesLoaded] = useState(false);

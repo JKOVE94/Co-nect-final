@@ -7,7 +7,12 @@ import ProjAddMember from "./ProjAddMember";
 import "./manageProject.css";
 
 const ProjHome = () => {
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userPkNum = userInfo.user_pk_num; //사번
   const compNum = userInfo.user_fk_comp_num;
   // console.log("projHome userInfo: ", userInfo);
   return (

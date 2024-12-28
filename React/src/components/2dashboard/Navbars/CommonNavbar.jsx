@@ -7,8 +7,12 @@ import axiosInstance from "api/axiosInstance";
 
 const CommonNavbar = (props) => {
   const proj = sessionStorage.getItem("persist:proj_pk_num");
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
-  const compNum = userInfo.user_fk_comp_num;
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userNum = userInfo.user_pk_num; //사번
+  const compNum = userInfo.user_fk_comp_num; //회사번호
 
   const [projList, setProjList] = useState([{}]);
 

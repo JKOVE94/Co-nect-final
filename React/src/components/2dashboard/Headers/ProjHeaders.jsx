@@ -52,7 +52,10 @@ const Header = () => {
   }, []);
 
   const logout = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("persist:proj_pk_num");
+    sessionStorage.removeItem("persist:root");
+    sessionStorage.removeItem("persist:userInfo");
+    sessionStorage.removeItem("token");
     dispatch(LOGOUT());
     navigate("/");
   };

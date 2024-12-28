@@ -6,9 +6,13 @@ import { useSocket } from "./SocketContext";
 import axiosInstance from "api/axiosInstance"; // axiosInstance 직접 import
 
 function ChatList(props) {
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
-  const compPkNum = userInfo.user_fk_comp_num;
-  const userPkNum = userInfo.user_pk_num;
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userPkNum = userInfo.user_pk_num; //사번
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
+
   const [projectList, setProjectList] = useState([{}]);
   const [userList, setUserList] = useState([{}]);
   const [searchValue, setSearchValue] = useState("");

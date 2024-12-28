@@ -9,8 +9,12 @@ import { Card, CardBody, CardTitle, Form, FormGroup } from "react-bootstrap";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const RecDetail = ({ handleError, projPkNum }) => {
-  const userNum = useSelector((state) => state.userData.user_pk_num); //사원번호
-  const compNum = useSelector((state) => state.userData.user_fk_comp_num); //회사번호
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userNum = userInfo.user_pk_num; //사번
+  const compNum = userInfo.user_fk_comp_num; //회사번호사번호
 
   const navigate = useNavigate();
   const location = useLocation();

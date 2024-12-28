@@ -10,7 +10,8 @@ import axiosInstance from "../api/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 
 const ProjectSelect = () => {
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
+  const userInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
   const compNum = userInfo.user_fk_comp_num;
   
 

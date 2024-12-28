@@ -15,8 +15,11 @@ import {
 } from "reactstrap";
 
 export default function Tasktable(props) {
-  const userInfo = JSON.parse(sessionStorage.getItem("persist:userInfo"));
-  const compNum = userInfo.user_fk_comp_num;
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compNum = userInfo.user_fk_comp_num; //회사번호
   const [tasks, setTasks] = useState([]);
   console.log(props.projPkNum);
   const navigate = useNavigate();
