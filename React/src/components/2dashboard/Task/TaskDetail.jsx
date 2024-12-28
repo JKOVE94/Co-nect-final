@@ -20,13 +20,20 @@ const TaskDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
-
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userPkNum = userInfo.user_pk_num; //사번
+  const compNum = userInfo.user_fk_comp_num; //회사번호
 
   useEffect(() => {
     const fetchTask = async () => {
       try {
-        const response = await axiosInstance.get(`/conect/${compNum}/board/task/${taskPkNum}`);
+        const response = await axiosInstance.get(
+          `/conect/${compNum}/board/task/${taskPkNum}`
+        );
         setTask(response.data);
       } catch (err) {
         setError(err.message);
@@ -117,7 +124,9 @@ const TaskDetail = () => {
                     <td colSpan="4" style={{ textAlign: "right" }}>
                       <button
                         className="btn btn-primary m-1"
-                        onClick={() => navigate(`/main/task/update/${taskPkNum}`)}
+                        onClick={() =>
+                          navigate(`/main/task/update/${taskPkNum}`)
+                        }
                       >
                         수정
                       </button>

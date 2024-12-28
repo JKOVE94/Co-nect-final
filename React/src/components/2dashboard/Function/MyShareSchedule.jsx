@@ -8,7 +8,14 @@ import CalEventShowModal from "variables/Modal/CalEventShowModal";
 import ReactMention from "variables/mention/ReactMention";
 
 const MyShareSchedule = ({ events }) => {
-  const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const num = userInfo.user_pk_num; //사번
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
+
   const [data, setData] = useState([{}]);
   const [showModalIsOpen, setShowModalIsOpen] = useState(false); //상세보기 modal
 

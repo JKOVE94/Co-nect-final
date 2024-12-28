@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useLocation, Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Navbar from "components/2dashboard/Navbars/Navbar.js";
@@ -33,11 +33,20 @@ const Dashboard = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.userData);
-  const [isLoading, setIsLoading] = useState(true);
-  const userInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).userData;
-  const projInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).projData;  
+
+const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
+  const user = userInfo.user_pk_num; //사번
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
+
+  
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const projInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).projData;  
+
   const [projPkNum, setProjPkNum] = useState(JSON.parse(projInfoFromRoot).proj_pk_num);
 
   const handleLogout = () => {
@@ -49,64 +58,6 @@ const Dashboard = (props) => {
     navigate("/login");
   };
 
-  const verifyToken = async () => {
-    const token = sessionStorage.getItem("token");
-    if (!token) return false;
-
-    try {
-      const response = await axiosInstance.post("/conect/validate-token", { token });
-      return response.data.isValid;
-    } catch (error) {
-      console.error("토큰 검증 실패:", error);
-      return false;
-    }
-  };
-
-  const refreshToken = async () => {
-    const token = sessionStorage.getItem("token");
-    try {
-      const response = await axiosInstance.post("/conect/refresh-token", { token });
-      const newToken = response.data.token;
-      sessionStorage.setItem("token", newToken);
-      return true;
-    } catch (error) {
-      console.error("토큰 갱신 실패:", error);
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      setIsLoading(true);
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        handleLogout();
-        return;
-      }
-
-      const isValid = await verifyToken();
-      if (!isValid) {
-        const refreshed = await refreshToken();
-        if (!refreshed) {
-          handleLogout();
-          return;
-        }
-      }
-      setIsLoading(false);
-    };
-
-    checkAuthStatus();
-
-    const tokenRefreshInterval = setInterval(refreshToken, 15 * 60 * 1000);
-
-    return () => clearInterval(tokenRefreshInterval);
-  }, []);
-
-  useEffect(() => {
-    if (!isLoading && user.user_pk_num === 0) {
-      navigate("/");
-    }
-  }, [user, navigate, isLoading]);
 
   const isProjReadPath = location.pathname.includes("/projdetail");
 

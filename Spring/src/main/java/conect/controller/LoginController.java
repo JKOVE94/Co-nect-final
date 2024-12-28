@@ -32,7 +32,6 @@ public class LoginController {
             case 1: // 로그인 성공
                 String accessToken = loginDto.getAccessToken();
                 String refreshToken = loginDto.getRefreshToken();
-
                 ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
                         .httpOnly(true)
                         .secure(true)
@@ -52,6 +51,7 @@ public class LoginController {
                         .body(loginDto);
             case 2: // 정보 불일치
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginDto);
+
             case 3: // 잠긴 계정
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(loginDto);
             default:

@@ -10,14 +10,19 @@ import { useNavigate } from "react-router";
 import CalEventEditModal from "variables/Modal/CalEventEditModal";
 
 const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
-
   const [showModalIsOpen, setShowModalIsOpen] = useState(false); //상세보기 modal
   const [addModalIsOpen, setAddModalIsOpen] = useState(false); //이벤트추가 modal
   const [editModalIsOpen, setEditModalIsOpen] = useState(false); //이벤트수정 modal
 
   const [modalContent, setModalContent] = useState({}); //modal 내용
-  
-  const num = useSelector((state) => state.userData.user_pk_num); //로그인한 유저의 사번
+
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const num = userInfo.user_pk_num; //사번
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
   const navigate = useNavigate();
 
   const renderEventContent = (info) => {
@@ -25,10 +30,11 @@ const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
     //공유된 일정인 경우 타이틀에 [공유] 표기
     return (
       <div>
-        {info.event.extendedProps.sharer !== num ?
-        <span>[공유] {info.event.title}</span>
-        :<span>{info.event.title}</span>
-      }
+        {info.event.extendedProps.sharer !== num ? (
+          <span>[공유] {info.event.title}</span>
+        ) : (
+          <span>{info.event.title}</span>
+        )}
       </div>
     );
   };
@@ -40,21 +46,20 @@ const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
       content: info.event.extendedProps.content, //내용
       startdate: moment(info.event._instance.range.start).format("YYYY-MM-DD"), //시작일
       enddate: moment(info.event._instance.range.end).format("YYYY-MM-DD"), //종료일
-      starttime : moment(info.event._instance.range.start).format("HH:mm"), //시작시간
-      endtime : moment(info.event._instance.range.end).format("HH:mm"), //종료시간
-      category : info.event.extendedProps.category,
-      all : info.event.extendedProps.all,
+      starttime: moment(info.event._instance.range.start).format("HH:mm"), //시작시간
+      endtime: moment(info.event._instance.range.end).format("HH:mm"), //종료시간
+      category: info.event.extendedProps.category,
+      all: info.event.extendedProps.all,
       id: info.event.id, //일정 pk num
-      sharer:info.event.extendedProps.sharer, //일정 작성자(공유자)
-      shared:info.event.extendedProps.shared, //일정 공유된 사람 목록
+      sharer: info.event.extendedProps.sharer, //일정 작성자(공유자)
+      shared: info.event.extendedProps.shared, //일정 공유된 사람 목록
     });
 
-    if(info.event.extendedProps.sharer === num){
+    if (info.event.extendedProps.sharer === num) {
       setEditModalIsOpen(true);
     } else {
       setShowModalIsOpen(true);
     }
-
   };
 
   const handleAdd = () => {
@@ -70,7 +75,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
         locale="ko"
         timeZone="Asia/Seoul"
         dayMaxEventRows={3}
-        height='auto'
+        height="auto"
         headerToolbar={{
           start: "today", //오늘날짜, 이전달, 다음달 버튼
           center: "title", //현재 달
@@ -114,7 +119,6 @@ const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
         handleToast={handleToast}
         handleError={handleError}
       />
-
     </>
   );
 };

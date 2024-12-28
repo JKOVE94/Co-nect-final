@@ -34,9 +34,9 @@ public class UserDto {
         userDto.setUser_pic(user.getUserPic());
         userDto.setUser_lastlogin(user.getUserLastlogin());
         userDto.setUser_trynum(user.getUserTrynum());
-        userDto.setUser_locked(user.isUserLocked());
+        userDto.setUser_locked(user.getUserLocked());
         userDto.setUser_author(user.getUserAuthor());
-        userDto.setUser_istemppw(user.isUserIstemppw());
+        userDto.setUser_istemppw(user.getUserIstemppw());
         userDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
         return userDto;
 

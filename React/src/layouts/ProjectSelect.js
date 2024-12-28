@@ -44,7 +44,6 @@ const ProjectSelect = () => {
   sessionStorage.setItem("persist:proj_pk_num", data.proj_pk_num);
   const user_pk_num = useSelector((state) => state.userData.user_pk_num);
   const user_author = useSelector((state) => state.userData.user_author);
-  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
   const navigate = useNavigate();
 
   const fetchData = useCallback(() => {

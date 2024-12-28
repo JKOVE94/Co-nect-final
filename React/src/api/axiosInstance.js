@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axiosInstance.post("/refresh-token");
+        const { data } = await axiosInstance.post("/conect/refresh-token");
         const newAccessToken = data.accessToken;
         axiosInstance.defaults.headers.common["Authorization"] =
           "Bearer " + newAccessToken;
@@ -64,7 +64,7 @@ axiosInstance.interceptors.response.use(
 
 export const refreshTokenAndGetUser = async () => {
   try {
-    const { data } = await axiosInstance.post("/refresh-token");
+    const { data } = await axiosInstance.post("/conect/refresh-token");
     if (data && data.accessToken) {
       axiosInstance.defaults.headers.common["Authorization"] =
         "Bearer " + data.accessToken;

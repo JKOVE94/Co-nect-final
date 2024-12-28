@@ -8,13 +8,11 @@ import conect.data.form.LoginForm;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface LoginService {
-    LoginDto checkLogin(LoginForm form);
+    LoginDto  checkLogin(LoginForm form);
 
     UserDto getUserInfo(String userId);
 
     int getTryNum(String userId);
-
-    LoginDto checkLogin(LoginForm form);
 
     String generateAccessToken(UserDto userDto);
 

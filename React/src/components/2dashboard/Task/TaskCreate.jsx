@@ -17,15 +17,22 @@ import axiosInstance from "../../../api/axiosInstance";
 const TaskCreate = () => {
   const navigate = useNavigate();
   const { projectNum } = useParams(); // 프로젝트 번호 받아오기
-  const compNum = useSelector((state) => state.userData.user_fk_comp_num);
-
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userPkNum = userInfo.user_pk_num; //사번
+  const compNum = userInfo.user_fk_comp_num; //회사번호
 
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axiosInstance.get(`/conect/${compNum}/board/proj/projread`);
+        const response = await axiosInstance.get(
+          `/conect/${compNum}/board/proj/projread`
+        );
         // 사용자 데이터 구조를 서버 응답에 맞게 조정
         setUsers(response.data);
         console.log(response.data);

@@ -16,7 +16,13 @@ const {
 } = require("react-bootstrap");
 
 const FreeFavorite = () => {
-  const num = useSelector((state) => state.userData.user_pk_num);
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const num = userInfo.user_pk_num; //사번
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
   const [favorFree, setFavorFree] = useState([{}]);
   const navigate = useNavigate();
 
@@ -109,10 +115,12 @@ const FreeFavorite = () => {
           </Table>
           <Pagination className="justify-content-center">
             <Pagination.Item
-            
               onClick={() => handlePageChange(currentPage)}
               disabled={currentPage === 0}
-            > {'<<'} </Pagination.Item>
+            >
+              {" "}
+              {"<<"}{" "}
+            </Pagination.Item>
             {[...Array(favorFree.totalPages)].map((num, index) => (
               <Pagination.Item
                 key={index}
@@ -124,7 +132,10 @@ const FreeFavorite = () => {
             <Pagination.Item
               onClick={() => handlePageChange(currentPage + 2)}
               disabled={currentPage === favorFree.totalPages - 1}
-            > {'>>'} </Pagination.Item>
+            >
+              {" "}
+              {">>"}{" "}
+            </Pagination.Item>
           </Pagination>
         </CardBody>
       </Card>
