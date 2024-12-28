@@ -41,7 +41,11 @@ const CommonNavbar = (props) => {
                 }}
               >
                 {projList.map((proj) => (
-                  <option value={`${proj.proj_pk_num}`}>
+                  <option
+                    value={`${proj.proj_pk_num}`}
+                    key={proj.proj_pk_num}
+                    selected={proj.proj_pk_num == proj}
+                  >
                     {proj.proj_title}
                   </option>
                 ))}

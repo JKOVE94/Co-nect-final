@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import axiosInstance from "../../../api/axiosInstance";
 import {
@@ -12,20 +12,29 @@ import {
   Progress,
   Input,
   Button,
+  Row,
   Col,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "reactstrap";
+import TaskDeleteModal from "./TaskDeleteModal";
 
 const TaskList = (props) => {
-  const info = JSON.parse(sessionStorage.getItem("persist:root"));
   const userInfoFromRoot = JSON.parse(
     sessionStorage.getItem("persist:root")
   ).userData;
+  const projpkNum = sessionStorage.getItem("persist:proj_pk_num");
   const userInfo = JSON.parse(userInfoFromRoot);
   const userPkNum = userInfo.user_pk_num; //사번
   const compPkNum = userInfo.user_fk_comp_num; //회사번호
 
-  const projInfo = info.projData.proj_pk_num;
-  const compNum = userInfo.user_fk_comp_num;
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -36,29 +45,31 @@ const TaskList = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
+
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+
   const { projectNum } = useParams();
-  // const compNum = useSelector((state) => state.userData.user_fk_comp_num);
 
   const fetchTasks = useCallback(
     (page, block, sortField, sortDirection) => {
-      // console.log("fetchTasks 호출:", {
-      //   page,
-      //   block,
-      //   sortField,
-      //   sortDirection,
-      //   searchText,
-      // });
+      console.log("fetchTasks 호출:", {
+        page,
+        block,
+        sortField,
+        sortDirection,
+        searchText,
+      });
       setLoading(true);
       setError(null);
       axiosInstance
         .get(
-          `/conect/${compNum}/task/tasklist/proj/${props.projPkNum}?page=${
+          `/conect/task/task/tasklist/proj/${props.projPkNum}?page=${
             page - 1
           }&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchText=${searchText}`
         )
         .then((res) => {
-          // console.log("API 응답:", res.data);
-          setTasks(sortTasks(res.data.tasks));
+          console.log("API 응답:", res.data);
+          setTasks(res.data.tasks);
           setCurrentPage(res.data.currentPage + 1);
           setTotalPages(res.data.totalPages);
           setTotalBlocks(res.data.totalBlocks);
@@ -73,15 +84,15 @@ const TaskList = (props) => {
           setLoading(false);
         });
     },
-    [props.projPkNum, searchText, props.projectNum]
+    [projectNum, searchText, props.projPkNum]
   );
 
   useEffect(() => {
-    console.log("useEffect 실행, projectNum:", props.projPkNum);
-    if (props.projPkNum) {
+    console.log("useEffect 실행, projectNum:", projectNum);
+    if (projectNum) {
       fetchTasks(1, 0, sortField, sortDirection);
     }
-  }, [props.projPkNum, sortField, sortDirection, fetchTasks]);
+  }, [projectNum, sortField, sortDirection, fetchTasks]);
 
   const pagesPerBlock = 5;
   const startPageOfBlock = pageBlock * pagesPerBlock + 1;
@@ -89,6 +100,7 @@ const TaskList = (props) => {
     startPageOfBlock + pagesPerBlock - 1,
     totalPages
   );
+
   const pageButtons = Array.from(
     { length: endPageOfBlock - startPageOfBlock + 1 },
     (_, index) => startPageOfBlock + index
@@ -103,15 +115,6 @@ const TaskList = (props) => {
       sortField,
       sortDirection
     );
-  };
-
-  const sortTasks = (tasks) => {
-    return tasks.sort((a, b) => {
-      if (a.taskGroup !== b.taskGroup) {
-        return a.taskGroup - b.taskGroup;
-      }
-      return a.taskDepth - b.taskDepth;
-    });
   };
 
   const handlePageChange = (pageNumber) => {
@@ -134,13 +137,44 @@ const TaskList = (props) => {
     setSortDirection(newSortDirection);
   };
 
-  const navigate = useNavigate();
-
-  const handleTaskCreate = () => {
-    navigate("/main/task/create");
-  };
   const handleSearch = () => {
     fetchTasks(1, 0, sortField, sortDirection);
+  };
+
+  const handleEditTask = (taskId) => {
+    navigate(`/main/task/edit/${props.projPkNum}/${taskId}`);
+  };
+
+  const handleDeleteClick = (taskId) => {
+    setSelectedTaskId(taskId);
+    setDeleteModal(true);
+  };
+
+  //--------------------------------------------------------------------------------
+  const [deleteModal, setDeleteModal] = useState(false);
+  const handleDeleteConfirm = async () => {
+    try {
+      await axiosInstance.delete(
+        `/conect/${compPkNum}/task/task/delete/${selectedTaskId}`
+      );
+
+      setDeleteModal(false);
+      setSelectedTaskId(null);
+      fetchTasks(currentPage, pageBlock, sortField, sortDirection);
+    } catch (error) {
+      console.error("Delete task error:", error);
+      setError("태스크 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModal(false);
+    setSelectedTaskId(null);
+  };
+
+  //--------------------------------------------------------------------------------
+  const handleCreateTask = () => {
+    navigate(`/main/task/create/${props.projPkNum}`);
   };
 
   return (
@@ -185,30 +219,19 @@ const TaskList = (props) => {
                     <th>시작일</th>
                     <th>마감일</th>
                     <th>상태</th>
-                    <th>진행도</th>
+                    <th style={{ width: "200px" }}>진행도</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {tasks.length > 0 ? (
                     tasks.map((task) => (
                       <tr key={task.taskPkNum}>
-                        <td
-                          style={{
-                            paddingLeft: `${task.taskDepth * 20}px`,
-                            fontWeight:
-                              task.taskDepth === 0 ? "bold" : "normal",
-                          }}
-                        >
-                          {task.taskDepth === 1 && (
-                            <span style={{ marginRight: "5px" }}>
-                              <i class="bi bi-arrow-return-right"></i>
-                            </span>
-                          )}
+                        <td style={{ fontWeight: "bold" }}>
                           <Link to={`/main/task/detail/${task.taskPkNum}`}>
                             {task.taskTitle}
                           </Link>
                         </td>
-
                         <td>{task.taskContent}</td>
                         <td>{formatDate(task.taskStartdate)}</td>
                         <td>{formatDate(task.taskDeadline)}</td>
@@ -224,29 +247,47 @@ const TaskList = (props) => {
                           <Progress
                             value={task.taskProgress}
                             max={100}
-                            style={{ height: "8px" }}
+                            style={{ height: "8px", width: "100%" }}
                           />
                           <div style={{ fontSize: "0.8rem", color: "#A0A0A0" }}>
                             {`진행률: ${task.taskProgress || 0}%`}
                           </div>
                         </td>
+                        <td>
+                          <UncontrolledDropdown>
+                            <DropdownToggle
+                              color="link"
+                              size="sm"
+                              className="p-0"
+                            >
+                              <i className="fas fa-ellipsis-v"></i>
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                              <DropdownItem
+                                onClick={() => handleEditTask(task.taskPkNum)}
+                              >
+                                수정
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={() =>
+                                  handleDeleteClick(task.taskPkNum)
+                                }
+                              >
+                                삭제
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledDropdown>
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6">업무가 없습니다.</td>
+                      <td colSpan="7">업무가 없습니다.</td>
                     </tr>
                   )}
                 </tbody>
               </table>
-              <div className="d-flex justify-content-end">
-                <button
-                  className="btn btn-primary mr-3 mt-3"
-                  onClick={handleTaskCreate}
-                >
-                  글쓰기
-                </button>
-              </div>
+
               <div
                 style={{
                   display: "flex",
@@ -263,6 +304,7 @@ const TaskList = (props) => {
                 >
                   &laquo; 이전
                 </button>
+
                 {pageButtons.map((pageNumber) => (
                   <button
                     key={pageNumber}
@@ -274,6 +316,7 @@ const TaskList = (props) => {
                     {pageNumber}
                   </button>
                 ))}
+
                 <button
                   className={`btn btn-link ${
                     pageBlock + 1 >= totalBlocks ? "disabled" : ""
@@ -288,8 +331,40 @@ const TaskList = (props) => {
               </div>
             </>
           )}
+
+          {/* 삭제 확인 Modal */}
+          {/* <Modal isOpen={deleteModal} toggle={handleDeleteCancel}>
+            <ModalHeader toggle={handleDeleteCancel}>삭제 확인</ModalHeader>
+            <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
+            <ModalFooter>
+              <Button color="danger" onClick={handleDeleteConfirm}>
+                삭제
+              </Button>{" "}
+              <Button color="secondary" onClick={handleDeleteCancel}>
+                취소
+              </Button>
+            </ModalFooter>
+          </Modal> */}
+
+          <TaskDeleteModal
+            deleteModal={deleteModal}
+            handleDeleteConfirm={handleDeleteConfirm}
+            handleDeleteCancel={handleDeleteCancel}
+          />
         </CardBody>
       </Card>
+      <div
+        style={{
+          borderTop: "1px solid #dee2e6",
+          padding: "1rem",
+          display: "flex",
+          justifyContent: "flex-start",
+        }}
+      >
+        <Button color="primary" onClick={handleCreateTask}>
+          등록
+        </Button>
+      </div>
     </Container>
   );
 };

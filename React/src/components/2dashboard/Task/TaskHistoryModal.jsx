@@ -24,7 +24,7 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
     setLoading(true);
     try {
       const response = await axiosInstance.get(
-        `/conect/${compNum}/board/task/history/${taskPkNum}`
+        `/conect/${compNum}/task/task/history/${taskPkNum}`
       );
       setTaskHistory(response.data);
     } catch (error) {

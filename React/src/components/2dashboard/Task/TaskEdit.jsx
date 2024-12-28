@@ -11,98 +11,175 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../../../api/axiosInstance";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 
-const TaskCreate = () => {
-  const navigate = useNavigate();
-  const { projectNum } = useParams(); // 프로젝트 번호 받아오기
-  const info = JSON.parse(sessionStorage.getItem("persist:root"));
+const TaskEdit = () => {
   const userInfoFromRoot = JSON.parse(
     sessionStorage.getItem("persist:root")
   ).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
   const userPkNum = userInfo.user_pk_num; //사번
-  const compNum = userInfo.user_fk_comp_num; //회사번호
-  const tagOptions = ["red", "orange", "blue", "gray", "green", "gold"];
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
+  const { taskId } = useParams(); // useParams 훅을 사용하여 URL 파라미터 가져오기
+  const navigate = useNavigate();
+  const location = useLocation(); // useLocation 훅 추가
+  const projectNum = useParams("projectNum").projectNum;
   const [users, setUsers] = useState([]);
-  const [duration, setDuration] = useState(0);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `/conect/${compNum}/task/task/member/${projectNum}`
-        );
-        // 사용자 데이터 구조를 서버 응답에 맞게 조정
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-    fetchUsers();
-  }, []);
-
   const [formData, setFormData] = useState({
     taskTitle: "",
     taskContent: "",
     taskStatus: "예정",
     taskStartdate: "",
     taskDeadline: "",
-    taskPriority: "중간",
+    taskPriority: "보통",
     taskFkUserNum: "",
     taskProgress: 0,
-    taskFkProjNum: projectNum,
+    taskFkProjNum: "", // projectNum으로 초기화
+    taskTagcol: "",
+    taskCreated: "", // 생성 날짜 추가
+    taskDuration: 0, // 소요 시간 추가
+    taskDepth: 0, // 깊이 추가
+    taskGroup: 0,
   });
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
 
-  // 시작일과 완료일로부터 소요 시간 계산
   useEffect(() => {
-    const startdate = new Date(formData.taskStartdate);
-    const deadline = new Date(formData.taskDeadline);
-    const diffTime = deadline - startdate;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    setDuration(diffDays);
-  }, [formData.taskStartdate, formData.taskDeadline]);
+    const fetchUsers = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/conect/${compPkNum}/task/task/${taskId}`
+        );
+        const taskData = response.data;
+        const responseMember = await axiosInstance.get(
+          `/conect/${compPkNum}/task/task/member/${projectNum}`
+        );
+        // 사용자 데이터 구조를 서버 응답에 맞게 조정
+        setUsers(responseMember.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    if (taskId) {
+      fetchUsers();
+    }
+  }, [taskId]);
+
+  // task 데이터 가져오기
+  useEffect(() => {
+    const fetchTask = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/conect/${compPkNum}/task/task/${taskId}`
+        );
+        const taskData = response.data;
+
+        const formatDate = (dateString) => {
+          if (!dateString) return "";
+          return new Date(dateString).toISOString().split("T")[0];
+        };
+
+        setFormData({
+          taskTitle: taskData.taskTitle,
+          taskContent: taskData.taskContent,
+          taskStatus: taskData.taskStatus,
+          taskStartdate: formatDate(taskData.taskStartdate),
+          taskDeadline: formatDate(taskData.taskDeadline),
+          taskPriority: taskData.taskPriority,
+          taskFkUserNum: taskData.taskFkUserNum,
+          taskProgress: taskData.taskProgress,
+          taskFkProjNum: taskData.taskFkProjNum,
+          taskTagcol: taskData.taskTagcol || "",
+          taskCreated: taskData.taskCreated, // 생성 날짜 추가
+          taskDuration: taskData.taskDuration || 0, // 소요 시간 추가
+          taskDepth: taskData.taskDepth || 0, // 깊이 추가
+        });
+      } catch (error) {
+        console.error("Error fetching task:", error);
+      }
+    };
+
+    if (taskId) {
+      fetchTask();
+    }
+  }, [taskId]);
+
+  useEffect(() => {
+    console.log(users);
+  }, [users]);
+
+  useEffect(() => {
+    console.log(projectNum);
+  }, [projectNum]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
 
+    // taskStartdate와 taskDeadline이 변경될 때 taskDuration을 업데이트
+    if (name === "taskStartdate" || name === "taskDeadline") {
+      const startDate =
+        name === "taskStartdate"
+          ? new Date(value)
+          : new Date(formData.taskStartdate);
+      const endDate =
+        name === "taskDeadline"
+          ? new Date(value)
+          : new Date(formData.taskDeadline);
+
+      if (startDate && endDate && startDate <= endDate) {
+        const duration = differenceInDays(endDate, startDate) + 1;
+        setFormData((prevState) => ({
+          ...prevState,
+          [name]: value,
+          taskDuration: duration,
+        }));
+      } else {
+        setFormData((prevState) => ({
+          ...prevState,
+          [name]: value,
+          taskDuration: 0,
+        }));
+      }
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // taskCreated를 현재 날짜로 설정
+      console.log("taskId:", taskId);
+
+      if (!taskId) {
+        console.error("taskId is null or undefined");
+        return;
+      }
+
       const dataToSend = {
         ...formData,
-        taskCreated: format(new Date(), "yyyy-MM-dd"),
+        taskPkNum: taskId, // 명시적으로 taskPkNum 속성에 taskId 값 할당
       };
 
-      const response = await axiosInstance.post(
-        `/conect/${compNum}/task/insert`,
-        dataToSend,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      await axiosInstance.put(
+        `/conect/${compPkNum}/task/update/${taskId}`,
+        dataToSend
       );
-
       navigate(`/main/task/${projectNum}`);
     } catch (error) {
-      console.error("Error creating task:", error);
+      console.error("Error updating task:", error);
     }
   };
 
   const handleCancel = () => {
-    navigate(-1); // TaskList로 이동
+    if (!projectNum) {
+      // 프로젝트 번호가 없는 경우 이전 페이지로 이동
+      navigate(-1);
+      return;
+    }
+    navigate(`/main/task/${projectNum}`);
   };
 
   const progressOptions = [
@@ -118,6 +195,8 @@ const TaskCreate = () => {
     "90%",
     "100%",
   ];
+
+  const tagOptions = ["red", "orange", "blue", "gray", "green", "gold"];
 
   const styles = {
     formLabel: {
@@ -157,7 +236,7 @@ const TaskCreate = () => {
     <Container className="py-4" style={{ overflowY: "auto" }}>
       <Card style={styles.card}>
         <CardHeader style={styles.header}>
-          <h2 className="mb-0">업무 생성</h2>
+          <h2 className="mb-0">업무 수정</h2>
         </CardHeader>
         <Form onSubmit={handleSubmit} style={styles.form}>
           <FormGroup row style={{ height: "auto" }}>
@@ -276,7 +355,7 @@ const TaskCreate = () => {
           <Row style={{ height: "auto" }}>
             <Col sm={6}>
               <FormGroup row style={{ height: "auto" }}>
-                <Label sm={4} style={styles.formLabel} for="task_fk_user_num">
+                <Label sm={4} style={styles.formLabel} for="taskFkUserNum">
                   담당자 :
                 </Label>
                 <Col sm={8}>
@@ -288,12 +367,15 @@ const TaskCreate = () => {
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="">담당자 선택</option>
+                    <option>담당자 선택</option>
                     {users.length !== 0
                       ? users.map((user) => (
                           <option
                             key={user.projmem_fk_user_num}
                             value={user.projmem_fk_user_num}
+                            selected={
+                              user.projmem_fk_user_num == formData.taskFkUserNum
+                            }
                           >
                             {user.projmem_name}
                           </option>
@@ -302,6 +384,7 @@ const TaskCreate = () => {
                     <option
                       key={userInfo.user_pk_num}
                       value={userInfo.user_pk_num}
+                      selected={userInfo.user_pk_num == formData.taskFkUserNum}
                     >
                       {userInfo.user_name}
                     </option>
@@ -334,7 +417,6 @@ const TaskCreate = () => {
           </Row>
 
           <Row style={{ height: "auto" }}>
-            {/* taskDuration 입력 필드 */}
             <Col sm={6}>
               <FormGroup row style={{ height: "auto" }}>
                 <Label sm={4} style={styles.formLabel} for="taskDuration">
@@ -345,14 +427,12 @@ const TaskCreate = () => {
                     id="taskDuration"
                     type="text"
                     name="taskDuration"
-                    value={isNaN(duration) ? "0" : `${duration}`}
+                    value={`${formData.taskDuration}일`}
                     readOnly
                   />
                 </Col>
               </FormGroup>
             </Col>
-
-            {/* taskTagcol 입력 필드 */}
             <Col sm={6}>
               <FormGroup row style={{ height: "auto" }}>
                 <Label sm={4} style={styles.formLabel} for="taskTagcol">
@@ -368,7 +448,11 @@ const TaskCreate = () => {
                   >
                     <option value="">태그 선택</option>
                     {tagOptions.map((tag) => (
-                      <option key={tag} value={tag}>
+                      <option
+                        key={tag}
+                        value={tag}
+                        selected={tag === formData.taskTagcol}
+                      >
                         {tag}
                       </option>
                     ))}
@@ -405,4 +489,4 @@ const TaskCreate = () => {
   );
 };
 
-export default TaskCreate;
+export default TaskEdit;

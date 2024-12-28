@@ -1,5 +1,6 @@
 package conect.controller;
 
+import conect.data.dto.ProjectmemberDto;
 import conect.data.dto.TaskDto;
 import conect.data.dto.TaskHistoryDto;
 import conect.data.form.TaskForm;
@@ -31,6 +32,7 @@ public class TaskController {
 
     @GetMapping("/task/{taskPkNum}")
     public TaskDto getTaskByNum(@PathVariable("taskPkNum") int taskPkNum) {
+        System.out.println("taskPkNum : " + taskPkNum);
         return taskService.getTaskByNum(taskPkNum);
     }
 
@@ -51,7 +53,8 @@ public class TaskController {
     }
 
     @PutMapping("/update/{task_pk_num}")
-    public void updateTask(@RequestBody TaskForm form) {
+    public void updateTask(@PathVariable("task_pk_num") int task_pk_num, @RequestBody TaskForm form) {
+        form.setTaskPkNum(task_pk_num);
         taskService.updateTask(form);
     }
 
@@ -140,6 +143,10 @@ public class TaskController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/task/member/{projNum}")
+    public List<ProjectmemberDto> getTaskMember(@PathVariable("comp_pk_num")int compNum, @PathVariable("projNum") int projNum) {
+        return taskService.getTaskMember(compNum, projNum);
     }
 
 }

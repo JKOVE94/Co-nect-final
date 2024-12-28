@@ -52,6 +52,8 @@ const UserNavbar = (props) => {
     sessionStorage.removeItem("persist:root");
     sessionStorage.removeItem("persist:userInfo");
     sessionStorage.removeItem("token");
+    document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
     dispatch(LOGOUT());
     navigate("/");
   }

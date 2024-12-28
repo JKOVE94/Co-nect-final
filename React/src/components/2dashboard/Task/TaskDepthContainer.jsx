@@ -22,7 +22,7 @@ const TaskDepthContainer = ({ task }) => {
   ).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
   const userPkNum = userInfo.user_pk_num; //사번
-  const compNum = userInfo.user_fk_comp_num; //회사번호
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
 
   useEffect(() => {
     const fetchRelatedTasks = async () => {
@@ -34,7 +34,7 @@ const TaskDepthContainer = ({ task }) => {
       try {
         setLoading(true);
         const response = await axiosInstance.get(
-          `/conect/${compNum}/board/task/${task.taskPkNum}/related`,
+          `/conect/${compPkNum}/task/task/${task.taskPkNum}/related`,
           {
             params: {
               taskGroup: task.taskGroup,

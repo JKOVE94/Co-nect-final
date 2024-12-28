@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import TaskDepthContainer from "./TaskDepthContainer";
 import TaskHistoryModal from "./TaskHistoryModal";
+import TaskDeleteModal from "./TaskDeleteModal";
 
 const TaskDetail = () => {
   const { taskPkNum } = useParams();
@@ -27,6 +28,28 @@ const TaskDetail = () => {
   const userInfo = JSON.parse(userInfoFromRoot);
   const userPkNum = userInfo.user_pk_num; //사번
   const compNum = userInfo.user_fk_comp_num; //회사번호
+
+  //--------------------------------------------------------------------------------
+  const [deleteModal, setDeleteModal] = useState(false);
+  const handleDeleteConfirm = async () => {
+    try {
+      await axiosInstance.delete(
+        `/conect/${compNum}/task/task/delete/${taskPkNum}`
+      );
+
+      setDeleteModal(false);
+      navigate(`/main/task/${task.taskFkProjNum}`);
+    } catch (error) {
+      console.error("Delete task error:", error);
+      setError("태스크 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModal(false);
+  };
+
+  //--------------------------------------------------------------------------------
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -45,13 +68,8 @@ const TaskDetail = () => {
     fetchTask();
   }, [taskPkNum]);
 
-  const handleDelete = async () => {
-    try {
-      await axiosInstance.delete(`/conect/${compNum}/task/task/${taskPkNum}`);
-      navigate("/main/tasklist", { state: { success: true } });
-    } catch (err) {
-      setError("삭제 실패: " + err.message);
-    }
+  const handleDeleteClick = () => {
+    setDeleteModal(true);
   };
 
   const formatDate = (dateString) => {
@@ -125,14 +143,16 @@ const TaskDetail = () => {
                       <button
                         className="btn btn-primary m-1"
                         onClick={() =>
-                          navigate(`/main/task/update/${taskPkNum}`)
+                          navigate(
+                            `/main/task/edit/${task.taskFkProjNum}/${taskPkNum}`
+                          )
                         }
                       >
                         수정
                       </button>
                       <button
                         className="btn btn-danger m-1"
-                        onClick={handleDelete}
+                        onClick={handleDeleteClick}
                       >
                         삭제
                       </button>
@@ -161,6 +181,11 @@ const TaskDetail = () => {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         taskPkNum={taskPkNum}
+      />
+      <TaskDeleteModal
+        deleteModal={deleteModal}
+        handleDeleteConfirm={handleDeleteConfirm}
+        handleDeleteCancel={handleDeleteCancel}
       />
     </Container>
   );

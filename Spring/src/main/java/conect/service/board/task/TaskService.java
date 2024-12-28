@@ -1,5 +1,6 @@
 package conect.service.board.task;
 
+import conect.data.dto.ProjectmemberDto;
 import conect.data.dto.TaskDto;
 import conect.data.dto.TaskHistoryDto;
 import conect.data.form.TaskForm;
@@ -32,4 +33,6 @@ public interface TaskService {
     // 페이징
     public Page<TaskDto> getListByProject(int projectNum, int page, int pageSize, String sortField,
             String sortDirection, String searchText);
+
+    List<ProjectmemberDto> getTaskMember(int compNum, int projNum);
 }

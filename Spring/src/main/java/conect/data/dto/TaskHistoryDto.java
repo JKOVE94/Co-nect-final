@@ -21,7 +21,7 @@ public class TaskHistoryDto {
 
     public static TaskHistoryDto fromEntity(TaskhistoryEntity entity) {
         TaskHistoryDto dto = new TaskHistoryDto();
-        dto.setTaskhisPkNum(entity.getTaskhistoryPkNum());
+        dto.setTaskhisPkNum(entity.getTaskhisPkNum());
         dto.setTaskhisBeforevalue(entity.getTaskhisBeforevalue());
         dto.setTaskhisAftervalue(entity.getTaskhisAftervalue());
         dto.setTaskhisUpdated(entity.getTaskhisUpdated());
