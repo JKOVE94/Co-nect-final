@@ -86,7 +86,6 @@ const Login = (props) => {
 
       switch (responseData.status) {
         case 1: // 로그인 성공
-          sessionStorage.setItem("token", responseData.token);
           dispatch(
             LOGIN({
               user_pk_num: responseData.user_pk_num,

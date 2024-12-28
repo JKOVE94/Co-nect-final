@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useLocation, Route, Routes, useNavigate } from "react-router-dom";
+import React, { useRef, useState } from "react";
+import { useLocation, Route, Routes } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "components/2dashboard/Navbars/Navbar.js";
 import Sidebar from "components/2dashboard/Sidebar/Sidebar.js";
 import Header from "components/2dashboard/Headers/Header.js";
@@ -108,10 +109,6 @@ const Dashboard = (props) => {
   }, [user, navigate, isLoading]);
 
   const isProjReadPath = location.pathname.includes("/projdetail");
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
 
   return (
     <>

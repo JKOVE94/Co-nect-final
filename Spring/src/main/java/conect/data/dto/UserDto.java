@@ -13,7 +13,6 @@ public class UserDto {
 
     private Integer user_pk_num; // 사용자 사번
     private String user_id; // 사용자 아이디
-    private String user_pw; // 사용자 패스워드
     private String user_name; // 사용자 이름
     private String user_mail; // 사용자 이메일
     private String user_pic; // 사용자 사진
@@ -24,13 +23,12 @@ public class UserDto {
     private boolean user_istemppw; // 사용자 임시 비밀번호 여부
     private int user_fk_comp_num; // 사용자 회사 번호
 
-    // Getters and Setters
+    // user_pw 필드는 보안상의 이유로 DTO에서 제거했습니다.
 
     public static UserDto fromEntity(UserEntity user) {
         UserDto userDto = new UserDto();
         userDto.setUser_pk_num(user.getUserPkNum());
         userDto.setUser_id(user.getUserId());
-        userDto.setUser_pw(user.getUserPw());
         userDto.setUser_name(user.getUserName());
         userDto.setUser_mail(user.getUserMail());
         userDto.setUser_pic(user.getUserPic());

@@ -14,23 +14,39 @@ import java.util.Collections;
 @Service
 public class UserSecurityService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+        @Override
+        public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+                UserEntity user = userRepository.findByUserId(userId)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
 
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getUserAuthor());
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getUserAuthor());
 
-        return new UserSecurityDetails(
-                String.valueOf(user.getCompanyEntity().getCompPkNum()),
-                user.getUserId(),
-                user.getUserPkNum(),
-                user.getUserPw(),
-                !user.isUserLocked(),
-                Collections.singletonList(authority)
-        );
-    }
+                return new UserSecurityDetails(
+                                String.valueOf(user.getCompanyEntity().getCompPkNum()),
+                                user.getUserId(),
+                                user.getUserPkNum(),
+                                user.getUserPw(),
+                                !user.getUserLocked(),
+                                Collections.singletonList(authority),
+                                user.getRefreshToken());
+        }
+
+        public UserDetails loadUserByRefreshToken(String refreshToken) {
+                UserEntity user = userRepository.findByRefreshToken(refreshToken)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found with refresh token"));
+
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getUserAuthor());
+
+                return new UserSecurityDetails(
+                                String.valueOf(user.getCompanyEntity().getCompPkNum()),
+                                user.getUserId(),
+                                user.getUserPkNum(),
+                                user.getUserPw(),
+                                !user.getUserLocked(),
+                                Collections.singletonList(authority),
+                                refreshToken);
+        }
 }

@@ -36,7 +36,8 @@ const TaskList = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
-  // const { projectNum } = useParams();
+  const { projectNum } = useParams();
+  // const compNum = useSelector((state) => state.userData.user_fk_comp_num);
 
   const fetchTasks = useCallback(
     (page, block, sortField, sortDirection) => {
