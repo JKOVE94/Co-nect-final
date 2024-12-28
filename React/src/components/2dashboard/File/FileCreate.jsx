@@ -8,7 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 const FileCreate = () => {
   const writer = useSelector((state) => state.userData);
-  const { projPkNum } = useParams(); // 프로젝트 번호
+  // const compPkNum = useSelector((state) => state.userData?.user_fk_comp_num);
+  // const projPkNum = useSelector((state) => state.userData?.user_fk_proj_num);  
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -29,10 +30,9 @@ const FileCreate = () => {
       setFormData((prevFormData) => ({
         ...prevFormData,
         wiki_fk_user_num: writer.user_pk_num,
-        wiki_fk_proj_num: projPkNum || prevFormData.wiki_fk_proj_num,
       }));
     }
-  }, [writer, projPkNum]);
+  }, [writer]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

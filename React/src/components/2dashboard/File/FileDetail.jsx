@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import { toast, ToastContainer } from "react-toastify"; // Toastify import
 import "react-toastify/dist/ReactToastify.css"; // Toastify CSS
+import { useSelector } from "react-redux";
 
 const FileDetail = () => {
   const filePkNumInt = parseInt(useParams().filePkNum, 10);
@@ -22,16 +23,16 @@ const FileDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null); // 선택된 파일 정보 
-
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const compPkNum = useSelector((state) => state.userInfo.user_fk_comp_num);
+  const projPkNum = useSelector((state) => state.userInfo.user_fk_proj_num);
 
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`/file/${filePkNumInt}`);
+        const response = await axios.get(`/${compPkNum}/${projPkNum}/file/${filePkNumInt}`);
         setPost(response.data);
       } catch (err) {
         setError("게시글을 불러오는 중 오류가 발생했습니다.");
@@ -54,7 +55,7 @@ const FileDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/file/${filePkNumInt}`);
+      await axios.delete(`/${compPkNum}/${projPkNum}/file/${filePkNumInt}`);
       toggleDeleteModal();
       toast.success("파일이 성공적으로 삭제되었습니다.");
       setTimeout(() => navigate("/main/file"), 2000); // 삭제 후 목록으로 이동
@@ -70,7 +71,7 @@ const FileDetail = () => {
   const handleDownload = async () => {
     const { filePkNumInt, fileName } = selectedFile;
     try {
-      const response = await axios.get(`/file/download/${filePkNumInt}`, {
+      const response = await axios.get(`/${compPkNum}/${projPkNum}/file/download/${filePkNumInt}`, {
         responseType: "blob",
       });
 

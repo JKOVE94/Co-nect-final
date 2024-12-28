@@ -14,11 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.FileDto;
 import conect.data.entity.FileEntity;
-import conect.data.entity.UserEntity;
 import conect.data.entity.WikiEntity;
 import conect.data.form.FileForm;
 import conect.data.repository.FileRepository;
-import conect.data.repository.UserRepository;
 import conect.data.repository.WikiRepository;
 import conect.service.board.file.FileService;
 import conect.service.board.wiki.WikiService;
@@ -28,12 +26,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.HashMap;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/file")
+@RequestMapping("{compPkNum}/file")
 public class FileController {
 
     @Autowired
@@ -49,8 +46,10 @@ public class FileController {
     private WikiRepository wikiRepository;
 
     // 모든 게시글 조회
-    @GetMapping
+    @GetMapping("/{projPkNum}")
     public ResponseEntity<Map<String, Object>> getAllPosts(
+            @PathVariable("compPkNum") int compPkNum, // 회사 번호 경로 변수
+            @PathVariable("projPkNum") int projPkNum, // 프로젝트 번호 경로 변수
     		@RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
     	    @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
     	    @RequestParam(name = "sortField", defaultValue = "wikiEntity.wikiRegdate") String sortField, // 정렬 필드
@@ -63,7 +62,7 @@ public class FileController {
             int blockSize = 5; // 한 블록당 페이지 버튼 수
 
             // 정렬 및 검색 조건에 따라 서비스 호출
-            Page<FileDto> postPage = fileService.getList(page, pageSize, sortField, sortDirection, searchType, searchText);
+            Page<FileDto> postPage = fileService.getList(projPkNum, page, pageSize, sortField, sortDirection, searchType, searchText);
 
             int totalPages = postPage.getTotalPages();
             int totalBlocks = (int) Math.ceil((double) totalPages / blockSize);
@@ -97,8 +96,10 @@ public class FileController {
 
 
     // 특정 게시글 조회
-    @GetMapping("/{filePkNum}")
+    @GetMapping("/{projPkNum}/{filePkNum}")
     public ResponseEntity<FileDto> getPost(
+    		@PathVariable("compPkNum") int compPkNum, // 회사 번호 경로 변수
+            @PathVariable("projPkNum") int projPkNum, // 프로젝트 번호 경로 변수
             @PathVariable("filePkNum") Integer filePkNum,
             HttpServletRequest request,
             HttpServletResponse response) {
@@ -115,6 +116,7 @@ public class FileController {
     @PostMapping
     @Transactional // 트랜잭션 처리
     public ResponseEntity<Object> createPostWithFile(
+    		@PathVariable("compPkNum") int compPkNum, // 회사 번호 경로 변수
             @RequestParam("file") MultipartFile file,
             @RequestParam("wiki_title") String wikiTitle,
             @RequestParam("wiki_content") String wikiContent,
@@ -165,6 +167,7 @@ public class FileController {
     @PutMapping("/{filePkNum}")
     @Transactional
     public ResponseEntity<Object> updatePost(
+    		@PathVariable("compPkNum") int compPkNum, // 회사 번호 경로 변수
             @PathVariable("filePkNum") int filePkNum,
             @RequestParam(value = "file", required = false) MultipartFile file, // 파일은 선택적
             @RequestParam("wiki_title") String wikiTitle,
@@ -189,7 +192,9 @@ public class FileController {
 
     // 게시글 삭제
     @DeleteMapping("/{filePkNum}")
-    public ResponseEntity<Void> deleteFile(@PathVariable("filePkNum") int filePkNum) {
+    public ResponseEntity<Void> deleteFile(
+    			@PathVariable("compPkNum") int compPkNum, // 회사 번호 경로 변수
+    			@PathVariable("filePkNum") int filePkNum) {
         System.out.println("삭제 요청 도달, 파일 PK: " + filePkNum);
 
         // 데이터 존재 여부 확인
@@ -212,7 +217,10 @@ public class FileController {
     }
     
     @GetMapping("/download/{filePkNum}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable("filePkNum") int filePkNum) {
+    public ResponseEntity<Resource> downloadFile(
+    		@PathVariable("compPkNum") int compPkNum, // 회사 번호 경로 변수
+            @PathVariable("projPkNum") int projPkNum, // 프로젝트 번호 경로 변수
+    		@PathVariable("filePkNum") int filePkNum) {
         try {
             // 파일 엔티티 조회
             FileEntity fileEntity = fileRepository.findById(filePkNum)
