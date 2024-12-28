@@ -31,13 +31,16 @@ const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
     return (
       <div>
         {info.event.extendedProps.sharer !== num ? (
-          <span>[공유] {info.event.title}</span>
+          <span> {info.event.extendedProps.all ? '' : moment(info.event._instance.range.start).format("HH:mm")}
+            &nbsp; [공유] {info.event.title}</span>
         ) : (
-          <span>{info.event.title}</span>
+          <span> {info.event.extendedProps.all ? '' : moment(info.event._instance.range.start).format("HH:mm")}
+            &nbsp; {info.event.title}</span>
         )}
       </div>
     );
-  };
+  }
+
 
   const handleEventClick = (info) => {
     setModalContent({
@@ -95,6 +98,7 @@ const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
         events={events} //표시될 이벤트
         eventContent={renderEventContent} //달력에 표시될 내용
         eventClick={handleEventClick} //이벤트 클릭
+        eventOrder={moment(events.start).format('HH:mm')}
       />
 
       <CalEventShowModal

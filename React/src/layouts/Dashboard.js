@@ -88,7 +88,7 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
           <Route path="/wiki/*" element={<WikiHome projPkNum={projPkNum}/>}/>
           <Route path="/noti/*" element={<NotiHome projPkNum={projPkNum}/>}/>
           <Route path="/file/*" element={<FileHome projPkNum={projPkNum}/>}/>
-          <Route path="/rec/:projPkNum/*" element={<RecHome projPkNum={projPkNum}/>} />
+          <Route path="/rec/*" element={<RecHome projPkNum={projPkNum}/>} />
 
         </Routes>
       </div>

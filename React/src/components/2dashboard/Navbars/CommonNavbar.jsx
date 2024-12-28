@@ -98,7 +98,7 @@ const CommonNavbar = (props) => {
               <NavLink to="/main/noti/notilist" tag={NavLinkRRD}>
                 공지게시판
               </NavLink>
-              <NavLink to={`/main/rec/${proj}/`} tag={NavLinkRRD}>
+              <NavLink to={`/main/rec/`} tag={NavLinkRRD}>
                 건의게시판
               </NavLink>
               <NavLink to="/main/wiki/wikilist" tag={NavLinkRRD}>

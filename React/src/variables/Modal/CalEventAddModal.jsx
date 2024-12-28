@@ -57,6 +57,11 @@ const CalEventAddModal = ({
     if (!e.target.checkValidity()) {
       return;
     }
+
+    if(data.todo_category == null || data.todo_category === undefined || !data.todo_category){
+      setData({...data, todo_category:'기타'});
+    }
+
     handleClick();
   };
 

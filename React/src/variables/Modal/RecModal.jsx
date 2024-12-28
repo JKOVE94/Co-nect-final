@@ -25,7 +25,7 @@ const RecModal = ({type, isOpen, onClose, fn}) => {
                     수정하지 않고 돌아가시겠습니까?
                 </Modal.Header>
                 <Modal.Body>
-                    <Button onClick={()=>navigate(`/main/rec/${projPkNum}`)}>예</Button>
+                    <Button onClick={()=>navigate(`/main/rec/`)}>예</Button>
                     <Button onClick={onClose}>아니오</Button>
                 </Modal.Body>
             </Modal>
