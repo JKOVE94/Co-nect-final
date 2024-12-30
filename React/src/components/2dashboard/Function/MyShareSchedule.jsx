@@ -22,7 +22,7 @@ const MyShareSchedule = ({ events }) => {
   const [modalContent, setModalContent] = useState({}); //modal 내용
 
   useEffect(() => {
-    const shareData = events.filter((event) => event.sharer !== num && moment(event.end).endOf("day") >= moment(new Date()).endOf("day"))
+    const shareData = events.filter((event) => event.sharer !== num && moment(event.end).utc().endOf("day") >= moment(new Date()).utc().endOf("day"))
     .sort((a,b) => moment(a.start).isBefore(moment(b.start)) ? -1 : 1);
     setData(shareData);
   }, [events, num]);
@@ -34,10 +34,10 @@ const MyShareSchedule = ({ events }) => {
       //modal에 표시될 내용
       title: info.title, //제목
       content: info.content, //내용
-      startdate: moment(info.start).format("YYYY-MM-DD"), //시작일
-      enddate: moment(info.end).format("YYYY-MM-DD"), //종료일
-      starttime: moment(info.start).format("HH:mm"), //시작시간
-      endtime: moment(info.end).format("HH:mm"), //종료시간
+      startdate: moment(info.start).utc().format("YYYY-MM-DD"), //시작일
+      enddate: moment(info.end).utc().format("YYYY-MM-DD"), //종료일
+      starttime: moment(info.start).utc().format("HH:mm"), //시작시간
+      endtime: moment(info.end).utc().format("HH:mm"), //종료시간
       category: info.category,
       all: info.all,
       id: info.id, //일정 pk num
@@ -66,8 +66,8 @@ const MyShareSchedule = ({ events }) => {
               >
                 <b>{d.title}</b> <br />
                 <small>
-                  {moment(d.start).format("MM월 DD일 HH:mm")} ~{" "}
-                  {moment(d.end).format("MM월 DD일 HH:mm")}
+                  {moment(d.start).utc().format("MM월 DD일 HH:mm")} ~{" "}
+                  {moment(d.end).utc().format("MM월 DD일 HH:mm")}
                 </small>
               </li>
             ))

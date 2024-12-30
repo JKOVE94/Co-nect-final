@@ -56,6 +56,7 @@ const CalEventShowModal = ({
                 id="todo_starttime"
                 value={info.starttime}
                 disabled
+                hidden={info.all}
               />
             </Col>
           </div>
@@ -76,6 +77,7 @@ const CalEventShowModal = ({
                 type="time"
                 id="todo_endtime"
                 value={info.endtime}
+                hidden={info.all}
                 disabled
               />
             </Col>
