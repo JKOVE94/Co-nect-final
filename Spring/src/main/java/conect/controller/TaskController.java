@@ -2,7 +2,7 @@ package conect.controller;
 
 import conect.data.dto.ProjectmemberDto;
 import conect.data.dto.TaskDto;
-import conect.data.dto.TaskHistoryDto;
+import conect.data.dto.TaskhistoryDto;
 import conect.data.form.TaskForm;
 import conect.data.form.TaskSearchForm;
 import conect.service.board.proj.ProjServiceImpl;
@@ -43,7 +43,7 @@ public class TaskController {
     }
 
     @GetMapping("/user/{user_pk_num}")
-    public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable int user_pk_num) {
+    public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable("user_pk_num") int user_pk_num) {
         return taskService.getAllTaskWithUser(user_pk_num);
     }
 
@@ -136,9 +136,9 @@ public class TaskController {
     }
 
     @GetMapping("/task/history/{taskPkNum}")
-    public ResponseEntity<List<TaskHistoryDto>> getTaskHistory(@PathVariable("taskPkNum") int taskPkNum) {
+    public ResponseEntity<List<TaskhistoryDto>> getTaskHistory(@PathVariable("taskPkNum") int taskPkNum) {
         try {
-            List<TaskHistoryDto> taskHistory = taskService.getTaskHistoryByTaskNum(taskPkNum);
+            List<TaskhistoryDto> taskHistory = taskService.getTaskHistoryByTaskNum(taskPkNum);
             return new ResponseEntity<>(taskHistory, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

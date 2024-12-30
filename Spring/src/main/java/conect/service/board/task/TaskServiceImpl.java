@@ -3,7 +3,7 @@ package conect.service.board.task;
 import conect.data.dto.PostDto;
 import conect.data.dto.ProjectmemberDto;
 import conect.data.dto.TaskDto;
-import conect.data.dto.TaskHistoryDto;
+import conect.data.dto.TaskhistoryDto;
 import conect.data.entity.PostEntity;
 import conect.data.entity.TaskEntity;
 import conect.data.entity.TaskhistoryEntity;
@@ -162,13 +162,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskHistoryDto> getTaskHistoryByTaskNum(int taskPkNum) {
-//        List<TaskhistoryEntity> entities = taskHistoryRepository
-//                .findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
-//        return entities.stream()
-//                .map(TaskHistoryDto::fromEntity)
-//                .collect(Collectors.toList());
-        return null;
+    public List<TaskhistoryDto> getTaskHistoryByTaskNum(int taskPkNum) {
+       List<TaskhistoryEntity> entities = taskHistoryRepository
+                .findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
+        return entities.stream()
+                .map(TaskhistoryDto::fromEntity)
+                .collect(Collectors.toList());
+       
     }
 
     @Override

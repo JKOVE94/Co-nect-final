@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class TaskHistoryForm {
+public class TaskhistoryForm {
     @NotBlank(message = "이전 값은 필수입니다.")
     private String taskhisBeforevalue;
 
