@@ -1,12 +1,10 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import moment from "moment";
+import moment from "moment-timezone";
 import CalEventShowModal from "../../../variables/Modal/CalEventShowModal";
 import CalEventAddModal from "../../../variables/Modal/CalEventAddModal";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 import CalEventEditModal from "variables/Modal/CalEventEditModal";
 
 const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
@@ -16,25 +14,23 @@ const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
 
   const [modalContent, setModalContent] = useState({}); //modal 내용
 
-  const info = JSON.parse(sessionStorage.getItem("persist:root"));
   const userInfoFromRoot = JSON.parse(
     sessionStorage.getItem("persist:root")
   ).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
   const num = userInfo.user_pk_num; //사번
-  const compPkNum = userInfo.user_fk_comp_num; //회사번호
-  const navigate = useNavigate();
 
   const renderEventContent = (info) => {
+    console.log(info);
     //표시될 타이틀
     //공유된 일정인 경우 타이틀에 [공유] 표기
     return (
       <div>
         {info.event.extendedProps.sharer !== num ? (
-          <span> {info.event.extendedProps.all ? '' : moment(info.event._instance.range.start).format("HH:mm")}
+          <span> {info.event.extendedProps.all ? '' : info.timeText}
             &nbsp; [공유] {info.event.title}</span>
         ) : (
-          <span> {info.event.extendedProps.all ? '' : moment(info.event._instance.range.start).format("HH:mm")}
+          <span> {info.event.extendedProps.all ? '' : info.timeText}
             &nbsp; {info.event.title}</span>
         )}
       </div>
@@ -43,14 +39,18 @@ const MyCalendar = ({ events, handleGetEvent, handleToast, handleError }) => {
 
 
   const handleEventClick = (info) => {
+
+    const start = moment(info.event.start);
+    const end = moment(info.event.end);
+
     setModalContent({
       //modal에 표시될 내용
       title: info.event.title, //제목
       content: info.event.extendedProps.content, //내용
-      startdate: moment(info.event._instance.range.start).format("YYYY-MM-DD"), //시작일
-      enddate: moment(info.event._instance.range.end).format("YYYY-MM-DD"), //종료일
-      starttime: moment(info.event._instance.range.start).format("HH:mm"), //시작시간
-      endtime: moment(info.event._instance.range.end).format("HH:mm"), //종료시간
+      startdate: start.clone().utc().format('YYYY-MM-DD'),
+      enddate: end.clone().utc().format('YYYY-MM-DD'), //종료일
+      starttime: start.clone().utc().format('HH:mm'), //시작시간
+      endtime: end.clone().utc().format('HH:mm'), //종료시간
       category: info.event.extendedProps.category,
       all: info.event.extendedProps.all,
       id: info.event.id, //일정 pk num

@@ -21,7 +21,6 @@
 .fc-scrollgrid-section {
   position: sticky; /* 헤더를 고정 */
   top: 0;
-  z-index: 10; /* 헤더가 스크롤 콘텐츠 위로 올라오도록 설정 */
   background: white; /* 헤더 배경색 */
 }
 

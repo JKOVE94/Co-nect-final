@@ -20,7 +20,7 @@ const CalEventAddModal = ({
   const [allDay, setAllDay] = useState();
 
   useEffect(() => {
-    setData((pre) => ({ ...pre, todo_fk_user_num: num }));
+    setData((pre) => ({ ...pre, todo_fk_user_num: num, todo_category:'기타' }));
     setAllDay(false);
   }, [num]);
 
@@ -56,10 +56,6 @@ const CalEventAddModal = ({
     e.preventDefault();
     if (!e.target.checkValidity()) {
       return;
-    }
-
-    if(data.todo_category == null || data.todo_category === undefined || !data.todo_category){
-      setData({...data, todo_category:'기타'});
     }
 
     handleClick();

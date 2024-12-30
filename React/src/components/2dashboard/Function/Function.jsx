@@ -7,13 +7,12 @@ import axiosInstance from "api/axiosInstance";
 import Error from "./Error";
 
 import { Card, CardBody, Container, Row, Col } from "reactstrap";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import "../../../assets/css/2dashboard/function.css";
 import style from "../../../assets/css/2dashboard/calendar.module.css";
 
-import moment from "moment";
+import moment from 'moment-timezone';
 
 const Function = () => {
   const userInfoFromRoot = JSON.parse(
@@ -52,17 +51,17 @@ const Function = () => {
           id: data.todo_pk_num, //일정 pk num
           title: data.todo_title, //일정 제목
           start: data.todo_starttime // 일정 시작
-            ? moment(
+            ? moment.tz(
                 data.todo_startdate + " " + data.todo_starttime,
                 "YYYY-MM-DD HH:mm:ss"
               ).toISOString()
-            : moment(data.todo_startdate).endOf("day").toISOString(),
+            : moment.tz(data.todo_startdate,"YYYY-MM-DD").toISOString(),
           end: data.todo_endtime // 일정 종료
-            ? moment(
+            ? moment.tz(
                 data.todo_enddate + " " + data.todo_endtime,
                 "YYYY-MM-DD HH:mm:ss"
               ).toISOString()
-            : moment(data.todo_enddate).endOf("day").toISOString(),
+            : moment.tz(data.todo_enddate,"YYYY-MM-DD").endOf("day").toISOString(),
           content: data.todo_content, //일정 내용
           category: data.todo_category, //일정 카테고리
           sharer: data.todo_fk_user_num, //일정 작성자
