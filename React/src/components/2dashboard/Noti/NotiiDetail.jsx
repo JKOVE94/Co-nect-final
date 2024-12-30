@@ -11,12 +11,21 @@ const NotiDetail = () => {
   const location = useLocation();
   const { notiPkNum } = useParams();
   const navigate = useNavigate();
-  const compPkNum = 1; //임시 테스트 회사 번호
-  const loginUser = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
+  //const compPkNum = 1; //임시 테스트 회사 번호
+  //const loginUser = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
   const [noti, setNoti] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalOpen, setModalOpen] = useState(false); // 확인/취소용 modal창 열림 닫힘 상태 관리
+  
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+    
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compPkNum = userInfo.user_fk_comp_num; //sessionStorage에서 로그인 된 회사번호 받아오기
+  const loginUser = userInfo.user_pk_num; //sessionStorage에서 로그인 유저 받아오기
+
 
   useEffect(() => {
     const fetchNoti = async () => {
@@ -44,7 +53,7 @@ const NotiDetail = () => {
   };
 
   const moveUpdate = () => {
-    if (noti.noti_fk_user_num !== loginUser.user_pk_num) {
+    if (noti.noti_fk_user_num !== loginUser) {
       showToast.fail(); //작성자 불일치 토스트 창
       setTimeout(() => {
         navigate(`/main/noti/notidetail/${notiPkNum}`);
@@ -56,7 +65,7 @@ const NotiDetail = () => {
 
   const handleDelete = async () => {
     // 작성자 검증
-    if (noti.noti_fk_user_num !== loginUser.user_pk_num) {
+    if (noti.noti_fk_user_num !== loginUser) {
       setModalOpen(false);
       showToast.fail(); //작성자 불일치 토스트 창
       setTimeout(() => {
@@ -65,7 +74,7 @@ const NotiDetail = () => {
       return;
     }
     try {
-      await axios.delete(
+      await axiosInstance.delete(
         `/conect/main/${compPkNum}/notice/delete/${notiPkNum}`
       );
       navigate("/main/noti/notilist", { state: { success: true } });

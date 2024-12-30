@@ -17,7 +17,9 @@ const NotiHome = (props) => {
           path="/notilist"
           element={<NotiList projPkNum={props.projPkNum} />}
         />
-        <Route path="/notiadd" element={<NotiCreate />} />
+        <Route path="/notiadd" 
+        element={<NotiCreate projPkNum={props.projPkNum}/>} 
+        />
         <Route path="/notidetail/:notiPkNum" element={<NotiDetail />} />
         <Route path="/notiedit/:notiPkNum" element={<NotiUpdate />} />
       </Routes>
