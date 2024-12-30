@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { useSelector } from "react-redux";
@@ -8,20 +7,23 @@ import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../../../api/axiosInstance";
 
 const FileCreate = () => {
-  const info = JSON.parse(sessionStorage.getItem("persist:root"));
   const userInfoFromRoot = JSON.parse(
     sessionStorage.getItem("persist:root")
   ).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
-  const writer = userInfo.user_pk_num; //사번
-  const compPkNum = userInfo.user_fk_comp_num; //회사번호
-  const { projPkNum } = useParams(); // 프로젝트 번호
+  const userName = userInfo.user_name; // 유저 이름
+  const userPkNum = userInfo.user_pk_num; // 유저 ID
+
+  const compNum = userInfo.user_fk_comp_num; // 회사 번호
+  const projNum = sessionStorage.getItem("persist:proj_pk_num"); // 프로젝트 번호
+
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     wiki_title: "",
     wiki_content: "",
-    wiki_fk_user_num: 1,
+    wiki_fk_user_num: userPkNum,
     wiki_fk_proj_num: 1,
     wiki_isnotice: false,
     file: null,
@@ -29,17 +31,6 @@ const FileCreate = () => {
     file_size: 0,
     file_type: "",
   });
-
-  // Update formData when writer or projPkNum changes
-  useEffect(() => {
-    if (writer?.user_pk_num) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        wiki_fk_user_num: writer.user_pk_num,
-        wiki_fk_proj_num: projPkNum || prevFormData.wiki_fk_proj_num,
-      }));
-    }
-  }, [writer, projPkNum]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -82,8 +73,10 @@ const FileCreate = () => {
       }
     });
 
+    data.append("user_name", userName);
+
     try {
-      const response = await axiosInstance.post("/conect/file", data);
+      const response = await axiosInstance.post(`/conect/${compNum}/file/${projNum}`, data);
 
       if (response.data) {
         toast.success("파일이 성공적으로 업로드되었습니다!", {
