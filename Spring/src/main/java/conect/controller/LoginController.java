@@ -10,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -48,6 +47,7 @@ public class LoginController {
 
                 return ResponseEntity.ok()
                         .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                        .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
                         .body(loginDto);
             case 2: // 정보 불일치
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginDto);
@@ -112,9 +112,17 @@ public class LoginController {
                     .path("/")
                     .maxAge(14 * 24 * 60 * 60) // 14일
                     .build();
+            
+            ResponseCookie newaccessTokenCookie = ResponseCookie.from("accessToken", newAccessToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge(1 * 60 * 60) // 1시간
+                    .build();
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString())
+                    .header(HttpHeaders.SET_COOKIE, newaccessTokenCookie.toString())
                     .body(Map.of("accessToken", newAccessToken));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 리프레시 토큰입니다.");
