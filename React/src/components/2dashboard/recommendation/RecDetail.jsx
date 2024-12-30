@@ -136,7 +136,7 @@ const RecDetail = ({ handleError, projPkNum }) => {
             </div>
             <button
               className="btn btn-primary"
-              onClick={() => navigate(`/main/rec/${projPkNum}`)}
+              onClick={() => navigate(`/main/rec/`)}
             >
               목록보기
             </button>

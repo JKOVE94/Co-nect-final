@@ -66,6 +66,7 @@
     "jqwidgets-scripts": "^20.0.0",
     "latest": "^0.2.0",
     "moment": "2.29.4",
+    "moment-timezone": "^0.5.46",
     "mongoose": "^8.9.2",
     "nodemon": "^3.1.9",
     "nouislider": "15.4.0",

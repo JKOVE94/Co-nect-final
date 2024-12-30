@@ -36,7 +36,7 @@ const RecCreate = ({ handleError, projPkNum }) => {
       .post(`/conect/${compNum}/rec/`, data)
       .then((res) => {
         if (res.data) {
-          navigate(`/main/rec/${projPkNum}`);
+          navigate(`/main/rec/`);
         }
       })
       .catch((err) =>
