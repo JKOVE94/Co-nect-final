@@ -43,7 +43,7 @@ public class TaskController {
     }
 
     @GetMapping("/user/{user_pk_num}")
-    public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable int user_pk_num) {
+    public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable("user_pk_num") int user_pk_num) {
         return taskService.getAllTaskWithUser(user_pk_num);
     }
 

@@ -163,20 +163,20 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskhistoryDto> getTaskHistoryByTaskNum(int taskPkNum) {
-//        List<TaskhistoryEntity> entities = taskHistoryRepository
-//                .findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
-//        return entities.stream()
-//                .map(TaskHistoryDto::fromEntity)
-//                .collect(Collectors.toList());
-        return null;
+        List<TaskhistoryEntity> entities = taskHistoryRepository
+                .findByTaskEntity_TaskPkNumOrderByTaskhisUpdatedDesc(taskPkNum);
+        return entities.stream()
+                .map(TaskhistoryDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProjectmemberDto> getTaskMember(int compNum, int projNum){
+    public List<ProjectmemberDto> getTaskMember(int compNum, int projNum) {
         return projectmemberRepository.findByProjmemFkProjNum(projNum).stream()
                 .map(ProjectmemberDto::fromEntity)
                 .map(projectmemberDto -> {
-                    projectmemberDto.setProjmem_name(userRepository.findById(projectmemberDto.getProjmem_fk_user_num()).get().getUserName());
+                    projectmemberDto.setProjmem_name(
+                            userRepository.findById(projectmemberDto.getProjmem_fk_user_num()).get().getUserName());
                     return projectmemberDto;
                 })
                 .collect(Collectors.toList());
