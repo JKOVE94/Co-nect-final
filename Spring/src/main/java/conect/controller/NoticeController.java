@@ -14,13 +14,13 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("main/{comp_pk_num}/notice")
+@RequestMapping("/main/{comp_pk_num}/notice")
 public class NoticeController {
     @Autowired
     private NoticeService noticeService;
 
     //프로젝트 관련 공지 게시글 전체 보기 + 검색기능
-    @GetMapping("list/{projNum}")
+    @GetMapping("/list/{projNum}")
     public ResponseEntity<Map<String, Object>> getNotiByNotiProjNum(
             @PathVariable("projNum") int noti_fk_proj_num,
             @RequestParam(defaultValue = "0") int page,
@@ -56,7 +56,7 @@ public class NoticeController {
 
 
     //공지 게시글 수정
-    @PutMapping("update/{notiPkNum}")
+    @PutMapping("/update/{notiPkNum}")
     public void updateNotice(@PathVariable int notiPkNum, @RequestBody NoticeForm form){
         noticeService.upNotice(notiPkNum, form);
     }
