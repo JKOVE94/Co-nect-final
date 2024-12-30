@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer{
 	public void addCorsMappings(CorsRegistry registry) {
 		// 모든 URL에 대해 '/ws'(Websocket Endpoint) 연결 허용
 		registry.addMapping("/**")
-		.allowedOrigins("*")
+		.allowedOrigins("http://192.168.0.150:3000")
 		.allowedMethods("GET", "POST", "PUT", "DELETE") //허용 메소드 범위 지정
 		.allowedHeaders("*"); //모든 헤더 허용
 	}

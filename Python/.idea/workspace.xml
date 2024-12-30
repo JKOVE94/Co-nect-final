@@ -5,22 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/gemini_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/gemini_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecCreate.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReply.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReply.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyCreate.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplylike.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplylike.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecUpdate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecUpdate.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/Reclike.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/Reclike.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/layouts/ProjectSelect.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/layouts/ProjectSelect.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskHistoryDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskHistoryDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TaskHistoryEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TaskHistoryEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TaskHistoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TaskHistoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../React/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../React/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/api/axiosInstance.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/api/axiosInstance.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/4chatting/SocketContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/4chatting/SocketContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/layouts/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/layouts/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/setupProxy.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/setupProxy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../React/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/ProjectController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/controller/TaskController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskHistoryDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskhistoryDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskhistoryDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/form/TaskHistoryForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/form/TaskHistoryForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/board/task/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/board/task/TaskService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/board/task/TaskServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/board/task/TaskServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +114,7 @@
       <updated>1734773064946</updated>
       <workItem from="1734773066002" duration="4643000" />
       <workItem from="1734831621818" duration="47449000" />
-      <workItem from="1735284123228" duration="6101000" />
+      <workItem from="1735284123228" duration="10968000" />
     </task>
     <servers />
   </component>

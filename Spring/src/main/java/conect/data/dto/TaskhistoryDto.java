@@ -8,7 +8,7 @@ import conect.data.entity.TaskhistoryEntity;
 
 @Getter
 @Setter
-public class TaskHistoryDto {
+public class TaskhistoryDto {
     private int taskhisPkNum;
     private String taskhisBeforevalue;
     private String taskhisAftervalue;
@@ -19,8 +19,8 @@ public class TaskHistoryDto {
     private int taskhisFkTaskNum;
     private String userName;  // 유저 이름을 저장할 필드 추가
 
-    public static TaskHistoryDto fromEntity(TaskhistoryEntity entity) {
-        TaskHistoryDto dto = new TaskHistoryDto();
+    public static TaskhistoryDto fromEntity(TaskhistoryEntity entity) {
+        TaskhistoryDto dto = new TaskhistoryDto();
         dto.setTaskhisPkNum(entity.getTaskhisPkNum());
         dto.setTaskhisBeforevalue(entity.getTaskhisBeforevalue());
         dto.setTaskhisAftervalue(entity.getTaskhisAftervalue());

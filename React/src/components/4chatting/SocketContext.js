@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from "react";
 import { io } from "socket.io-client";
-
+const server = process.env.REACT_APP_SERVER_URL;
 const SocketContext = createContext();
 
 export const useSocket = () => {
@@ -27,7 +27,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (userPkNum) {
-      const newSocket = io("http://localhost:5002/api/chat", {
+      const newSocket = io(`${server}:5002/api/chat`, {
         query: {
           userId: userPkNum,
         },

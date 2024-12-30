@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { LOGIN } from "../Redux/Reducer/userDataReducer";
 import LoginModal from "../variables/Modal/LoginModal";
 import axios from "axios";
+import {setAuthToken} from "api/axiosInstance";
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -30,6 +31,11 @@ const Login = (props) => {
   const toggle = () => {
     setIsSignIn((prev) => !prev);
   };
+
+  useEffect(() => {
+    sessionStorage.removeItem("token");
+    document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  },[])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -83,22 +89,23 @@ const Login = (props) => {
       const res = await axios.post("/conect/login", loginInfo);
       const responseData = res.data;
       setData(responseData);
-
+      
       switch (responseData.status) {
         case 1: // 로그인 성공
-          dispatch(
-            LOGIN({
-              user_pk_num: responseData.user_pk_num,
-              user_id: responseData.user_id,
-              user_name: responseData.user_name,
-              user_mail: responseData.user_mail,
-              user_pic: responseData.user_pic,
-              user_fk_comp_num: responseData.user_fk_comp_num,
-              user_author: responseData.user_author,
-            })
-          );
-          setIsReversed(true);
-          setTimeout(() => {
+        dispatch(
+          LOGIN({
+            user_pk_num: responseData.user_pk_num,
+            user_id: responseData.user_id,
+            user_name: responseData.user_name,
+            user_mail: responseData.user_mail,
+            user_pic: responseData.user_pic,
+            user_fk_comp_num: responseData.user_fk_comp_num,
+            user_author: responseData.user_author,
+          })
+        );
+        setIsReversed(true);
+        setAuthToken(responseData.accessToken);
+        setTimeout(() => {
             navigate(`/ProjSel/${responseData.user_pk_num}`);
           }, 1000);
           break;

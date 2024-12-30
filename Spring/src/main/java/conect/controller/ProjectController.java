@@ -34,7 +34,10 @@ public class ProjectController {
 		this.projService = projService;
 		this.manageProjService = manageProjService;
 	}
-
+	@GetMapping("/ProjSel/{userNum}")
+	public List<ProjectDto> getUserProject(@PathVariable("compNum") int compNum, @PathVariable("userNum") int userNum) {
+		return manageProjService.getProjectListWithUser(compNum, userNum);
+	}
 
 	// 프로젝트 목록 조회
 	@GetMapping("/projlist")
@@ -88,10 +91,6 @@ public class ProjectController {
 	}
 
 	// 2024.12.27 대현 로직 수정
-	@GetMapping("/ProjSel/{user_pk_num}")
-	public List<ProjectDto> getUserProject(@PathVariable("compNum") int compNum,  @PathVariable("user_pk_num") int user_pk_num) {
-		return manageProjService.getProjectListWithUser(compNum, user_pk_num);
-	}
 
 	@GetMapping("/projdetail/{projPkNum}")
 	public ProjectDto getProjById(@PathVariable("projPkNum") int projPkNum) {
@@ -133,5 +132,4 @@ public class ProjectController {
 		Map<String, Object> userData = projServiceImpl.getUserRelatedData(userPkNum);
 		return ResponseEntity.ok(userData);
 	}
-
 }

@@ -2,7 +2,7 @@ package conect.service.board.task;
 
 import conect.data.dto.ProjectmemberDto;
 import conect.data.dto.TaskDto;
-import conect.data.dto.TaskHistoryDto;
+import conect.data.dto.TaskhistoryDto;
 import conect.data.form.TaskForm;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public interface TaskService {
 
     List<TaskDto> getRelatedTasks(int taskPkNum);
 
-    List<TaskHistoryDto> getTaskHistoryByTaskNum(int taskPkNum);
+    List<TaskhistoryDto> getTaskHistoryByTaskNum(int taskPkNum);
 
     // 페이징
     public Page<TaskDto> getListByProject(int projectNum, int page, int pageSize, String sortField,

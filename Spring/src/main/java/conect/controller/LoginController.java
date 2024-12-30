@@ -24,12 +24,12 @@ public class LoginController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-
     public ResponseEntity<LoginDto> login(@RequestBody LoginForm form) {
         LoginDto loginDto = loginService.checkLogin(form);
 
         switch (loginDto.getStatus()) {
             case 1: // 로그인 성공
+            System.out.println("-----------------login1  -----------------");
                 String accessToken = loginDto.getAccessToken();
                 String refreshToken = loginDto.getRefreshToken();
                 ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
@@ -80,6 +80,7 @@ public class LoginController {
 
     @PostMapping("/validate-token")
     public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
+        System.out.println("-----------------validateToken-----------------");
         if (token == null || !token.startsWith("Bearer ")) {
             return ResponseEntity.badRequest().body("유효한 토큰이 제공되지 않았습니다.");
         }
@@ -100,8 +101,8 @@ public class LoginController {
         if (refreshToken == null || refreshToken.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("리프레시 토큰이 제공되지 않았습니다.");
         }
-
         try {
+            System.out.println("-----------------refresh-token-----------------");
             Map<String, String> tokens = loginService.refreshTokens(refreshToken);
             String newAccessToken = tokens.get("accessToken");
             String newRefreshToken = tokens.get("refreshToken");
@@ -112,6 +113,7 @@ public class LoginController {
                     .path("/")
                     .maxAge(14 * 24 * 60 * 60) // 14일
                     .build();
+
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString())
