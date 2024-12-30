@@ -278,7 +278,7 @@ const NotiList = (props) => {
           <Button
             color="primary"
             className="btn btn-primary"
-            style={{ position: "absolute", bottom: "2em", right: "2em" }}
+            style={{ position: "absolute", bottom: "7em", right: "2em" }}
             onClick={() => navigate("/main/noti/notiadd")}
           >
             공지 등록
