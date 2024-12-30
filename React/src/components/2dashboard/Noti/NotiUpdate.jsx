@@ -175,6 +175,7 @@ const NotiUpdate = () => {
                   onChange={handleEditChange}
                   required
                   placeholder="입력하세요"
+                  style={{ height: "300px" }}
                 />
               </Col>
             </FormGroup>

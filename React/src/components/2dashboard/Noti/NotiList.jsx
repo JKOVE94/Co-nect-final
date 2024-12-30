@@ -41,7 +41,7 @@ const NotiList = (props) => {
       .get(`/conect/main/${compPkNum}/notice/list/${props.projPkNum}`, {
         params: {
           page: validPage,
-          size: 7, // 한 페이지에 표시할 공지 게시글 수
+          size: 9, // 한 페이지에 표시할 공지 게시글 수
           sortField: sortField,
           sortDirection: sortDirection,
           searchType: searchType,
@@ -114,8 +114,8 @@ const NotiList = (props) => {
   };
 
   return (
-    <Container fluid style={{ Height: "40em", marginTop: "1em" }}>
-      <Card style={{ Height: "40em", overflowY: "auto" }}>
+    <Container fluid style={{ marginTop: "1em" }}>
+      <Card style={{ height: "45em", position: "relative" }}>
         <CardHeader>
           <h2>공지 사항</h2>
           <div>
@@ -178,7 +178,7 @@ const NotiList = (props) => {
             </button>
           </div>
         </CardHeader>
-        <CardBody style={{ Height: "40em", overflowY: "auto" }}>
+        <CardBody style={{ height: "calc(100% - 4em)", overflowY: "hidden" }}>
           <table className="table" style={{ fontSize: "1.2rem" }}>
             <thead>
               <tr>
@@ -230,65 +230,61 @@ const NotiList = (props) => {
               )}
             </tbody>
           </table>
-        </CardBody>
-      </Card>
 
-      <Button
-        color="primary"
-        style={{
-          position: "relative",
-          top: "6vh",
-          right: "-70vw",
-          zIndex: 1000,
-        }}
-        onClick={() => navigate("/main/noti/notiadd")}
-      >
-        공지 등록
-      </Button>
-
-      {/* 페이지네이션 */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "1em",
-        }}
-      >
-        <button
-          className="btn btn-link"
-          onClick={handlePrevPage}
-          disabled={currentPage === 0} // 첫 페이지일 때만 비활성화
-        >
-          &laquo; 이전
-        </button>
-
-        {getPageNumbers().map((pageNumber) => (
-          <button
-            key={pageNumber}
-            className={`btn btn-link ${
-              currentPage === pageNumber ? "active" : ""
-            }`}
-            onClick={() => handlePageChange(pageNumber)}
+          <div
             style={{
-              margin: "0 0.5em",
-              padding: "0.5em 1em",
-              fontWeight: currentPage === pageNumber ? "bold" : "normal",
-              textDecoration: "none",
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "1em",
             }}
           >
-            {pageNumber + 1}
-          </button>
-        ))}
+            <button
+              className={`btn btn-link ${currentPage === 0 ? "disabled" : ""}`}
+              onClick={handlePrevPage}
+              disabled={currentPage === 0}
+            >
+              &laquo; 이전
+            </button>
 
-        <button
-          className="btn btn-link"
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages - 1} // 마지막 페이지일때만 비활성화
-        >
-          다음 &raquo;
-        </button>
-      </div>
+            {getPageNumbers().map((pageNumber) => (
+              <button
+                key={pageNumber}
+                className={`btn btn-link ${
+                  currentPage === pageNumber ? "active" : ""
+                }`}
+                onClick={() => handlePageChange(pageNumber)}
+                style={{
+                  margin: "0 0.5em",
+                  padding: "0.5em 1em",
+                  fontWeight: currentPage === pageNumber ? "bold" : "normal",
+                  textDecoration: "none",
+                }}
+              >
+                {pageNumber + 1}
+              </button>
+            ))}
+
+            <button
+              className={`btn btn-link ${
+                currentPage === totalPages - 1 ? "disabled" : ""
+              }`}
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages - 1}
+            >
+              다음 &raquo;
+            </button>
+          </div>
+
+          <Button
+            color="primary"
+            className="btn btn-primary"
+            style={{ position: "absolute", bottom: "2em", right: "2em" }}
+            onClick={() => navigate("/main/noti/notiadd")}
+          >
+            공지 등록
+          </Button>
+        </CardBody>
+      </Card>
     </Container>
   );
 };
