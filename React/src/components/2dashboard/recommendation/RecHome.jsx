@@ -7,7 +7,9 @@ import { Container } from "react-bootstrap";
 import Error from "./Error";
 import { useState } from "react";
 
-const RecHome = (props) => {
+const RecHome = () => {
+  const projPkNum = sessionStorage.getItem("persist:proj_pk_num");
+  
   //에러
   const [error, setError] = useState();
   const [errorIsOpen, setErrorIsOpen] = useState(false);
@@ -16,6 +18,7 @@ const RecHome = (props) => {
     setError(error);
     setErrorIsOpen(errorIsOpen);
   };
+
 
   return (
     <Container
@@ -26,19 +29,19 @@ const RecHome = (props) => {
         <Route
           path="/"
           element={
-            <RecList handleError={handleError} projPkNum={props.projPkNum} />
+            <RecList handleError={handleError} projPkNum={projPkNum} />
           }
         />
         <Route
           path="/create"
           element={
-            <RecCreate handleError={handleError} projPkNum={props.projPkNum} />
+            <RecCreate handleError={handleError} projPkNum={projPkNum} />
           }
         />
         <Route
           path="/detail/:recPkNum"
           element={
-            <RecDetail handleError={handleError} projPkNum={props.projPkNum} />
+            <RecDetail handleError={handleError} projPkNum={projPkNum} />
           }
         />
         <Route
