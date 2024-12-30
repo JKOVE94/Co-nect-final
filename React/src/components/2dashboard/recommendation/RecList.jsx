@@ -20,9 +20,8 @@ const RecList = ({ handleError, projPkNum }) => {
   const userInfo = JSON.parse(userInfoFromRoot);
   const userNum = userInfo.user_pk_num; //사번
   const compNum = userInfo.user_fk_comp_num; //회사번호
-  // const { projPkNum } = useParams(); //프로젝트 번호
 
-  const [datas, setDatas] = useState({}); //건의사항 게시글
+  const [datas, setDatas] = useState([]); //건의사항 게시글
   const [mostLike, setMostLike] = useState({}); //최상단에 위치할 글 (좋아요 수가 가장 많은 글)
 
   const [sortField, setSortField] = useState("recRegdate"); //정렬컬럼 default:작성일자
@@ -50,7 +49,6 @@ const RecList = ({ handleError, projPkNum }) => {
         setLoading(false); //로딩완료
       })
       .catch((err) => {
-        console.error(err);
         setLoading(false);
         handleError("건의사항 목록을 불러올 수 없습니다.", true);
       });
@@ -85,6 +83,8 @@ const RecList = ({ handleError, projPkNum }) => {
     getMostLike();
     getData();
   }, [sortField, sortDirection, currentPage, projPkNum]);
+
+  
 
   return (
     <>
@@ -136,7 +136,7 @@ const RecList = ({ handleError, projPkNum }) => {
                 </tr>
               </thead>
               <tbody>
-                {mostLike && (
+                { mostLike && mostLike.rec_pk_num ? (
                   <tr>
                     <td style={{ color: "red" }}> HOT! </td>
                     <td>
@@ -148,8 +148,8 @@ const RecList = ({ handleError, projPkNum }) => {
                     <td> {mostLike.rec_likes} </td>
                     <td> {mostLike.rec_view} </td>
                   </tr>
-                )}
-                {datas.content.length > 0 ? (
+                ):<></>}
+                {datas && datas.content && datas.content.length > 0 ? (
                   datas.content.map((data, index) =>
                     data.rec_pk_num !== mostLike.rec_pk_num ? (
                       <tr key={index}>

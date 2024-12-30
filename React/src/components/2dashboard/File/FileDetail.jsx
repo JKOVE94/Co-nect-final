@@ -18,6 +18,13 @@ import axiosInstance from "../../../api/axiosInstance";
 
 const FileDetail = () => {
   const filePkNumInt = parseInt(useParams().filePkNum, 10);
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compNum = userInfo.user_fk_comp_num; //회사번호
+  const projNum = sessionStorage.getItem("persist:proj_pk_num");
+
   const navigate = useNavigate();
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
@@ -31,7 +38,7 @@ const FileDetail = () => {
     const fetchPost = async () => {
       try {
         const response = await axiosInstance.get(
-          `/conect/file/${filePkNumInt}`
+          `/conect/${compNum}/file/${projNum}/${filePkNumInt}`
         );
         setPost(response.data);
       } catch (err) {
@@ -55,7 +62,7 @@ const FileDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`/conect/file/${filePkNumInt}`);
+      await axiosInstance.delete(`/conect/${compNum}/file/${projNum}/${filePkNumInt}`);
       toggleDeleteModal();
       toast.success("파일이 성공적으로 삭제되었습니다.");
       setTimeout(() => navigate("/main/file"), 2000); // 삭제 후 목록으로 이동
@@ -71,7 +78,7 @@ const FileDetail = () => {
     const { filePkNumInt, fileName } = selectedFile;
     try {
       const response = await axiosInstance.get(
-        `/file/download/${filePkNumInt}`,
+        `/conect/${compNum}/file/${projNum}/download/${filePkNumInt}`,
         {
           responseType: "blob",
         }

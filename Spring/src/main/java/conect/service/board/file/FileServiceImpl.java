@@ -265,7 +265,7 @@ public class FileServiceImpl implements FileService {
 
     
     // 페이징, 검색, 공지 여부 정렬 추가
-    public Page<FileDto> getList(int page, int pageSize, String sortField, String sortDirection,String searchType, String searchText) {
+    public Page<FileDto> getList(Integer compNum, Integer projNum, int page, int pageSize, String sortField, String sortDirection,String searchType, String searchText) {
     	// 공지사항 여부를 우선 정렬하고, 사용자 지정 정렬 조건 추가
         Sort sort = Sort.by(Sort.Order.desc("wikiEntity.wikiIsnotice")) // 공지사항을 상단에 정렬
                         .and(Sort.by(Sort.Direction.fromString(sortDirection), sortField)); // 사용자 지정 정렬
@@ -293,6 +293,5 @@ public class FileServiceImpl implements FileService {
         // FileEntity -> FileDto 변환
         return filePage.map(FileDto::fromEntity);
     }
-
 
 }

@@ -17,8 +17,15 @@ import FileSearch from "variables/Search/FileSearch";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../../../api/axiosInstance";
+import { useSelector } from "react-redux";
 
 const FileList = () => {
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compNum = userInfo.user_fk_comp_num; //회사번호
+  const projNum = sessionStorage.getItem("persist:proj_pk_num");
   const [files, setFiles] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -41,8 +48,14 @@ const FileList = () => {
     searchType,
     searchText
   ) => {
+    console.log("회사 번호(compNum):", compNum);
+    console.log("프로젝트 번호(projNum):", projNum);
+    if (!compNum || !projNum) {
+      toast.error("회사 번호 또는 프로젝트 번호가 설정되지 않았습니다.");
+      return;
+    }
     axiosInstance
-      .get("/conect/file", {
+      .get(`/conect/${compNum}/file/${projNum}`, {
         params: {
           page,
           pageBlock: block,
@@ -82,7 +95,7 @@ const FileList = () => {
     const { filePkNum, fileName } = selectedFile;
     try {
       const response = await axiosInstance.get(
-        `/conect/file/download/${filePkNum}`,
+        `/conect/${compNum}/file/${projNum}/download/${filePkNum}`,
         {
           responseType: "blob",
         }
