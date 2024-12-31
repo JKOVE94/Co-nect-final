@@ -288,7 +288,7 @@ public class WikiServiceImpl implements WikiService {
 	        // 파일 처리
 	        FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
 	        String fileStatus = form.getFileStatus();
-
+	        System.out.println("fileStatus: " + fileStatus);
 	        // 파일 없이 문서 수정 (파일이 없으면 새로운 파일을 처리하지 않고 글만 수정)
 	        if (form.getFileInput() == null || form.getFileInput().getOriginalFilename() == null) {
 	            // 새 파일이 없으므로, 그냥 글만 수정하고 파일은 저장하지 않음
@@ -297,16 +297,25 @@ public class WikiServiceImpl implements WikiService {
 	            return;
 	        }
 	        
-			// 파일 상태가 DELETE인 경우, 기존 파일을 찾아서 삭제
-			if ("DELETE".equals(fileStatus)) {
-				// 파일을 DB에서 찾아오기
-				deleteFile(existingFile.getFilePkNum()); // 파일 삭제
-				fileRepository.flush(); // DB 반영
-				System.out.println("기존 파일 삭제 완료.");
-			} else {
-				// 파일이 존재하지 않는 경우
-				System.out.println("삭제할 파일이 존재하지 않습니다.");
-			}
+	        // 파일 삭제 요청
+	           if ("DELETE".equals(fileStatus) && existingFile != null) {
+	               System.out.println("파일 삭제 처리 시작");
+	               //deleteFile(existingFile.getFilePkNum());
+	               // DB에서 파일 삭제
+	               fileRepository.delete(existingFile);
+	               fileRepository.flush(); // DB 반영
+	               
+	               // 삭제된 파일이 DB에서 반영되었는지 확인
+	               FileEntity deletedFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
+	               if (deletedFile == null) {
+	                   System.out.println("파일이 DB에서 삭제되었습니다.");
+	               } else {
+	                   System.out.println("파일이 DB에서 삭제되지 않았습니다.");
+	               }
+
+	               System.out.println("파일 삭제 완료");
+	           }
+
 
 	        // 파일 변경이 없으면, 파일 처리 없이 문서만 저장
 	        if ("KEEP".equals(fileStatus)) {
