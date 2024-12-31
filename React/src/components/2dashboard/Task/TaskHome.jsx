@@ -1,23 +1,33 @@
 import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import TaskList from "./TaskList";
+import TaskDetail from "./TaskDetail";
 import TaskCreate from "./TaskCreate";
 import TaskEdit from "./TaskEdit";
-import TaskDetail from "./TaskDetail"; // TaskEdit 컴포넌트 import
+import TaskSubCreate from "./TaskSubCreate";
 
-const TaskHome = () => {
-    const navigate = useNavigate();
-
-    return (
-        <div>
-            <Routes>
-                <Route path="/tasklist/:projectNum" element={<TaskList />} />
-                <Route path="/taskcreate/:projectNum" element={<TaskCreate />} />
-                <Route path="/task/detail/:taskPkNum" element={<TaskDetail />} />
-                <Route path="/taskedit/:taskId" element={<TaskEdit />} />
-            </Routes>
-        </div>
-    );
+const TaskHome = (props) => {
+  return (
+    <Routes>
+      <Route
+        path="/:projectNum"
+        element={<TaskList projPkNum={props.projPkNum} />}
+      />
+      <Route
+        path="/detail/:taskPkNum"
+        element={<TaskDetail projPkNum={props.projPkNum} />}
+      />
+      <Route
+        path="/create/:projectNum"
+        element={<TaskCreate projPkNum={props.projPkNum} />}
+      />
+      <Route path="/edit/:projectNum/:taskId" element={<TaskEdit />} />
+        <Route
+            path="/subcreate/:projectNum/:parentTaskId" // 경로 수정
+            element={<TaskSubCreate />}
+        />
+    </Routes>
+  );
 };
 
 export default TaskHome;
