@@ -114,7 +114,7 @@ public class WikiServiceImpl implements WikiService {
 	}
 
 	// 페이징, 정렬, 검색
-	public Page<WikiDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType,
+	public Page<WikiDto> getList(int projPkNum, int page, int pageSize, String sortField, String sortDirection, String searchType,
 			String searchText) {
 		// 정렬 정보 생성
 		Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
@@ -130,7 +130,7 @@ public class WikiServiceImpl implements WikiService {
 		} else if (searchType.equalsIgnoreCase("user_name")) {
 			wikiPage = wrepository.findByUserEntity_UserNameContains(searchText, pageable);
 		} else {
-			wikiPage = wrepository.findAll(pageable);
+			wikiPage = wrepository.findAll(projPkNum, pageable);
 		}
 		// PostEntity -> PostDto 변환
 		return wikiPage.map(WikiDto::fromEntity);
@@ -289,6 +289,14 @@ public class WikiServiceImpl implements WikiService {
 	        FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
 	        String fileStatus = form.getFileStatus();
 
+	        // 파일 없이 문서 수정 (파일이 없으면 새로운 파일을 처리하지 않고 글만 수정)
+	        if (form.getFileInput() == null || form.getFileInput().getOriginalFilename() == null) {
+	            // 새 파일이 없으므로, 그냥 글만 수정하고 파일은 저장하지 않음
+	            System.out.println("파일 없이 글만 수정");
+	            wrepository.save(entity);
+	            return;
+	        }
+	        
 			// 파일 상태가 DELETE인 경우, 기존 파일을 찾아서 삭제
 			if ("DELETE".equals(fileStatus)) {
 				// 파일을 DB에서 찾아오기

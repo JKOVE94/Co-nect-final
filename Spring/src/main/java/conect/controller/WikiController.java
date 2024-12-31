@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import conect.data.dto.WikiDto;
 
@@ -37,8 +37,10 @@ public class WikiController {
 	private FileRepository fileRepository;
 
 	// 모든 게시글 조회 (페이징, 검색, 정렬 포함)
-	@GetMapping("/wikilist")
-	public ResponseEntity<Map<String, Object>> getAllWikis(@RequestParam(name = "page", defaultValue = "0") int page, // 현재
+	@GetMapping("/wikilist/{projPkNum}")
+	public ResponseEntity<Map<String, Object>> getAllWikis(
+			@PathVariable("projPkNum") int projPkNum,
+			@RequestParam(name = "page", defaultValue = "0") int page, // 현재
 			@RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
 			@RequestParam(name = "sortField", defaultValue = "wikiRegdate") String sortField, // 정렬 필드
 			@RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
@@ -50,7 +52,7 @@ public class WikiController {
 			int blockSize = 5; // 한 블록당 페이지 버튼 수
 
 			// 페이징 및 정렬 데이터를 포함한 게시글 목록 조회
-			Page<WikiDto> wikiPage = wikiServiceImpl.getList(page, pageSize, sortField, sortDirection, searchType,
+			Page<WikiDto> wikiPage = wikiServiceImpl.getList(projPkNum, page, pageSize, sortField, sortDirection, searchType,
 					searchText);
 
 			// 총 페이지 수 계산
@@ -138,7 +140,8 @@ public class WikiController {
 	}
 	
 	@PutMapping("/wikiedit/{wikiPkNum}")
-	public ResponseEntity<?> editWiki(@PathVariable("wikiPkNum") int wikiPkNum, @ModelAttribute WikiForm form) {
+	public ResponseEntity<?> editWiki(@PathVariable("wikiPkNum") int wikiPkNum, 
+			@ModelAttribute WikiForm form) {
 		 try {
 	            // 문서 수정 서비스 호출
 	            wikiServiceImpl.editWiki(wikiPkNum, form);

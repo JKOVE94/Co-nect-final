@@ -20,21 +20,27 @@ import {
 import { Checkbox } from "rsuite";
 import axiosInstance from "../../../api/axiosInstance";
 
-const WikiCreate = () => {
+const WikiCreate = (props) => {
   const navigate = useNavigate();
+  
   const { wikiPkNum } = useParams(); // URL에서 wikiPkNum 가져오기
-  const writer = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
+  
   const [fileName, setFileName] = useState(""); // 파일 이름 상태
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
   const [modalMessage, setModalMessage] = useState(""); // 모달 메시지 상태 추가
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 목록 이동 확인 모달 상태
-  const compPkNum = 1; // 테스트 compNum
+  const userInfoFromRoot = JSON.parse(
+      sessionStorage.getItem("persist:root")
+    ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const writer = userInfo.user_pk_num;
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
 
   // 프로젝트 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
     wiki_title: "", // 제목
-    wiki_fk_proj_num: 1, //프로젝트 번호
-    wiki_fk_user_num: writer.user_pk_num, // 작성자 번호
+    wiki_fk_proj_num: props.projPkNum, //프로젝트 번호
+    wiki_fk_user_num: writer, // 작성자 번호
     wiki_regdate: "", // 등록일
     wiki_isnotice: false, // 공지
     wiki_content: "", // 내용
