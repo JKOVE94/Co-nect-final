@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import conect.data.dto.WikiDto;
-import conect.data.entity.WikiEntity;
 import conect.data.form.WikiForm;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

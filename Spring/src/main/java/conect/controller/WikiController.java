@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.WikiDto;
-import conect.data.entity.FileEntity;
+
 import conect.data.form.WikiForm;
 import conect.data.repository.FileRepository;
 import conect.service.board.wiki.WikiServiceImpl;
@@ -120,16 +119,8 @@ public class WikiController {
 
 	// 문서 생성
 	@PostMapping("/wikiadd")
-	public ResponseEntity<?> addWiki(@RequestParam("file") MultipartFile file, @ModelAttribute WikiForm form) {
+	public ResponseEntity<?> addWiki(@ModelAttribute WikiForm form) {
 		try {
-			// 파일 검증 로직
-            long maxFileSize = 10 * 1024 * 1024; // 10MB
-            if (file.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일이 비어 있습니다.");
-            }
-            if (file.getSize() > maxFileSize) {
-                return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("파일 크기가 10MB를 초과합니다.");
-            }
 			// 문서 등록 서비스 호출
 			int wikiPkNum = wikiServiceImpl.addWiki(form);
 
@@ -148,35 +139,17 @@ public class WikiController {
 	
 	@PutMapping("/wikiedit/{wikiPkNum}")
 	public ResponseEntity<?> editWiki(@PathVariable("wikiPkNum") int wikiPkNum, @ModelAttribute WikiForm form) {
-	    try {
-	        System.out.println("파일 상태: " + form.getFileStatus());
-
-	        // 파일 상태 설정
-	        if (form.getFileInput() != null && !form.getFileInput().isEmpty()) {
-	            form.setFileStatus("REPLACE"); // 새 파일 업로드
-	            String fileUrl = wikiServiceImpl.saveFile(form);
-	            form.setFile_path(fileUrl);
-	            form.setFile_name(form.getFileInput().getOriginalFilename());
-	        } else if (form.getFile_name() == null || form.getFile_name().isEmpty()) {
-	            form.setFileStatus("DELETE"); // 파일 삭제
-	        } else {
-	            form.setFileStatus("KEEP"); // 기존 파일 유지
+		 try {
+	            // 문서 수정 서비스 호출
+	            wikiServiceImpl.editWiki(wikiPkNum, form);
+	            
+	            // 성공 응답
+	            return ResponseEntity.ok("문서가 성공적으로 수정되었습니다.");
+	        } catch (Exception e) {
+	            // 오류 발생 시 응답
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                    .body("문서 수정 중 오류 발생: " + e.getMessage());
 	        }
-
-	        // 문서 수정 서비스 호출
-	        wikiServiceImpl.editWiki(wikiPkNum, form);
-
-	        return ResponseEntity.ok()
-	                .body(Map.of(
-	                        "message", "문서 수정 성공!",
-	                        "fileName", form.getFile_name(),
-	                        "filePath", form.getFile_path()
-	                ));
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body("문서 수정 실패: " + e.getMessage());
-	    }
 	}
 
 	// 문서 삭제
