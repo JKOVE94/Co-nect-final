@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.WikiDto;
 import conect.data.entity.FileEntity;
@@ -40,7 +41,7 @@ public class WikiController {
 	@GetMapping("/wikilist")
 	public ResponseEntity<Map<String, Object>> getAllWikis(@RequestParam(name = "page", defaultValue = "0") int page, // 현재
 			@RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
-			@RequestParam(name = "sortField", defaultValue = "postRegdate") String sortField, // 정렬 필드
+			@RequestParam(name = "sortField", defaultValue = "wikiRegdate") String sortField, // 정렬 필드
 			@RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
 			@RequestParam(name = "searchType", defaultValue = "") String searchType, // 검색 분류
 			@RequestParam(name = "searchText", defaultValue = "") String searchText // 검색어
@@ -119,8 +120,16 @@ public class WikiController {
 
 	// 문서 생성
 	@PostMapping("/wikiadd")
-	public ResponseEntity<?> addWiki(@ModelAttribute WikiForm form) {
+	public ResponseEntity<?> addWiki(@RequestParam("file") MultipartFile file, @ModelAttribute WikiForm form) {
 		try {
+			// 파일 검증 로직
+            long maxFileSize = 10 * 1024 * 1024; // 10MB
+            if (file.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일이 비어 있습니다.");
+            }
+            if (file.getSize() > maxFileSize) {
+                return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("파일 크기가 10MB를 초과합니다.");
+            }
 			// 문서 등록 서비스 호출
 			int wikiPkNum = wikiServiceImpl.addWiki(form);
 
