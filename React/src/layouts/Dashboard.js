@@ -26,6 +26,7 @@ import TaskDetail from "components/2dashboard/Task/TaskDetail";
 import RecHome from "components/2dashboard/recommendation/RecHome";
 import TaskCreate from "components/2dashboard/Task/TaskCreate";
 import TaskHome from "components/2dashboard/Task/TaskHome";
+import ProfileHome from "components/2dashboard/profile/ProfileHome";
 
 
 const Dashboard = (props) => {
@@ -46,8 +47,8 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
   const [isLoading, setIsLoading] = useState(true);
   
   const projInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).projData;  
-
-  const [projPkNum, setProjPkNum] = useState(JSON.parse(projInfoFromRoot).proj_pk_num);
+  const projNum = sessionStorage.getItem("persist:proj_pk_num");
+  const [projPkNum, setProjPkNum] = useState(projNum);
 
   const handleLogout = () => {
     sessionStorage.removeItem("persist:proj_pk_num");
@@ -89,6 +90,7 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
           <Route path="/noti/*" element={<NotiHome projPkNum={projPkNum}/>}/>
           <Route path="/file/*" element={<FileHome projPkNum={projPkNum}/>}/>
           <Route path="/rec/*" element={<RecHome projPkNum={projPkNum}/>} />
+          <Route path={`/profile/*`} element={<ProfileHome/>} />
 
         </Routes>
       </div>

@@ -20,7 +20,7 @@ public class TasklogEntity {
     @JoinColumn(name = "tasklog_fk_task_num")
     private TaskEntity taskEntity;
 
-    @OneToMany(mappedBy = "tasklogEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "tasklogEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<TaskhistoryEntity> taskhistoryEntities;
 
 }

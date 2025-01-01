@@ -125,13 +125,13 @@ public class TaskController {
     @GetMapping("/task/{taskPkNum}/related")
     public ResponseEntity<List<TaskDto>> getRelatedTasks(
             @PathVariable("taskPkNum") int taskPkNum,
-            @RequestParam("taskGroup") int taskGroup,
-            @RequestParam("taskDepth") int taskDepth) {
+            @RequestParam(name = "taskGroup", defaultValue = "0") int taskGroup,
+            @RequestParam(name = "taskDepth", defaultValue = "0") int taskDepth) {
         try {
             List<TaskDto> relatedTasks = taskService.getRelatedTasks(taskPkNum);
             return new ResponseEntity<>(relatedTasks, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return null;
         }
     }
 
@@ -147,6 +147,11 @@ public class TaskController {
     @GetMapping("/task/member/{projNum}")
     public List<ProjectmemberDto> getTaskMember(@PathVariable("comp_pk_num")int compNum, @PathVariable("projNum") int projNum) {
         return taskService.getTaskMember(compNum, projNum);
+    }
+    @PostMapping("/search")
+    public List<TaskDto> getTaskBySearching(@RequestBody TaskSearchForm form) {
+        return taskService.getTaskBySearching(form.getProjectNum(), form.getSearchType(), form.getSearchValue());
+
     }
 
 }

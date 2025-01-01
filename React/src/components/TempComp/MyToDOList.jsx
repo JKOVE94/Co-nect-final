@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Card, Carousel } from "react-bootstrap";
 import "../../assets/css/2dashboard/function.css";
 import style from "../../assets/css/2dashboard/calendar.module.css";
@@ -20,9 +21,11 @@ import moment from "moment";
 import axiosInstance from "../../api/axiosInstance"; // axiosInstance 직접 import
 
 const MyToDoList = (props) => {
+  const nav = useNavigate();
   const userInfoFromRoot = JSON.parse(
     sessionStorage.getItem("persist:root")
   ).userData;
+  const projectNum = JSON.parse(sessionStorage.getItem("persist:proj_pk_num"));
   const userInfo = JSON.parse(userInfoFromRoot);
   const compNum = userInfo.user_fk_comp_num; //회사번호
   const [data, setData] = useState({
@@ -31,6 +34,8 @@ const MyToDoList = (props) => {
     posts: [],
     todos: [],
   });
+  const [noticedata, setNoticeData] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [todoList, setTodoList] = useState([]);
@@ -60,6 +65,12 @@ const MyToDoList = (props) => {
       .finally(() => {
         setLoading(false);
       });
+
+    axiosInstance
+      .get(`/conect/main/${compNum}/notice/list/${props.projPkNum}`)
+      .then((response) => {
+        setNoticeData(response.data.content);
+      });
   }, [user_pk_num, props.projPkNum]);
 
   const updateTodoList = useCallback((todos) => {
@@ -85,6 +96,14 @@ const MyToDoList = (props) => {
   const formatDate = (dateString) => {
     if (!dateString) return "날짜 정보 없음"; // 날짜가 없는 경우 처리
     return moment(dateString).format("YYYY-MM-DD");
+  };
+
+  const handlemore = () => {
+    nav(`/main/noti/notilist`);
+  };
+  const moveDetail = (e, noti_pk_num) => {
+    e.preventDefault();
+    nav(`/main/noti/notidetail/${noti_pk_num}`);
   };
 
   if (loading)
@@ -113,8 +132,13 @@ const MyToDoList = (props) => {
           <Col lg={7} className="px-1">
             <Card className="shadow">
               <CardHeader className="border-0">
-                <h3 className="mb-0">게시판</h3>
-                <Button color="outline-primary" size="sm" className="btnview">
+                <h3 className="mb-0">공지 게시판</h3>
+                <Button
+                  color="outline-primary"
+                  size="sm"
+                  className="btnview"
+                  onClick={() => handlemore()}
+                >
                   더 보기
                 </Button>
               </CardHeader>
@@ -124,29 +148,27 @@ const MyToDoList = (props) => {
                   <tr>
                     <th scope="col">글 번호</th>
                     <th scope="col">제목</th>
-                    <th scope="col">태그</th>
                     <th scope="col">등록일</th>
-                    <th scope="col">조회수</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.posts && data.posts.length > 0 ? (
-                    data.posts.slice(0, 4).map((item) => (
-                      <tr key={item.post_pk_num}>
+                  {noticedata && noticedata.length > 0 ? (
+                    noticedata.slice(0, 4).map((item) => (
+                      <tr key={item.noti_pk_num}>
                         <td>
-                          <h6 className="text-sm mb-0">{item.post_pk_num}</h6>
+                          <h6 className="text-sm mb-0">{item.noti_pk_num}</h6>
                         </td>
                         <td>
-                          <a href="#">
-                            <h6 className="text-sm mb-0">{item.post_name}</h6>
+                          <a
+                            href="#"
+                            onClick={(e) => moveDetail(e, item.noti_pk_num)}
+                          >
+                            <h6 className="text-sm mb-0">{item.noti_title}</h6>
                           </a>
                         </td>
                         <td>
-                          <h6 className="text-sm mb-0">{item.post_tag}</h6>
-                        </td>
-                        <td>
                           <h6 className="text-sm mb-0">
-                            {new Date(item.post_regdate).toLocaleDateString(
+                            {new Date(item.noti_regdate).toLocaleDateString(
                               "ko-KR",
                               {
                                 year: "numeric",
@@ -156,15 +178,12 @@ const MyToDoList = (props) => {
                             )}
                           </h6>
                         </td>
-                        <td>
-                          <h6 className="text-sm mb-0">{item.post_view}</h6>
-                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td colSpan="5" className="text-center">
-                        <h6 className="text-sm mb-0">게시글이 없습니다</h6>
+                        <h6 className="text-sm mb-0">공지가 없습니다</h6>
                       </td>
                     </tr>
                   )}

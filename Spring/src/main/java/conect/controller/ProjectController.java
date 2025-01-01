@@ -25,12 +25,11 @@ import java.util.Map;
 @RequestMapping("{compNum}/proj")
 public class ProjectController {
 
-	private ProjServiceImpl projServiceImpl;
 	private ProjService projService;
 	private ManageProjService manageProjService;
 
 	public ProjectController(ProjServiceImpl projServiceImpl, ProjService projService, ManageProjService manageProjService) {
-		this.projServiceImpl = projServiceImpl;
+
 		this.projService = projService;
 		this.manageProjService = manageProjService;
 	}
@@ -87,21 +86,24 @@ public class ProjectController {
 
 	@GetMapping("/projread")
 	public List<ProjectDto> getListAll() {
-		return projServiceImpl.getListAll();
+		return projService.getListAll();
 	}
 
 	// 2024.12.27 대현 로직 수정
 
+
 	@GetMapping("/projdetail/{projPkNum}")
 	public ProjectDto getProjById(@PathVariable("projPkNum") int projPkNum) {
-		return projServiceImpl.getProjById(projPkNum);
+		System.out.println("-----------------");
+		System.out.println("projPkNum :"+projPkNum);
+		return projService.getProjById(projPkNum);
 	}
 
 	// 프로젝트 생성
 	@PostMapping("/projadd")
 	public ResponseEntity<?> addProject(@RequestBody ProjectForm form) {
 		try {
-			int projPkNum = projServiceImpl.addProject(form); // 생성된 프로젝트 ID 반환
+			int projPkNum = projService.addProject(form); // 생성된 프로젝트 ID 반환
 			return ResponseEntity.ok(projPkNum); // 생성된 projPkNum 반환
 		} catch (Exception e) {
 			e.printStackTrace(); // 로그로 에러 확인
@@ -113,7 +115,7 @@ public class ProjectController {
 	@PutMapping("/projedit/{projPkNum}")
 	public ResponseEntity<?> editProject(@PathVariable("projPkNum") int projPkNum, @RequestBody ProjectForm form) {
 		try {
-			projServiceImpl.editProject(projPkNum, form);
+			projService.editProject(projPkNum, form);
 			return ResponseEntity.ok("프로젝트 수정 성공!"); // 성공 시 메시지 반환
 		} catch (Exception e) {
 			e.printStackTrace(); // 로그로 에러 확인
@@ -124,12 +126,12 @@ public class ProjectController {
 	// 프로젝트 게시판
 	@GetMapping("/")
 	public List<ProjectDto> getAllProj(@PathVariable("compNum") int compNum) {
-		return projServiceImpl.getAllProjInfo(compNum);
+		return projService.getAllProjInfo(compNum);
 	}
 
 	@GetMapping("/user/{user_pk_num}")
 	public ResponseEntity<Map<String, Object>> getUserRelatedData(@PathVariable("user_pk_num") int userPkNum) {
-		Map<String, Object> userData = projServiceImpl.getUserRelatedData(userPkNum);
+		Map<String, Object> userData = projService.getUserRelatedData(userPkNum);
 		return ResponseEntity.ok(userData);
 	}
 }

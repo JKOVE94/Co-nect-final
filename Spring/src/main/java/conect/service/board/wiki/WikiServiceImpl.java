@@ -281,6 +281,10 @@ public class WikiServiceImpl implements WikiService {
 
 	        // 파일 처리
 	        FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
+			System.out.println("--------------------");
+			System.out.println(existingFile.getWikiEntity().getWikiPkNum());
+			System.out.println(form.getFileStatus());
+			System.out.println("--------------------");
 	        String fileStatus = form.getFileStatus();
 
 	        if ("DELETE".equals(fileStatus) && existingFile != null) {

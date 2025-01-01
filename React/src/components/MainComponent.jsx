@@ -16,19 +16,11 @@ const MainComponent = (props) => {
   const compPkNum = userInfo.user_fk_comp_num; //회사번호
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const projectNum = searchParams.get("proj");
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (projectNum) {
-      dispatch(PROJSEL({ proj_pk_num: projectNum }));
-    }
-  }, [dispatch, projectNum]);
+  const projectNum = searchParams.get("");
 
   return (
     <>
-      <Tasktable projectNum={projectNum} projPkNum={props.projPkNum} />
+      <Tasktable projPkNum={props.projPkNum} />
       <MyToDoList user_pk_num={user_pk_num} projPkNum={props.projPkNum} />
     </>
   );

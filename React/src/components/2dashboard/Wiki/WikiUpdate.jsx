@@ -169,6 +169,7 @@ const WikiUpdate = () => {
           },
         }
       );
+
       navigate(`/main/wiki/wikidetail/${wikiPkNum}`, {
         state: { actionType: "update" },
       });

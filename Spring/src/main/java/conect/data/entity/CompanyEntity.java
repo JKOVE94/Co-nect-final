@@ -22,11 +22,11 @@ public class CompanyEntity {
     private String compTel; // 회사 전화번호 [VARCHAR]
     private String compWebsite; // 회사 웹사이트 [VARCHAR]
 
-    @OneToMany(mappedBy = "companyEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "companyEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<UserEntity> userEntities;
 
-    @OneToMany(mappedBy = "companyEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "companyEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ProjectEntity> projectEntities;
 

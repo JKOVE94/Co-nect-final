@@ -28,7 +28,7 @@ public class WikiEntity {
     private int wikiView; // 조회수 [INT]
     private boolean wikiBoardtype; // 게시판 종류 [INT] (1, 2)
 
-    @OneToOne(mappedBy = "wikiEntity", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "wikiEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonBackReference
     private FileEntity fileEntity;
 

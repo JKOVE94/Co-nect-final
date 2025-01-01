@@ -61,9 +61,9 @@ public class TaskEntity {
     @JoinColumn(name = "task_fk_user_num")
     private UserEntity userEntity;
 
-    @OneToMany(mappedBy = "taskEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "taskEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<TaskhistoryEntity> taskhistoryEntities;
 
-    @OneToMany(mappedBy = "taskEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "taskEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<TasklogEntity> tasklogEntities;
 }

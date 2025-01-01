@@ -25,17 +25,16 @@ const NoticeCreate = (props) => {
   const userInfoFromRoot = JSON.parse(
     sessionStorage.getItem("persist:root")
   ).userData;
-    
+
   const userInfo = JSON.parse(userInfoFromRoot);
   const compPkNum = userInfo.user_fk_comp_num; //sessionStorage에서 로그인 된 회사번호 받아오기
   const writer = userInfo.user_pk_num; //sessionStorage에서 로그인 유저 받아오기
-  
 
   // Notice 입력 폼 상태 초기화
   const [formData, setFormData] = useState({
     noti_title: "", // 제목
     noti_content: "", // 내용
-    noti_fk_proj_num: props.projPkNum, // 프로젝트 번호_url 전달 값 받아오기 
+    noti_fk_proj_num: props.projPkNum, // 프로젝트 번호_url 전달 값 받아오기
     noti_fk_user_num: writer, // 로그인 된 작성자 번호
     noti_import: 0, // 중요도 체크 (기본값 0)
   });

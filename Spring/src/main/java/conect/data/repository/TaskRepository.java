@@ -30,8 +30,8 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Integer> {
 
     Page<TaskEntity> findByProjectEntity_ProjPkNum(int projPkNum, Pageable pageable);
 
-    @Query("SELECT t FROM TaskEntity t WHERE t.taskGroup = :taskGroup AND t.taskDepth = :taskDepth")
-    List<TaskEntity> findRelatedTasks(@Param("taskGroup") int taskGroup, @Param("taskDepth") int taskDepth);
+    @Query("SELECT t FROM TaskEntity t WHERE t.taskGroup = ?1 AND t.taskDepth = 1")
+    List<TaskEntity> findRelatedTaskLists(int taskPkNum);
 
     @Query("SELECT t.taskPkNum FROM TaskEntity t WHERE t.taskGroup = ?1 AND t.taskDepth = 1")
     List<Integer> findChildTask(int task_pk_num);

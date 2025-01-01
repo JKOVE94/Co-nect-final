@@ -40,6 +40,7 @@ export default function Tasktable(props) {
           .sort((a, b) => new Date(b.taskStartdate) - new Date(a.taskStartdate))
           .slice(0, 4);
         setTasks(sortData);
+        console.log(tasks);
       })
       .catch((error) => {
         console.error("showList 오류:", error);
@@ -88,7 +89,7 @@ export default function Tasktable(props) {
           <Card style={{ width: "100%" }}>
             <CardHeader className="border-0">
               <h3 className="mb-0" style={{ fontWeight: "bold" }}>
-                업무 테이블
+                나의 업무
               </h3>
               <Button
                 color="outline-primary"

@@ -3,10 +3,16 @@ import axios from "axios";
 import Ganttchart from "./Ganttchart";
 import { Card, CardBody, CardHeader } from "react-bootstrap";
 import "./GanttHome.css";
+import axiosInstance from "api/axiosInstance";
 
 const GanttHome = (props) => {
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compNum = userInfo.user_fk_comp_num; //회사번호
+
   const [status, setStatus] = useState(1); //normal(1), finished(2), alert(3) 3가지 상태
-  const [projectNum, setProjectNum] = useState(props.projPkNum);
   const [taskdatas, setTaskdatas] = useState([]); // 업무 데이터를 저장하는 state
   const [projdatas, setProjdatas] = useState([]); // 프로젝트 데이터를 저장하는 state
   const [searchType, setSearchType] = useState("taskName");
@@ -25,15 +31,21 @@ const GanttHome = (props) => {
 
   //해당 프로젝트의 업무 데이터를 가져오는 함수 (초기 로딩, 업데이트 시 실행)
   const fetchTaskData = async () => {
-    const taskResponse = await axios.get(`/board/task/proj/${projectNum}`);
+    const taskResponse = await axiosInstance.get(
+      `/conect/${compNum}/task/task/proj/${props.projPkNum}`
+    );
     // console.log(taskResponse.data);
     setTaskdatas(taskResponse.data);
   };
 
   //해당 프로젝트의 정보 데이터를 가져오는 함수 (초기 로딩, 업데이트 시 실행)
-  const fetcProjData = async () => {
-    const projResponse = await axios.get(`/proj/projread/${projectNum}`);
+  const fetchProjData = async () => {
+    const projResponse = await axiosInstance.get(
+      `/conect/${compNum}/proj/projdetail/${props.projPkNum}`
+    );
+    console.log("-----------------");
     setProjdatas(projResponse.data);
+    console.log(projResponse.data);
   };
 
   const checkStatus = () => {
@@ -57,16 +69,19 @@ const GanttHome = (props) => {
   };
 
   useEffect(() => {
-    fetcProjData();
+    fetchProjData();
     fetchTaskData();
-  }, []); // 마운트될 때 한 번만 실행되도록 설정
+  }, [props.projPkNum]); // 마운트될 때 한 번만 실행되도록 설정
 
   const fetchSearchData = async () => {
-    const response = await axios.post(`/board/task/search`, {
-      projectNum: projectNum,
-      searchType: searchType,
-      searchValue: searchValue,
-    });
+    const response = await axiosInstance.post(
+      `/conect/${compNum}/task/search`,
+      {
+        projectNum: props.projPkNum,
+        searchType: searchType,
+        searchValue: searchValue,
+      }
+    );
     setTaskdatas(response.data);
     // console.log(response.data);
   };
@@ -100,28 +115,16 @@ const GanttHome = (props) => {
           </span>
           <div id="info-container">
             <span id="title">
-              {projdatas.proj_pk_num}&nbsp;{projdatas.proj_name}
+              {projdatas.proj_pk_num}&nbsp;{projdatas.proj_title}
             </span>
 
             <span>
               <i className="bi bi-person-fill"></i> 담당자 :
-              {projdatas.proj_username}
+              {projdatas.proj_manager}
             </span>
             <span>
               <i className="bi bi-calendar-fill"></i> 마감기한 :
               {projdatas.proj_enddate}
-            </span>
-            <span
-              className={
-                status === 3 ? "alert" : status === 2 ? "finished" : ""
-              }
-            >
-              {status === 3 ? (
-                <i className="bi bi-exclamation-circle-fill"></i>
-              ) : (
-                <i className="bi bi-check-circle-fill"></i>
-              )}
-              &nbsp; 진행상황 : {projdatas.proj_progress} %
             </span>
           </div>
           <Ganttchart taskdatas={taskdatas} />

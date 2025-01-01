@@ -38,11 +38,11 @@ public class ProjectEntity {
     @JsonBackReference
     private UserEntity userEntity;
 
-    @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "projectEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<RecommendationEntity> recommendationEntities;
 
-    @OneToMany(mappedBy = "projectEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "projectEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ProjectmemberEntity> projectmemberEntities;
 

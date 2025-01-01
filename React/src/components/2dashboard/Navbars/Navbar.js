@@ -46,6 +46,11 @@ const UserNavbar = (props) => {
   useEffect(()=>{
     setUserData(user);
   },[]);
+    const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const userNum = userInfo.user_pk_num; //사번
 
   const logout = () => {
     sessionStorage.removeItem("persist:proj_pk_num");
@@ -93,7 +98,7 @@ const UserNavbar = (props) => {
                 <DropdownItem className="noti-title" header tag="div">
                   <h6 className="text-overflow m-0">Welcome!</h6>
                 </DropdownItem>
-                <DropdownItem to="/#" tag={Link}>
+                <DropdownItem to={`/main/profile/${userNum}`} tag={Link}>
                   <i className="ni ni-single-02" />
                   <span>계정 정보</span>
                 </DropdownItem>
@@ -104,15 +109,7 @@ const UserNavbar = (props) => {
                   <span>설정</span>
                 </DropdownItem> : null
                 }
-                <DropdownItem to="#" tag={Link}>
-                  <i className="ni ni-calendar-grid-58" />
-                  <span>활동</span>
-                </DropdownItem>
-                
-                <DropdownItem to="#" tag={Link}>
-                  <i className="ni ni-support-16" />
-                  <span>지원</span>
-                </DropdownItem>
+           
                 <DropdownItem divider />
                 <DropdownItem onClick={(e) => logout()}>
                   <i className="ni ni-user-run" />
