@@ -4,6 +4,7 @@ import TaskList from "./TaskList";
 import TaskDetail from "./TaskDetail";
 import TaskCreate from "./TaskCreate";
 import TaskEdit from "./TaskEdit";
+import TaskSubCreate from "./TaskSubCreate";
 
 const TaskHome = (props) => {
   return (
@@ -21,6 +22,10 @@ const TaskHome = (props) => {
         element={<TaskCreate projPkNum={props.projPkNum} />}
       />
       <Route path="/edit/:projectNum/:taskId" element={<TaskEdit />} />
+        <Route
+            path="/subcreate/:projectNum/:parentTaskId" // 경로 수정
+            element={<TaskSubCreate />}
+        />
     </Routes>
   );
 };
