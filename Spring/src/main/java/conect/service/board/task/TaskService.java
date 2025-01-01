@@ -7,6 +7,7 @@ import conect.data.form.TaskForm;
 
 import java.util.List;
 
+import conect.data.form.TaskhistoryForm;
 import org.springframework.data.domain.Page;
 
 public interface TaskService {
@@ -35,4 +36,5 @@ public interface TaskService {
             String sortDirection, String searchText);
 
     List<ProjectmemberDto> getTaskMember(int compNum, int projNum);
+    boolean insertTaskHistory(int taskPkNum, List<TaskhistoryForm> taskhistoryForms);
 }

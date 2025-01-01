@@ -8,6 +8,7 @@ import conect.data.entity.PostEntity;
 import conect.data.entity.TaskEntity;
 import conect.data.entity.TaskhistoryEntity;
 import conect.data.form.TaskForm;
+import conect.data.form.TaskhistoryForm;
 import conect.data.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
+
+    @Autowired
+    private CompanyRepository compRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -180,4 +184,38 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
+    @Override
+    public boolean insertTaskHistory(int taskPkNum, List<TaskhistoryForm> taskhistoryFormList) {
+        System.out.println("taskPkNum : " + taskPkNum);
+        System.out.println(taskhistoryFormList.size());
+        try {
+            for (TaskhistoryForm form : taskhistoryFormList) {
+                System.out.println("--------------------1");
+                System.out.println(form.getTaskhis_aftervalue());
+                System.out.println(form.getTaskhis_beforevalue());
+                System.out.println(form.getTaskhis_fk_comp_num());
+                System.out.println(form.getTaskhis_fk_user_num());
+                System.out.println(form.getTaskhis_type());
+                System.out.println(form.getTaskhis_updated());
+
+                System.out.println("--------------------2");
+                TaskhistoryEntity taskhistoryEntity = TaskhistoryForm.toEntity(form);
+
+                taskhistoryEntity.setTaskEntity(taskRepository.findById(taskPkNum).get());
+                taskhistoryEntity.setUserEntity(userRepository.findById(form.getTaskhis_fk_user_num()).get());
+                taskhistoryEntity.setCompanyEntity(compRepository.findById(form.getTaskhis_fk_comp_num()).get());
+
+                System.out.println("--------------------3");
+                System.out.println(taskhistoryEntity.getTaskhisType());
+                System.out.println(taskhistoryEntity.getTaskhisUpdated());
+                System.out.println(taskhistoryEntity.getTaskhisBeforevalue());
+
+                taskHistoryRepository.save(taskhistoryEntity);
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println("insertTaskHistory err : " + e);
+            return false;
+        }
+    }
 }

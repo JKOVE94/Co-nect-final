@@ -52,7 +52,7 @@ const TaskEdit = () => {
       taskhis_type: "",
       taskhis_beforevalue: "",
       taskhis_aftervalue: "",
-      taskhis_updated: Date.now(),
+      taskhis_updated: new Date().toISOString(),
       taskhis_fk_comp_num: compPkNum,
       taskhis_fk_user_num: userPkNum,
       taskhis_fk_task_num: taskId,
@@ -61,7 +61,6 @@ const TaskEdit = () => {
 
   const generateChangeForm = (originalData, changeData) => {
     const changeForm = [];
-
     for (const key in originalData) {
       if (originalData.hasOwnProperty(key)) {
         // 객체의 고유 속성인지 확인
@@ -76,7 +75,7 @@ const TaskEdit = () => {
             taskhis_type: key,
             taskhis_beforevalue: originalData[key],
             taskhis_aftervalue: changeData[key],
-            taskhis_updated: Date.now(),
+            taskhis_updated: new Date().toISOString(),
             taskhis_fk_comp_num: compPkNum,
             taskhis_fk_user_num: userPkNum,
             taskhis_fk_task_num: taskId,
@@ -84,8 +83,8 @@ const TaskEdit = () => {
         }
       }
     }
-
-    setChangeForm(changeForm);
+    console.log(changeForm);
+    return changeForm;
   };
 
   useEffect(() => {
@@ -139,7 +138,21 @@ const TaskEdit = () => {
           taskDuration: taskData.taskDuration || 0, // 소요 시간 추가
           taskDepth: taskData.taskDepth || 0, // 깊이 추가
         });
-        setOriginalData(formData);
+        setOriginalData({
+          taskTitle: taskData.taskTitle,
+          taskContent: taskData.taskContent,
+          taskStatus: taskData.taskStatus,
+          taskStartdate: formatDate(taskData.taskStartdate),
+          taskDeadline: formatDate(taskData.taskDeadline),
+          taskPriority: taskData.taskPriority,
+          taskFkUserNum: taskData.taskFkUserNum,
+          taskProgress: taskData.taskProgress,
+          taskFkProjNum: taskData.taskFkProjNum,
+          taskTagcol: taskData.taskTagcol || "",
+          taskCreated: taskData.taskCreated, // 생성 날짜 추가
+          taskDuration: taskData.taskDuration || 0, // 소요 시간 추가
+          taskDepth: taskData.taskDepth || 0, // 깊이 추가
+        });
       } catch (error) {
         console.error("Error fetching task:", error);
       }
@@ -204,7 +217,7 @@ const TaskEdit = () => {
       }
 
       const dataToSend = {
-        ...changeData,
+        ...formData,
         taskPkNum: taskId, // 명시적으로 taskPkNum 속성에 taskId 값 할당
       };
 
@@ -213,12 +226,11 @@ const TaskEdit = () => {
         dataToSend
       );
 
-      generateChangeForm(originalData, formData);
-      console.log(changeForm);
-      // await axiosInstance.post(
-      //   `/conect/${compPkNum}/task/update/${taskId}`,
-      //   formData
-      // );
+      // 변경 내용 기록
+      await axiosInstance.post(
+        `/conect/${compPkNum}/task/task/history/${taskId}`,
+        generateChangeForm(originalData, formData)
+      );
       navigate(`/main/task/${projectNum}`);
     } catch (error) {
       console.error("Error updating task:", error);

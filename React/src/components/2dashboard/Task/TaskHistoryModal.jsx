@@ -8,7 +8,7 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
   const [loading, setLoading] = useState(true);
   const info = JSON.parse(sessionStorage.getItem("persist:root"));
   const userInfoFromRoot = JSON.parse(
-      sessionStorage.getItem("persist:root")
+    sessionStorage.getItem("persist:root")
   ).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
   const userPkNum = userInfo.user_pk_num; //사번
@@ -24,7 +24,7 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
     setLoading(true);
     try {
       const response = await axiosInstance.get(
-          `/conect/${compNum}/task/task/history/${taskPkNum}`
+        `/conect/${compNum}/task/task/history/${taskPkNum}`
       );
       setTaskHistory(response.data);
     } catch (error) {
@@ -40,67 +40,89 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
     return date.toLocaleString("ko-KR");
   };
 
+  const checkType = (data) => {
+    switch (data) {
+      case "taskTitle":
+        return "제목";
+      case "taskContent":
+        return "내용";
+      case "taskStatus":
+        return "상 태";
+      case "taskStartDate":
+        return "시작일";
+      case "taskEndDate":
+        return "종료일";
+      case "taskPriority":
+        return "우선순위";
+      case "taskProgress":
+        return "진행도";
+      case "taskTag":
+        return "태그";
+      case "taskAssignee":
+        return "담당자";
+    }
+  };
+
   return (
-      <Modal
-          isOpen={isOpen}
-          onRequestClose={onRequestClose}
-          contentLabel="태스크 수정 이력"
-          style={{
-            content: {
-              top: "50%",
-              left: "50%",
-              right: "auto",
-              bottom: "auto",
-              marginRight: "-50%",
-              transform: "translate(-50%, -50%)",
-              width: "80%",
-              maxHeight: "80%",
-            },
-          }}
-      >
-        <Card style={{ height: "auto", overflowY: "auto" }}>
-          <CardHeader>
-            <h2>태스크 수정 이력</h2>
-            <button className="btn btn-secondary" onClick={onRequestClose}>
-              닫기
-            </button>
-          </CardHeader>
-          <CardBody style={{ fontSize: "1.2rem", padding: "0" }}>
-            {loading ? (
-                <p className="text-center">로딩 중...</p>
-            ) : taskHistory.length === 0 ? (
-                <p className="text-center font-weight-bold pt-3">
-                  수정 이력이 없습니다.
-                </p>
-            ) : (
-                <Table responsive style={{ fontSize: "1.2rem" }}>
-                  <thead>
-                  <tr>
-                    <th>수정 일시</th>
-                    <th>수정자</th>
-                    <th>수정 항목</th>
-                    <th>이전 값</th>
-                    <th>변경 값</th>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      contentLabel="태스크 수정 이력"
+      style={{
+        content: {
+          top: "50%",
+          left: "50%",
+          right: "auto",
+          bottom: "auto",
+          marginRight: "-50%",
+          transform: "translate(-50%, -50%)",
+          width: "80%",
+          maxHeight: "80%",
+        },
+      }}
+    >
+      <Card style={{ height: "auto", overflowY: "auto" }}>
+        <CardHeader>
+          <h2>태스크 수정 이력</h2>
+          <button className="btn btn-secondary" onClick={onRequestClose}>
+            닫기
+          </button>
+        </CardHeader>
+        <CardBody style={{ fontSize: "1.2rem", padding: "0" }}>
+          {loading ? (
+            <p className="text-center">로딩 중...</p>
+          ) : taskHistory.length === 0 ? (
+            <p className="text-center font-weight-bold pt-3">
+              수정 이력이 없습니다.
+            </p>
+          ) : (
+            <Table responsive style={{ fontSize: "1.2rem" }}>
+              <thead>
+                <tr>
+                  <th>수정 일시</th>
+                  <th>수정자</th>
+                  <th>수정 항목</th>
+                  <th>이전 값</th>
+                  <th>변경 값</th>
+                </tr>
+              </thead>
+              <tbody>
+                {taskHistory.map((history, index) => (
+                  <tr key={index}>
+                    <td>{formatDate(history.taskhisUpdated)}</td>
+                    <td>{history.userName}</td>
+                    <td>{checkType(history.taskhisType)}</td>
+                    <td>{history.taskhisBeforevalue}</td>
+                    <td>{history.taskhisAftervalue}</td>
                   </tr>
-                  </thead>
-                  <tbody>
-                  {taskHistory.map((history, index) => (
-                      <tr key={index}>
-                        <td>{formatDate(history.taskhisUpdated)}</td>
-                        <td>{history.userName}</td>
-                        <td>{history.taskhisType}</td>
-                        <td>{history.taskhisBeforevalue}</td>
-                        <td>{history.taskhisAftervalue}</td>
-                      </tr>
-                  ))}
-                  </tbody>
-                </Table>
-            )}
-          </CardBody>
-        </Card>
-      </Modal>
+                ))}
+              </tbody>
+            </Table>
+          )}
+        </CardBody>
+      </Card>
+    </Modal>
   );
 };
 
 export default TaskHistoryModal;
-

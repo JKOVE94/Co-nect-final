@@ -5,6 +5,7 @@ import conect.data.dto.TaskDto;
 import conect.data.dto.TaskhistoryDto;
 import conect.data.form.TaskForm;
 import conect.data.form.TaskSearchForm;
+import conect.data.form.TaskhistoryForm;
 import conect.service.board.proj.ProjServiceImpl;
 
 import conect.service.board.task.TaskService;
@@ -153,5 +154,11 @@ public class TaskController {
         return taskService.getTaskBySearching(form.getProjectNum(), form.getSearchType(), form.getSearchValue());
 
     }
+
+    @PostMapping("/task/history/{taskPkNum}")
+    public boolean insertTaskHistory(@PathVariable("taskPkNum") int taskPkNum, @RequestBody List<TaskhistoryForm> taskHistoryForms) {
+        return taskService.insertTaskHistory(taskPkNum, taskHistoryForms);
+    }
+
 
 }
