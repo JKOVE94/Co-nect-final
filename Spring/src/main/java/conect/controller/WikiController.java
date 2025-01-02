@@ -3,6 +3,7 @@ package conect.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import conect.service.board.wiki.WikiService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -31,7 +32,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/{compPkNum}/wiki")
 public class WikiController {
 	@Autowired
-	private WikiServiceImpl wikiServiceImpl;
+	private WikiService wikiServiceImpl;
 	
 	@Autowired
 	private FileRepository fileRepository;
@@ -143,16 +144,18 @@ public class WikiController {
 	        System.out.println("파일 상태: " + form.getFileStatus());
 
 	        // 파일 상태 설정
-	        if (form.getFileInput() != null && !form.getFileInput().isEmpty()) {
-	            form.setFileStatus("REPLACE"); // 새 파일 업로드
-	            String fileUrl = wikiServiceImpl.saveFile(form);
-	            form.setFile_path(fileUrl);
-	            form.setFile_name(form.getFileInput().getOriginalFilename());
-	        } else if (form.getFile_name() == null || form.getFile_name().isEmpty()) {
-	            form.setFileStatus("DELETE"); // 파일 삭제
-	        } else {
-	            form.setFileStatus("KEEP"); // 기존 파일 유지
-	        }
+
+			if (form.getFileInput() != null && !form.getFileInput().isEmpty()) {
+				form.setFileStatus("REPLACE"); // 새 파일 업로드
+				String fileUrl = wikiServiceImpl.saveFile(form);
+				form.setFile_path(fileUrl);
+				form.setFile_name(form.getFileInput().getOriginalFilename());
+			} else if (form.getFile_name() == null || form.getFile_name().isEmpty()) {
+				form.setFileStatus("DELETE"); // 파일 삭제
+			} else {
+				form.setFileStatus("KEEP"); // 기존 파일 유지
+			}
+
 
 	        // 문서 수정 서비스 호출
 	        wikiServiceImpl.editWiki(wikiPkNum, form);

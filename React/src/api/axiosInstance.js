@@ -1,7 +1,8 @@
 import axios from "axios";
+const server = process.env.REACT_APP_SERVER_URL;
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:3000",
+  baseURL: process.env.REACT_APP_API_URL || `${server}:3000`,
   timeout: 5000,
   withCredentials: true,
 });

@@ -10,36 +10,67 @@ import axiosInstance from "../api/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 
 const ProjectSelect = () => {
-  const userInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).userData;
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
   const compNum = userInfo.user_fk_comp_num;
-  
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: data.length >= 3,
     speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
+    slidesToShow: Math.min(3, data.length),
+    slidesToScroll: Math.min(3, data.length),
     nextArrow: (
       <img
         src={rightArrow}
-        style={{ display: "block", width: "30px", height: "30px" }}
+        style={{
+          display: data.length <= 3 ? "none" : "block",
+          width: "30px",
+          height: "30px",
+          zIndex: 9999,
+          position: "absolute",
+          right: "-35px",
+        }}
         alt="다음"
       />
     ),
     prevArrow: (
       <img
         src={leftArrow}
+        style={{
+          display: data.length <= 3 ? "none" : "block",
+          width: "30px",
+          height: "30px",
+          zIndex: 9999,
+          position: "absolute",
+          left: "-35px",
+        }}
         alt="이전"
-        style={{ display: "block", width: "30px", height: "30px" }}
       />
     ),
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: Math.min(2, data.length),
+          slidesToScroll: Math.min(2, data.length),
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
-
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   sessionStorage.setItem("persist:proj_pk_num", data.proj_pk_num);
   const user_pk_num = useSelector((state) => state.userData.user_pk_num);
@@ -64,15 +95,17 @@ const ProjectSelect = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [user_pk_num, navigate]);
+  }, [user_pk_num, navigate, compNum]);
 
   useEffect(() => {
     fetchData();
+    console.log(userInfo.user_author);
+    console.log(data.length);
   }, [fetchData]);
 
   const handleSession = (proj_pk_num) => {
     sessionStorage.setItem("persist:proj_pk_num", proj_pk_num);
-  }
+  };
 
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -80,18 +113,21 @@ const ProjectSelect = () => {
   };
 
   const renderProjectCard = (proj) => (
-    <Col style={{ marginLeft: "1.5rem" }}>
+    <Col style={{ marginLeft: "1.5rem", zIndex: "20", zIndex: "20" }}>
       <Card
         style={{
           height: "35rem",
           width: "90%",
           boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+          zIndex: "20",
         }}
       >
         <Link
           to={`/main?proj=${proj.proj_pk_num}&user=${user_pk_num}`}
           style={{ textDecoration: "none", color: "inherit" }}
-          onClick={() => {handleSession(proj.proj_pk_num)}}
+          onClick={() => {
+            handleSession(proj.proj_pk_num);
+          }}
         >
           <CardBody className="p-5">
             <Row style={{ maxHeight: "3rem" }}>
@@ -166,11 +202,11 @@ const ProjectSelect = () => {
     if (loading) return <div>로딩 중...</div>;
     if (error) return <div>에러: {error}</div>;
 
-    if (data.length === 0) {
+    if (data.length == 0) {
       return (
         <div
           className="d-flex justify-content-center align-items-center"
-          style={{ height: "35rem", zIndex: "20" }}
+          style={{ height: "35rem", zIndex: "9" }}
         >
           <Card
             style={{
@@ -178,6 +214,7 @@ const ProjectSelect = () => {
               width: "90%",
               maxWidth: "400px",
               boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+              zIndex: "8",
             }}
           >
             <CardBody className="text-center">
@@ -185,17 +222,17 @@ const ProjectSelect = () => {
               <h3 className="font-weight-bold">
                 현재 진행중인 프로젝트가 없습니다
               </h3>
-              {user_author !== "1" ? (
+              {(userInfo.user_author == 2 || userInfo.user_author == 3) ? (
                 <>
                   <p className="text-muted">새 프로젝트를 시작해보세요!</p>
-                  <Link to="/create-project" className="btn btn-primary mt-3">
+                  <Link to="/manage/proj/create" className="btn btn-primary mt-3">
                     프로젝트 생성하기
                   </Link>
                 </>
               ) : (
                 <>
                   <p className="text-muted">프로필 설정창을 확인하세요!</p>
-                  <Link to="/profile-settings" className="btn btn-primary mt-3">
+                  <Link to="/" className="btn btn-primary mt-3">
                     프로필 설정하기
                   </Link>
                 </>
@@ -204,10 +241,30 @@ const ProjectSelect = () => {
           </Card>
         </div>
       );
+    } else if (data.length === 1) {
+      return (
+        <div style={{ width: "30%", margin: "0 auto", zIndex: "8" }}>
+          {renderProjectCard(data[0])}
+        </div>
+      );
+    } else if (data.length <= 2) {
+      return (
+        <div
+          style={{
+            width: "60%",
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "center",
+            gap: "2rem",
+          }}
+        >
+          {data.map((proj, index) => renderProjectCard(proj))}
+        </div>
+      );
     }
 
     return (
-      <Slider {...settings} style={{ zIndex: "8", width: "90%" }}>
+      <Slider {...settings} style={{ zIndex: "10", width: "90%" }}>
         {data.map((proj, index) => (
           <div key={index}>{renderProjectCard(proj)}</div>
         ))}

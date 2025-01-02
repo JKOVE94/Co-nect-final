@@ -2,9 +2,10 @@ package conect.controller;
 
 import conect.data.dto.ProjectmemberDto;
 import conect.data.dto.TaskDto;
-import conect.data.dto.TaskHistoryDto;
+import conect.data.dto.TaskhistoryDto;
 import conect.data.form.TaskForm;
 import conect.data.form.TaskSearchForm;
+import conect.data.form.TaskhistoryForm;
 import conect.service.board.proj.ProjServiceImpl;
 
 import conect.service.board.task.TaskService;
@@ -43,7 +44,7 @@ public class TaskController {
     }
 
     @GetMapping("/user/{user_pk_num}")
-    public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable int user_pk_num) {
+    public List<TaskDto> getTaskByTaskFkUserNum(@PathVariable("user_pk_num") int user_pk_num) {
         return taskService.getAllTaskWithUser(user_pk_num);
     }
 
@@ -125,20 +126,20 @@ public class TaskController {
     @GetMapping("/task/{taskPkNum}/related")
     public ResponseEntity<List<TaskDto>> getRelatedTasks(
             @PathVariable("taskPkNum") int taskPkNum,
-            @RequestParam("taskGroup") int taskGroup,
-            @RequestParam("taskDepth") int taskDepth) {
+            @RequestParam(name = "taskGroup", defaultValue = "0") int taskGroup,
+            @RequestParam(name = "taskDepth", defaultValue = "0") int taskDepth) {
         try {
             List<TaskDto> relatedTasks = taskService.getRelatedTasks(taskPkNum);
             return new ResponseEntity<>(relatedTasks, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return null;
         }
     }
 
     @GetMapping("/task/history/{taskPkNum}")
-    public ResponseEntity<List<TaskHistoryDto>> getTaskHistory(@PathVariable("taskPkNum") int taskPkNum) {
+    public ResponseEntity<List<TaskhistoryDto>> getTaskHistory(@PathVariable("taskPkNum") int taskPkNum) {
         try {
-            List<TaskHistoryDto> taskHistory = taskService.getTaskHistoryByTaskNum(taskPkNum);
+            List<TaskhistoryDto> taskHistory = taskService.getTaskHistoryByTaskNum(taskPkNum);
             return new ResponseEntity<>(taskHistory, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -148,5 +149,16 @@ public class TaskController {
     public List<ProjectmemberDto> getTaskMember(@PathVariable("comp_pk_num")int compNum, @PathVariable("projNum") int projNum) {
         return taskService.getTaskMember(compNum, projNum);
     }
+    @PostMapping("/search")
+    public List<TaskDto> getTaskBySearching(@RequestBody TaskSearchForm form) {
+        return taskService.getTaskBySearching(form.getProjectNum(), form.getSearchType(), form.getSearchValue());
+
+    }
+
+    @PostMapping("/task/history/{taskPkNum}")
+    public boolean insertTaskHistory(@PathVariable("taskPkNum") int taskPkNum, @RequestBody List<TaskhistoryForm> taskHistoryForms) {
+        return taskService.insertTaskHistory(taskPkNum, taskHistoryForms);
+    }
+
 
 }

@@ -6,21 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/endpoints/gemini.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/endpoints/gemini.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/services/gemini_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/gemini_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecCreate.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReply.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReply.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyCreate.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplyList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplylike.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecReply/RecReplylike.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecUpdate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/RecUpdate.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/Reclike.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/recommendation/Reclike.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskHistoryModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Task/TaskHistoryModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Wiki/WikiUpdate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Wiki/WikiUpdate.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/layouts/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/layouts/Login.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../React/src/layouts/ProjectSelect.js" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/layouts/ProjectSelect.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskHistoryDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/dto/TaskHistoryDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TaskHistoryEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/TaskHistoryEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TaskHistoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/repository/TaskHistoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/WikiEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/data/entity/WikiEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/board/task/TaskServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/board/task/TaskServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/board/wiki/WikiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/service/board/wiki/WikiServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,21 +39,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.embaded.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Refactoring",
-    "last_opened_file_path": "/Users/jkove/Documents/GitHub/Co-nect-final/Python",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.embaded.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Refactoring&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jkove/Documents/GitHub/Co-nect-final/Python&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/services" />
@@ -114,7 +108,7 @@
       <updated>1734773064946</updated>
       <workItem from="1734773066002" duration="4643000" />
       <workItem from="1734831621818" duration="47449000" />
-      <workItem from="1735284123228" duration="6101000" />
+      <workItem from="1735284123228" duration="19628000" />
     </task>
     <servers />
   </component>

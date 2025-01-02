@@ -70,7 +70,7 @@ def generate_answer_with_gemini(context, question):
     사용자가 관계에 대해 질문(내가 속한 프로젝트, 내가 속한 업무, 프로젝트가 포함하고 있는 업무, 업무가 포함된 프로젝트) 를 말하면 번호가 아닌 이름으로 알려줘.
     프로젝트 생성일은 porj_created 컬럼에 저장되어있어. 업무 생성일은 task_created 컬럼에 저장되어있어.
     그리고 컬럼과 관련된 정보를 알려줄때는 컬럼명을 노출하지 않도록 주의해줘.
-    데이터가 없는 경우에는 '잘 모르겠어요' 이라고 답해줘.
+    데이터가 없는 경우에는 '저는 이제 막 태어난 AI어시스턴트 코넥트입니다. 질문해주신 내용은 아직 잘 모르겠어요' 이라고 답해줘.
     
     문맥:
     {context}
@@ -125,6 +125,9 @@ def get_answer(user_question, db_data):
 
     **업무:**
     {tasks}
+    
+    **업무기록, 업무변화, 업무수정:**
+    {taskchanges}
     """
 
     # 사용자 정보 (유사한 사용자 상위 2명)
@@ -153,11 +156,13 @@ def get_answer(user_question, db_data):
     # 업무 정보 (모든 업무)
     tasks_info = db_data["tasks"].to_markdown()
     myself_info = db_data["myself"].to_markdown()
+    taskhistories_info = db_data["taskchanges"].to_markdown()
     context = context_template.format(
         users=users_info,
         projects=projects_info,
         tasks=tasks_info,
-        myself=myself_info
+        myself=myself_info,
+        taskchanges=taskhistories_info
     )
 
     print("생성된 context:\n", context)  # context 내용 확인 (디버깅용)

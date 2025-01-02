@@ -21,16 +21,20 @@ import axiosInstance from "../../../api/axiosInstance";
 const NotiUpdate = () => {
   const navigate = useNavigate();
   const { notiPkNum } = useParams(); // URL에서 projPkNum 가져오기
-  const projNum = 6; // 테스트 projNum
-  const compPkNum = 1; // 테스트 compNum
-  const loginUser = useSelector((state) => state.userData); // Redux에서 로그인한 유저 정보 가져오기
   const [modalOpen, setModalOpen] = useState(false); // 확인/취소용 modal창 열림 닫힘 상태 관리
+
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+    
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compPkNum = userInfo.user_fk_comp_num; //sessionStorage에서 로그인 된 회사번호 받아오기
+  const loginUser = userInfo.user_pk_num; //sessionStorage에서 로그인 유저 받아오기
 
   // 폼 데이터 상태 관리
   const [formData, setFormData] = useState({
     noti_title: "", // 공지 제목
     noti_content: "", //공지 내용
-    //noti_fk_user_num: writer.user_pk_num, //작성자 로그인되어 있는 user로 변경
     noti_import: 0, // 공지 중요도 체크
   });
 
@@ -42,15 +46,14 @@ const NotiUpdate = () => {
           `/conect/main/${compPkNum}/notice/${notiPkNum}`,
           {
             params: {
-              userPkNum: loginUser.user_pk_num, // 조회수 기능을 위한 로그인한 사용자 ID 전달
+              userPkNum: loginUser, // 조회수 기능을 위한 로그인한 사용자 ID 전달
             },
           }
         );
         const notiData = response.data;
 
         // 작성자 검증
-        if (notiData.noti_fk_user_num !== loginUser.user_pk_num) {
-          //setAlertOpenNo2(true);
+        if (notiData.noti_fk_user_num !== loginUser) {
           showToast.fail(); //토스트 알림 작성자 불일치
           setTimeout(() => {
             navigate("/main/noti/notilist");
@@ -62,7 +65,6 @@ const NotiUpdate = () => {
         setFormData({
           noti_title: notiData.noti_title,
           noti_content: notiData.noti_content,
-          //noti_fk_user_num: writer.user_pk_num, 작성자 변경 불가능하게 변경
           noti_import: notiData.noti_import,
         });
       } catch (error) {
@@ -73,7 +75,7 @@ const NotiUpdate = () => {
     if (notiPkNum) {
       fetchNotiData();
     }
-  }, [notiPkNum, compPkNum, loginUser.user_pk_num]);
+  }, [notiPkNum, compPkNum, loginUser]);
 
   // 입력값 변경될 때마다 상태 업데이트
   const handleEditChange = (e) => {

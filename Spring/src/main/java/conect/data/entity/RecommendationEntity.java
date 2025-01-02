@@ -1,5 +1,6 @@
 package conect.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,16 +25,18 @@ public class RecommendationEntity {
 
     @ManyToOne
     @JoinColumn(name = "rec_fk_user_num")
+    @JsonIgnore
     private UserEntity userEntity;
 
     @ManyToOne
     @JoinColumn(name = "rec_fk_proj_num")
+    @JsonIgnore
     private ProjectEntity projectEntity;
     
-    @OneToMany(mappedBy = "recommendationEntity")
+    @OneToMany(mappedBy = "recommendationEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     List<ReclikesEntity> reclikesEntities;
     
-    @OneToMany(mappedBy = "recommendationEntity")
+    @OneToMany(mappedBy = "recommendationEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     List<ReplyEntity> replyEntities;
 
 }

@@ -33,7 +33,7 @@ public class ReplyEntity {
     @JsonIgnore
     private UserEntity userEntity;
     
-    @OneToMany(mappedBy = "replyEntity")
+    @OneToMany(mappedBy = "replyEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     List<ReplyLikesEntity> replylikesEntities;
 
 }

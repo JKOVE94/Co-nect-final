@@ -1,28 +1,29 @@
 package conect.data.form;
 
+import conect.data.entity.TaskhistoryEntity;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class TaskHistoryForm {
-    @NotBlank(message = "이전 값은 필수입니다.")
-    private String taskhisBeforevalue;
+public class TaskhistoryForm {
 
-    @NotBlank(message = "변경 후 값은 필수입니다.")
-    private String taskhisAftervalue;
+    private String taskhis_beforevalue;
+    private String taskhis_aftervalue;
+    private LocalDateTime taskhis_updated;
+    private String taskhis_type;
+    private int taskhis_fk_comp_num;
+    private int taskhis_fk_user_num;
+    private int taskhis_fk_task_num;
 
-    @NotBlank(message = "변경 유형은 필수입니다.")
-    private String taskhisType;
-
-    @NotNull(message = "회사 번호는 필수입니다.")
-    private Integer taskhisFkCompNum;
-
-    @NotNull(message = "사용자 번호는 필수입니다.")
-    private Integer taskhisFkUserNum;
-
-    @NotNull(message = "태스크 번호는 필수입니다.")
-    private Integer taskhisFkTaskNum;
+    public static TaskhistoryEntity toEntity(TaskhistoryForm form) {
+        TaskhistoryEntity entity = new TaskhistoryEntity();
+        entity.setTaskhisBeforevalue(form.getTaskhis_beforevalue());
+        entity.setTaskhisAftervalue(form.getTaskhis_aftervalue());
+        entity.setTaskhisUpdated(form.getTaskhis_updated());
+        entity.setTaskhisType(form.getTaskhis_type());
+        return entity;
+    }
 }

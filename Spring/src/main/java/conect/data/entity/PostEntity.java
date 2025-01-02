@@ -39,7 +39,7 @@ public class PostEntity {
 	@JsonIgnore
 	private CompanyEntity companyEntity;
 
-	@OneToMany(mappedBy = "postEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonBackReference
 	private List<FavoritesEntity> favoritesEntities;
 }

@@ -26,6 +26,7 @@ const CommonNavbar = (props) => {
     fetchData();
     return () => {};
   }, []);
+  const projNum = sessionStorage.getItem("persist:proj_pk_num");
 
   return (
     <>
@@ -44,7 +45,7 @@ const CommonNavbar = (props) => {
                   <option
                     value={`${proj.proj_pk_num}`}
                     key={proj.proj_pk_num}
-                    selected={proj.proj_pk_num == proj}
+                    selected={proj.proj_pk_num == projNum}
                   >
                     {proj.proj_title}
                   </option>
@@ -82,7 +83,7 @@ const CommonNavbar = (props) => {
               <NavLink to={`/main/task/${proj}`} tag={NavLinkRRD}>
                 업무 목록
               </NavLink>
-              <NavLink to={`/main/task/${proj}`} tag={NavLinkRRD}>
+              <NavLink to={`/main/task/gantt`} tag={NavLinkRRD}>
                 간트차트
               </NavLink>
             </NavItem>

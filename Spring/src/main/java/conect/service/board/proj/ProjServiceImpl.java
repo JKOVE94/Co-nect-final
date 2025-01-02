@@ -66,7 +66,10 @@ public class ProjServiceImpl implements ProjService {
 
 	@Override
 	public ProjectDto getProjById(int projPkNum) {
-		return null;
+		System.out.println("getProjById : " + projPkNum);
+		return prepository.findById(projPkNum)
+				.map(ProjectDto::fromEntity)
+				.orElseThrow(() -> new EntityNotFoundException("getProjById 프로젝트가 존재하지 않습니다."));
 	}
 
 	// 프로젝트 생성 메서드
@@ -95,7 +98,7 @@ public class ProjServiceImpl implements ProjService {
 	public void editProject(int projPkNum, ProjectForm form) {
 		// 프로젝트 번호로 기존 프로젝트 조회
 		ProjectEntity entity = prepository.findById(form.getProj_pk_num())
-				.orElseThrow(() -> new RuntimeException("프로젝트가 존재하지 않습니다."));
+				.orElseThrow(() -> new RuntimeException("editProject 프로젝트가 존재하지 않습니다."));
 
 		// 기존 proj_created 값은 그대로 유지하고, 나머지 필드를 수정
 		ProjectEntity updatedEntity = ProjectForm.toEntity(form);

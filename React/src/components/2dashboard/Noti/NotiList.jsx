@@ -19,9 +19,14 @@ const NotiList = (props) => {
   const [searchText, setSearchText] = useState(""); // 검색어
 
   const navigate = useNavigate(); // 페이지 이동을 위한 navigate 훅
-  const projNum = 6; // 테스트 projNum
-  const compPkNum = 1; // 테스트 compNum
   const pagesPerBlock = 5; // 한 블록당 페이지 수
+
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
 
   // 게시글 데이터를 가져오는 함수
   const fetchNotices = (
@@ -45,12 +50,15 @@ const NotiList = (props) => {
       })
       .then((res) => {
         // console.log("서버 응답:", res.data);
+        // api/axiosInstance.js
+
         setNotices(res.data.content);
         setTotalPages(res.data.totalPages);
         setCurrentPage(res.data.number);
         setTotalBlocks(Math.ceil(res.data.totalPages / pagesPerBlock));
       })
       .catch((error) => {
+        console.log("현재 baseURL:", axiosInstance.defaults.baseURL); // baseURL 확인
         console.error("Axios 요청 중 오류 발생:", error);
       });
   };

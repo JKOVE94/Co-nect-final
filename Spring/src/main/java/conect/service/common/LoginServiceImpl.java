@@ -64,17 +64,22 @@ public class LoginServiceImpl implements LoginService {
                     UserEntity user = userOptional.get();
                     if (user.getUserLocked() == null || !user.getUserLocked()) {
                         if (checkPassword(user, form.getUser_pw())) {
+                            System.out.println("------------------processSuccessfulLogin------------------");
                             loginDto = processSuccessfulLogin(user);
                         } else {
+                            System.out.println("------------------processFailedLogin------------------");
                             loginDto = processFailedLogin(user);
                         }
                     } else {
+                        System.out.println("------------------processLockedAccount------------------");
                         loginDto = processLockedAccount(user);
                     }
                 } else {
+                    System.out.println("------------------processUserNotFound------------------");
                     loginDto = processUserNotFound();
                 }
             } else {
+                System.out.println("------------------processCompanyNotFound------------------");
                 loginDto = processCompanyNotFound();
             }
         } catch (Exception e) {
@@ -105,6 +110,11 @@ public class LoginServiceImpl implements LoginService {
         LocalDateTime refreshTokenExpiry = LocalDateTime.now().plusDays(14);
         user.setRefreshToken(refreshToken);
         user.setRefreshTokenExpiry(refreshTokenExpiry);
+
+//        System.out.println("-----------------login2  -----------------");
+//        System.out.println(user.getUserPkNum());
+//        System.out.println("-----------------login2  -----------------");
+
         userRepository.save(user);
         loginDto.setStatus(1);
         loginDto.setAccessToken(accessToken);
@@ -117,6 +127,9 @@ public class LoginServiceImpl implements LoginService {
         loginDto.setUser_author(user.getUserAuthor());
         loginDto.setUser_fk_comp_num(user.getCompanyEntity().getCompPkNum());
         loginDto.setUser_locked(false);
+//        System.out.println("-----------------login2  -----------------");
+//        System.out.println(loginDto.getUser_pk_num());
+//        System.out.println("-----------------login2  -----------------");
         return loginDto;
     }
 

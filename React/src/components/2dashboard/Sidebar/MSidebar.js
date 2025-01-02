@@ -16,7 +16,7 @@
 
 */
 /*eslint-disable*/
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
@@ -36,6 +36,8 @@ var ps;
 
 const Sidebar = (props) => {
   const [collapseOpen, setCollapseOpen] = useState();
+  const [isRightAccess, setIsRightAccess] = useState(false);
+  const projInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).projData; 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
@@ -44,6 +46,25 @@ const Sidebar = (props) => {
   const toggleCollapse = () => {
     setCollapseOpen((data) => !data);
   };
+
+  useEffect(() => {
+    const projPkNumTest = sessionStorage.getItem("persist:proj_pk_num");
+    // console.log("projInfoFromRoot.proj_pk_num : " +projPkNumTest == undefined)
+    // console.log("projInfoFromRoot.proj_pk_num : " +projInfoFromRoot.proj_pk_num)
+    // console.log("projInfoFromRoot.proj_pk_num : " +projInfoFromRoot.proj_pk_num>0)
+    // console.log("!projInfoFromRoot.proj_pk_num : " +!projInfoFromRoot.proj_pk_num)
+    // console.log("!projInfoFromRoot.proj_pk_num : " +projInfoFromRoot.proj_pk_num)
+    // console.log("projPkNumTest : " +projPkNumTest)
+    // console.log("projPkNumTest : ", Number(projPkNumTest) > 0)
+    // console.log("!projPkNumTest : " +!projPkNumTest)
+
+    if ( !Number(projPkNumTest) > 0) { // null 또는 undefined, 빈 문자열("") 모두 포함
+      setIsRightAccess(false);
+    }
+    else{
+      setIsRightAccess(true);
+    }
+  },[])
 
   return (
     <Navbar
@@ -63,7 +84,7 @@ const Sidebar = (props) => {
         {/* Brand */}
 
         <NavbarBrand className="pt-0"></NavbarBrand>
-       <Link to="/main"> <Logo /></Link> {/* 로고 */}
+       <Link to={isRightAccess? "/main" : "/"}> <Logo /></Link> {/* 로고 */}
         <Collapse navbar isOpen={collapseOpen}>
           <Nav navbar>
             <ManageNavbar /> {/* 관리자 메뉴 */}

@@ -158,12 +158,32 @@ public class ManageUserServiceImpl implements ManageUserService {
     public boolean updateUser(UserForm form) {
         String imgUrl = null;
         try {
-            UserEntity entity = UserForm.toEntity(form);
+            UserEntity entity = userRepository.findById(form.getUser_pk_num()).get();
             if (form.getUser_picfile() != null) {
                 imgUrl = saveImage(form);
                 entity.setUserPic(imgUrl); // 이미지 경로 저장 (Google Cloude Storage)
             }
             entity.setCompanyEntity(companyRepository.findById(form.getUser_fk_comp_num()).get());
+            if(form.getUser_pw() != null) {
+                entity.setUserPw(form.getUser_pw());
+                entity.setUserIstemppw(false);
+            }
+            if(form.getUser_author() > 0) {
+                entity.setUserAuthor(form.getUser_author());
+            }
+            if(form.getUser_id() != null) {
+                entity.setUserId(form.getUser_id());
+            }
+            if(form.getUser_lastlogin() != null) {
+                entity.setUserLastlogin(form.getUser_lastlogin());
+            }
+            if(form.getUser_mail() != null) {
+                entity.setUserMail(form.getUser_mail());
+            }
+            if(form.getUser_name() != null) {
+                entity.setUserName(form.getUser_name());
+            }
+
             userRepository.save(entity);
             return true;
         } catch (Exception e) {

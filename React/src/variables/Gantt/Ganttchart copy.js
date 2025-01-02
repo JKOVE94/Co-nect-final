@@ -168,11 +168,8 @@ class Ganttchart extends Component {
                         zoom={this.state.currentZoom}
                         onTaskUpdate={this.handleTaskUpdate}
                         onTaskAdd={this.handleTaskAdd}
-<<<<<<< Updated upstream
                         setDeleteTarget={this.props.setDeleteTarget}
                         setUpdatedData={this.props.setUpdatedData}
-=======
->>>>>>> Stashed changes
                     />
                 </div>
                 {/* <MessageArea messages={messages} /> */}

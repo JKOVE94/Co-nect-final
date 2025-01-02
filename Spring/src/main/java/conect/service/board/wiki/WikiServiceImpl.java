@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
@@ -259,6 +260,7 @@ public class WikiServiceImpl implements WikiService {
 		return savedEntity.getWikiPkNum();
 	}
 
+	@Modifying
 	@Transactional
 	public void editWiki(int wikiPkNum, WikiForm form) throws Exception {
 	    try {
@@ -278,21 +280,22 @@ public class WikiServiceImpl implements WikiService {
 	        entity.setWikiIsnotice(form.isWiki_isnotice());
 	        entity.setProjectEntity(projEntity);
 	        entity.setUserEntity(userEntity);
+			wrepository.save(entity);
 
 	        // 파일 처리
-	        FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
 	        String fileStatus = form.getFileStatus();
+			System.out.println("--------------------");
+			System.out.println(form.getFile_name());
+			System.out.println(fileStatus);
 
-	        if ("DELETE".equals(fileStatus) && existingFile != null) {
+	        if (",DELETE".equals(fileStatus) && entity.getFileEntity() != null) {
 	            // 기존 파일 삭제
-	            fileRepository.delete(existingFile);
-	            fileRepository.flush();
+	            fileRepository.delete(entity.getFileEntity());
 	            System.out.println("기존 파일 삭제 완료.");
-	        } else if ("REPLACE".equals(fileStatus)) {
+	        } else if (",REPLACE".equals(fileStatus)) {
 	            // 기존 파일 삭제 및 새 파일 저장
-	            if (existingFile != null) {
-	                fileRepository.delete(existingFile);
-	                fileRepository.flush();
+	            if (entity.getFileEntity() != null) {
+	                fileRepository.delete(entity.getFileEntity());
 	                System.out.println("기존 파일 삭제 완료.");
 	            }
 	            String fileUrl = saveFile(form);
@@ -315,7 +318,7 @@ public class WikiServiceImpl implements WikiService {
 	        }
 
 	        // 문서 저장
-	        wrepository.save(entity);
+
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        throw new Exception("문서 수정 중 오류 발생: " + e.getMessage());

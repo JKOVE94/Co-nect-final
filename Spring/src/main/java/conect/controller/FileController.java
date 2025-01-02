@@ -33,7 +33,7 @@ import java.util.HashMap;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/file")
+@RequestMapping("{compNum}/file/{projNum}")
 public class FileController {
 
     @Autowired
@@ -51,6 +51,8 @@ public class FileController {
     // 모든 게시글 조회
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllPosts(
+            @PathVariable("compNum") Integer compNum,
+            @PathVariable("projNum") Integer projNum,
     		@RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
     	    @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
     	    @RequestParam(name = "sortField", defaultValue = "wikiEntity.wikiRegdate") String sortField, // 정렬 필드
@@ -63,7 +65,7 @@ public class FileController {
             int blockSize = 5; // 한 블록당 페이지 버튼 수
 
             // 정렬 및 검색 조건에 따라 서비스 호출
-            Page<FileDto> postPage = fileService.getList(page, pageSize, sortField, sortDirection, searchType, searchText);
+            Page<FileDto> postPage = fileService.getList(compNum, projNum, page, pageSize, sortField, sortDirection, searchType, searchText);
 
             int totalPages = postPage.getTotalPages();
             int totalBlocks = (int) Math.ceil((double) totalPages / blockSize);
@@ -84,6 +86,7 @@ public class FileController {
             response.put("blockEnd", blockEnd - 1);
             response.put("hasPreviousBlock", hasPreviousBlock);
             response.put("hasNextBlock", hasNextBlock);
+            response.put("projNum", projNum);
             
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -99,6 +102,8 @@ public class FileController {
     // 특정 게시글 조회
     @GetMapping("/{filePkNum}")
     public ResponseEntity<FileDto> getPost(
+    		@PathVariable("compNum") Integer compNum,
+            @PathVariable("projNum") Integer projNum,
             @PathVariable("filePkNum") Integer filePkNum,
             HttpServletRequest request,
             HttpServletResponse response) {
@@ -115,11 +120,12 @@ public class FileController {
     @PostMapping
     @Transactional // 트랜잭션 처리
     public ResponseEntity<Object> createPostWithFile(
+    		@PathVariable("compNum") Integer compNum,
+            @PathVariable("projNum") Integer projNum,
             @RequestParam("file") MultipartFile file,
             @RequestParam("wiki_title") String wikiTitle,
             @RequestParam("wiki_content") String wikiContent,
             @RequestParam("wiki_fk_user_num") Integer userNum,
-            @RequestParam("wiki_fk_proj_num") Integer projNum,
             @RequestParam("wiki_isnotice") boolean wikiNotice
             //projNum int, wikiNotice boolean 추가해야됨 
     ) {
@@ -165,6 +171,8 @@ public class FileController {
     @PutMapping("/{filePkNum}")
     @Transactional
     public ResponseEntity<Object> updatePost(
+    		@PathVariable("compNum") Integer compNum,
+            @PathVariable("projNum") Integer projNum,
             @PathVariable("filePkNum") int filePkNum,
             @RequestParam(value = "file", required = false) MultipartFile file, // 파일은 선택적
             @RequestParam("wiki_title") String wikiTitle,
@@ -189,7 +197,10 @@ public class FileController {
 
     // 게시글 삭제
     @DeleteMapping("/{filePkNum}")
-    public ResponseEntity<Void> deleteFile(@PathVariable("filePkNum") int filePkNum) {
+    public ResponseEntity<Void> deleteFile(
+    		@PathVariable("compNum") Integer compNum,
+            @PathVariable("projNum") Integer projNum,
+    		@PathVariable("filePkNum") int filePkNum) {
         System.out.println("삭제 요청 도달, 파일 PK: " + filePkNum);
 
         // 데이터 존재 여부 확인
@@ -212,7 +223,10 @@ public class FileController {
     }
     
     @GetMapping("/download/{filePkNum}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable("filePkNum") int filePkNum) {
+    public ResponseEntity<Resource> downloadFile(
+    		@PathVariable("compNum") Integer compNum,
+            @PathVariable("projNum") Integer projNum,
+    		@PathVariable("filePkNum") int filePkNum) {
         try {
             // 파일 엔티티 조회
             FileEntity fileEntity = fileRepository.findById(filePkNum)

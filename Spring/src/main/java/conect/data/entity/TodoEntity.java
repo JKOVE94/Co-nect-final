@@ -33,7 +33,7 @@ public class TodoEntity {
     @JsonIgnore
     private UserEntity userEntity;
     
-    @OneToMany(mappedBy = "todoEntity")
+    @OneToMany(mappedBy = "todoEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ShareEntity> shareEntities;
 
 }

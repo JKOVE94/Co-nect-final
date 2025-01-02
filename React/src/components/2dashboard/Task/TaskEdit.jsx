@@ -14,6 +14,7 @@ import {
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../../../api/axiosInstance";
 import { format, differenceInDays } from "date-fns";
+import { set } from "mongoose";
 
 const TaskEdit = () => {
   const userInfoFromRoot = JSON.parse(
@@ -43,6 +44,48 @@ const TaskEdit = () => {
     taskDepth: 0, // 깊이 추가
     taskGroup: 0,
   });
+
+  const [originalData, setOriginalData] = useState({});
+  const [changeData, setChangeData] = useState({});
+  const [changeForm, setChangeForm] = useState([
+    {
+      taskhis_type: "",
+      taskhis_beforevalue: "",
+      taskhis_aftervalue: "",
+      taskhis_updated: new Date().toISOString(),
+      taskhis_fk_comp_num: compPkNum,
+      taskhis_fk_user_num: userPkNum,
+      taskhis_fk_task_num: taskId,
+    },
+  ]);
+
+  const generateChangeForm = (originalData, changeData) => {
+    const changeForm = [];
+    for (const key in originalData) {
+      if (originalData.hasOwnProperty(key)) {
+        // 객체의 고유 속성인지 확인
+        // 값 비교 시 null과 undefined, 빈 문자열("") 등을 고려하여 비교하는 것이 좋습니다.
+        if (
+          originalData[key] !== changeData[key] &&
+          !(originalData[key] == null && changeData[key] === "") && // null과 "" 비교 방지
+          !(originalData[key] === "" && changeData[key] == null)
+        ) {
+          // ""과 null 비교 방지
+          changeForm.push({
+            taskhis_type: key,
+            taskhis_beforevalue: originalData[key],
+            taskhis_aftervalue: changeData[key],
+            taskhis_updated: new Date().toISOString(),
+            taskhis_fk_comp_num: compPkNum,
+            taskhis_fk_user_num: userPkNum,
+            taskhis_fk_task_num: taskId,
+          });
+        }
+      }
+    }
+    console.log(changeForm);
+    return changeForm;
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -81,6 +124,21 @@ const TaskEdit = () => {
         };
 
         setFormData({
+          taskTitle: taskData.taskTitle,
+          taskContent: taskData.taskContent,
+          taskStatus: taskData.taskStatus,
+          taskStartdate: formatDate(taskData.taskStartdate),
+          taskDeadline: formatDate(taskData.taskDeadline),
+          taskPriority: taskData.taskPriority,
+          taskFkUserNum: taskData.taskFkUserNum,
+          taskProgress: taskData.taskProgress,
+          taskFkProjNum: taskData.taskFkProjNum,
+          taskTagcol: taskData.taskTagcol || "",
+          taskCreated: taskData.taskCreated, // 생성 날짜 추가
+          taskDuration: taskData.taskDuration || 0, // 소요 시간 추가
+          taskDepth: taskData.taskDepth || 0, // 깊이 추가
+        });
+        setOriginalData({
           taskTitle: taskData.taskTitle,
           taskContent: taskData.taskContent,
           taskStatus: taskData.taskStatus,
@@ -166,6 +224,12 @@ const TaskEdit = () => {
       await axiosInstance.put(
         `/conect/${compPkNum}/task/update/${taskId}`,
         dataToSend
+      );
+
+      // 변경 내용 기록
+      await axiosInstance.post(
+        `/conect/${compPkNum}/task/task/history/${taskId}`,
+        generateChangeForm(originalData, formData)
       );
       navigate(`/main/task/${projectNum}`);
     } catch (error) {

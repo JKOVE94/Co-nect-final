@@ -46,35 +46,35 @@ public class UserEntity {
     @JsonIgnore
     private CompanyEntity companyEntity;
 
-    @OneToMany(mappedBy = "userEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<FavoritesEntity> favoritesEntities;
 
-    @OneToMany(mappedBy = "userEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ReclikesEntity> reclikesEntities;
 
-    @OneToMany(mappedBy = "userEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ReplyEntity> replyEntities;
 
-    @OneToMany(mappedBy = "userEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<TodoEntity> todoEntities;
 
-    @OneToMany(mappedBy = "userEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ProjectmemberEntity> projectmemberEntities;
 
-    @OneToMany(mappedBy = "userEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<RecommendationEntity> recommendationEntities;
 
-    @OneToMany(mappedBy = "userEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ReplyLikesEntity> replyLikesEntities;
 
-    @OneToMany(mappedBy = "userEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<ProjectEntity> projectEntities;
 }

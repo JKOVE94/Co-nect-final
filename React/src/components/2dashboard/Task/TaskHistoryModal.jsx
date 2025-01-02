@@ -40,6 +40,29 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
     return date.toLocaleString("ko-KR");
   };
 
+  const checkType = (data) => {
+    switch (data) {
+      case "taskTitle":
+        return "제목";
+      case "taskContent":
+        return "내용";
+      case "taskStatus":
+        return "상 태";
+      case "taskStartDate":
+        return "시작일";
+      case "taskEndDate":
+        return "종료일";
+      case "taskPriority":
+        return "우선순위";
+      case "taskProgress":
+        return "진행도";
+      case "taskTagcol":
+        return "태그색상";
+      case "taskAssignee":
+        return "담당자";
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -88,7 +111,7 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
                   <tr key={index}>
                     <td>{formatDate(history.taskhisUpdated)}</td>
                     <td>{history.userName}</td>
-                    <td>{history.taskhisType}</td>
+                    <td>{checkType(history.taskhisType)}</td>
                     <td>{history.taskhisBeforevalue}</td>
                     <td>{history.taskhisAftervalue}</td>
                   </tr>

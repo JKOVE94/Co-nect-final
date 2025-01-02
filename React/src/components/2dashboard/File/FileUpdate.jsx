@@ -8,6 +8,12 @@ import axiosInstance from "../../../api/axiosInstance";
 
 const FileUpdate = () => {
   const { filePkNum } = useParams();
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compNum = userInfo.user_fk_comp_num; //회사번호
+  const projNum = sessionStorage.getItem("persist:proj_pk_num");
   const navigate = useNavigate();
   const [file, setFile] = useState({
     wiki_title: "",
@@ -20,7 +26,7 @@ const FileUpdate = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axiosInstance.get(`/conect/file/${filePkNum}`);
+        const response = await axiosInstance.get(`/conect/${compNum}/file/${projNum}/${filePkNum}`);
         setFile({
           wiki_title: response.data.wiki.wiki_title || "",
           wiki_content: response.data.wiki.wiki_content || "",
@@ -57,7 +63,7 @@ const FileUpdate = () => {
       }
 
       const response = await axiosInstance.put(
-        `/conect/file/${filePkNum}`,
+        `/conect/${compNum}/file/${projNum}/${filePkNum}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
