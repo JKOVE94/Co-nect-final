@@ -67,6 +67,7 @@ const Function = () => {
           sharer: data.todo_fk_user_num, //일정 작성자
           shared: data.share_user, //일정 참여자 목록
           all: data.todo_starttime === null ? true : false,
+          display: "block",
           backgroundColor:
             data.todo_category === "회의"
               ? "#53A0EC"
