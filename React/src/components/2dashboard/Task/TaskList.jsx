@@ -219,19 +219,30 @@ const TaskList = (props) => {
                     <th>시작일</th>
                     <th>마감일</th>
                     <th>상태</th>
-                    <th style={{ width: "200px" }}>진행도</th>
-                    <th></th>
+                    <th>진행도</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tasks.length > 0 ? (
                     tasks.map((task) => (
                       <tr key={task.taskPkNum}>
-                        <td style={{ fontWeight: "bold" }}>
+                        <td
+                          style={{
+                            paddingLeft: `${task.taskDepth * 20}px`,
+                            fontWeight:
+                              task.taskDepth === 0 ? "bold" : "normal",
+                          }}
+                        >
+                          {task.taskDepth === 1 && (
+                            <span style={{ marginRight: "5px" }}>
+                              <i class="bi bi-arrow-return-right"></i>
+                            </span>
+                          )}
                           <Link to={`/main/task/detail/${task.taskPkNum}`}>
                             {task.taskTitle}
                           </Link>
                         </td>
+
                         <td>{task.taskContent}</td>
                         <td>{formatDate(task.taskStartdate)}</td>
                         <td>{formatDate(task.taskDeadline)}</td>
@@ -247,7 +258,7 @@ const TaskList = (props) => {
                           <Progress
                             value={task.taskProgress}
                             max={100}
-                            style={{ height: "8px", width: "100%" }}
+                            style={{ height: "8px" }}
                           />
                           <div style={{ fontSize: "0.8rem", color: "#A0A0A0" }}>
                             {`진행률: ${task.taskProgress || 0}%`}
@@ -282,12 +293,19 @@ const TaskList = (props) => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="7">업무가 없습니다.</td>
+                      <td colSpan="6">업무가 없습니다.</td>
                     </tr>
                   )}
                 </tbody>
               </table>
-
+              <div className="d-flex justify-content-end">
+                <button
+                  className="btn btn-primary mr-3 mt-3"
+                  onClick={handleCreateTask}
+                >
+                  글쓰기
+                </button>
+              </div>
               <div
                 style={{
                   display: "flex",
@@ -304,7 +322,6 @@ const TaskList = (props) => {
                 >
                   &laquo; 이전
                 </button>
-
                 {pageButtons.map((pageNumber) => (
                   <button
                     key={pageNumber}
@@ -316,7 +333,6 @@ const TaskList = (props) => {
                     {pageNumber}
                   </button>
                 ))}
-
                 <button
                   className={`btn btn-link ${
                     pageBlock + 1 >= totalBlocks ? "disabled" : ""
@@ -331,21 +347,6 @@ const TaskList = (props) => {
               </div>
             </>
           )}
-
-          {/* 삭제 확인 Modal */}
-          {/* <Modal isOpen={deleteModal} toggle={handleDeleteCancel}>
-            <ModalHeader toggle={handleDeleteCancel}>삭제 확인</ModalHeader>
-            <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
-            <ModalFooter>
-              <Button color="danger" onClick={handleDeleteConfirm}>
-                삭제
-              </Button>{" "}
-              <Button color="secondary" onClick={handleDeleteCancel}>
-                취소
-              </Button>
-            </ModalFooter>
-          </Modal> */}
-
           <TaskDeleteModal
             deleteModal={deleteModal}
             handleDeleteConfirm={handleDeleteConfirm}
@@ -353,18 +354,6 @@ const TaskList = (props) => {
           />
         </CardBody>
       </Card>
-      <div
-        style={{
-          borderTop: "1px solid #dee2e6",
-          padding: "1rem",
-          display: "flex",
-          justifyContent: "flex-start",
-        }}
-      >
-        <Button color="primary" onClick={handleCreateTask}>
-          등록
-        </Button>
-      </div>
     </Container>
   );
 };
