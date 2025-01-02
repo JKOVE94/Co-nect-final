@@ -50,21 +50,20 @@ public class FileController {
 
     // 모든 게시글 조회
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllPosts(
-            @PathVariable("compNum") Integer compNum,
-            @PathVariable("projNum") Integer projNum,
-          @RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
-           @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
-           @RequestParam(name = "sortField", defaultValue = "wikiEntity.wikiRegdate") String sortField, // 정렬 필드
-           @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
-           @RequestParam(name = "searchType", defaultValue = "") String searchType, // 검색분류
-           @RequestParam(name = "searchText", defaultValue = "") String searchText // 검색어
+    public ResponseEntity<Map<String, Object>> getFilesByProjectNumber(
+        @PathVariable("compNum") Integer compNum,
+        @PathVariable("projNum") Integer projNum,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock,
+        @RequestParam(name = "sortField", defaultValue = "wikiEntity.wikiRegdate") String sortField,
+        @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection,
+        @RequestParam(name = "searchType", defaultValue = "") String searchType,
+        @RequestParam(name = "searchText", defaultValue = "") String searchText
     ) {
         try {
-            int pageSize = 10; // 한 페이지당 항목 수
-            int blockSize = 5; // 한 블록당 페이지 버튼 수
+            int pageSize = 10;
+            int blockSize = 5;
 
-            // 정렬 및 검색 조건에 따라 서비스 호출
             Page<FileDto> postPage = fileService.getList(compNum, projNum, page, pageSize, sortField, sortDirection, searchType, searchText);
 
             int totalPages = postPage.getTotalPages();
@@ -87,16 +86,17 @@ public class FileController {
             response.put("hasPreviousBlock", hasPreviousBlock);
             response.put("hasNextBlock", hasNextBlock);
             response.put("projNum", projNum);
-            
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                    "message", "서버 오류 발생",
-                    "details", e.getMessage()
+                "message", "서버 오류 발생",
+                "details", e.getMessage()
             ));
         }
     }
+
 
 
     // 특정 게시글 조회

@@ -72,6 +72,8 @@ const FileList = () => {
           setCurrentPage(currentPage);
           setTotalPages(totalPages);
           setTotalBlocks(totalBlocks);
+          console.log("API 호출 성공:", res.data);
+
         } else {
           console.error("파일 목록이 배열이 아닙니다.");
         }
@@ -139,7 +141,7 @@ const FileList = () => {
 
   useEffect(() => {
     fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
-  }, [sortField, sortDirection]);
+  }, [projNum, sortField, sortDirection]);
 
   const formatDate = (date) => format(new Date(date), "yyyy-MM-dd");
 
