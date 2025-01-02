@@ -143,7 +143,10 @@ const MyToDoList = (props) => {
                 </Button>
               </CardHeader>
 
-              <Table responsive style={{ marginBottom: "1rem" }}>
+              <Table
+                responsive
+                style={{ marginBottom: "1rem", minHeight: "13rem" }}
+              >
                 <thead className="thead-light">
                   <tr>
                     <th scope="col">글 번호</th>

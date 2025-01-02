@@ -28,14 +28,13 @@ import TaskCreate from "components/2dashboard/Task/TaskCreate";
 import TaskHome from "components/2dashboard/Task/TaskHome";
 import ProfileHome from "components/2dashboard/profile/ProfileHome";
 
-
 const Dashboard = (props) => {
   const mainContent = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-const info = JSON.parse(sessionStorage.getItem("persist:root"));
+  const info = JSON.parse(sessionStorage.getItem("persist:root"));
   const userInfoFromRoot = JSON.parse(
     sessionStorage.getItem("persist:root")
   ).userData;
@@ -43,10 +42,11 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
   const user = userInfo.user_pk_num; //사번
   const compPkNum = userInfo.user_fk_comp_num; //회사번호
 
-  
   const [isLoading, setIsLoading] = useState(true);
   const [isRightway, setIsRightway] = useState(false);
-  const projInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).projData;  
+  const projInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).projData;
   const projNum = sessionStorage.getItem("persist:proj_pk_num");
   const [projPkNum, setProjPkNum] = useState(projNum);
 
@@ -65,19 +65,16 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
     console.log("Type of projPkNumTest:", typeof projPkNumTest); // 값의 타입을 확인
     console.log("projPkNumTest === null:", projPkNumTest === null); // null인지 확인
     console.log("!projPkNumTest:", !projPkNumTest); // 조건식의 결과 확인
-    if (!projInfoFromRoot || (!projPkNumTest || projPkNumTest === "")) { // null 또는 undefined, 빈 문자열("") 모두 포함
+    if (!projInfoFromRoot || !projPkNumTest || projPkNumTest === "") {
+      // null 또는 undefined, 빈 문자열("") 모두 포함
       navigate("/");
-    }
-    else{
+    } else {
       setIsRightway(true);
     }
   }, [navigate]); // navigate를 dependency array에 추가하여 navigate 함수가 변경될 때마다 useEffect가 실행되도록 합니다.
 
-
-
   const isProjReadPath = location.pathname.includes("/projdetail");
-  return (
-  !isRightway ? (
+  return !isRightway ? (
     <></>
   ) : (
     <>
@@ -96,25 +93,39 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
         {isProjReadPath ? <BinHeader /> : <Header />}
         <ChatOffcanvas /> {/* 채팅 기능 관련 컴포넌트 */}
         <Routes>
-          <Route path="/" element={<MainComponent projPkNum={projPkNum}/>} />
-          <Route path="/proj/projread/:id" element={<ProjStatus projPkNum={projPkNum}/>} />
-          <Route path="/proj/*" element={<ProjectHome projPkNum={projPkNum}/>} />
-          <Route path="/task/*" element={<TaskHome projPkNum={projPkNum}/>} />
-          <Route path="/projfavorite" element={<ProjFavorite projPkNum={projPkNum}/>} />
-          <Route path="/freefavorite" element={<FreeFavorite projPkNum={projPkNum}/>} />
-          <Route path="/function" element={<Function projPkNum={projPkNum}/>} />
-          <Route path="/wiki/*" element={<WikiHome projPkNum={projPkNum}/>}/>
-          <Route path="/noti/*" element={<NotiHome projPkNum={projPkNum}/>}/>
-          <Route path="/file/*" element={<FileHome projPkNum={projPkNum}/>}/>
-          <Route path="/rec/*" element={<RecHome projPkNum={projPkNum}/>} />
-          <Route path={`/profile/*`} element={<ProfileHome/>} />
+          <Route path="/" element={<MainComponent projPkNum={projPkNum} />} />
+          <Route
+            path="/proj/projread/:id"
+            element={<ProjStatus projPkNum={projPkNum} />}
+          />
+          <Route
+            path="/proj/*"
+            element={<ProjectHome projPkNum={projPkNum} />}
+          />
+          <Route path="/task/*" element={<TaskHome projPkNum={projPkNum} />} />
+          <Route
+            path="/projfavorite"
+            element={<ProjFavorite projPkNum={projPkNum} />}
+          />
+          <Route
+            path="/freefavorite"
+            element={<FreeFavorite projPkNum={projPkNum} />}
+          />
+          <Route
+            path="/function"
+            element={<Function projPkNum={projPkNum} />}
+          />
+          <Route path="/wiki/*" element={<WikiHome projPkNum={projPkNum} />} />
+          <Route path="/noti/*" element={<NotiHome projPkNum={projPkNum} />} />
+          <Route path="/file/*" element={<FileHome projPkNum={projPkNum} />} />
+          <Route path="/rec/*" element={<RecHome projPkNum={projPkNum} />} />
+          <Route path={`/profile/*`} element={<ProfileHome />} />
         </Routes>
       </div>
-      <ChatOffcanvas/>
-      <ChatOffcnavasSet/>
+      <ChatOffcanvas />
+      <ChatOffcnavasSet />
     </>
-  )
-);
-}
+  );
+};
 
 export default Dashboard;
