@@ -204,7 +204,7 @@ const ProjectSelect = () => {
       return (
         <div
           className="d-flex justify-content-center align-items-center"
-          style={{ height: "35rem", zIndex: "1" }}
+          style={{ height: "35rem", zIndex: "2" }}
         >
           <Card
             style={{
@@ -212,7 +212,7 @@ const ProjectSelect = () => {
               width: "90%",
               maxWidth: "400px",
               boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-              zIndex: "8",
+              zIndex: "10",
             }}
           >
             <CardBody className="text-center">
