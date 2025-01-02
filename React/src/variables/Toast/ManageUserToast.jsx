@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React, { use, useEffect } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Toast from "react-bootstrap/Toast";
@@ -20,6 +20,10 @@ import { Link } from "react-router-dom";
  */
 //props에 담기는 데이터 => type(어떤 유형인지), showA(토스트표시 함수), toggleShowA(토스트숨김 함수)
 const ManageUserToast = (props) => {
+  useEffect(() => {
+    console.log("props.type : ", props.type);
+    console.log("props.showA : ", props.showA);
+  }, [props]);
   const TypeText = (props) => {
     switch (props.type) {
       case "unlocked":

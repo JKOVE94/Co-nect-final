@@ -48,9 +48,11 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
         return "내용";
       case "taskStatus":
         return "상 태";
-      case "taskStartDate":
+      case "taskDuration":
+        return "소요시간";
+      case "taskStartdate":
         return "시작일";
-      case "taskEndDate":
+      case "taskDeadline":
         return "종료일";
       case "taskPriority":
         return "우선순위";
@@ -58,8 +60,8 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
         return "진행도";
       case "taskTagcol":
         return "태그색상";
-      case "taskAssignee":
-        return "담당자";
+      case "taskFkUserNum":
+        return "담당자 사번";
     }
   };
 
