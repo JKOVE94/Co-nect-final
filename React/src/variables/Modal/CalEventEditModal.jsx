@@ -240,7 +240,11 @@ const CalEventEditModal = ({
             </Form.Select>
           </Form.Group>
           <Form.Group className="mb-2">
-            <Form.Label>참여자</Form.Label>
+            <Form.Label>참여자
+            {!read && <small style={{ color: "gray", marginLeft: "0.5rem" }}>
+                @사원명 또는 @사번으로 멘션해주세요
+              </small>}
+            </Form.Label>
             <ReactMention
               id="shareUser"
               disabled={read}
