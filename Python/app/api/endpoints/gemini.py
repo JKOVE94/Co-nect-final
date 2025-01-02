@@ -35,6 +35,7 @@ async def ask_gemini(userPkNum: str, question: str, db_connection=Depends(get_db
         FROM task AS t
         LEFT JOIN taskhistory th ON t.task_pk_num = th.taskhis_fk_task_num
     """, db_connection)
+    taskchanges_df = pd.read_sql_query("SELECT * FROM taskhistory", db_connection)
 
     # 1. project와 projectmember 조인
     project_member_df = pd.merge(
@@ -62,7 +63,8 @@ async def ask_gemini(userPkNum: str, question: str, db_connection=Depends(get_db
         "myself": myself_df,
         "users": users_df,
         "projects": project_member_user_df,  # 조인된 데이터프레임 전달
-        "tasks": tasks_project_df  # 조인된 데이터프레임 전달
+        "tasks": tasks_project_df,  # 조인된 데이터프레임 전달
+        "taskchanges": taskchanges_df
     }
 
     answer = get_answer(question, db_data)

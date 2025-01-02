@@ -56,8 +56,8 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
         return "우선순위";
       case "taskProgress":
         return "진행도";
-      case "taskTag":
-        return "태그";
+      case "taskTagcol":
+        return "태그색상";
       case "taskAssignee":
         return "담당자";
     }

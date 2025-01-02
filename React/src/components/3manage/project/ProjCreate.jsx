@@ -7,7 +7,12 @@ import axiosInstance from "api/axiosInstance";
 
 const ProjCreate = (props) => {
   // Redux에서 로그인한 유저 정보 가져오기
-  const writer = useSelector((state) => state.userData);
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const compNum = userInfo.user_fk_comp_num;
+  const writer = userInfo;
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -18,8 +23,8 @@ const ProjCreate = (props) => {
     proj_status: "예정",
     proj_updated: "",
     proj_created: new Date().toISOString(), // 현재 시간 추가
-    proj_fk_comp_num: writer.user_pk_num, // 로그인한 유저의 pk_num을 기본값으로 설정
-    proj_fk_user_num: props.compNum, // 회사 번호도 Redux에서 가져온 값으로 설정
+    proj_fk_comp_num: props.compNum, // 로그인한 유저의 pk_num을 기본값으로 설정
+    proj_fk_user_num: writer.user_pk_num, // 회사 번호도 Redux에서 가져온 값으로 설정
   });
 
   const handleChange = (e) => {
@@ -46,7 +51,7 @@ const ProjCreate = (props) => {
       .post(`/conect/${props.compNum}/manage/proj`, formToSubmit)
       .then((response) => {
         if (response.data !== 0) {
-          navigate(`/manage/proj/detail/${response.data}`);
+          navigate(-1);
         }
       })
       .catch((error) => {
@@ -58,7 +63,7 @@ const ProjCreate = (props) => {
   };
 
   const handleBackToList = () => {
-    navigate("/manage/proj"); // React Router로 리디렉션
+    navigate("/manage/pro"); // React Router로 리디렉션
   };
 
   return (

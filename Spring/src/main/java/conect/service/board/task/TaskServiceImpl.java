@@ -190,26 +190,10 @@ public class TaskServiceImpl implements TaskService {
         System.out.println(taskhistoryFormList.size());
         try {
             for (TaskhistoryForm form : taskhistoryFormList) {
-                System.out.println("--------------------1");
-                System.out.println(form.getTaskhis_aftervalue());
-                System.out.println(form.getTaskhis_beforevalue());
-                System.out.println(form.getTaskhis_fk_comp_num());
-                System.out.println(form.getTaskhis_fk_user_num());
-                System.out.println(form.getTaskhis_type());
-                System.out.println(form.getTaskhis_updated());
-
-                System.out.println("--------------------2");
                 TaskhistoryEntity taskhistoryEntity = TaskhistoryForm.toEntity(form);
-
                 taskhistoryEntity.setTaskEntity(taskRepository.findById(taskPkNum).get());
                 taskhistoryEntity.setUserEntity(userRepository.findById(form.getTaskhis_fk_user_num()).get());
                 taskhistoryEntity.setCompanyEntity(compRepository.findById(form.getTaskhis_fk_comp_num()).get());
-
-                System.out.println("--------------------3");
-                System.out.println(taskhistoryEntity.getTaskhisType());
-                System.out.println(taskhistoryEntity.getTaskhisUpdated());
-                System.out.println(taskhistoryEntity.getTaskhisBeforevalue());
-
                 taskHistoryRepository.save(taskhistoryEntity);
             }
             return true;

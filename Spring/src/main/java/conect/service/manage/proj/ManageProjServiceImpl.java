@@ -43,9 +43,14 @@ public class ManageProjServiceImpl implements ManageProjService {
     // 생성
     @Override
     public int insertProject(int compPkNum, ProjectForm projectForm) {
+//        System.out.println("-----------------");
+//        System.out.println(compPkNum);
+//        System.out.println(projectForm.getProj_fk_user_num());
+//        System.out.println(userRepository.findById(projectForm.getProj_fk_user_num()).get().getUserName());
+//        System.out.println("-----------------");
         ProjectEntity projectEntity = ProjectForm.toEntity(projectForm);
         projectEntity.setCompanyEntity(companyRepository.findById(compPkNum).get());
-        projectEntity.setUserEntity(userRepository.findUserByUserPkNumAndCompPkNum(compPkNum, projectForm.getProj_fk_user_num()));
+        projectEntity.setUserEntity(userRepository.findById(projectForm.getProj_fk_user_num()).get());
         return projectRepository.save(projectEntity).getProjPkNum();
 
     }

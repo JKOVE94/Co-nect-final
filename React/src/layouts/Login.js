@@ -8,6 +8,7 @@ import { LOGIN } from "../Redux/Reducer/userDataReducer";
 import LoginModal from "../variables/Modal/LoginModal";
 import axios from "axios";
 import {setAuthToken} from "api/axiosInstance";
+import { LOGOUT } from "../Redux/Reducer/userDataReducer";
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -33,6 +34,8 @@ const Login = (props) => {
   };
 
   useEffect(() => {
+    sessionStorage.removeItem("persist:proj_pk_num");
+    dispatch(LOGOUT());
     sessionStorage.removeItem("token");
     document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   },[])
@@ -170,6 +173,7 @@ const Login = (props) => {
                       name="comp_pk_num"
                       value={loginInfo.comp_pk_num}
                       onChange={(e) => handleChange(e)}
+                      min={1}
                       required
                     />
                   </div>

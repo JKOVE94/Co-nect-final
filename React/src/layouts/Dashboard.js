@@ -45,7 +45,7 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
 
   
   const [isLoading, setIsLoading] = useState(true);
-  
+  const [isRightway, setIsRightway] = useState(false);
   const projInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).projData;  
   const projNum = sessionStorage.getItem("persist:proj_pk_num");
   const [projPkNum, setProjPkNum] = useState(projNum);
@@ -59,10 +59,27 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
     navigate("/login");
   };
 
+  useEffect(() => {
+    const projPkNumTest = sessionStorage.getItem("persist:proj_pk_num");
+    console.log("projPkNumTest: ", projPkNumTest);
+    console.log("Type of projPkNumTest:", typeof projPkNumTest); // 값의 타입을 확인
+    console.log("projPkNumTest === null:", projPkNumTest === null); // null인지 확인
+    console.log("!projPkNumTest:", !projPkNumTest); // 조건식의 결과 확인
+    if (!projInfoFromRoot || (!projPkNumTest || projPkNumTest === "")) { // null 또는 undefined, 빈 문자열("") 모두 포함
+      navigate("/");
+    }
+    else{
+      setIsRightway(true);
+    }
+  }, [navigate]); // navigate를 dependency array에 추가하여 navigate 함수가 변경될 때마다 useEffect가 실행되도록 합니다.
+
+
 
   const isProjReadPath = location.pathname.includes("/projdetail");
-
   return (
+  !isRightway ? (
+    <></>
+  ) : (
     <>
       <Sidebar
         {...props}
@@ -91,13 +108,13 @@ const info = JSON.parse(sessionStorage.getItem("persist:root"));
           <Route path="/file/*" element={<FileHome projPkNum={projPkNum}/>}/>
           <Route path="/rec/*" element={<RecHome projPkNum={projPkNum}/>} />
           <Route path={`/profile/*`} element={<ProfileHome/>} />
-
         </Routes>
       </div>
       <ChatOffcanvas/>
       <ChatOffcnavasSet/>
     </>
-  );
-};
+  )
+);
+}
 
 export default Dashboard;

@@ -113,7 +113,7 @@ const WikiUpdate = () => {
       ...prev,
       fileInput: null,
       fileName: "",
-      fileStatus: "DELETE",
+      fileStatus: null,
     }));
 
     // 파일 input 초기화

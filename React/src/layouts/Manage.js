@@ -48,7 +48,7 @@ const Dashboard = (props) => {
   }, [location]);
 
   useEffect(()=>{
-    if(user.user_author === 1 || user.user_author === 4){
+    if(!(user.user_author == 2 || user.user_author == 3)){
       navigate("/");
     }
   },[]);

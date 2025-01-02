@@ -99,6 +99,8 @@ const ProjectSelect = () => {
 
   useEffect(() => {
     fetchData();
+    console.log(userInfo.user_author);
+    console.log(data.length);
   }, [fetchData]);
 
   const handleSession = (proj_pk_num) => {
@@ -200,11 +202,11 @@ const ProjectSelect = () => {
     if (loading) return <div>로딩 중...</div>;
     if (error) return <div>에러: {error}</div>;
 
-    if (data.length === 0) {
+    if (data.length == 0) {
       return (
         <div
           className="d-flex justify-content-center align-items-center"
-          style={{ height: "35rem", zIndex: "1" }}
+          style={{ height: "35rem", zIndex: "9" }}
         >
           <Card
             style={{
@@ -220,17 +222,17 @@ const ProjectSelect = () => {
               <h3 className="font-weight-bold">
                 현재 진행중인 프로젝트가 없습니다
               </h3>
-              {user_author !== "1" ? (
+              {(userInfo.user_author == 2 || userInfo.user_author == 3) ? (
                 <>
                   <p className="text-muted">새 프로젝트를 시작해보세요!</p>
-                  <Link to="/create-project" className="btn btn-primary mt-3">
+                  <Link to="/manage/proj/create" className="btn btn-primary mt-3">
                     프로젝트 생성하기
                   </Link>
                 </>
               ) : (
                 <>
                   <p className="text-muted">프로필 설정창을 확인하세요!</p>
-                  <Link to="/profile-settings" className="btn btn-primary mt-3">
+                  <Link to="/" className="btn btn-primary mt-3">
                     프로필 설정하기
                   </Link>
                 </>
