@@ -127,6 +127,7 @@ public class recommendationServiceImpl implements recommendationService {
 	
 	//건의사항 수정
 	@Override
+	@Transactional
 	public RecommendationDto editRec(int recNum, RecommendationForm bean) {
 		try {
 			RecommendationEntity entity = RecommendationForm.toEntity(bean);
@@ -137,7 +138,9 @@ public class recommendationServiceImpl implements recommendationService {
 	        
 	        UserEntity userEntity = userRepository.findById(bean.getRec_fk_user_num())
 	                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다. 사번 : " + bean.getRec_fk_user_num()));
+	        
 	        entity.setUserEntity(userEntity);
+	        entity.setReclikesEntities(reclikesRepository.findByRecommendationEntity_RecPkNum(recNum));
 			
 			return RecommendationDto.fromEntity(recRepository.save(entity));
 			
@@ -241,6 +244,7 @@ public class recommendationServiceImpl implements recommendationService {
 	
 	//건의사항 좋아요 등록
 	@Override
+	@Transactional
 	public void addReclike(int userNum, int recNum) {
 		try {
             ReclikesEntity entity = new ReclikesEntity();
