@@ -53,12 +53,12 @@ public class FileController {
     public ResponseEntity<Map<String, Object>> getAllPosts(
             @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
-    		@RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
-    	    @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
-    	    @RequestParam(name = "sortField", defaultValue = "wikiEntity.wikiRegdate") String sortField, // 정렬 필드
-    	    @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
-    	    @RequestParam(name = "searchType", defaultValue = "") String searchType, // 검색분류
-    	    @RequestParam(name = "searchText", defaultValue = "") String searchText // 검색어
+          @RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
+           @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
+           @RequestParam(name = "sortField", defaultValue = "wikiEntity.wikiRegdate") String sortField, // 정렬 필드
+           @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
+           @RequestParam(name = "searchType", defaultValue = "") String searchType, // 검색분류
+           @RequestParam(name = "searchText", defaultValue = "") String searchText // 검색어
     ) {
         try {
             int pageSize = 10; // 한 페이지당 항목 수
@@ -102,7 +102,7 @@ public class FileController {
     // 특정 게시글 조회
     @GetMapping("/{filePkNum}")
     public ResponseEntity<FileDto> getPost(
-    		@PathVariable("compNum") Integer compNum,
+          @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
             @PathVariable("filePkNum") Integer filePkNum,
             HttpServletRequest request,
@@ -120,7 +120,7 @@ public class FileController {
     @PostMapping
     @Transactional // 트랜잭션 처리
     public ResponseEntity<Object> createPostWithFile(
-    		@PathVariable("compNum") Integer compNum,
+          @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
             @RequestParam("file") MultipartFile file,
             @RequestParam("wiki_title") String wikiTitle,
@@ -171,7 +171,7 @@ public class FileController {
     @PutMapping("/{filePkNum}")
     @Transactional
     public ResponseEntity<Object> updatePost(
-    		@PathVariable("compNum") Integer compNum,
+          @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
             @PathVariable("filePkNum") int filePkNum,
             @RequestParam(value = "file", required = false) MultipartFile file, // 파일은 선택적
@@ -198,9 +198,9 @@ public class FileController {
     // 게시글 삭제
     @DeleteMapping("/{filePkNum}")
     public ResponseEntity<Void> deleteFile(
-    		@PathVariable("compNum") Integer compNum,
+          @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
-    		@PathVariable("filePkNum") int filePkNum) {
+          @PathVariable("filePkNum") int filePkNum) {
         System.out.println("삭제 요청 도달, 파일 PK: " + filePkNum);
 
         // 데이터 존재 여부 확인
@@ -224,9 +224,9 @@ public class FileController {
     
     @GetMapping("/download/{filePkNum}")
     public ResponseEntity<Resource> downloadFile(
-    		@PathVariable("compNum") Integer compNum,
+          @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
-    		@PathVariable("filePkNum") int filePkNum) {
+          @PathVariable("filePkNum") int filePkNum) {
         try {
             // 파일 엔티티 조회
             FileEntity fileEntity = fileRepository.findById(filePkNum)
@@ -238,16 +238,21 @@ public class FileController {
 
             Resource resource;
             if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
-                // URL 인코딩 처리
-                String encodedFilePath = java.net.URLEncoder.encode(filePath, "UTF-8")
-                        .replace("%3A", ":") // URL 프로토콜 복원
-                        .replace("%2F", "/"); // 경로 구분자 복원
+                String[] urlParts = filePath.split("/");
+                String fileName = urlParts[urlParts.length - 1];
+                String basePath = filePath.replace(fileName, "");
+                String encodedFileName = java.net.URLEncoder.encode(fileName, "UTF-8").replace("+", "%20");
+
+                String encodedFilePath = basePath + encodedFileName;
+                System.out.println("인코딩된 파일 경로: " + encodedFilePath);
+
                 resource = new UrlResource(encodedFilePath);
             } else {
-                // 로컬 파일 시스템 경로 처리
                 Path path = Paths.get(filePath).toAbsolutePath().normalize();
                 resource = new UrlResource(path.toUri());
             }
+
+
 
             if (!resource.exists() || !resource.isReadable()) {
                 throw new RuntimeException("파일을 읽을 수 없습니다: " + filePath);
