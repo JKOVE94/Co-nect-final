@@ -232,7 +232,7 @@ const ProjectSelect = () => {
               ) : (
                 <>
                   <p className="text-muted">프로필 설정창을 확인하세요!</p>
-                  <Link to="/" className="btn btn-primary mt-3">
+                  <Link to={`/main/profile/${userInfo.user_pk_num}`} className="btn btn-primary mt-3">
                     프로필 설정하기
                   </Link>
                 </>

@@ -41,7 +41,7 @@ const ProjUpdate = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
+      const response = await axiosInstance.put(
         `/conect/${props.compNum}/manage/proj/${projPkNum}`,
         proj
       );
@@ -53,7 +53,6 @@ const ProjUpdate = (props) => {
       }
     } catch (error) {
       console.error("Error updating proj:", error);
-      alert("게시글 수정에 실패했습니다. 다시 시도해 주세요.");
     }
   };
 

@@ -36,7 +36,6 @@ var ps;
 
 const Sidebar = (props) => {
   const [collapseOpen, setCollapseOpen] = useState();
-  const [isRightAccess, setIsRightAccess] = useState(false);
   const projInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).projData; 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
@@ -46,7 +45,8 @@ const Sidebar = (props) => {
   const toggleCollapse = () => {
     setCollapseOpen((data) => !data);
   };
-
+  
+  const [isRightAccess, setIsRightAccess] = useState(false);
   useEffect(() => {
     const projPkNumTest = sessionStorage.getItem("persist:proj_pk_num");
     // console.log("projInfoFromRoot.proj_pk_num : " +projPkNumTest == undefined)

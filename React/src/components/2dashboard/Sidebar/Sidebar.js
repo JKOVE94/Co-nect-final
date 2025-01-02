@@ -16,7 +16,7 @@
 
 */
 /*eslint-disable*/
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
@@ -67,6 +67,27 @@ const Sidebar = (props) => {
     setCollapseOpen((data) => !data);
   };
 
+  const [isRightAccess, setIsRightAccess] = useState(false);
+    useEffect(() => {
+      const projPkNumTest = sessionStorage.getItem("persist:proj_pk_num");
+      // console.log("projInfoFromRoot.proj_pk_num : " +projPkNumTest == undefined)
+      // console.log("projInfoFromRoot.proj_pk_num : " +projInfoFromRoot.proj_pk_num)
+      // console.log("projInfoFromRoot.proj_pk_num : " +projInfoFromRoot.proj_pk_num>0)
+      // console.log("!projInfoFromRoot.proj_pk_num : " +!projInfoFromRoot.proj_pk_num)
+      // console.log("!projInfoFromRoot.proj_pk_num : " +projInfoFromRoot.proj_pk_num)
+      // console.log("projPkNumTest : " +projPkNumTest)
+      // console.log("projPkNumTest : ", Number(projPkNumTest) > 0)
+      // console.log("!projPkNumTest : " +!projPkNumTest)
+  
+      if ( !Number(projPkNumTest) > 0) { // null 또는 undefined, 빈 문자열("") 모두 포함
+        setIsRightAccess(false);
+      }
+      else{
+        setIsRightAccess(true);
+      }
+    },[])
+  
+
   return (
     <Navbar
       className="navbar-vertical fixed-left navbar-light bg-white"
@@ -85,13 +106,16 @@ const Sidebar = (props) => {
         {/* Brand */}
 
         <NavbarBrand className="pt-0"></NavbarBrand>
-       <Link to="/main"> <Logo /></Link> {/* 로고 */}
-        <Collapse navbar isOpen={collapseOpen}>
-          <Nav navbar>
-            <CommonNavbar setProjPkNum={props.setProjPkNum}/> {/* 공통 메뉴 */}
-          </Nav>
-          <hr className="my-3" />  {/* 구분선 */}
-        </Collapse>
+       <Link to={isRightAccess? "/main" : "/"}> <Logo /></Link> {/* 로고 */}
+       
+  <Collapse navbar isOpen={collapseOpen}>
+    <Nav navbar>
+      {isRightAccess ? (
+      <CommonNavbar setProjPkNum={props.setProjPkNum}/> ) : null}
+    </Nav>
+    <hr className="my-3" />  {/* 구분선 */}
+  </Collapse>
+
       </Container>
     </Navbar>
   );

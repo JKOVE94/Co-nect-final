@@ -106,21 +106,6 @@ const MyToDoList = (props) => {
     nav(`/main/noti/notidetail/${noti_pk_num}`);
   };
 
-  if (loading)
-    return (
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <h3>데이터를 불러오는 중입니다...</h3>
-      </div>
-    );
-
-  if (error)
-    return (
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <h3 style={{ color: "red" }}>{error}</h3>
-        <button onClick={fetchData}>다시 시도</button>
-      </div>
-    );
-
   return (
     <>
       <Container

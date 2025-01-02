@@ -5,6 +5,7 @@ import { Row, Col, Card, CardBody, CardHeader, Container } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axiosInstance from "api/axiosInstance";
 
 /*
 상위 컴포넌트에는 하단의 코드가 있어야 합니다.
@@ -17,8 +18,8 @@ import { useSelector } from "react-redux";
 function ManageUserModal(props) {
   const nav = useNavigate();
   const handleDeletePermit = async () => {
-    const response = await axios.delete(
-      `/${props.compNum}/manage/proj/${props.projPkNumInt}`
+    const response = await axiosInstance.delete(
+      `/conect/${props.compNum}/manage/proj/${props.projPkNumInt}`
     );
     // console.log(response.data);
     if (response.data) {

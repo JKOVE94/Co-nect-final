@@ -92,7 +92,6 @@ const Login = (props) => {
       const res = await axios.post("/conect/login", loginInfo);
       const responseData = res.data;
       setData(responseData);
-      
       switch (responseData.status) {
         case 1: // 로그인 성공
         dispatch(
@@ -126,7 +125,12 @@ const Login = (props) => {
       }
     } catch (error) {
       console.error("로그인 실패:", error);
-      if (error.response && error.response.status === 403) {
+      if (error.response && error.response.status === 401) {
+        setData(error.response.data);
+         setErrType(2);
+        toggleShowA();
+      }
+      else if (error.response && error.response.status === 403) {
         // 403 Forbidden 에러 처리 (잠긴 계정)
         setErrType(3);
         handleShowM();
@@ -138,6 +142,10 @@ const Login = (props) => {
       setIsLoading(false);
     }
   };
+  
+  useEffect(() => {
+    console.log(data);
+  },[data])
 
   return (
     <>

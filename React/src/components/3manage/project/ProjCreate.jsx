@@ -56,9 +56,9 @@ const ProjCreate = (props) => {
       })
       .catch((error) => {
         console.error("게시글 저장 중 오류:", error);
-        alert(
-          "저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status
-        );
+        // alert(
+        //   "저장 중 오류가 발생했습니다. 오류 코드: " + error.response.status
+        // );
       });
   };
 
