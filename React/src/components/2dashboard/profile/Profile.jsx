@@ -107,7 +107,7 @@ const Profile = (props) => {
                 }}
               >
                 <img
-                  src={userInfo.user_pic}
+                  src={formData.user_pic}
                   alt="User"
                   style={{
                     width: "150px",
@@ -121,21 +121,21 @@ const Profile = (props) => {
                 />
                 <div>
                   <h3 style={{ fontWeight: "bold", marginBottom: "5px" }}>
-                    {userInfo.user_name}
+                    {formData.user_name}
                   </h3>
                   <br />
                   <p>
                     <FaIdCard className="mr-2" /> <b>사번:</b>{" "}
-                    {userInfo.user_pk_num}
+                    {formData.user_pk_num}
                   </p>{" "}
                   {/* 아이콘 추가 */}
                   <p>
                     <FaUser className="mr-2" /> <b>아이디:</b>{" "}
-                    {userInfo.user_id}
+                    {formData.user_id}
                   </p>
                   <p>
                     <FaEnvelope className="mr-2" /> <b>이메일:</b>{" "}
-                    {userInfo.user_mail}
+                    {formData.user_mail}
                   </p>
                 </div>
               </div>

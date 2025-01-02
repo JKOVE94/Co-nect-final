@@ -26,7 +26,6 @@ const WikiList = (props) => {
   const compPkNum = userInfo.user_fk_comp_num; //회사번호
   const navigate = useNavigate();
 
-
   // 게시글 데이터를 가져오는 함수
   const fetchWikis = (
     page,
@@ -70,7 +69,7 @@ const WikiList = (props) => {
   // 컴포넌트가 마운트될 때 게시글을 가져옴
   useEffect(() => {
     fetchWikis(0, 0, sortField, sortDirection); // 첫 번째 페이지 데이터를 가져옴
-  }, [sortField, sortDirection]); // 정렬 필드나 방향이 변경될 때마다 게시글을 다시 가져옴
+  }, [sortField, sortDirection, props.projPkNum]); // 정렬 필드나 방향이 변경될 때마다 게시글을 다시 가져옴
 
   // 페이지 블록에서 한 번에 보여줄 페이지 수
   const pagesPerBlock = 5;

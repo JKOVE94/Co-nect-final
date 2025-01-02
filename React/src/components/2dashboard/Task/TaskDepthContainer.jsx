@@ -60,9 +60,11 @@ const TaskDepthContainer = ({ task }) => {
         {task.taskDepth === 0 ? (
           <>
             하위 업무
-            <Button color="primary" className="m-1" onClick={toggleModal}>
-              하위 업무 추가
-            </Button>
+            {userInfo.user_author == 2 || userInfo.user_author == 3 ? (
+              <Button color="primary" className="m-1" onClick={toggleModal}>
+                하위 업무 추가
+              </Button>
+            ) : null}
           </>
         ) : (
           "상위 업무"

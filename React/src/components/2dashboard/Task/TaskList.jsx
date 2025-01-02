@@ -299,12 +299,14 @@ const TaskList = (props) => {
                 </tbody>
               </table>
               <div className="d-flex justify-content-end">
-                <button
-                  className="btn btn-primary mr-3 mt-3"
-                  onClick={handleCreateTask}
-                >
-                  글쓰기
-                </button>
+                {userInfo.user_author == 2 || userInfo.user_author == 3 ? (
+                  <button
+                    className="btn btn-primary mr-3 mt-3"
+                    onClick={handleCreateTask}
+                  >
+                    업무 생성
+                  </button>
+                ) : null}
               </div>
               <div
                 style={{
