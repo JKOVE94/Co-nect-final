@@ -63,7 +63,7 @@ public class NoticeController {
 
     //공지 게시글 추가
     @PostMapping("/insert")
-    public void addNotice(@RequestBody NoticeForm form, @PathVariable int comp_pk_num){
+    public void addNotice(@RequestBody NoticeForm form, @PathVariable("comp_pk_num") int comp_pk_num){
         form.setNoti_fk_comp_num(comp_pk_num);//경로에 있는 회사 정보 저장
         form.setNoti_regdate(LocalDate.now());//생성날짜에 현재 날짜 넣기
 

@@ -196,8 +196,8 @@ const MyToDoList = (props) => {
           </Col>
           {/* 이번주 나의 업무 */}
           <Col lg={5} className="px-1">
-            <Card className="shadow" style={{ minHeight: "10rem" }}>
-              <CardBody style={{ minHeight: "10rem" }}>
+            <Card className="shadow" style={{ minHeight: "17.8rem" }}>
+              <CardBody style={{ minHeight: "13rem" }}>
                 <CardTitle className={style.title}>오늘의 일정</CardTitle>
                 {todoList.length === 0 ? (
                   <CardSubtitle className={style.scheduleSub}>
