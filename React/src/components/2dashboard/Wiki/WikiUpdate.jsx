@@ -101,7 +101,6 @@ const WikiUpdate = () => {
   };
 
   const handleFileRemove = () => {
-    // 실제 삭제 API 호출하지 않고, 상태만 업데이트
     setFileState({
       originalFile: null,
       newFile: null,
@@ -111,9 +110,7 @@ const WikiUpdate = () => {
 
     setFormData((prev) => ({
       ...prev,
-      fileInput: null,
-      fileName: "",
-      fileStatus: null,
+      fileStatus: "DELETE",
     }));
 
     // 파일 input 초기화
@@ -148,14 +145,17 @@ const WikiUpdate = () => {
     // 파일 처리 상태
     if (fileState.newFile) {
       // 새 파일 업로드
+      console.log("새 파일 업로드:", fileState.newFile);
       data.append("fileInput", fileState.newFile);
       data.append("fileStatus", "REPLACE");
     } else if (fileState.originalFile && fileState.fileName) {
       // 기존 파일 유지
+      console.log("기존 파일 유지:", fileState.originalFile);
       data.append("fileStatus", "KEEP");
       data.append("originalFileName", fileState.originalFile);
     } else {
       // 파일 삭제
+      console.log("파일 삭제");
       data.append("fileStatus", "DELETE");
     }
 
@@ -244,6 +244,7 @@ const WikiUpdate = () => {
                 onChange={handleEditChange}
                 required
                 placeholder="입력하세요"
+                style={{ height: "300px" }}
               />
             </Col>
           </FormGroup>

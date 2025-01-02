@@ -3,9 +3,10 @@ package conect.service.board.wiki;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import conect.data.dto.WikiDto;
-import conect.data.entity.WikiEntity;
+import conect.data.entity.FileEntity;
 import conect.data.form.WikiForm;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,12 +19,17 @@ public interface WikiService {
 	List<WikiDto> getListAll();
 	
 	// 페이징, 정렬, 검색
-	Page<WikiDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType, String searchText);
+	Page<WikiDto> getList(int projPkNum, int page, int pageSize, String sortField, String sortDirection, String searchType,
+			String searchText);
 	
 	WikiDto getPostView(Integer wikiPkNum, HttpServletRequest request, HttpServletResponse response);
 	
+	void incrementViewCount(Integer wikiPkNum);
+	
+	FileEntity getWikiFileByWikiNum(int wikiPkNum);
+	
 	// 문서 생성
-	int addWiki(WikiForm form)  throws Exception ;
+	int addWiki(WikiForm form) throws Exception ;
 
 	// 문서 수정
 	void editWiki(int wikiPkNum, WikiForm form) throws Exception;

@@ -22,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
@@ -115,7 +114,7 @@ public class WikiServiceImpl implements WikiService {
 	}
 
 	// 페이징, 정렬, 검색
-	public Page<WikiDto> getList(int page, int pageSize, String sortField, String sortDirection, String searchType,
+	public Page<WikiDto> getList(int projPkNum, int page, int pageSize, String sortField, String sortDirection, String searchType,
 			String searchText) {
 		// 정렬 정보 생성
 		Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
@@ -131,7 +130,7 @@ public class WikiServiceImpl implements WikiService {
 		} else if (searchType.equalsIgnoreCase("user_name")) {
 			wikiPage = wrepository.findByUserEntity_UserNameContains(searchText, pageable);
 		} else {
-			wikiPage = wrepository.findAll(pageable);
+			wikiPage = wrepository.findAll(projPkNum, pageable);
 		}
 		// PostEntity -> PostDto 변환
 		return wikiPage.map(WikiDto::fromEntity);
@@ -240,7 +239,12 @@ public class WikiServiceImpl implements WikiService {
 			FileEntity fileEntity = new FileEntity();
 			fileEntity.setFileName(form.getFileInput().getOriginalFilename()); // 원본 파일명
 			fileEntity.setFilePath(fileUrl); // 저장된 경로
-			fileEntity.setFileSize((int) form.getFileInput().getSize()); // 파일 크기
+			fileEntity.setFileSize((int) form.getFileInput().getSize());
+            
+            String fileType = form.getFileInput().getContentType();
+            if (fileType != null && fileType.length() > 50) {
+                fileType = fileType.substring(0, 50);
+            }
 			fileEntity.setFileType(form.getFileInput().getContentType()); // 파일 타입
 
 			// WikiEntity와 연결
@@ -259,9 +263,9 @@ public class WikiServiceImpl implements WikiService {
 		// 저장된 엔티티의 Primary Key 반환
 		return savedEntity.getWikiPkNum();
 	}
-
-	@Modifying
-	@Transactional
+	
+	// 문서 수정
+	@Transactional(rollbackFor = {Exception.class, RuntimeException.class})
 	public void editWiki(int wikiPkNum, WikiForm form) throws Exception {
 	    try {
 	        // 문서 조회
@@ -280,80 +284,97 @@ public class WikiServiceImpl implements WikiService {
 	        entity.setWikiIsnotice(form.isWiki_isnotice());
 	        entity.setProjectEntity(projEntity);
 	        entity.setUserEntity(userEntity);
-			wrepository.save(entity);
 
 	        // 파일 처리
+	        FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
 	        String fileStatus = form.getFileStatus();
-			System.out.println("--------------------");
-			System.out.println(form.getFile_name());
-			System.out.println(fileStatus);
-
-	        if (",DELETE".equals(fileStatus) && entity.getFileEntity() != null) {
-	            // 기존 파일 삭제
-	            fileRepository.delete(entity.getFileEntity());
-	            System.out.println("기존 파일 삭제 완료.");
-	        } else if (",REPLACE".equals(fileStatus)) {
-	            // 기존 파일 삭제 및 새 파일 저장
-	            if (entity.getFileEntity() != null) {
-	                fileRepository.delete(entity.getFileEntity());
-	                System.out.println("기존 파일 삭제 완료.");
-	            }
-	            String fileUrl = saveFile(form);
-	            System.out.println("새 파일 저장 완료. 파일 URL: " + fileUrl);
-	            
-	            FileEntity newFileEntity = new FileEntity();
-	            newFileEntity.setFileName(form.getFileInput().getOriginalFilename());
-	            newFileEntity.setFilePath(fileUrl);
-	            newFileEntity.setFileSize((int) form.getFileInput().getSize());
-	            
-	            String fileType = form.getFileInput().getContentType();
-	            if (fileType != null && fileType.length() > 50) {
-	                fileType = fileType.substring(0, 50);
-	            }
-	            newFileEntity.setFileType(fileType);
-	            newFileEntity.setWikiEntity(entity);
-	            fileRepository.save(newFileEntity);
-	            fileRepository.flush();
-                System.out.println("새 파일 엔티티 저장 완료: " + newFileEntity);
+	        System.out.println("fileStatus: " + fileStatus);
+	        // 파일 없이 문서 수정 (파일이 없으면 새로운 파일을 처리하지 않고 글만 수정)
+	        if (form.getFileInput() == null || form.getFileInput().getOriginalFilename() == null) {
+	            // 새 파일이 없으므로, 그냥 글만 수정하고 파일은 저장하지 않음
+	            System.out.println("파일 없이 글만 수정");
+	            wrepository.save(entity);
+	            return;
 	        }
+	        
+	        // 파일 삭제 요청
+	           if ("DELETE".equals(fileStatus) && existingFile != null) {
+	               System.out.println("파일 삭제 처리 시작");
+	               //deleteFile(existingFile.getFilePkNum());
+	               // DB에서 파일 삭제
+	               fileRepository.delete(existingFile);
+	               fileRepository.flush(); // DB 반영
+	               
+	               // 삭제된 파일이 DB에서 반영되었는지 확인
+	               FileEntity deletedFile = fileRepository.findByWikiEntityWikiPkNum(wikiPkNum).orElse(null);
+	               if (deletedFile == null) {
+	                   System.out.println("파일이 DB에서 삭제되었습니다.");
+	               } else {
+	                   System.out.println("파일이 DB에서 삭제되지 않았습니다.");
+	               }
 
-	        // 문서 저장
+	               System.out.println("파일 삭제 완료");
+	           }
 
+
+	        // 파일 변경이 없으면, 파일 처리 없이 문서만 저장
+	        if ("KEEP".equals(fileStatus)) {
+	            // 파일 변경 없이 그냥 문서만 업데이트
+	            wrepository.save(entity);
+	            return;
+	        }
+	        
+	        if ("REPLACE".equals(fileStatus) || existingFile != null) {
+	            // 기존 파일 덮어쓰기
+	            if (existingFile != null) {
+	                // 기존 파일 정보 업데이트
+	                String newFileUrl = saveFile(form);
+	                existingFile.setFileName(form.getFileInput().getOriginalFilename());
+	                existingFile.setFilePath(newFileUrl);
+	                existingFile.setFileSize((int) form.getFileInput().getSize());
+
+	                String fileType = form.getFileInput().getContentType();
+	                if (fileType != null && fileType.length() > 50) {
+	                    fileType = fileType.substring(0, 50);
+	                }
+	                existingFile.setFileType(fileType);
+	                
+	                // 기존 파일 엔티티를 업데이트하여 저장
+	                fileRepository.save(existingFile);
+	                fileRepository.flush();
+	                System.out.println("기존 파일 덮어쓰기 완료: " + existingFile);
+	            } else {
+	                // 기존 파일이 없으면 새 파일 저장
+	                String fileUrl = saveFile(form);
+	                System.out.println("새 파일 저장 완료. 파일 URL: " + fileUrl);
+	                
+	                // 새 파일 엔티티 생성 및 저장
+	                FileEntity newFileEntity = new FileEntity();
+	                newFileEntity.setFileName(form.getFileInput().getOriginalFilename());
+	                newFileEntity.setFilePath(fileUrl);
+	                newFileEntity.setFileSize((int) form.getFileInput().getSize());
+
+	                String fileType = form.getFileInput().getContentType();
+	                if (fileType != null && fileType.length() > 50) {
+	                    fileType = fileType.substring(0, 50);
+	                }
+	                newFileEntity.setFileType(fileType);
+	                newFileEntity.setWikiEntity(entity);
+
+	                fileRepository.save(newFileEntity);
+	                fileRepository.flush();
+	                System.out.println("새 파일 엔티티 저장 완료: " + newFileEntity);
+	            }
+	        }
+	        wrepository.save(entity);
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        throw new Exception("문서 수정 중 오류 발생: " + e.getMessage());
 	    }
 	}
 
-	/*
-	@Transactional
-	public void handleFileOperations(WikiForm form, WikiEntity savedEntity) throws Exception {
-	    String fileStatus = form.getFileStatus();
-
-	    // 기존 파일 삭제
-	    if ("DELETE".equals(fileStatus) || "REPLACE".equals(fileStatus)) {
-	        FileEntity existingFile = fileRepository.findByWikiEntityWikiPkNum(savedEntity.getWikiPkNum()).orElse(null);
-	        if (existingFile != null) {
-	            fileRepository.delete(existingFile);
-	            fileRepository.flush();
-	        }
-	    }
-
-	    // 새 파일 추가
-	    if ("REPLACE".equals(fileStatus) && form.getFileInput() != null && !form.getFileInput().isEmpty()) {
-	        String fileUrl = saveFile(form); // 파일 저장 로직
-	        FileEntity newFileEntity = new FileEntity();
-	        newFileEntity.setFileName(form.getFileInput().getOriginalFilename());
-	        newFileEntity.setFilePath(fileUrl);
-	        newFileEntity.setFileSize((int) form.getFileInput().getSize());
-	        newFileEntity.setWikiEntity(savedEntity);
-	        fileRepository.save(newFileEntity);
-	        fileRepository.flush();
-	    }
-	}
-*/
-	
 	// 파일 삭제
+	@Transactional
 	public void deleteFile(int filePkNum) {
 	    FileEntity file = fileRepository.findById(filePkNum)
 	            .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다."));

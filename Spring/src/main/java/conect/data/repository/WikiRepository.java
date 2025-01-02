@@ -16,7 +16,8 @@ public interface WikiRepository extends JpaRepository<WikiEntity, Integer> {
     Optional<WikiEntity> findByIdWithUser(@Param("wikiPkNum") int wikiPkNum);
 
     // 페이징 및 정렬 지원 (Pageable을 사용하여 페이지와 정렬 정보 처리)
-    Page<WikiEntity> findAll(Pageable pageable);
+    @Query("SELECT w FROM WikiEntity w WHERE w.projectEntity.projPkNum =?1")
+    Page<WikiEntity> findAll(int projPkNum, Pageable pageable);
 
     // 게시글 제목에 검색어가 포함된 게시글을 페이징 처리하여 검색
     Page<WikiEntity> findByWikiTitleContains(String searchText, Pageable pageable);

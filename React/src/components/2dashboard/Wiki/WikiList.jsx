@@ -18,8 +18,14 @@ const WikiList = (props) => {
   const [sortDirection, setSortDirection] = useState("DESC"); // 정렬 방향 (기본값: 내림차순)
   const [searchType, setSearchType] = useState(""); // 검색 분류 (제목, 작성자)
   const [searchText, setSearchText] = useState(""); // 검색어
-  const compPkNum = 1;
+  const userInfoFromRoot = JSON.parse(
+    sessionStorage.getItem("persist:root")
+  ).userData;
+  const userInfo = JSON.parse(userInfoFromRoot);
+  const loginUser = userInfo.user_pk_num; //sessionStorage에서 로그인 유저 받아오기
+  const compPkNum = userInfo.user_fk_comp_num; //회사번호
   const navigate = useNavigate();
+
 
   // 게시글 데이터를 가져오는 함수
   const fetchWikis = (
@@ -31,9 +37,16 @@ const WikiList = (props) => {
     searchText
   ) => {
     axiosInstance
-      .get(
-        `/conect/${compPkNum}/wiki/wikilist?page=${page}&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchType=${searchType}&searchText=${searchText}`
-      )
+      .get(`/conect/${compPkNum}/wiki/wikilist/${props.projPkNum}`, {
+        params: {
+          page,
+          pageBlock: block,
+          sortField,
+          sortDirection,
+          searchType,
+          searchText,
+        },
+      })
       .then((res) => {
         // console.log(res.data);
         if (res.data && res.data.wikis) {

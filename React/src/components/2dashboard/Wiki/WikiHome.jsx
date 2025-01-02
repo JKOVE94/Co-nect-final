@@ -17,7 +17,7 @@ const WikiHome = (props) => {
           path="/wikilist"
           element={<WikiList projPkNum={props.projPkNum} />}
         />
-        <Route path="/wikiadd" element={<WikiCreate />} />
+        <Route path="/wikiadd" element={<WikiCreate  projPkNum={props.projPkNum}/>} />
         <Route path="/wikidetail/:wikiPkNum" element={<WikiDetail />} />
         <Route path="/wikiedit/:wikiPkNum" element={<WikiUpdate />} />
       </Routes>

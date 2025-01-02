@@ -189,7 +189,7 @@ const WikiDetail = () => {
                   </tr>
                   <tr>
                     <td style={{ width: "10%", textAlign: "left" }}> 내 용</td>
-                    <td style={{ width: "90%", textAlign: "left" }}>
+                    <td style={{ width: "90%", textAlign: "left" ,  whiteSpace: "pre-wrap",  wordBreak: "break-all", minHeight: "200px", verticalAlign: "top" }}>
                       {wiki.wiki_content} {/* 게시글 내용 */}
                     </td>
                   </tr>
