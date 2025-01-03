@@ -127,8 +127,15 @@ const Login = (props) => {
       console.error("로그인 실패:", error);
       if (error.response && error.response.status === 401) {
         setData(error.response.data);
+        if(data.status === 2){
          setErrType(2);
         toggleShowA();
+        }
+        else if(data.status === 3){
+          setErrType(3);
+          handleShowM();
+        }
+
       }
       else if (error.response && error.response.status === 403) {
         // 403 Forbidden 에러 처리 (잠긴 계정)

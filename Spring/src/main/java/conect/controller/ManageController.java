@@ -34,24 +34,25 @@ public class ManageController {
 
     //------------- 회사 관리 (/manage/comp) -------------
     @GetMapping("/comp")
-    public CompanyDto getCompInfo(@PathVariable("comp_pk_num") int compNum){
+    public CompanyDto getCompInfo(@PathVariable("comp_pk_num") int compNum) {
         return manageCompService.getCompanyInfo(compNum);
     }
+
     @PutMapping("/comp")
-    public void updateCompInfo(@PathVariable("comp_pk_num") String compNum, @RequestBody CompanyForm form){
+    public void updateCompInfo(@PathVariable("comp_pk_num") String compNum, @RequestBody CompanyForm form) {
         manageCompService.updateCompanyInfo(form, Integer.parseInt(compNum));
     }
 
     //----------사원관리 (/manage/user)----------
     //유저 전체 정보 얻기
     @GetMapping("/user")
-    public List<UserDto> getUserAll(@PathVariable(name="comp_pk_num") int comp_pk_num){
+    public List<UserDto> getUserAll(@PathVariable(name = "comp_pk_num") int comp_pk_num) {
         return manageUserService.getUserAll(comp_pk_num);
     }
 
     //한명의 유저 정보 얻기
     @GetMapping("/user/{userno}")
-    public UserDto getUserOne(@PathVariable(name="comp_pk_num") int comp_pk_num, @PathVariable(name="userno") int userno){
+    public UserDto getUserOne(@PathVariable(name = "comp_pk_num") int comp_pk_num, @PathVariable(name = "userno") int userno) {
 //        System.out.println("userno : " +userno);
 //        System.out.println("comp_pk_num" + comp_pk_num);
         return manageUserService.getUserOne(userno, comp_pk_num);
@@ -59,19 +60,19 @@ public class ManageController {
 
     //유저 삭제
     @DeleteMapping("/user/{userno}")
-    public boolean deleteUser(@PathVariable(name="comp_pk_num") int comp_pk_num,@PathVariable(name="userno") int userno){
+    public boolean deleteUser(@PathVariable(name = "comp_pk_num") int comp_pk_num, @PathVariable(name = "userno") int userno) {
         return manageUserService.deleteUser(comp_pk_num, userno);
     }
 
     //잠긴 계정 정보 얻기
     @GetMapping("/user/locked")
-    public List<UserDto> getLockedAll(@PathVariable(name="comp_pk_num") int comp_pk_num){
+    public List<UserDto> getLockedAll(@PathVariable(name = "comp_pk_num") int comp_pk_num) {
         return manageUserService.getLockedUserAll(comp_pk_num);
     }
 
     //잠긴 계정 정보 수정
     @PutMapping("/user/locked")
-    public boolean getLockedAll(@PathVariable(name="comp_pk_num") int comp_pk_num, @RequestBody Integer[] checkedNumber){
+    public boolean getLockedAll(@PathVariable(name = "comp_pk_num") int comp_pk_num, @RequestBody Integer[] checkedNumber) {
         manageUserService.unlockUser(comp_pk_num, checkedNumber);
         return true;
     }
@@ -84,19 +85,19 @@ public class ManageController {
      */
     //사원 등록
     @PostMapping("/user")
-    public int insertUser(@ModelAttribute UserForm form){
+    public int insertUser(@ModelAttribute UserForm form) {
         MultipartFile file = form.getUser_picfile();
         long MaxFileSize = 5 * 1024 * 1024;
         //검증 로직
-        if(file.getContentType().contains("image") == false){
+        if (file.getContentType().contains("image") == false) {
             return 2;
         }
         file.getOriginalFilename();
-        if(file.getSize() > MaxFileSize){
+        if (file.getSize() > MaxFileSize) {
             return 3;
         }
         try {
-            if(manageUserService.insertUser(form)) {
+            if (manageUserService.insertUser(form)) {
                 return 1;
             }
         } catch (Exception e) {
@@ -107,10 +108,12 @@ public class ManageController {
 
     //사원 정보 수정
     @PutMapping("/user/{userno}")
-    public boolean updateUser(@PathVariable("userno") int userno, @ModelAttribute UserForm form){ return manageUserService.updateUser(form); }
+    public boolean updateUser(@PathVariable("userno") int userno, @ModelAttribute UserForm form) {
+        return manageUserService.updateUser(form);
+    }
 
     @PutMapping("/user/reset/{userno}")
-    public boolean resetPassword(@PathVariable("comp_pk_num") int compNum, @PathVariable("userno") int userno){
+    public boolean resetPassword(@PathVariable("comp_pk_num") int compNum, @PathVariable("userno") int userno) {
         return manageUserService.resetPassword(compNum, userno);
     }
 
@@ -172,26 +175,26 @@ public class ManageController {
 
     //프로젝트 상세 조회
     @GetMapping("/proj/{proj_pk_num}")
-    public ProjectDto getProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum){
+    public ProjectDto getProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum) {
         return manageProjService.getProjectView(compNum, projNum);
     }
 
     //프로젝트 등록
     @PostMapping("/proj")
-    public int insertProj(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectForm form){
+    public int insertProj(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectForm form) {
         System.out.println("insertProj");
         return manageProjService.insertProject(compNum, form);
     }
 
     //프로젝트 삭제
     @DeleteMapping("/proj/{proj_pk_num}")
-    public boolean deleteProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum){
+    public boolean deleteProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum) {
         return manageProjService.deleteProject(compNum, projNum);
     }
 
     //프로젝트 수정
     @PutMapping("/proj/{proj_pk_num}")
-    public boolean updateProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum, @RequestBody ProjectForm form){
+    public boolean updateProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum, @RequestBody ProjectForm form) {
         return manageProjService.updateProject(compNum, projNum, form);
     }
 
@@ -199,27 +202,28 @@ public class ManageController {
     //------ 프로젝트 멤버 관리 (/manage/projmem) ------
 
     @GetMapping("/projmem/{proj_pk_num}")
-    public List<ProjectmemberDto> getProjMem(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum){
+    public List<ProjectmemberDto> getProjMem(@PathVariable("comp_pk_num") int compNum, @PathVariable("proj_pk_num") int projNum) {
         return manageProjService.getProjectMembers(compNum, projNum);
     }
 
     @PostMapping("/projmem")
-    public boolean insertProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm){
+    public boolean insertProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm) {
         return manageProjService.insertProjectMembers(compNum, projMemForm);
     }
 
     @PutMapping("/projmem")
-    public boolean updateProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm){
+    public boolean updateProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm) {
         return manageProjService.updateProjectMembers(compNum, projMemForm);
     }
+
     @DeleteMapping("/projmem")
-    public boolean deleteProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm){
+    public boolean deleteProjMem(@PathVariable("comp_pk_num") int compNum, @RequestBody ProjectmemberForm projMemForm) {
         return manageProjService.deleteProjectMembers(compNum, projMemForm);
     }
 
     //----- 채팅용 프로젝트 관리 ----
     @GetMapping("/chatproj/{user_pk_num}")
-    public List<ProjectDto> getChatProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("user_pk_num") int userNum){
+    public List<ProjectDto> getChatProj(@PathVariable("comp_pk_num") int compNum, @PathVariable("user_pk_num") int userNum) {
         return manageProjService.getProjectListWithUser(compNum, userNum);
     }
 }

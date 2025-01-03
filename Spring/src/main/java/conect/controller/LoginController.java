@@ -25,7 +25,7 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<LoginDto> login(@RequestBody LoginForm form) {
         LoginDto loginDto = loginService.checkLogin(form);
-
+        System.out.println(loginDto.getStatus());
         switch (loginDto.getStatus()) {
             case 1: // 로그인 성공
             System.out.println("-----------------login1  -----------------");

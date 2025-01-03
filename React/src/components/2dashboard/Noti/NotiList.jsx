@@ -232,19 +232,20 @@ const NotiList = (props) => {
           </table>
         </CardBody>
       </Card>
-
-      <Button
-        color="primary"
-        style={{
-          position: "relative",
-          top: "6vh",
-          right: "-70vw",
-          zIndex: 1000,
-        }}
-        onClick={() => navigate("/main/noti/notiadd")}
-      >
-        공지 등록
-      </Button>
+      {userInfo.user_author == 2 || userInfo.user_author == 3 ? (
+        <Button
+          color="primary"
+          style={{
+            position: "relative",
+            top: "6vh",
+            right: "-70vw",
+            zIndex: 1000,
+          }}
+          onClick={() => navigate("/main/noti/notiadd")}
+        >
+          공지 등록
+        </Button>
+      ) : null}
 
       {/* 페이지네이션 */}
       <div
