@@ -92,7 +92,7 @@ const TaskDetail = () => {
         <Col>
           <Card style={{ height: "auto", overflowY: "auto" }}>
             <CardHeader>
-              <h2>태스크 상세보기</h2>
+              <h2>업무 상세보기</h2>
               <button className="btn btn-primary m-1" onClick={openModal}>
                 수정이력
               </button>
@@ -139,32 +139,34 @@ const TaskDetail = () => {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colSpan="4" style={{ textAlign: "right" }}>
-                      <button
-                        className="btn btn-primary m-1"
-                        onClick={() =>
-                          navigate(
-                            `/main/task/edit/${task.taskFkProjNum}/${taskPkNum}`
-                          )
-                        }
-                      >
-                        수정
-                      </button>
-                      <button
-                        className="btn btn-danger m-1"
-                        onClick={handleDeleteClick}
-                      >
-                        삭제
-                      </button>
-                      <button
-                        className="btn btn-secondary m-1"
-                        onClick={() =>
-                          navigate(`/main/task/${task.taskFkProjNum}`)
-                        }
-                      >
-                        목록
-                      </button>
-                    </td>
+                    {userInfo.user_author == 2 || userInfo.user_author == 3 ? (
+                      <td colSpan="4" style={{ textAlign: "right" }}>
+                        <button
+                          className="btn btn-primary m-1"
+                          onClick={() =>
+                            navigate(
+                              `/main/task/edit/${task.taskFkProjNum}/${taskPkNum}`
+                            )
+                          }
+                        >
+                          수정
+                        </button>
+                        <button
+                          className="btn btn-danger m-1"
+                          onClick={handleDeleteClick}
+                        >
+                          삭제
+                        </button>
+                        <button
+                          className="btn btn-secondary m-1"
+                          onClick={() =>
+                            navigate(`/main/task/${task.taskFkProjNum}`)
+                          }
+                        >
+                          목록
+                        </button>
+                      </td>
+                    ) : null}
                   </tr>
                 </tfoot>
               </Table>

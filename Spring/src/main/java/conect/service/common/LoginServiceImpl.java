@@ -61,25 +61,26 @@ public class LoginServiceImpl implements LoginService {
             if (companyRepository.findById(form.getComp_pk_num()).isPresent()) {
                 Optional<UserEntity> userOptional = userRepository.findByUserId(form.getUser_id());
                 if (userOptional.isPresent()) {
+//                    System.out.println("--------userOptional.isPresent--------");
                     UserEntity user = userOptional.get();
-                    if (user.getUserLocked() == null || !user.getUserLocked()) {
+                    if (!user.getUserLocked()) {
+//                        System.out.println("--------getUserLocked--------");
                         if (checkPassword(user, form.getUser_pw())) {
-                            System.out.println("------------------processSuccessfulLogin------------------");
+//                            System.out.println("--------processSuccessfulLogin--------");
                             loginDto = processSuccessfulLogin(user);
-                        } else {
-                            System.out.println("------------------processFailedLogin------------------");
+                        }
+                        else {
+//                            System.out.println("--------login failed--------");
                             loginDto = processFailedLogin(user);
                         }
-                    } else {
-                        System.out.println("------------------processLockedAccount------------------");
+                    }
+                    else {
                         loginDto = processLockedAccount(user);
                     }
                 } else {
-                    System.out.println("------------------processUserNotFound------------------");
                     loginDto = processUserNotFound();
                 }
-            } else {
-                System.out.println("------------------processCompanyNotFound------------------");
+            } else if (companyRepository.findById(form.getComp_pk_num()).isEmpty()) {
                 loginDto = processCompanyNotFound();
             }
         } catch (Exception e) {
@@ -138,11 +139,20 @@ public class LoginServiceImpl implements LoginService {
         user.setUserTrynum(user.getUserTrynum() + 1);
         if (user.getUserTrynum() >= 5) {
             user.setUserLocked(true);
+            user.setUserTrynum(0);
+            loginDto.setUser_locked(user.getUserLocked());
         }
         userRepository.save(user);
-        loginDto.setStatus(2);
+
+        if(user.getUserLocked()) {
+            loginDto.setStatus(3);
+            System.out.println("locked");
+        } else{
+            loginDto.setStatus(2);
+        }
+
         loginDto.setUser_trynum(user.getUserTrynum());
-        loginDto.setUser_locked(user.getUserLocked());
+
         return loginDto;
     }
 

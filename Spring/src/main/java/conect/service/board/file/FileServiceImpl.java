@@ -83,10 +83,10 @@ public class FileServiceImpl implements FileService {
             }
         }
         System.out.println(fileUrl);
-        
+
         return fileUrl;
     }
-    
+
     // WikiEntity 저장 (트랜잭션 처리)
     @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
     public FileEntity insertPost(MultipartFile file, FileForm fileForm) throws IOException {
@@ -100,7 +100,7 @@ public class FileServiceImpl implements FileService {
             fileEntity.setFilePath(fileUrl);
             fileEntity.setFileType(file.getContentType());
             fileEntity.setFileSize((int) file.getSize());
-            
+
             // WikiEntity와 연결
             WikiEntity wikiEntity = fileForm.getWikiEntity();
             if (wikiEntity != null) {
@@ -109,7 +109,7 @@ public class FileServiceImpl implements FileService {
 
             // 4. FileEntity 저장
             fileRepository.save(fileEntity);
-            return fileEntity; 
+            return fileEntity;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,22 +126,22 @@ public class FileServiceImpl implements FileService {
                 .collect(Collectors.toList());
     }
 
- // 부분 조회 (조회수 증가 포함)
+    // 부분 조회 (조회수 증가 포함)
     @Override
     public FileDto getPostView(Integer filePkNum, HttpServletRequest request, HttpServletResponse response) {
-    	 // 세션에서 조회 기록 확인
+        // 세션에서 조회 기록 확인
         HttpSession session = request.getSession();
         String sessionKey = "viewedPost_" + filePkNum;
         Boolean hasViewedInSession = (Boolean) session.getAttribute(sessionKey);
-    	
-    	// 쿠키 확인
+
+        // 쿠키 확인
         Cookie[] cookies = request.getCookies();
         boolean hasViewedInCookie = false; // 게시물 확인 여부
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("viewedPost_" + filePkNum)) {
-                	hasViewedInCookie  = true;
+                    hasViewedInCookie  = true;
                     break;
                 }
             }
@@ -151,12 +151,12 @@ public class FileServiceImpl implements FileService {
         // 조회수 확인되었을 때 실행되는 로직
         if ((hasViewedInSession == null || !hasViewedInSession) && !hasViewedInCookie) {
             incrementViewCount(filePkNum);
-            
+
             // 세션에 조회 기록 저장
             session.setAttribute(sessionKey, true);
 
             // 새로운 쿠키 생성
-            Cookie newCookie = new Cookie("viewedPost_" + filePkNum, "true"); 
+            Cookie newCookie = new Cookie("viewedPost_" + filePkNum, "true");
             // 쿠키 이름 : 확인된게시물_게시물PkNum => 특정 파일을 사용자가 조회했는지 쿠키로 저장합니다. 
             // 해당 게시물을 1일 이내 다시 조회하면 저장된 쿠키를 확인하고 조회수 증가 X
             newCookie.setMaxAge(86400); // 쿠키 유효 기간 : 1일
@@ -164,7 +164,7 @@ public class FileServiceImpl implements FileService {
             newCookie.setPath("/"); // 모든 경로에서 쿠키 유효
             response.addCookie(newCookie);
         }
-        
+
         // 부분 조회 로직
         FileEntity fileEntity = fileRepository.findById(filePkNum)
                 .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다."));
@@ -173,7 +173,7 @@ public class FileServiceImpl implements FileService {
 
         return fileDto;
     }
-    
+
     // 조회수 증가 로직
     @Transactional
     public void incrementViewCount(Integer filePkNum) {
@@ -181,7 +181,7 @@ public class FileServiceImpl implements FileService {
                 .orElseThrow(() -> new RuntimeException("파일이 존재하지 않습니다."));
 
         WikiEntity wikiEntity = fileEntity.getWikiEntity(); // FileEntity에서 WikiEntity 정보 가져옴
-        
+
         if (wikiEntity != null) { // wikiEntity가 비어있지 않을 때 조회수 증가
             wikiEntity.setWikiView(wikiEntity.getWikiView() + 1);
             wikiRepository.save(wikiEntity);
@@ -263,16 +263,16 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    
+
     // 페이징, 검색, 공지 여부 정렬 추가
     public Page<FileDto> getList(Integer compNum, Integer projNum, int page, int pageSize, String sortField, String sortDirection,String searchType, String searchText) {
-    	// 공지사항 여부를 우선 정렬하고, 사용자 지정 정렬 조건 추가
+        // 공지사항 여부를 우선 정렬하고, 사용자 지정 정렬 조건 추가
         Sort sort = Sort.by(Sort.Order.desc("wikiEntity.wikiIsnotice")) // 공지사항을 상단에 정렬
-                        .and(Sort.by(Sort.Direction.fromString(sortDirection), sortField)); // 사용자 지정 정렬
+                .and(Sort.by(Sort.Direction.fromString(sortDirection), sortField)); // 사용자 지정 정렬
 
 
-    	// 디버깅 로그로 확인
-    	System.out.println("생성된 정렬 조건: " + sort);
+        // 디버깅 로그로 확인
+        System.out.println("생성된 정렬 조건: " + sort);
 
         Pageable pageable = PageRequest.of(page, pageSize, sort);
 

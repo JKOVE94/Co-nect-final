@@ -19,7 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../../../api/axiosInstance";
 import { useSelector } from "react-redux";
 
-const FileList = () => {
+const FileList = (props) => {
   const userInfoFromRoot = JSON.parse(
     sessionStorage.getItem("persist:root")
   ).userData;
@@ -55,7 +55,7 @@ const FileList = () => {
       return;
     }
     axiosInstance
-      .get(`/conect/${compNum}/file/${projNum}`, {
+      .get(`/conect/${compNum}/file/${props.projPkNum}`, {
         params: {
           page,
           pageBlock: block,
@@ -178,6 +178,10 @@ const FileList = () => {
       fetchFiles(0, 0, sortField, sortDirection, searchType, searchText);
     }
   };
+
+  useEffect(() => {
+    console.log("props.projPkNum : ", props.projPkNum);
+  }, [props.projPkNum]);
 
   return (
     <Container fluid style={{ marginTop: "1em" }}>

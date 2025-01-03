@@ -168,4 +168,4 @@ def get_answer(user_question, db_data):
     print("생성된 context:\n", context)  # context 내용 확인 (디버깅용)
 
     answer = generate_answer_with_gemini(context, user_question)
-    return answer
+    return answer;

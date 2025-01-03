@@ -264,31 +264,34 @@ const TaskList = (props) => {
                             {`진행률: ${task.taskProgress || 0}%`}
                           </div>
                         </td>
-                        <td>
-                          <UncontrolledDropdown>
-                            <DropdownToggle
-                              color="link"
-                              size="sm"
-                              className="p-0"
-                            >
-                              <i className="fas fa-ellipsis-v"></i>
-                            </DropdownToggle>
-                            <DropdownMenu right>
-                              <DropdownItem
-                                onClick={() => handleEditTask(task.taskPkNum)}
+                        {userInfo.user_author == 2 ||
+                        userInfo.user_author == 3 ? (
+                          <td>
+                            <UncontrolledDropdown>
+                              <DropdownToggle
+                                color="link"
+                                size="sm"
+                                className="p-0"
                               >
-                                수정
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={() =>
-                                  handleDeleteClick(task.taskPkNum)
-                                }
-                              >
-                                삭제
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledDropdown>
-                        </td>
+                                <i className="fas fa-ellipsis-v"></i>
+                              </DropdownToggle>
+                              <DropdownMenu right>
+                                <DropdownItem
+                                  onClick={() => handleEditTask(task.taskPkNum)}
+                                >
+                                  수정
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={() =>
+                                    handleDeleteClick(task.taskPkNum)
+                                  }
+                                >
+                                  삭제
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledDropdown>
+                          </td>
+                        ) : null}
                       </tr>
                     ))
                   ) : (
@@ -299,12 +302,14 @@ const TaskList = (props) => {
                 </tbody>
               </table>
               <div className="d-flex justify-content-end">
-                <button
-                  className="btn btn-primary mr-3 mt-3"
-                  onClick={handleCreateTask}
-                >
-                  글쓰기
-                </button>
+                {userInfo.user_author == 2 || userInfo.user_author == 3 ? (
+                  <button
+                    className="btn btn-primary mr-3 mt-3"
+                    onClick={handleCreateTask}
+                  >
+                    업무 생성
+                  </button>
+                ) : null}
               </div>
               <div
                 style={{

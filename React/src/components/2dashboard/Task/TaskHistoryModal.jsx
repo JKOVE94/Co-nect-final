@@ -36,8 +36,7 @@ const TaskHistoryModal = ({ isOpen, onRequestClose, taskPkNum }) => {
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleString("ko-KR");
+    return dateString.split("T")[0];
   };
 
   const checkType = (data) => {

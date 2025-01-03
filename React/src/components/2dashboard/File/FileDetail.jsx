@@ -49,6 +49,7 @@ const FileDetail = () => {
     };
 
     fetchPost();
+    console.log(post);
   }, [filePkNumInt]);
 
   const toggleDeleteModal = () => {
@@ -62,7 +63,9 @@ const FileDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`/conect/${compNum}/file/${projNum}/${filePkNumInt}`);
+      await axiosInstance.delete(
+        `/conect/${compNum}/file/${projNum}/${filePkNumInt}`
+      );
       toggleDeleteModal();
       toast.success("파일이 성공적으로 삭제되었습니다.");
       setTimeout(() => navigate("/main/file"), 2000); // 삭제 후 목록으로 이동
@@ -305,15 +308,19 @@ const FileDetail = () => {
               gap: "1em",
             }}
           >
-            <Button
-              color="primary"
-              onClick={() => navigate(`/main/file/update/${filePkNumInt}`)}
-            >
-              수정
-            </Button>
-            <Button color="danger" onClick={toggleDeleteModal}>
-              삭제
-            </Button>
+            {userInfo.user_pk_num == post.wiki.wiki_fk_user_num ? (
+              <Button
+                color="primary"
+                onClick={() => navigate(`/main/file/update/${filePkNumInt}`)}
+              >
+                수정
+              </Button>
+            ) : null}
+            {userInfo.user_pk_num == post.wiki.wiki_fk_user_num ? (
+              <Button color="danger" onClick={toggleDeleteModal}>
+                삭제
+              </Button>
+            ) : null}
             <Button color="secondary" onClick={() => navigate("/main/file")}>
               목록
             </Button>

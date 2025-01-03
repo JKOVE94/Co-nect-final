@@ -38,13 +38,13 @@ public class FileController {
 
     @Autowired
     private FileService fileService;
-    
+
     @Autowired
     private WikiService wikiService;
-    
+
     @Autowired
     private FileRepository fileRepository;
-    
+
     @Autowired
     private WikiRepository wikiRepository;
 
@@ -102,7 +102,7 @@ public class FileController {
     // 특정 게시글 조회
     @GetMapping("/{filePkNum}")
     public ResponseEntity<FileDto> getPost(
-          @PathVariable("compNum") Integer compNum,
+            @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
             @PathVariable("filePkNum") Integer filePkNum,
             HttpServletRequest request,
@@ -120,7 +120,7 @@ public class FileController {
     @PostMapping
     @Transactional // 트랜잭션 처리
     public ResponseEntity<Object> createPostWithFile(
-          @PathVariable("compNum") Integer compNum,
+            @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
             @RequestParam("file") MultipartFile file,
             @RequestParam("wiki_title") String wikiTitle,
@@ -138,12 +138,12 @@ public class FileController {
             if (file.getSize() > maxFileSize) {
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("파일 크기가 10MB를 초과합니다.");
             }
- 
+
             // WikiEntity 생성
             int wikiPkNum = wikiService.addWikiEntity(wikiTitle, wikiContent, userNum, projNum, wikiNotice);
             WikiEntity wikiEntity = wikiRepository.findById(wikiPkNum)
                     .orElseThrow(() -> new RuntimeException("WikiEntity를 찾을 수 없습니다."));
-            
+
             // FileForm 객체 생성 및 파일 저장 로직
             FileForm fileForm = new FileForm();
             fileForm.setFile(file);
@@ -166,12 +166,12 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
         }
     }
-    
+
     // 게시글 수정
     @PutMapping("/{filePkNum}")
     @Transactional
     public ResponseEntity<Object> updatePost(
-          @PathVariable("compNum") Integer compNum,
+            @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
             @PathVariable("filePkNum") int filePkNum,
             @RequestParam(value = "file", required = false) MultipartFile file, // 파일은 선택적
@@ -198,9 +198,9 @@ public class FileController {
     // 게시글 삭제
     @DeleteMapping("/{filePkNum}")
     public ResponseEntity<Void> deleteFile(
-          @PathVariable("compNum") Integer compNum,
+            @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
-          @PathVariable("filePkNum") int filePkNum) {
+            @PathVariable("filePkNum") int filePkNum) {
         System.out.println("삭제 요청 도달, 파일 PK: " + filePkNum);
 
         // 데이터 존재 여부 확인
@@ -221,12 +221,12 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     @GetMapping("/download/{filePkNum}")
     public ResponseEntity<Resource> downloadFile(
-          @PathVariable("compNum") Integer compNum,
+            @PathVariable("compNum") Integer compNum,
             @PathVariable("projNum") Integer projNum,
-          @PathVariable("filePkNum") int filePkNum) {
+            @PathVariable("filePkNum") int filePkNum) {
         try {
             // 파일 엔티티 조회
             FileEntity fileEntity = fileRepository.findById(filePkNum)
@@ -275,4 +275,3 @@ public class FileController {
     }
 
 }
-
