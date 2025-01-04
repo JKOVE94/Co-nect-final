@@ -127,7 +127,6 @@ public class FileController {
             @RequestParam("wiki_content") String wikiContent,
             @RequestParam("wiki_fk_user_num") Integer userNum,
             @RequestParam("wiki_isnotice") boolean wikiNotice
-            //projNum int, wikiNotice boolean 추가해야됨 
     ) {
         try {
             // 파일 검증 로직
@@ -137,6 +136,22 @@ public class FileController {
             }
             if (file.getSize() > maxFileSize) {
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("파일 크기가 10MB를 초과합니다.");
+            }
+            
+            // 파일 유형 지정
+            // 허용된 파일 확장자 목록
+            String[] allowedExtensions = {"png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf"};
+            String originalFileName = file.getOriginalFilename();
+            if (originalFileName == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 이름을 확인할 수 없습니다.");
+            }
+
+            // 파일 확장자 추출
+            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf('.') + 1).toLowerCase();
+            boolean isAllowedExtension = java.util.Arrays.stream(allowedExtensions).anyMatch(fileExtension::equals);
+
+            if (!isAllowedExtension) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("허용되지 않는 파일 형식입니다. 허용된 파일 형식: " + String.join(", ", allowedExtensions));
             }
 
             // WikiEntity 생성
@@ -267,6 +282,7 @@ public class FileController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(resource);
+            
         } catch (Exception e) {
             System.err.println("파일 다운로드 중 오류 발생: " + e.getMessage());
             e.printStackTrace();

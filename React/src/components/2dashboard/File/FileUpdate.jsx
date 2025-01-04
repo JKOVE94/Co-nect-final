@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardBody, CardHeader, Container } from "reactstrap";
 import { toast, ToastContainer } from "react-toastify";
@@ -8,13 +7,12 @@ import axiosInstance from "../../../api/axiosInstance";
 
 const FileUpdate = () => {
   const { filePkNum } = useParams();
-  const userInfoFromRoot = JSON.parse(
-    sessionStorage.getItem("persist:root")
-  ).userData;
+  const userInfoFromRoot = JSON.parse(sessionStorage.getItem("persist:root")).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
-  const compNum = userInfo.user_fk_comp_num; //회사번호
+  const compNum = userInfo.user_fk_comp_num; // 회사 번호
   const projNum = sessionStorage.getItem("persist:proj_pk_num");
   const navigate = useNavigate();
+
   const [file, setFile] = useState({
     wiki_title: "",
     wiki_content: "",
@@ -48,7 +46,31 @@ const FileUpdate = () => {
   };
 
   const handleFileChange = (e) => {
-    setNewFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
+    const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
+    const allowedExtensions = ["png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf"]; // 허용된 확장자
+    const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+
+    // 파일 확장자 검증
+    if (!allowedExtensions.includes(fileExtension)) {
+      toast.error(`허용되지 않는 파일 형식입니다. 허용된 형식: ${allowedExtensions.join(", ")}`, {
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    // 파일 크기 검증
+    if (selectedFile.size > maxFileSize) {
+      toast.error("파일 크기는 10MB를 초과할 수 없습니다.", {
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    // 유효한 파일이면 상태 업데이트
+    setNewFile(selectedFile);
   };
 
   const handleSubmit = async (e) => {
@@ -134,6 +156,9 @@ const FileUpdate = () => {
                 name="file"
                 onChange={handleFileChange}
               />
+               <small className="text-muted">
+                  허용된 파일 형식: png, jpg, jpeg, xlsx, xls, hwp, doc, docx, pdf (최대 10MB)
+                </small>
             </div>
             <div
               style={{
