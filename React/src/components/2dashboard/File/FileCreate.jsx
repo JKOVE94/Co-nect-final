@@ -161,7 +161,8 @@ const FileCreate = () => {
                 required
               />
               <small className="text-muted">
-                ✔️허용된 파일 형식: png, jpg, jpeg, xlsx, xls, hwp, doc, docx, pdf, zip (최대 10MB)
+                ✔️허용된 파일 형식: png, jpg, jpeg, xlsx, xls, hwp, doc, docx, pdf, zip (최대 10MB)<br/>
+                ✔️파일은 1개만 업로드 가능합니다.
               </small>
               {formData.file && (
                 <div style={{ marginTop: "1em" }}>
