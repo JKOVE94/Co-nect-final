@@ -15,6 +15,7 @@ import {
 } from "reactstrap";
 import { Checkbox } from "rsuite";
 import axiosInstance from "../../../api/axiosInstance";
+import { FileType } from "create/lib/metadata";
 
 const WikiUpdate = () => {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ const WikiUpdate = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 목록 이동 확인 모달 상태
+  const [originalFileName, setOriginalFileName] = useState("");
+
   const compPkNum = 1;
   const [formData, setFormData] = useState({
     wiki_title: "",
@@ -57,6 +60,8 @@ const WikiUpdate = () => {
           ...wikiData,
           wiki_regdate: regdate,
         });
+
+        setOriginalFileName(wikiData.file_name);
 
         // 파일 상태 초기화
         if (wikiData.file_name) {
@@ -110,7 +115,7 @@ const WikiUpdate = () => {
 
     setFormData((prev) => ({
       ...prev,
-      fileStatus: "DELETE",
+      // fileStatus: "DELETE",
     }));
 
     // 파일 input 초기화
@@ -129,6 +134,12 @@ const WikiUpdate = () => {
       document.getElementById("fileInput").click(); // 파일 선택 창 열기
     }
   };
+  useEffect(() => {
+    console.log("fileState.fileName");
+    console.log(!fileState.fileName);
+    console.log("fileState.originalFile");
+    console.log(fileState.originalFile);
+  }, [fileState]);
 
   // 폼 제출 핸들러
   const handleSubmit = async (e) => {
@@ -148,15 +159,17 @@ const WikiUpdate = () => {
       // console.log("새 파일 업로드:", fileState.newFile);
       data.append("fileInput", fileState.newFile);
       data.append("fileStatus", "REPLACE");
-    } else if (fileState.originalFile && fileState.fileName) {
+    } else if (originalFileName && fileState.fileName) {
       // 기존 파일 유지
       // console.log("기존 파일 유지:", fileState.originalFile);
       data.append("fileStatus", "KEEP");
       data.append("originalFileName", fileState.originalFile);
-    } else {
+    } else if (originalFileName && !fileState.fileName) {
       // 파일 삭제
       // console.log("파일 삭제");
       data.append("fileStatus", "DELETE");
+    } else {
+      data.append("fileStatus", "TEXT");
     }
 
     try {

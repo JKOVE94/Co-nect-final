@@ -146,6 +146,8 @@ public class WikiController {
 			@ModelAttribute WikiForm form) {
 		try {
 			// 문서 수정 서비스 호출
+			System.out.println("--------------------");
+			System.out.println(form.getFileStatus());
 			wikiServiceImpl.editWiki(wikiPkNum, form);
 
 			// 성공 응답

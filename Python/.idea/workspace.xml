@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Node/chat/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Node/chat/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/gemini_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/gemini_service.py" afterDir="false" />
-    </list>
+    <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +98,7 @@
       <workItem from="1734773066002" duration="4643000" />
       <workItem from="1734831621818" duration="47449000" />
       <workItem from="1735284123228" duration="19628000" />
-      <workItem from="1735908515924" duration="719000" />
+      <workItem from="1735908515924" duration="1317000" />
     </task>
     <servers />
   </component>

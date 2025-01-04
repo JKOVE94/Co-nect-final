@@ -21,7 +21,7 @@ public class FileEntity {
     private int fileSize; // 파일 크기 [INT]
     private String fileType; // 파일 타입 [VARCHAR]
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL) // wiki 테이블에서도 삭제
+    @OneToOne // wiki 테이블에서도 삭제
     @JoinColumn(name = "file_fk_wiki_num", referencedColumnName = "wikiPkNum")
     @JsonBackReference
     private WikiEntity wikiEntity;
