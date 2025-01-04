@@ -50,21 +50,20 @@ public class FileController {
 
     // 모든 게시글 조회
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllPosts(
-            @PathVariable("compNum") Integer compNum,
-            @PathVariable("projNum") Integer projNum,
-            @RequestParam(name = "page", defaultValue = "0") int page, // 현재 페이지 번호
-            @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock, // 현재 블록 번호
-            @RequestParam(name = "sortField", defaultValue = "wikiEntity.wikiRegdate") String sortField, // 정렬 필드
-            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection, // 정렬 방향
-            @RequestParam(name = "searchType", defaultValue = "") String searchType, // 검색분류
-            @RequestParam(name = "searchText", defaultValue = "") String searchText // 검색어
+    public ResponseEntity<Map<String, Object>> getFilesByProjectNumber(
+        @PathVariable("compNum") Integer compNum,
+        @PathVariable("projNum") Integer projNum,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "pageBlock", defaultValue = "0") int pageBlock,
+        @RequestParam(name = "sortField", defaultValue = "wikiEntity.wikiRegdate") String sortField,
+        @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection,
+        @RequestParam(name = "searchType", defaultValue = "") String searchType,
+        @RequestParam(name = "searchText", defaultValue = "") String searchText
     ) {
         try {
-            int pageSize = 10; // 한 페이지당 항목 수
-            int blockSize = 5; // 한 블록당 페이지 버튼 수
+            int pageSize = 10;
+            int blockSize = 5;
 
-            // 정렬 및 검색 조건에 따라 서비스 호출
             Page<FileDto> postPage = fileService.getList(compNum, projNum, page, pageSize, sortField, sortDirection, searchType, searchText);
 
             int totalPages = postPage.getTotalPages();
@@ -92,11 +91,12 @@ public class FileController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                    "message", "서버 오류 발생",
-                    "details", e.getMessage()
+                "message", "서버 오류 발생",
+                "details", e.getMessage()
             ));
         }
     }
+
 
 
     // 특정 게시글 조회
@@ -127,7 +127,6 @@ public class FileController {
             @RequestParam("wiki_content") String wikiContent,
             @RequestParam("wiki_fk_user_num") Integer userNum,
             @RequestParam("wiki_isnotice") boolean wikiNotice
-            //projNum int, wikiNotice boolean 추가해야됨 
     ) {
         try {
             // 파일 검증 로직
@@ -137,6 +136,22 @@ public class FileController {
             }
             if (file.getSize() > maxFileSize) {
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body("파일 크기가 10MB를 초과합니다.");
+            }
+            
+            // 파일 유형 지정
+            // 허용된 파일 확장자 목록
+            String[] allowedExtensions = {"png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf", "zip"};
+            String originalFileName = file.getOriginalFilename();
+            if (originalFileName == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 이름을 확인할 수 없습니다.");
+            }
+
+            // 파일 확장자 추출
+            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf('.') + 1).toLowerCase();
+            boolean isAllowedExtension = java.util.Arrays.stream(allowedExtensions).anyMatch(fileExtension::equals);
+
+            if (!isAllowedExtension) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("허용되지 않는 파일 형식입니다. 허용된 파일 형식: " + String.join(", ", allowedExtensions));
             }
 
             // WikiEntity 생성
@@ -267,6 +282,7 @@ public class FileController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"")
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(resource);
+            
         } catch (Exception e) {
             System.err.println("파일 다운로드 중 오류 발생: " + e.getMessage());
             e.printStackTrace();

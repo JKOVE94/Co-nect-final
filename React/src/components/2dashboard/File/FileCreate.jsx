@@ -43,15 +43,25 @@ const FileCreate = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
+  
     const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
+    const allowedExtensions = ["png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf", "zip"]; // 허용된 확장자
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+  
+    if (!allowedExtensions.includes(fileExtension)) {
+      toast.error(`허용되지 않는 파일 형식입니다. 허용된 형식: ${allowedExtensions.join(", ")}`, {
+        autoClose: 3000,
+      });
+      return;
+    }
+  
     if (file.size > maxFileSize) {
       toast.error("파일 크기는 10MB를 초과할 수 없습니다.", {
         autoClose: 3000,
       });
       return;
     }
-
+  
     setFormData((prevFormData) => ({
       ...prevFormData,
       file,
@@ -60,6 +70,7 @@ const FileCreate = () => {
       file_type: file.type,
     }));
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -149,6 +160,10 @@ const FileCreate = () => {
                 onChange={handleFileChange}
                 required
               />
+              <small className="text-muted">
+                ✔️허용된 파일 형식: png, jpg, jpeg, xlsx, xls, hwp, doc, docx, pdf, zip (최대 10MB)<br/>
+                ✔️파일은 1개만 업로드 가능합니다.
+              </small>
               {formData.file && (
                 <div style={{ marginTop: "1em" }}>
                   <strong>선택한 파일:</strong> {formData.file_name}

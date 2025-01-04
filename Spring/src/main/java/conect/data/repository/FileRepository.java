@@ -19,13 +19,18 @@ public interface FileRepository extends JpaRepository<FileEntity, Integer> {
 	Page<FileEntity> findAll(Pageable pageable);
 
 	// 검색 - file name
-	Page<FileEntity> findByFileNameContains(String searchText, Pageable pageable);
+	Page<FileEntity> findByFileNameContains(String searchText, int projNum, Pageable pageable);
 
 	// 검색 - 작성자명 (WikiEntity와 연관된 userEntity 사용)
-	Page<FileEntity> findByWikiEntity_UserEntity_UserNameContains(String searchText, Pageable pageable);
+	Page<FileEntity> findByWikiEntity_UserEntity_UserNameContains(String searchText, int projNum, Pageable pageable);
 
 	Optional<FileEntity> findByWikiEntity(WikiEntity wikiEntity);
 
 	Optional<FileEntity> findByWikiEntityWikiPkNum(int wikiPkNum);
+	
+	// 특정 프로젝트 번호에 속하는 모든 파일
+	Page<FileEntity> findByWikiEntity_ProjectEntity_ProjPkNum(int projNum, Pageable pageable);
+
+
 
 }

@@ -281,13 +281,13 @@ public class FileServiceImpl implements FileService {
 
         if ("file_name".equalsIgnoreCase(searchType)) {
             // 파일명 검색
-            filePage = fileRepository.findByFileNameContains(searchText, pageable);
+            filePage = fileRepository.findByFileNameContains(searchText, projNum, pageable);
         } else if ("user_name".equalsIgnoreCase(searchType)) {
             // 작성자명 검색
-            filePage = fileRepository.findByWikiEntity_UserEntity_UserNameContains(searchText, pageable);
+            filePage = fileRepository.findByWikiEntity_UserEntity_UserNameContains(searchText, projNum, pageable);
         } else {
             // 전체 조회
-            filePage = fileRepository.findAll(pageable);
+            filePage = fileRepository.findByWikiEntity_ProjectEntity_ProjPkNum(projNum, pageable);
         }
 
         // FileEntity -> FileDto 변환
