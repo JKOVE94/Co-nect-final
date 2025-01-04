@@ -22,16 +22,16 @@ import axiosInstance from "../../../api/axiosInstance";
 
 const WikiCreate = (props) => {
   const navigate = useNavigate();
-  
+
   const { wikiPkNum } = useParams(); // URL에서 wikiPkNum 가져오기
-  
+
   const [fileName, setFileName] = useState(""); // 파일 이름 상태
   const [showModal, setShowModal] = useState(false); // 모달 상태 추가
   const [modalMessage, setModalMessage] = useState(""); // 모달 메시지 상태 추가
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 목록 이동 확인 모달 상태
   const userInfoFromRoot = JSON.parse(
-      sessionStorage.getItem("persist:root")
-    ).userData;
+    sessionStorage.getItem("persist:root")
+  ).userData;
   const userInfo = JSON.parse(userInfoFromRoot);
   const writer = userInfo.user_pk_num;
   const compPkNum = userInfo.user_fk_comp_num; //회사번호

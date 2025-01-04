@@ -240,11 +240,11 @@ public class WikiServiceImpl implements WikiService {
 			fileEntity.setFileName(form.getFileInput().getOriginalFilename()); // 원본 파일명
 			fileEntity.setFilePath(fileUrl); // 저장된 경로
 			fileEntity.setFileSize((int) form.getFileInput().getSize());
-            
-            String fileType = form.getFileInput().getContentType();
-            if (fileType != null && fileType.length() > 50) {
-                fileType = fileType.substring(0, 50);
-            }
+
+			String fileType = form.getFileInput().getContentType();
+			if (fileType != null && fileType.length() > 50) {
+				fileType = fileType.substring(0, 50);
+			}
 			fileEntity.setFileType(form.getFileInput().getContentType()); // 파일 타입
 
 			// WikiEntity와 연결
