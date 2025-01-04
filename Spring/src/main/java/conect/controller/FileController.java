@@ -140,7 +140,7 @@ public class FileController {
             
             // 파일 유형 지정
             // 허용된 파일 확장자 목록
-            String[] allowedExtensions = {"png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf"};
+            String[] allowedExtensions = {"png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf", "zip"};
             String originalFileName = file.getOriginalFilename();
             if (originalFileName == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 이름을 확인할 수 없습니다.");

@@ -45,7 +45,7 @@ const FileCreate = () => {
     if (!file) return;
   
     const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
-    const allowedExtensions = ["png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf"]; // 허용된 확장자
+    const allowedExtensions = ["png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf", "zip"]; // 허용된 확장자
     const fileExtension = file.name.split(".").pop().toLowerCase();
   
     if (!allowedExtensions.includes(fileExtension)) {
@@ -161,7 +161,7 @@ const FileCreate = () => {
                 required
               />
               <small className="text-muted">
-                허용된 파일 형식: png, jpg, jpeg, xlsx, xls, hwp, doc, docx, pdf (최대 10MB)
+                ✔️허용된 파일 형식: png, jpg, jpeg, xlsx, xls, hwp, doc, docx, pdf, zip (최대 10MB)
               </small>
               {formData.file && (
                 <div style={{ marginTop: "1em" }}>
