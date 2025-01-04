@@ -22,14 +22,11 @@ export default function Projtable() {
   //const compNum = 1; //테스트용 임시 값 지워주기
 
   //const compNum = useSelector((state) =>state.compNum);
-  console.log(compNum);
-
-  console.log(compNum);
   const showList = () => {
     axios
       .get(`/proj/${compNum}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         //최신 날짜 기준으로 프로젝트 5개만 자르기
         const sortData = res.data
           .sort(
@@ -39,7 +36,7 @@ export default function Projtable() {
         setProjs(sortData);
       })
       .catch((error) => {
-        console.log("showList 오류:" + error);
+        console.error("showList 오류:" + error);
       });
   };
 

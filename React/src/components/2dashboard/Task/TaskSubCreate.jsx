@@ -66,10 +66,6 @@ const TaskSubCreate = ({
   });
 
   useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
-  useEffect(() => {
     const startDate = new Date(formData.taskStartdate);
     const endDate = new Date(formData.taskDeadline);
 

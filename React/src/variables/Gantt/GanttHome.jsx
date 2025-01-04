@@ -43,9 +43,9 @@ const GanttHome = (props) => {
     const projResponse = await axiosInstance.get(
       `/conect/${compNum}/proj/projdetail/${props.projPkNum}`
     );
-    console.log("-----------------");
+    // console.log("-----------------");
     setProjdatas(projResponse.data);
-    console.log(projResponse.data);
+    // console.log(projResponse.data);
   };
 
   const checkStatus = () => {

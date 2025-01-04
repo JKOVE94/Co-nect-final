@@ -16,59 +16,50 @@ class Ganttchart extends Component {
 
     convertToGanttData = (taskdatas) => {
     const tasks = [];
-    const taskIds = new Set();
-    const taskMap = new Map(); // taskPkNum을 키로 하는 맵 추가
+    const taskMap = new Map(taskdatas.map(task => [Number(task.taskPkNum), task]));
 
-    // 모든 작업을 맵에 저장
-    taskdatas.forEach(task => taskMap.set(task.taskPkNum, task));
+    for (const task of taskdatas) {
+        let parentId = null;
+        let current = task;
+        const visited = new Set();
 
-    const addTasks = (taskList, parentId = null) => { // parentId 기본값을 null로 변경
-        if (!Array.isArray(taskList)) return;
-
-        taskList.forEach(task => {
-            if (taskIds.has(task.taskPkNum)) {
-                console.error(`Cyclic reference detected on task ${task.taskPkNum}`);
-                return;
+        while (current && current.taskGroup) {
+            const currentTaskGroup = Number(current.taskGroup);
+            if (visited.has(currentTaskGroup)) {
+                console.error(`Cyclic reference detected for task ${task.taskPkNum}. Path:`, Array.from(visited).join(" -> ") + " -> " + currentTaskGroup);
+                parentId = null;
+                break;
             }
-            taskIds.add(task.taskPkNum);
-
-            let actualParentId = parentId; // 실제 부모 ID를 저장할 변수
-
-            if (task.taskDepth > 0) {
-                // taskDepth가 0보다 크면 부모 작업 찾기
-                const parentTask = Array.from(taskMap.values()).find(t => t.taskPkNum === task.taskGroup);
-                if (parentTask) {
-                    actualParentId = parentTask.taskPkNum; // 부모 작업의 taskPkNum을 parentId로 설정
-                } else {
-                    console.error(`Parent task not found for task ${task.taskPkNum}. taskGroup: ${task.taskGroup}`);
-                }
+            visited.add(currentTaskGroup);
+            current = taskMap.get(currentTaskGroup);
+            if (!current && task.taskGroup) {
+                console.warn(`Parent task ${task.taskGroup} not found for task ${task.taskPkNum}`);
+                break;
             }
-            tasks.push({
-                id: task.taskPkNum,
-                text: task.taskTitle,
-                start_date: task.taskStartdate,
-                deadline: task.taskDeadline,
-                duration: task.taskDuration,
-                progress: task.taskProgress / 100,
-                member: task.userName,
-                color: task.taskTagcol,
-                parent: actualParentId // 계산된 actualParentId 사용
-            });
+        }
 
-            // taskDepth가 0보다 큰 작업이 있다면, 해당 task의 taskPkNum으로 재귀 호출한다.
-            if (task.taskDepth > 0) {
-              const childTasks = taskdatas.filter(t => t.taskGroup === task.taskPkNum);
-              if (childTasks.length > 0) {
-                addTasks(childTasks, task.taskPkNum);
-              }
-            }
+        if (!parentId && task.taskGroup) {
+            parentId = Number(task.taskGroup);
+        } else if (!task.taskGroup) {
+            parentId = 0;
+        }
+
+        tasks.push({
+            id: Number(task.taskPkNum),
+            text: task.taskTitle,
+            start_date: task.taskStartdate,
+            deadline: task.taskDeadline,
+            duration: task.taskDuration,
+            progress: task.taskProgress / 100,
+            member: task.userName,
+            color: task.taskTagcol,
+            parent: parentId // 최종 parentId 설정 (null 또는 유효한 taskGroup 값)
         });
     };
 
-    addTasks(taskdatas);
-    console.log("Processed tasks:", tasks);
     return { data: tasks, links: [] };
 };
+
 
     
     componentDidMount() {
@@ -106,7 +97,7 @@ class Ganttchart extends Component {
         const { currentZoom } = this.state;
         const { taskdatas } = this.props;
         const ganttData = this.convertToGanttData(taskdatas);
-        console.log(ganttData);
+        // console.log(ganttData);
         return (
             <>
                 <Toolbar 

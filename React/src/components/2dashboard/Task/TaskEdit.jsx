@@ -83,7 +83,7 @@ const TaskEdit = () => {
         }
       }
     }
-    console.log(changeForm);
+    // console.log(changeForm);
     return changeForm;
   };
 
@@ -163,14 +163,6 @@ const TaskEdit = () => {
     }
   }, [taskId]);
 
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
-
-  useEffect(() => {
-    console.log(projectNum);
-  }, [projectNum]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -209,7 +201,7 @@ const TaskEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("taskId:", taskId);
+      // console.log("taskId:", taskId);
 
       if (!taskId) {
         console.error("taskId is null or undefined");

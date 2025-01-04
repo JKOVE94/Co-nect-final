@@ -46,7 +46,7 @@ const ProjList = (props) => {
         },
       })
       .then((res) => {
-        console.log(res.data.projects);
+        // console.log(res.data.projects);
         setProjs(res.data.projects);
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);

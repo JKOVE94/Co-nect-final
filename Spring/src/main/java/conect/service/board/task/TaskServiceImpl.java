@@ -69,9 +69,7 @@ public class TaskServiceImpl implements TaskService {
         TaskEntity taskEntity = TaskForm.toEntity(form);
         taskEntity.setProjectEntity(projectRepository.findById(form.getTaskFkProjNum()).orElseThrow());
         taskEntity.setUserEntity(userRepository.findById(form.getTaskFkUserNum()).orElseThrow());
-        TaskEntity entity2 = taskRepository.save(taskEntity);
-        entity2.setTaskGroup(entity2.getTaskPkNum());
-        taskRepository.save(entity2);
+        taskRepository.save(taskEntity);
     }
 
     @Override

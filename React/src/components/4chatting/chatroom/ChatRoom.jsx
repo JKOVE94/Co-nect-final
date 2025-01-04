@@ -21,12 +21,12 @@ function ChatRoom(props) {
   }
 
   useEffect(() => {
-    console.log(
-      "props.roomInfo.no:",
-      props.roomInfo.no,
-      "props.roomInfo.type:",
-      props.roomInfo.type
-    );
+    // console.log(
+    //   "props.roomInfo.no:",
+    //   props.roomInfo.no,
+    //   "props.roomInfo.type:",
+    //   props.roomInfo.type
+    // );
     if (props.roomInfo.type && props.roomInfo.no) {
       joinRoom(props.roomInfo.no, props.roomInfo.type, props.roomInfo.no);
     }

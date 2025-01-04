@@ -29,7 +29,7 @@ function MessageItem({ message }) {
     const fetchData = async () => {
       await getAllUsers();
     };
-    console.log("compPkNum:", compPkNum);
+    // console.log("compPkNum:", compPkNum);
     fetchData();
   }, [compPkNum]);
 

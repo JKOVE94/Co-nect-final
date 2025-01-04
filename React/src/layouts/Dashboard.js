@@ -61,10 +61,10 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     const projPkNumTest = sessionStorage.getItem("persist:proj_pk_num");
-    console.log("projPkNumTest: ", projPkNumTest);
-    console.log("Type of projPkNumTest:", typeof projPkNumTest); // 값의 타입을 확인
-    console.log("projPkNumTest === null:", projPkNumTest === null); // null인지 확인
-    console.log("!projPkNumTest:", !projPkNumTest); // 조건식의 결과 확인
+    // console.log("projPkNumTest: ", projPkNumTest);
+    // console.log("Type of projPkNumTest:", typeof projPkNumTest); // 값의 타입을 확인
+    // console.log("projPkNumTest === null:", projPkNumTest === null); // null인지 확인
+    // console.log("!projPkNumTest:", !projPkNumTest); // 조건식의 결과 확인
     if (!projInfoFromRoot || !projPkNumTest || projPkNumTest === "") {
       // null 또는 undefined, 빈 문자열("") 모두 포함
       navigate("/");

@@ -48,8 +48,8 @@ const FileList = (props) => {
     searchType,
     searchText
   ) => {
-    console.log("회사 번호(compNum):", compNum);
-    console.log("프로젝트 번호(projNum):", projNum);
+    // console.log("회사 번호(compNum):", compNum);
+    // console.log("프로젝트 번호(projNum):", projNum);
     if (!compNum || !projNum) {
       toast.error("회사 번호 또는 프로젝트 번호가 설정되지 않았습니다.");
       return;
@@ -178,7 +178,7 @@ const FileList = (props) => {
   };
 
   useEffect(() => {
-    console.log("props.projPkNum : ", props.projPkNum);
+    // console.log("props.projPkNum : ", props.projPkNum);
   }, [props.projPkNum]);
 
   return (

@@ -35,8 +35,8 @@ const TaskDepthContainer = ({ task }) => {
       const response = await axiosInstance.get(
         `/conect/${compPkNum}/task/task/${task.taskPkNum}/related`
       );
-      console.log("fetchRelatedTasks");
-      console.log(response.data);
+      // console.log("fetchRelatedTasks");
+      // console.log(response.data);
       setRelatedTasks(response.data || []);
     } catch (err) {
       setError(err.message);

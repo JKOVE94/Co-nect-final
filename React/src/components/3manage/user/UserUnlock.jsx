@@ -60,11 +60,6 @@ const UserUnlock = (props) => {
       });
   };
 
-  useEffect(() => {
-    console.log("type:", type);
-    console.log("showA:", showA);
-  }, [type]);
-
   const [showA, setShowA] = useState(false);
   const toggleShowA = () => {
     setShowA(true);

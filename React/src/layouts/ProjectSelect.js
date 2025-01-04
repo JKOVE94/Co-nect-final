@@ -99,8 +99,6 @@ const ProjectSelect = () => {
 
   useEffect(() => {
     fetchData();
-    console.log(userInfo.user_author);
-    console.log(data.length);
   }, [fetchData]);
 
   const handleSession = (proj_pk_num) => {

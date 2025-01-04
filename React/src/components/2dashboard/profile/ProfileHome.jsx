@@ -5,9 +5,6 @@ import ProfileEdit from "./ProfileEdit";
 
 const ProfileHome = () => {
   const [update, setUpdate] = useState(false);
-  useEffect(() => {
-    console.log("update", update);
-  }, [update]);
 
   return (
     <Routes>

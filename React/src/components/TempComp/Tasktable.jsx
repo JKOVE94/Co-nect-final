@@ -21,13 +21,13 @@ export default function Tasktable(props) {
   const userInfo = JSON.parse(userInfoFromRoot);
   const compNum = userInfo.user_fk_comp_num; //회사번호
   const [tasks, setTasks] = useState([]);
-  console.log(props.projPkNum);
+  // console.log(props.projPkNum);
   const navigate = useNavigate();
   const [userNum, setUserNum] = useState(userInfo.user_pk_num);
 
   const showList = useCallback(() => {
     if (!props.projPkNum || !userNum) {
-      console.log("프로젝트 번호 또는 사용자 번호가 유효하지 않습니다.");
+      console.error("프로젝트 번호 또는 사용자 번호가 유효하지 않습니다.");
       return;
     }
 
@@ -40,7 +40,7 @@ export default function Tasktable(props) {
           .sort((a, b) => new Date(b.taskStartdate) - new Date(a.taskStartdate))
           .slice(0, 4);
         setTasks(sortData);
-        console.log(tasks);
+        // console.log(tasks);
       })
       .catch((error) => {
         console.error("showList 오류:", error);

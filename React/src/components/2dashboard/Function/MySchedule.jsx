@@ -17,15 +17,16 @@ const MySchedule = ({ events }) => {
       const sday = moment(event.start).utc().startOf("day");
       const eday = moment(event.end).utc().endOf("day");
 
-      console.log(sday, eday, day);
+      // console.log(sday, eday, day);
 
       if (sday <= day && day <= eday) {
         dbList.push({
           title: event.title,
           content: event.content,
-          start: moment(today).utc().startOf("day") > sday ?
-          moment().format("00:00 A"):
-          moment(event.start).utc().format("hh:mm A"),
+          start:
+            moment(today).utc().startOf("day") > sday
+              ? moment().format("00:00 A")
+              : moment(event.start).utc().format("hh:mm A"),
           end:
             eday > moment(today).utc().endOf("day")
               ? moment().format("11:59 A")

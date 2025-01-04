@@ -21,7 +21,7 @@ db.connect();
 // 미들웨어 설정
 app.use(express.json());
 
-// 라우트 설정
+// 라우트 설정ㅞㅡ
 app.use("/api/chat", chatRoutes);
 
 // Socket.IO 설정

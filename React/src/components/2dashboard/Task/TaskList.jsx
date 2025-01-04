@@ -52,13 +52,13 @@ const TaskList = (props) => {
 
   const fetchTasks = useCallback(
     (page, block, sortField, sortDirection) => {
-      console.log("fetchTasks 호출:", {
-        page,
-        block,
-        sortField,
-        sortDirection,
-        searchText,
-      });
+      // console.log("fetchTasks 호출:", {
+      //   page,
+      //   block,
+      //   sortField,
+      //   sortDirection,
+      //   searchText,
+      // });
       setLoading(true);
       setError(null);
       axiosInstance
@@ -68,7 +68,7 @@ const TaskList = (props) => {
           }&pageBlock=${block}&sortField=${sortField}&sortDirection=${sortDirection}&searchText=${searchText}`
         )
         .then((res) => {
-          console.log("API 응답:", res.data);
+          // console.log("API 응답:", res.data);
           setTasks(res.data.tasks);
           setCurrentPage(res.data.currentPage + 1);
           setTotalPages(res.data.totalPages);
@@ -88,7 +88,7 @@ const TaskList = (props) => {
   );
 
   useEffect(() => {
-    console.log("useEffect 실행, projectNum:", projectNum);
+    // console.log("useEffect 실행, projectNum:", projectNum);
     if (projectNum) {
       fetchTasks(1, 0, sortField, sortDirection);
     }
@@ -235,7 +235,7 @@ const TaskList = (props) => {
                         >
                           {task.taskDepth === 1 && (
                             <span style={{ marginRight: "5px" }}>
-                              <i class="bi bi-arrow-return-right"></i>
+                              <i className="bi bi-arrow-return-right"></i>
                             </span>
                           )}
                           <Link to={`/main/task/detail/${task.taskPkNum}`}>

@@ -149,10 +149,6 @@ const Login = (props) => {
       setIsLoading(false);
     }
   };
-  
-  useEffect(() => {
-    console.log(data);
-  },[data])
 
   return (
     <>

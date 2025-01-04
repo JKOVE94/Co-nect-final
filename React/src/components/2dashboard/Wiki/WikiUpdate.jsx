@@ -145,17 +145,17 @@ const WikiUpdate = () => {
     // 파일 처리 상태
     if (fileState.newFile) {
       // 새 파일 업로드
-      console.log("새 파일 업로드:", fileState.newFile);
+      // console.log("새 파일 업로드:", fileState.newFile);
       data.append("fileInput", fileState.newFile);
       data.append("fileStatus", "REPLACE");
     } else if (fileState.originalFile && fileState.fileName) {
       // 기존 파일 유지
-      console.log("기존 파일 유지:", fileState.originalFile);
+      // console.log("기존 파일 유지:", fileState.originalFile);
       data.append("fileStatus", "KEEP");
       data.append("originalFileName", fileState.originalFile);
     } else {
       // 파일 삭제
-      console.log("파일 삭제");
+      // console.log("파일 삭제");
       data.append("fileStatus", "DELETE");
     }
 

@@ -49,7 +49,7 @@ const FileDetail = () => {
     };
 
     fetchPost();
-    console.log(post);
+    // console.log(post);
   }, [filePkNumInt]);
 
   const toggleDeleteModal = () => {

@@ -58,7 +58,7 @@ const NotiList = (props) => {
         setTotalBlocks(Math.ceil(res.data.totalPages / pagesPerBlock));
       })
       .catch((error) => {
-        console.log("현재 baseURL:", axiosInstance.defaults.baseURL); // baseURL 확인
+        // console.log("현재 baseURL:", axiosInstance.defaults.baseURL); // baseURL 확인
         console.error("Axios 요청 중 오류 발생:", error);
       });
   };
