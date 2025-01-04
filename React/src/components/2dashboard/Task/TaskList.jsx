@@ -220,6 +220,7 @@ const TaskList = (props) => {
                     <th>마감일</th>
                     <th>상태</th>
                     <th>진행도</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -234,9 +235,7 @@ const TaskList = (props) => {
                           }}
                         >
                           {task.taskDepth === 1 && (
-                            <span style={{ marginRight: "5px" }}>
-                              <i className="bi bi-arrow-return-right"></i>
-                            </span>
+                            <span style={{ marginRight: "5px" }}></span>
                           )}
                           <Link to={`/main/task/detail/${task.taskPkNum}`}>
                             {task.taskTitle}
