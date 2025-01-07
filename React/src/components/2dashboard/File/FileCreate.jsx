@@ -17,7 +17,6 @@ const FileCreate = () => {
   const compNum = userInfo.user_fk_comp_num; // 회사 번호
   const projNum = sessionStorage.getItem("persist:proj_pk_num"); // 프로젝트 번호
 
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -43,25 +42,41 @@ const FileCreate = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-  
+
     const maxFileSize = 10 * 1024 * 1024; // 10MB 제한
-    const allowedExtensions = ["png", "jpg", "jpeg", "xlsx", "xls", "hwp", "doc", "docx", "pdf", "zip"]; // 허용된 확장자
+    const allowedExtensions = [
+      "png",
+      "jpg",
+      "jpeg",
+      "xlsx",
+      "xls",
+      "hwp",
+      "doc",
+      "docx",
+      "pdf",
+      "zip",
+    ]; // 허용된 확장자
     const fileExtension = file.name.split(".").pop().toLowerCase();
-  
+
     if (!allowedExtensions.includes(fileExtension)) {
-      toast.error(`허용되지 않는 파일 형식입니다. 허용된 형식: ${allowedExtensions.join(", ")}`, {
-        autoClose: 3000,
-      });
+      toast.error(
+        `허용되지 않는 파일 형식입니다. 허용된 형식: ${allowedExtensions.join(
+          ", "
+        )}`,
+        {
+          autoClose: 3000,
+        }
+      );
       return;
     }
-  
+
     if (file.size > maxFileSize) {
       toast.error("파일 크기는 10MB를 초과할 수 없습니다.", {
         autoClose: 3000,
       });
       return;
     }
-  
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       file,
@@ -70,7 +85,6 @@ const FileCreate = () => {
       file_type: file.type,
     }));
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,7 +101,10 @@ const FileCreate = () => {
     data.append("user_name", userName);
 
     try {
-      const response = await axiosInstance.post(`/conect/${compNum}/file/${projNum}`, data);
+      const response = await axiosInstance.post(
+        `/conect/${compNum}/file/${projNum}`,
+        data
+      );
 
       if (response.data) {
         toast.success("파일이 성공적으로 업로드되었습니다!", {
@@ -161,7 +178,9 @@ const FileCreate = () => {
                 required
               />
               <small className="text-muted">
-                ✔️허용된 파일 형식: png, jpg, jpeg, xlsx, xls, hwp, doc, docx, pdf, zip (최대 10MB)<br/>
+                ✔️허용된 파일 형식: png, jpg, jpeg, xlsx, xls, hwp, doc, docx,
+                pdf, zip (최대 10MB)
+                <br />
                 ✔️파일은 1개만 업로드 가능합니다.
               </small>
               {formData.file && (

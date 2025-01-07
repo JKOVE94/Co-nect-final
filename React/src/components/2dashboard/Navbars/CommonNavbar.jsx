@@ -35,7 +35,12 @@ const CommonNavbar = (props) => {
           <MenuItem>
             <div>
               <select
-                style={{ width: "95%", height: "3vh", marginLeft: "0.4vw" }}
+                style={{
+                  width: "95%",
+                  height: "3vh",
+                  marginLeft: "0.4vw",
+                  borderColor: "rgba(0,0,0,0.3)",
+                }}
                 onChange={(e) => {
                   sessionStorage.setItem("persist:proj_pk_num", e.target.value);
                   props.setProjPkNum(e.target.value);

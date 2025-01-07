@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="" />
+    <list default="true" id="18748728-76fe-4441-b600-cae9e35c7027" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../React/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/File/FileCreate.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/File/FileCreate.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/File/FileList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/File/FileList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/Navbars/CommonNavbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/Navbars/CommonNavbar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/2dashboard/profile/ProfileEdit.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/2dashboard/profile/ProfileEdit.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/4chatting/chatroom/ChatInput.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/4chatting/chatroom/ChatInput.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/4chatting/chatroom/ChatRoom.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/4chatting/chatroom/ChatRoom.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../React/src/components/4chatting/chatroom/MessageList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../React/src/components/4chatting/chatroom/MessageList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Spring/src/main/java/conect/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Spring/src/main/java/conect/security/SecurityConfig.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -98,7 +110,8 @@
       <workItem from="1734773066002" duration="4643000" />
       <workItem from="1734831621818" duration="47449000" />
       <workItem from="1735284123228" duration="19628000" />
-      <workItem from="1735908515924" duration="1317000" />
+      <workItem from="1735908515924" duration="5915000" />
+      <workItem from="1736168705943" duration="641000" />
     </task>
     <servers />
   </component>

@@ -10,6 +10,8 @@ function ChatRoom(props) {
   const { type, no } = useParams();
   const { joinRoom, messages, allMessagesLoaded } = useSocket();
   const [isLoading, setIsLoading] = useState(true);
+  const [tempMessages, setTempMessages] = useState("");
+  const [AIisReady, setAIisReady] = useState(false);
 
   let chatRoomTitle = "채팅방";
   if (props.roomInfo.type === "project") {
@@ -88,12 +90,18 @@ function ChatRoom(props) {
         <div className="chat-content-box" ref={messageListRef}>
           <MessageList
             messages={messages}
+            tempMessages={tempMessages}
             roomInfo={props.roomInfo}
+            AIisReady={AIisReady}
+            setAIisReady={setAIisReady}
             className="chat-message-content"
           />
         </div>
         <div className="chat-input-box">
-          <ChatInput roomInfo={props.roomInfo} />
+          <ChatInput
+            roomInfo={props.roomInfo}
+            setTempMessages={setTempMessages}
+          />
         </div>
       </div>
     </div>

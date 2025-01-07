@@ -19,6 +19,7 @@ function ChatInput(props) {
         props.roomInfo.type,
         props.roomInfo.no
       );
+      props.setTempMessages(message);
       setMessage("");
     }
   };

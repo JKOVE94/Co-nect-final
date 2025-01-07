@@ -72,8 +72,7 @@ const FileList = (props) => {
           setCurrentPage(currentPage);
           setTotalPages(totalPages);
           setTotalBlocks(totalBlocks);
-          console.log("API 호출 성공:", res.data);
-
+          // console.log("API 호출 성공:", res.data);
         } else {
           console.error("파일 목록이 배열이 아닙니다.");
         }
